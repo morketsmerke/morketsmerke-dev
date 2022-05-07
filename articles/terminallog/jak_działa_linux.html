@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="utf-8" />
+			<link rel="icon" type="image/png" href="https://i.ibb.co/khy45hh/mm.png">
+			<style>
+				.code-block {
+					display: block;
+					background-color: silver;
+					font-family: monospace;
+					font-weight: bolder;
+					text-align: left;
+				}
+				.code-inline {
+					background-color: silver;
+					font-family: monospace;
+					font-weight: bolder;
+				}
+				ul {
+					text-align: left;
+				}
+        p { text-align: justify; }
+        .toc { list-style-type: none; }
+			</style>
+		</head>
+		<body style="font-family: monospace;" >
+<pre>
+     _       _          _     _       _         _     _                  ___ 
+    | | __ _| | __   __| |___(_) __ _| | __ _  | |   (_)_ __  _   ___  _|__ \
+ _  | |/ _` | |/ /  / _` |_  / |/ _` | |/ _` | | |   | | '_ \| | | \ \/ / / /
+| |_| | (_| |   <  | (_| |/ /| | (_| | | (_| | | |___| | | | | |_| |>  < |_| 
+ \___/ \__,_|_|\_\  \__,_/___|_|\__,_|_|\__,_| |_____|_|_| |_|\__,_/_/\_\(_)
+</pre>
+<p style="margin: 0; padding: 0; outline: 0; font-size: 18pt;">
+	&#9760;&nbsp;<a href="https://morketsmerke.github.io">morketsmerke</a>&nbsp;&#9760;
+</p>
+			<div style="margin-left: auto; margin-right: auto; width: 80%;">
+        <h1>Jak działa Linux</h1>
+        <div>
+          <h2>Spis treści</h2>
+          <ul class="toc">
+            <li><a href="#1.howlinuxismade">1. Budowa systemu Linux<a>
+              <ul class="toc">
+                <li><a href="#1.1.hardware">1.1. Sprzęt</a>
+                  <ul class="toc">
+                    <li><a href="#1.1.1.ram">1.1.1. Pamięć operacyjna</a>
+                  </ul>
+                </li>
+                <li><a href="#1.2.kernel">1.2. Jądro</a>
+                <li><a href="#1.3.userspace">1.3. Przestrzeń użytkownika</a>
+                <li><a href="#1.4.users">1.4. Użytkownicy</a>
+              </ul></li>
+              <li><a href="#2.linuxbasics">2. Podstawy obsługi Linuksa</a>
+                <ul class="toc">
+                  <li><a href="#2.1.shells">2.1. Powłoka</a></li>
+                  <li><a href="#2.2.shellusage">2.2. Korzystanie z powłoki</a>
+                    <ul class="toc">
+                      <li><a href="#2.2.1.catcommand">2.2.1. Polecenie cat</a></li>
+                      <li><a href="#2.2.2.stdinstdout">2.2.2. Standardowe wejście i standardowe wyjście</a></li>
+                    </ul></li>
+                  <li><a href="#2.3.basicscommands">2.3. Podstawowe polecenia</a></li>
+                  <li><a href="#2.4.commandsworksondir">2.4. Polecenia działające na katalogach</a>
+                    <ul class="toc">
+                      <li><a href="#2.4.1.globbing">2.4.1. Nazwy wieloznaczne</a></li>
+                    </ul></li>
+                  <li><a href="#2.5.proxycommands">2.5. Polecenia pośredniczące</a></li>
+                  <li><a href="#2.6.passwdandchsh">2.6. Zmiana hasła i powłoki</a></li>
+                  <li><a href="#2.7.dotfiles">2.7. Plik z kropką</a></li>
+                  <li><a href="#2.8.shellandenvvars">2.8. Zmienne środowiskowe i powłoki</a></li>
+                  <li><a href="#2.9.path">2,9, Ścieżka poleceń</a></li>
+                  <li><a href="#2.10.specialchars">2.10. Znaki specjalne</a></li>
+                  <li><a href="#2.11.commadlineedit">2.11. Edycja wiersza poleceń</a></li>
+                  <li><a href="#2.12.texteditors">2.12. Edytory tekstu</a></li>
+                  <li><a href="#2.13.gettinghelp">2.13. Uzyskiwanie pomocy</a></li>
+                  <li><a href="#2.14.shellio">2.14. Wejście i wyjście powłoki</a>
+                    <ul class="toc">
+                      <li><a href="#2.14.1.stderr">2.14.1. Standardowy strumień błędów</a></li>
+                      <li><a href="#2.14.2.stdin">2.14.2. Przekierowanie standardowego wejścia</a></li>
+                    </ul></li>
+                  <li><a href="#2.15.readingerrors">2.15. Odczytwanie komunikatów o błędach</a></li>
+                  <li><a href="#2.16.manipulatingprocesses">2.16. Przeglądanie procesów i manipulowanie nimi</a>
+                    <ul class="toc">
+                      <li><a href="#2.16.1.processkilling">2.16.1. Przerywanie działania procesów</a></li>
+                      <li><a href="#2.16.2.jobcontrol">2.16.2. Kontrola zadań</a></li>
+                      <li><a href="#2.16.3.processinbg">2.16.3. Procesy działające w tle</a></li>
+                    </ul></li>
+                  <li><a href="#2.17.filemodeandpermissions">2.17. Tryb pliku i uprawnienia</a>
+                    <ul class="toc">
+                      <li><a href="#2.17.1.modifypermissions">2.17.1. Modyfikacja uprawnień</a></li>
+                      <li><a href="#2.17.2.sylinks">2.17.2. Dowiązania symboliczne</a></li> 
+                    </ul></li>
+                  <li><a href="#2.18.archvesandcompression">2.18. Archiwizowanie i kompresowanie danych</a>
+                    <ul class="toc">
+                      <li><a href="#2.18.1.tarprogram">2.18.1. Program tar</a></li>
+                      <li><a href="#2.18.2.gzipprogram">2.18.2. Program gzip</a></li>
+                      <li><a href="#2.18.3.compressedarchives">2.18.3. Skompresowane archiwa</a></li>
+                      <li><a href="#2.18.4.othercommpression">2.18.4. Inne metody kompresji</a></li>
+                    </ul></li>
+                  <li><a href="#2.19.filesystemhierarchy">2.19. Hierarchia katalogów</a>
+                    <ul class="toc">
+                      <li><a href="#2.19.1.othermainsubdirs">2.19.1. Pozostałe katalogi główne</a></li>
+                      <li><a href="#2.19.2.usrdirectory">2.19.2. Katalog /usr</a></li>
+                      <li><a href="#2.19.3.kernelplace">2.19.3. Umiejscowienie jądra w systemie</a></li>
+                    </ul></li>
+                  <li><a href="#2.20.runitasroot">2.20. Uruchamianie poleceń przez superużytkownika</a>
+                    <ul class="toc">
+                      <li><a href="#2.20.1.sudoersfile">2.20.1. Plik /etc/sudoers</a></li>
+                    </ul></li>
+                  <li><a href="#2.21.summary">2.21. Podsumowanie</a></li>
+                </ul></li>
+          </ul>
+        </div>
+        <p>
+          Opisywany tutaj materiał będzie kompatybilny z dystrybucjami 
+          pochodnymi od GNU/Linux Debian zarówno tymi opartymi na 
+          <em>systemd</em> jak <em>sysvinit</em> oraz tymi z rodziny
+          <em>RHEL</em>/<em>Fedora</em>/<em>CentOS</em>. 
+        </p>
+        <p>
+          GNU/Linux czy raczej sam Linux? Sama nazwa, jest już tematem dość
+          kontrowersyjnym. Ludzie związani z projektem GNU twierdzą, że ta
+          pierwsza liczba jest właściwa ponieważ wskazuje ona na to, że isotne
+          elemnty projektu GNU zostały wykorzystane do stworzenia tego systemu.
+          W mowie potocznej jednak przyjęło się użycie tej drugiej nazwy. Jest
+          to jedno, łatwe do zapamiętania słowo. Jeśli mówimy następujące
+          zdanie wyrażające chęć zainstalowania na jakiejś maszynie omawianego
+          tutaj systemu, mówimy że "zainstalujemy jakiegoś Linuksa". Słowo
+          "jakiegoś" zostało tu użyte w kontekscie wyboru konkretnej
+          dystrybucji. Co to dystrybucja wyjaśnie za chwilę. Bez projektu GNU
+          niebyło by Linuksa. Wydaje mi się, że każdy kto jest nieco bardziej
+          związany z tym środowiskiem o tym wie. Ja również jestem tego świadom
+          dla tego też w tym dokumencie użyje nazwy Linux. Poprostu.
+        </p>
+        <h1 id="1.howlinuxismade">1. Budowa systemu Linux</h1>
+        <p>
+          Nie zagłebiając się w szczegóły, to Linux składa się z 
+          <strong>jądra</strong> oraz
+          <strong>przestrzeni użytkownika</strong>. Oba kompomenty rezydują w 
+          pamięci więc
+          wiele, nie które teksty popularno-naukowe mogą włączać pamięć lub
+          ogólnie sprzęt do składowych systemu operacyjnego Linux, w mojej
+          opinii jest raczej cecha wykorzystywanych przez nas komputerów
+          konwencjonalnych. 
+        </p>
+        <p>
+          Mówiąc o jądrze możemy wskazać konktretny program, konkretny plik.
+          W przypadku przestrzeni użytkownika, w systemie nie istnieje żaden
+          namacalny byt cyfrowy jak w przypadku jądra. Przestrzeń użytkownika
+          jest bowiem <strong>warstwą abstrakcji</strong> - czyli terminem,
+          bądź założeniem wykorzystywanym w celu określenia czynności, funkcji,
+          zjawiska bez wdawania się w szczegóły. Przestrzeń użytkownika jest
+          miejscem uruchamiania <strong>procesów</strong> użytkownika. Procesy
+          to nic innego jak wystąpienia programów uruchomionych przez
+          użytkownika. Nie wszystkie procesy są programami użytkownika w
+          dosłownym tych słów znaczeniu. Część tych procesów to programy
+          wspomagające wykorzystanie komputera i jego zasobów. Bez nich systemy
+          operacyjne dalej mogły by spełniać swoją rolę, jednak nie miały by
+          powszechnie znanej nam dzisiaj formy. Przestrzeń użytkownika  składa 
+          się z wielu ogólno dostępnych kompnentów ich istnienie w danej wersji
+          systemu oraz ich konfiguracja sprawia, iż nie mamy doczynienia z
+          gotowym jednolitym produktem, ale z dystrybucją. Z jedną z wersji, 
+          gdzie ktoś
+          wziął jądro, które jest ogolno dostępne i skomponował przestrzeń
+          użytkownika. Obecnie na rynku mamy dostępnych ok. 600 dystrybucji.
+          Wiekszość z nich to pochodne innych, oryginalnych rozwiązań
+          rozwijanych przez setki osób na całym świecie. Kilka takich głównych
+          dystrybucji, znajduje się w tabeli poniżej. Przejrzałem większość z
+          nich, a z częsci osobiście korzystałem. 
+        </p>
+        <table border="1">
+          <thead>
+            <th>Logo</th>
+            <th>Nazwa</th>
+            <th>Opis</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td><img src="https://i.ibb.co/GspTqqK/linux-mint-logo32.png" alt="linux-mint-logo32" border="0"></td>
+              <td>Linux Mint</td>
+              <td>
+                Dystrybucja bardzo przyjazna użytkownikowi. Wykorzystywana 
+                przez nowych niedoświadczonych użytkowników system Linux. 
+                Pod czas
+                instalacji mogą być instalowane nie wolne moduły oraz nie
+                wolne oprogramownie. Jej głównym zadaniem jest sprzyjanie
+                użytkownikowi i umożliwienie mu wykorzystanie Linuksa przy
+                codziennym wykorzystaniu komputera. Mint rozwijany jest przez
+                społeczność zebraną wokół niego.
+              </td>
+            </tr>
+            <tr>
+              <td><img src="https://i.ibb.co/ckrkfjX/ubuntu-logo32.png" alt="ubuntu-logo32" border="0"></td>
+              <td>Ubuntu</td>
+              <td>
+                  Podobnie jak Linux Mint, Ubuntu również jest skierowane dla
+                  osób ceniących sobie wygodne i prostę rozwiązania. Jest
+                  przyjazna użytkownikowi, ma nieco bardziej konserwatywne
+                  podejście do ideii wolnego oprogramowania, jądro może
+                  zawierać nie wolne moduły, jednak zamknięte oprogramowanie
+                  nie jest domyślnie instalowane. Ubuntu rozwijane jest przez 
+                  firmę
+                  Canonical. Jej technologię są wdrażane do Ubuntu, dzięki
+                  czemu może ona uchdzić za system klasy <em>enterprise</em> 
+                  wśród
+                  dystrybucji opartych o GNU/Linux Debian. Poza wersją na
+                  komputery biurkowe istnieją również wersja skierowana
+                  na serwery oraz inne wersje z preinstalowanymi różnymi
+                  środowiskami graficznymi czy wersja skierowana do obróbki
+                  multimediów zawierająca pozwalające do tego oprogramowanie.
+                  Społeczność zebrana
+                  wokół systemu Linux zarzuca jej siłowe próby wdrożenia
+                  manedżera oprogramowania <em>Snap</em>, rozwijanego przez tę 
+                  firmę
+                  przez co może ona pretendować do stopniowego zarzucenia
+                  klasycznego schematu dystrybucji pakietów rozwijanego wraz
+                  z GNU/Linux Debian.
+              </td> 
+            </tr>
+            <tr>
+              <td><img src="https://i.ibb.co/v4026kk/fedora-logo32.png" alt="fedora-logo32" border="0"></td>
+              <td>Fedora Linux</td>
+              <td>
+                  Fedora jest dystrybucją skierowaną do różnej maści
+                  użytkowników, ponieważ istnieje w kilku głównych wersjach.
+                  oraz wiele wersji pobocznych tzw. <em>spins</em>. Fedora ma
+                  najprzyjźniejszy instalator chyba ze wszystkich możliwych
+                  dystrybucji. Wymaga on głównie wybrania miejsca instalacji
+                  i kliknięcia przycisku dalej. Fedora została stworzona i jest
+                  rozwiajana przez firme Red Hat Inc. (obecnie IBM) jako
+                  <em>upstream</em> (poligon doświadczalny dla zmian), dla 
+                  glównego produktu tej firmy Red Hat Enterprise Linux - 
+                  płatnej dystrybucji skierowanej do środowisk produkcyjnych 
+                  (100$ rocznie). Jest to system o dużej stabilości ze
+                  wsparciem dla najnowszego sprzetu. Fedora również
+                  charakteryzuje się wprowadzeniej jako pierwsza środowiska
+                  GNOME w najnowszej wersji 41 oraz innych nowych technologi
+                  wśród otwartego oraz wolnego oprogramowania. 
+              </td>
+            </tr>
+            <tr>
+              <td><img src="https://i.ibb.co/Q965txs/debian-logo32.png" alt="debian-logo32" border="0"></td>
+              <td>GNU/Linux Debian</td>
+              <td>
+                  Debian jest jedną z pierwszy dostępnych dystrybucji, początek
+                  jej istnienia jest datowany na 1993 rok. Dystrybucja 
+                  konserwatywna, posiadała w pierwszych latach swojego 
+                  istnienia aprobatę FSF (Free Software Fundation). Jednak
+                  została ona wycofana, za zezwolenie na instalację zamkniętego
+                  oprogramowania. Kernel przygotowywany przez twórców tej
+                  dystrybucji pozbawiony jest tzw. blobów binarnych (nie
+                  wolnych prekompilowanych modułów, używanych przy budowaniu
+                  jądra.) Bloby najczęściej dotyczą sterowników sprzętu.
+                  Dystrybucja charkteryzuje się wysoką stabilnościa
+                  porównywalną z RHEL, wsparciem dla starszego sprzętu. Jedną
+                  z cech, która może odstraszać potencjalnych użytkowników
+                  od niej jest długi cykl wydawniczy (co dwa lata) oraz
+                  używanie sprawdzone oprogramowania czy technologii (pozostaje
+                  dość mocno w tyle jeśli chodzi o najnowsze wersje
+                  oprogramowania). Wydaje mi się, że niema
+                  stabilniejszego gotowego rozwiązania niż GNU/Linux Debian.
+                  Debian wymaga nieco większego zaawansowania niż dystrybucje
+                  podane do tej pory. Stosowany jest częściej w środowiskach
+                  produkcyjnych niż np. Ubuntu. Rozwój Debiana opiera się
+                  na zaangażowaniu społeczności z całego świata.
+              </td>
+            </tr>
+            <tr>
+              <td><img src="https://i.ibb.co/MpCcKqy/arch-linux-logo32.png" alt="arch-linux-logo32" border="0"></td>
+              <td>Arch Linux</td>
+              <td>
+                  Dystrybucja skierowana do zaawansowanych użytkowników.
+                  Charakteryzuje się wysoką konfigurowalnością oraz
+                  dostępnością najnowszych wersji oprogramowania. Nie posiada
+                  oficjalnego instalatora, choć można pobrać skrypt z sieci.
+                  Instalacji dokonuj się ręcznie, wpisującac kolejne polecenia
+                  z podręcznika instalacji w środowisku LiveCD, gdzie
+                  przygotowuje się dysk, pobiera się pakiety i je konfiguruje.
+                  Instalacja i konfiguracji Arch Linux nie jest tak
+                  pracochłonna jak innych dystrybucji, można by powiedzieć,
+                  meta-dystrybucji. Dość ciekawą cechą jest społeczność zebrana
+                  wokół niej, która przechwalająca się swoją wyższością na
+                  innymi (ponieważ przebrneli przez proces instalacji) 
+                  używając frazy "I use Arch BTW.". Dystrybucja rozwijana
+                  jest przez społeczność na całym świecie.
+              </td>
+            </tr>
+            <tr>
+              <td><img src="https://i.ibb.co/vz98yMx/void-linux-logo32.png" alt="void-linux-logo32" border="0"></td>
+              <td>Void Linux</td>
+              <td>
+                  Nie zależna dystrybucjna, trochę odmienna od inny dystrybucji
+                  głównego nurtu. Systemd zastąpiono programem <em>runit</em>,
+                  zamiast OpenSSL, użyto projektu OpenBSD LibreSSL jak jedyna
+                  z dystrybucji Linuksa. Kernel Void-a pozbawiony jest blobów,
+                  a domyślna instalacja zawiera tylko wolne oprogramowanie,
+                  posiada on jednak oficjalne repozytorium z zamkniętym
+                  oprogramowaniem. Instalacja pakietów opiera się stworzonym
+                  dla Void menedżerze pakietów XBPS. Pakiety są wydawane stylu
+                  <em>rolling release</em>, co daje szybkie i stabline
+                  aktualizacje. Obok standardowej biblioteki języka C -
+                  GNU libc, mamy również bibliotekę <em>musl</em>. Za pomoca
+                  programu <em>xbps-src</em> możemy tworzyć z kodu źródłowego
+                  własne pakiety XBPS. 
+              </td>
+            </tr>
+            <tr>
+              <td><img src="https://i.ibb.co/0QsPfPh/gentoo-linux-logo32.png" alt="gentoo-linux-logo32" border="0"></td>
+              <td>Gentoo Linux</td>
+              <td>
+                  Gentoo jest dystybucją na tyle zaawansowaną, że można by się
+                  pokusić o nazwanie jej meta-dystrybucją. Jest ona bowiem
+                  jedną z najbardziej konfigurowalnych dystrybucji. Jedną z
+                  ciekawszych czynności, jakie należy wykonać podczas
+                  instalacji, to ręczna kompliacja jądra. Dystrybucja
+                  skierowana do jeszcze bardziej zaawansowanych użytkowników
+                  niż w przypadku Arch Linux. Instalacja Gentoo na maszynie
+                  wirtualnej wraz z poradnikiem, zajeło mi to jakieś dwie
+                  godziny. 
+              </td>
+            </tr>
+            <tr>
+              <td><img src="https://i.ibb.co/hKwFYQh/lfs-logo32.jpg" alt="lfs-logo32" border="0"></td>
+              <td>Linux from scratch</td>
+              <td>
+                  LFS to w zasadzie projekt, a niżejli sama dystrybucja.
+                  Umożliwia on stworzenie oraz skonfigurowanie własnej
+                  dystrybucji. Na stronie projektu zawarte są wskazówki, co
+                  należy zrobić, aby stworzyć rozwiązanie najbardziej
+                  elastyczne dla siebie. LFS z pewnością może nosić miano
+                  meta dystrybucji.
+              </td>
+            </tr>
+          </tbody>
+        </table> 
+        <p>
+          W powyższej tabeli przedstawiłem  dystrybucje, na które
+          warto zwrócić uwagę. Teraz prawdopodobnie czekać będzie Cię duży
+          dylemat, którą wybrać. W pierwszej kolejności ważny jest sprzęt,
+          na którym będziemy z tego systemu korzystać. Część sprzętu, 
+          z którego chcemy korzystać może 
+          nie działać <em>out of box</em>, wowczas potrzebne będą sterowniki,
+          które mogą być własnościowe (nie wolne, generalnie być zamkniętym 
+          oprogramowaniem), jeśli zależy nam na prywatności, to lepiej upewnić
+          się z jakiego rodzaju sprzętem będzie mieć doczynienia, ponieważ 
+          każde zamknięte oprogramowanie można teoretycznie uznać za
+          oprogramowanie szkodliwe. Dobrym wyborem może być zakup Thinkpada z
+          przed 2008 roku. Wówczas będziemy mogli bez obaw wybrać Debiana i
+          zainstalować np. XFCE (to dość lekkie środowisko graficzne, nadające
+          się do codziennej pracy, bez zniechęcania się). Kolejną rzeczą do
+          wyboru dystrybucji jest zapał do pracy. Mimo iż opisując dystrybucje
+          napisałem że ta jest dla początkujących, a ta dla zaawansowanych to 
+          żadna z
+          nich nie jest ani dla jednych ani dla drugich. Obsługa czego kolwiek
+          związanego z komputerami wymaga przeczytania dokumentacji ze
+          zrozumieniem i umiejętności radzenie sobie z ewentualnymi problemami.
+          Dlatego dlaczego by nie wybrać Gentoo, zainstalować go 
+          z poradnikiem, skonfigurować, a wrazie problemów użyć Googla, lub
+          poprość kogoś ze społeczności o pomoc.  
+        </p>
+        <p>
+          Dość częstym zjawiskiem, wśród społeczności użytkowników Linuksa jest
+          tzw. <em>distro-hopping</em>, czyli przesiadanie się z jednej
+          dystrybucji na drugą. Jest to normalne zjawisko, chciaż można
+          powszechną opinia jego jest raczej negatywna, głównym argumentem
+          oponetów jest stwierdzenie, że przez to nie uczymy się niczego. Moim
+          zdaniem, możemy dojść do wniosku, że tak naprawdę nie ma dystrybucji
+          tylko produkt w ciągłej ewolucji z dostępnym takim a takim
+          oprogramowaniem. Nie mam mendżera pakietów, mam program do instalacji
+          i konfiguracji oprogramowania, nieważne czy jest apt, dnf, yum czy
+          pacman. Mam stronę podręcznika i znajduj sobie potrzebne opcje. Mam
+          dostęp do internetu, i wystarczy wyszukać konkretną potrzebną 
+          czynność np.: "Remove packages with all dependencies pacman". I mam
+          gotowy wynik. Wiele miesięcy błądziłem słuchając mendrców jak RMS
+          (<em>Richard Matthew Stallman</em>). Myślcie samodzielnie, 
+          przeskakujcie z distro na distro i bawcię się dobrze.
+        </p>
+        <h2 id="1.1.hardware">1.1. Sprzęt</h2>
+        <p>
+          Sprzęt sam w sobie nie mozę wchodzić z skład systemu operacyjnego,
+          to jego elementy jak pamieć operacyjna, procesor czy pamięć masowa
+          odgrywają w nim bardzo ważna rolę.
+        </p>
+        <h3 id="1.1.1.ram">1.1.1. Pamięć operacyjna</h3>
+        <p>
+          W działaniu systemów operacyjnych takich jak Linux, najważniejszym
+          komponentem sprzętowym może być pamięć operacyjna, ponieważ to w
+          niej rezyduje jądro oraz przestrzeń użytkownika. Dane zapisane w
+          pamięci nie są niczym innym jak zbiorem zer i jedynek określanych
+          mianem <strong>bitów</strong> (najmniejsze przetwarzanej ilości
+          informacji). Procesy oraz jądro są jednymi z takich zbiorów. Takie
+          zbiory określa się mianem <strong>obrazu</strong>. 
+        </p>
+        <h2 id="1.2.kernel">1.2. Jądro</h2>
+        <p>
+          Jądro Linux jest to nadrzędy proces w całym systemie, realizuje swoje
+          działania w czterech obszarch funkcjonalności systemu operacyjnego.
+        </p>
+        <ul>
+          <li><strong>Zarządzanie procesami</strong> - jądro jest
+            odpowiedzialne za uruchamianie, wstrzymywanie, ponowne uruchomienie
+            oraz kończenie pracy procesów. Korzystając ze współczesnych
+            systemów operacyjnych możemy mieć wrażenie uruchomione przez nas
+            programy (a co za tym idzie ich procesy) mogą działać jednocześnie.
+            Dzieje się tak dlatego, iż jądro uruchamia kod procesu na ułamek
+            sekundy, po upłynięciu danego przez jądro <strong>wycinka czasu</strong>
+            stan procesora wykonującego kod danego procesu zapisywany jest
+            w pamięci, a jądro wybiera kolejny proces i ładuje stan procesora
+            po czym wznawia jego wykonanie. Tych czynności jest znacznie więcej
+            zostało tu wymionionych. Te
+            czynności nazywane są <strong>przełączaniem kontekstu</strong>.
+            Na współczesnych procesorach dzieje się to tak szybko, że możemy
+            mieć złudzenie <strong>wielozadaniowości</strong>. W przypadku 
+            maszyn wielordzeniowych jak i wieloprocesorowych jądro nie musi
+            zwalniać wykorzystywanego procesora (rdzenia), ale robi to aby
+            jak najlepiej wykorzystać zasoby.</li>
+          <li><strong>Zarządzanie pamięcią</strong> - każdy proces jest obrazem
+            w pamięci, każdy proces również potrzebuje pamięci na swoje
+            obliczenia. Zadaniem jądra jest przydzielanie, zwalnianie jak i
+            ochrona (przed tym aby proces nie uzyskał dostępu do obszaru
+            innego procesu) przekazanych procesom obszarów. Czynności z tym
+            związane są dość złożone, ale jądro może posiłkować się 
+            rozszerzenim MMU we współczesnych procesorach. Pozwala ono podczas
+            dzielenia pamięci wykorzystać metodę <strong>pamięci wirtualnej</strong>,
+            polegającej na zamianie adresów pamięci, przez co proces jest
+            skonfigurowany, że "tak jakby" miał do dyspozycji całą pamięć
+            fizyczną maszyny. Zamiana adresów wiąże się z potrzebą posiadania
+            map (czy też tabel), pozwalających na odzorowanie adresów, co
+            dokłada czynność aktualizacji mapy podczas przełączania kontekstu.
+            Mapy adresów nazywane są <strong>tablicami stron</strong>.
+          <li><strong>Sterowniki urządzeń</strong> - zadaniem sterowników
+            jest dostarczenie identycznego interfejsu do komunikacji z
+            poszczególnymi urządzeniami zainstalowanymi w komputerze. Za racji
+            to iż swobodny dostęp do sprzetu jest potencjalnie niebezpieczny,
+            to jaka kolwiek próba komunikacji z urządzeniem odbywać się
+            zawsze będzie za pośrednictwem jądra systemu. Sterowniki w systemie
+            Linux są częścią jądra, nie oznacza to jednak, że nie możemy
+            jakiegoś brakującego do instalować. Sterowniki są przechowywane w
+            postaci modułów, które są ładowane podczas uruchamiania jądra, a
+            nie które znich mogą być ładowane podczas pracy systemu.</li>
+          <li><strong>Wywołania systemowe</strong> - są to funkcje udostępnione
+            przez jądro procesom użytkownika. Wywołania realizują zadania,
+            które są trudne do zrealizowania przez procesy użytkownika lub w
+            ogóle nie wykonalne. Przykładem wykonywania wywołań systemowych
+            jest obsługa plików (otwieranie, odczyt czy zapis), innymi
+            bardzo często wykorzystywanymi wywołaniami są <em>fork()</em> oraz
+            <em>exec()</em>, wykonywane są za każdym wydanym poleceniem w
+            powłoce.</li> 
+        </ul>
+        <p>
+          Inną ciekawą cechą jądra są <strong>pseudourządzenia</strong>.
+          Procesy widzą takie urządenia jak każde inne, jednak występują on
+          wyłącznie w warstwie programowej, dzięki temu nie muszą być częścią
+          jądra, ale ze względów praktycznych się je tam umieszcza. Inna
+          implementacja urządzenia <em>/dev/random</em> - służacego
+          do generowania liczb pseudolosowych, które jest urządzeniem 
+          programowym mogłoby nie być zbyt bezpieczne.
+        </p>
+        <h2 id="1.3.userspace">1.3. Przestrzeń użytkownika</h2>
+        <p>
+          Przestrzeń użytkownika formalnie jest obszarem pamięci, w którym
+          spedzimy 99% czasu pracy na Linuksie. Wewnątrz przestrzeni
+          użytkownika znajdują się procesy definiujące dystrybucje wykonujące
+          różne zadania dla użytkownika, teoretycznie są one wobec siebie
+          równe, to jednak przestrzeń użytkownika można podzielić na trzy
+          warstwy, na której warstwie będzie znajdować się proces zależy jak
+          bardzo skomplikowane zadania wykonuje. Przeglądarka sieci WWW, może
+          się taka nie wydawać ale to potężny subsystem więc będzie znajdować
+          na najwyższej warstwie, z kolei proces służący za rejestrowanie
+          logów, tzw. protokół diagnostyczne będzie znajdować się na najniższej
+          warstwie blisko jądra, ponieważ nie jest on zbyt skomplikowany w
+          porównaniu do na przykład przeglądarki, warstwa środkowa
+          zarezerowana jest dla różnej maści serwerów. Najproście rzecz ujmując
+          podstawowe usługi znajdują się na najniższej warstwie, usługi
+          pomocnicze na warstwie środkowej, a aplikacje, które kontroluje już
+          sam użytkownik będą znajdować się na samej górze. Procesy mogą
+          komunikować się z innymi procesami o ile te znajdują się na tym
+          samym lub niższym poziomie. Używanie tego rozdzaju podziału, może
+          być kłopotliwe ponieważ obecne serwery nie są już tak prostym
+          oprogramowaniem więc powinny znajdować się tej samej warstwie co
+          przeglądarka czy klient pocztowy, jednak to te aplikacje mogą
+          wykorzystywać serwery do realizacji zadań użytkownika, więc ich
+          miejsce jest raczej na warstwie centralnej (środkowej).
+        </p>
+        <h2 id="1.4.users">1.4. Użytkownicy</h2>
+        <p>
+          Użytkownicy w Linksie są odwzorowaniem rzeczywistych obiektów, czyli
+          <em>encją</em>. Użytkownicy mają prawo do uruchamiania procesów oraz
+          posiadnia (bycia właścielem) plików. Jądro nie rozpoznaje
+          użytkowników po ich nazwach, tak jak mają w zwyczaju to ludzie,
+          używa ono identyfikatorów <strong>userid</strong> w skrócie
+          <strong>UID</strong>. Identyfikatory są przedstawiane za pomocą 
+          liczb. 
+        </p>
+        <p>
+          Użytkownicy istnieją wyłącznie po to aby wyznaczać granice. Każdy
+          proces ma swojego właściela, dlatego też mówi się że proces
+          uruchamia się z uprawnieniami takiego a takiego użytkownika.
+          Użytkownicy mogą uruchamiać i konczyć procesy w własnych granicach
+          (tylko te, których są właścicielami), przez co nie mogą wpływać na
+          procesy innych użytkowników. Poza procesami, użytkownicy mogą 
+          tworzyć własne pliki, których automatycznie stają się właścicielami.
+          Mogą oni decydować czy chcą się nimi dzielić, ustalając im
+          odpowiednie uprawnienia.
+        </p>
+        <p>
+          Poza użytkownikami przypisanymi do konkretnych osób (raczej
+          spotkamy jednego), istnieje kilku dodatkowych specjalnych 
+          użytkowników, głównie mają oni na celu ograniczenie uprawnień
+          serwerów. Po za tymi specjalnymi istnieje jeszcze użytkownik
+          <strong>root</strong>, którego nie tyczą się zapisane powyżej
+          ograniczenia dlatego jest on nazywany <em>superużytkownikiem</em>.
+        </p>
+        <p>
+          Osoba pracująca na koncie użytkownika <em>root</em>, nazywana jest
+          <em>administratorem systemu</em>. <em>Root</em> może kończyć
+          procesy innych użytkowników, przeglądać cudze pliki czy instalować
+          oprogramowanie z repozytorium. Praca na tym koncie jest dość
+          niebezpieczna z punktu widzenia systemu, ponieważ ten użytkownik
+          jest wstanie wykonać czynności prowadzące do zniszczenia całego
+          systemu. Na Linuksie <em>root</em> ma do tego pełne prawo, dlatego
+          projektancji dystrybucji starają się ograniczyć konieczność pracy
+          z wykorzystaniem tego użytkownika.
+        </p>
+        <p>
+          Innym tworem podobnym to użytkowników są <strong>grupy</strong>.
+          Grupy są zbiorem użytkowników, a ich zadaniem jest współdzielenie
+          plików wewnątrz jednej grupy, między jej użytkownikami.
+        </p>
+        <h1 id="2.linuxbasics">2. Podstawy obsługi Linuksa</h1>
+        <p>
+          W tym rozdziale przedstawione zostaną podstawy obsługi systemu
+          Linux, oczywiście z poziomu powłoki, ponieważ inne sposóby
+          zależą w dużej mierze od programów, które do tego celu będziemy
+          wykorzystywać. Takich programów może być kilka, powłok
+          również dostępnych jest kilka rodzajów, jednak sam program powłoki
+          nie będzie wpływać na prezentowane w tym rozdziale czynności. Ten
+          rozdział zaczniem od tego czy jest powłoka.
+        </p>
+        <h2 id="2.1.shells">2.1. Powłoka</h2>
+        <p>
+          <strong>Powłoka</strong> jest chyba jednym z najistoniejszych 
+          komponentów systemu
+          Linux, pozwala ona na uruchamianie róznych poleceń wydawanych przez
+          użytkownika. Powłoki są również małymi środowiskami programistycznymi.
+          Nie które narzędzia systemowe są <strong>skryptami powłoki</strong> - 
+          plikami tekstowymi zawierającymi zbiór wykonywanych kolejno (jedno po
+          drugim) poleceń powłoki.
+        </p>
+        <p>
+          Pierwotną powłoką była <strong>powłoka Bourna</strong>, opracowana
+          jeszcze dla systemu UNIX w laboratoriach <em>Bell Labs</em>. Mimo
+          niezbyt częstego wykorzystywania, powłoka ta jest stałym kompenetem
+          nie tylko systemu Linux, ale i innych systemów uniksopodbnych.
+          Obecnie wykorzystywaną powłoką jest <strong>BASH</strong> - 
+          ulepszona wersja oryginalnej powłoki. Korzystając z róznych
+          dystrybucji, domyślna powłoka może być inna. Ten materiał zakłada
+          wykorzystanie powłoki BASH, szczególnie w rozdziale poświęconym 
+          skryptom powłoki.
+        </p>
+        <h2 id="2.2.shellusage">2.2. Korzystanie z powłoki</h2>
+        <p>
+          Dostęp do powłoki może odbywać się w dwojaki sposób wykorzystać
+          możemy wbudowaną w każdą dystrybucję konsole, nie zależnie od
+          instalacji wybranej przez nas dystrybucji. Jeśli jest to dystrybucja
+          skierowana do komputery biurkowe, to możemy skorzystać z wbudowanego
+          programu <em>terminal</em>. Po uruchomieniu okna powłoki, w prawym
+          górnym rogu pojawi się <strong>symbol zachęty</strong>. Jest to ciąg
+          znaków wskazujący wiersz, w którym będziemy wprowadzać polecenia.
+          Znak zachęty może przyjmować różną formę:
+        </p>
+        <ul>
+          <li><code class="code-inline">użytkownik@host:ścieżka$</code> - 
+            <code class="code-inline">użytkownik</code> - nazwa użytkownika,
+            <code class="code-inline">host</code> - nazwa komputera,
+            <code class="code-inline">ścieżka</code> - obecna ścieżka
+            (czym jest ścieżka, będzie za chwilę). Tego typu symbol zachęty
+            stosowany jest w dystrybucjach opartych na GNU/Linux Debian takich
+            Linux Mint (Mint oparty jest na Ubuntu, a Ubuntu na GNU/Linux
+            Debian) czy Ubuntu.</li>
+          <li><code class="code-inline">[użytkownik@host:katalog]$</code> -
+            <code class="code-inline">użytkownik</code> i
+            <code class="code-inline">host</code> podobnie jak wyżej,
+            <code class="code-inline">katalog</code> - katalog w którym się
+            obecnie znajdujemy, z tego typu znakiem zachęty spotkamy się
+            w dystrybucjach RHEL/Fedora/CentOS oraz Arch Linux.</li>
+          <li><code class="code-inline">bash-wersja$</code> - Originalny symbol
+            zachęty powłoki BASH, <code class="code-inline">wersja</code>
+            przedstawia wersję wykorzystywanej powłoki, spotkamy go
+            w ręcznych instalacjach powłoki (kompilacji kodu źródłowego)</li>
+          <li><code class="code-inline">$</code> - symbol zachęty
+            wykorzystywany w celu zaoszczędzenia miejsca w wierszu polecenia.</li>
+        </ul>
+        <p>
+          W tych symbolach jeden element jest stały jest to znak dolara
+          (<strong>$</strong>), oznacza on że polecenia wydawane będą jako
+          zwykły użytkownika, innym symbolem jest znak krzyżyka
+          (<strong>#</strong>), który mówi nam że polecenia będą uruchamiane
+          przez superużytkownika. Najprostsze polecenie jakie możemy wydać
+          jest użycie polecenia <strong>echo</strong>, które zwraca na
+          standardowe wyjście podajny mu jako argument ciągu znaków:
+        </p>
+<pre class="code-block">
+$ echo Witaj świecie.
+</pre>
+        <p>
+          W przykładach w tym materiale, jeśli polecenia ma zostać wydane z
+          uprawnieniami zywkłego użytkownika, przed poleceniem będzie
+          pojawiać się znak dolara (<strong>$</strong>), a jeśli polecenie ma 
+          być uruchomione z wyższymi uprawnieniami, będą one poprzedzone 
+          znakiem krzyżyka (<strong>#</strong>) oznaczający uprawnienia 
+          użytkownika <em>root</em>.
+        </p>
+        <h3 id="2.2.1.catcommand">2.2.1. Polecnie cat</h3>
+        <p>
+          Polecenie <strong>cat</strong> wypisuje na standardowe wyjście
+          podane w argumentach pliki jeden po drugim dokonując tym samym
+          połączenia (konkatenacji - stąd nazwa polecenia) na jednym
+          strumieniu zawartości tych wszystkich plików.
+        </p>
+<pre class="code-block">
+$ cat plik1 plik2 plik3 ...
+</pre>
+        <h3 id="2.2.2.stdinstdout">2.2.2. Standardowe wyjście i standardowe
+        wejście</h3>
+        <p>
+          Użyłem powyższego polecenia <em>cat</em>, aby nakreślić kontekst dla
+          omówienia dwóch podstawowcyh strumieni. Linux wykorzystuje strumień
+          wejściowy do odczytu danych, a strumień wyjściowy do ich zapisu. 
+          Źródłem strumienia wejściowego może być plik, urządzenie, terminal czy
+          strumień wyjściowy innego procesu. 
+        </p>
+        <p>
+          Strumień wejściowy możemy zaobserować poprzez uruchomienie polecenia
+          <em>cat</em> bez żadnego pliku. Program nie zwróci od razu znaku
+          zachęty, ponieważ oczekuje na dane. Możemy wpisać co kolwiek, a po
+          naciśnięciu klawisza <em>enter</em> polecenie powtórzy ten wpisany
+          tekst. Z racji tego iż nie podaliśmy mu żadnego pliku polecenie
+          zaczęło korzystać ze strumienia <strong>standardowego wejścia</strong>,
+          przekazanego
+          mu przez jądro, w tym przypadku był to terminal, którym zostało
+          uruchomione to polecenie. Aby zakończyć to polecenie należy wciśnąć
+          kombinacje klawiszy <em>Ctrl+d</em>, która oznacza koniec 
+          danych ze standardowego wejścia. 
+        </p>
+        <p>
+          Ze <strong>standardowym wyjściem</strong> jest podobnie, jądro
+          przezkazuje strumień standardowego wyjścia procesom, do którego
+          mogą one zapisywać swoje dane. Polecenie <em>cat</em> zawsze 
+          wypisuje swoje
+          dane na standardowe wyjście, które przez uruchomienie polecenia w
+          terminalu jest do niego podłączone. Dzięki temu mogliśmy zobaczyć
+          wypisywane przez polecenie dane.
+        </p>
+        <p>
+          Standardowe wyjście oraz standardowe wejście możemy zapisać
+          skrótowo <strong>stdout</strong> oraz <strong>stdin</strong>.
+          Takich nazw również należy się spodziewać w wszelakiej dokumentacji.
+        </p>
+        <p>
+          Prócz wspomanianych strumieni istnieje jeszcze trzeci strumień
+          wejścia-wyjścia - <strong>standardowy strumień błędów</strong>.
+          Opiszę go nieco później.
+        </p>
+        <p>
+          Strumienie są dość elastycznym mechanizem, można je zmusić do
+          odczytywania i zapisywania danych z innych miejsc niż terminal.
+          O przekierowaniach strumienii będzie nieco poźniej w tym rozdziale.
+        </p>
+        <h2 id="2.3.basicscommands">2.3. Podstawowe polecenia</h2>
+        <p>
+          Poniżej znajduje się pogrupowane przedstawienie najbardziej
+          podstawowych poleceń niezbędnych do pracy w powłoce systemu Linux.
+        </p>
+        <ul>
+          <li>polecenie <strong>ls</strong> - wypisuje zawartość katalogu.
+            Najważniejsze opcje:
+            <ul>
+              <li><strong>-a</strong> - powoduje wyświetlenie wszystkich
+              elementów, łącznie z tzw. <em>dot-files</em> (plikami ukrytymi,
+              plikami konfiguracyjnymi</li>
+              <li><strong>-l</strong> - wyświetlenie zwartości katalogu w
+              postaci kilku kolumnowej tabeli zawierającej m.in uprawnienia,
+              czas ostatniej modyfikacji plików, wielkość czy przypisanie 
+              pliku, katalogu do użytkownika oraz grupy.
+            </ul></li>
+          <li>polecenie <strong>cp</strong> - kopiujej pliki
+            Najważniejsze opcje:
+            <ul>
+              <li><strong>-p</strong> - zachowuje atrybuty kopiowanych plików,
+                na przykład takie jak uprawnienia czy przypisanego właściela i
+                grupę</li>
+              <li><strong>-r</strong> - kopiowanie rekurencyjne, kopiuje całe
+                katalogi wraz z podkatalogami oraz ich zawartością.</li>
+              <li><strong>-v</strong> - włącza komunikaty diagostyczne,
+                polecenie wypisuje co, gdzie kopiuje. Normalnie program nie
+                zwraca nic poza znakiem zachęty po zakończonym kopiowaniu.</li>
+            </ul></li>
+          <li>polecenie <strong>mv</strong> - w najprostszym przypadku
+            polecenie służy do zmiany nazwy pliku, jednak gdy drugim
+            argumentem będzie katalog, plik zostanie przeniesiony do tego
+            katalogu. Najważniejsze opcje:
+            <ul>
+              <li><strong>-v</strong> - włącza komunikaty diagnostyczne,
+                identycznie jak w przypadku <em>cp</em>.</li>
+            </ul></li>
+          <li>polecenie <strong>touch</strong> - aktualizuje czas modyfikacji
+            pliku, jeśli plik nie istnieje to zostanie utworzony pusty plik o
+            podanej w argumencie nazwie.</li>
+          <li>polecenie <strong>rm</strong> - polecenie służy do kasowania
+            plików. Kombinacja opcji <strong>-rf</strong> wykorzystywana jest
+            kasowania całych katalogów z podkatalogami. Najważniejsze opcje:
+            <ul>
+              <li><strong>-r</strong> - umożliwia, kasowanie rekurencyjne,
+                całych katalogów z podkatalogami.</li>
+              <li><strong>-f</strong> - przed każdym kasowaniem pliku polecenie
+                pyta czy jesteśmy pewni, że chcemy skasować ten plik. Ta opcja
+                pomija to pytanie wymusząjąc tak jakby kasowanie.</li>
+            </ul></li>
+          <li>polecenie <strong>echo</strong> - polecenie wypisuje ciąg znaków
+            podany jako argument na standardowe wyjście. Najważniejsze opcje:
+            <ul>
+              <li><strong>-n</strong> - ta opcja wyłącza przechodzenie
+                do nowej linii, po wypisaniu ciągu znaków.</li> 
+            </ul></li>  
+        </ul>
+        <h2 id="2.4.commandsworksondir">Polecenia działające na katalogach</h2>
+        <p>
+          Uniksy w tym i Linux, korzystają ze standardu hierarchi katalogów,
+          aby utrzymać w porządku dane przestrzeni użytkownika. Za początkowy
+          katalog uznaje się <strong>katalog główny</strong> oznaczany prawym 
+          ukośnikiem lub
+          slashem (<strong>/</strong>), wewnątrz tego katalogu znajdują się
+          pod katalogi, przechowujące konkretny rodzaj czy typ plików zgodny
+          z ich przeznaczeniem.
+        </p>
+        <p>
+          Droga do konkretnego katalogu nosi nazwę <strong>ścieżki</strong>.
+          Jeśli ścieżki zaczynają się od <em>/</em>, czyli od katalogu głównego
+          mamy doczynienia ze <strong>ścieżką bezwzględną</strong>. Elementy 
+          katalogów na
+          ścieżkach katalogi mogą być również wyrażane z pomocą jednej lub 
+          dwóch kropek.
+          Dwie kropki (<strong>..</strong>) oznaczają katalog nadrzędny
+          względem aktualnego katalogu, zaś jedna kropka oznacza
+          (<strong>.</strong>) aktualny katalog. Ścieżki nie zawierające
+          slasha na początku, czyli nie zaczynające się od katalogu głównego
+          są wówczas określane mianem <strong>ścieżki względnej</strong>.
+        </p>
+        <ul>
+          <li>polecenie <strong>cd</strong> - polecenie służy do zmiany
+            aktualnego katalogu, jako argument przyjmuje katalog, do którego
+            checemy przejść, równie dobrze możemy przenieść się w dowolne
+            miejsce w systemie plików (w katalogu głównym) podając jako
+            argument ścieżkę. Nie podanie argumentu spowowduje przejście do
+            katalogu domowego użytkownika.</li>
+          <li>polecenie <strong>mkdir</strong> - polecenie tworzy nowy katalog.
+            Jako argument przyjmuje nazwę katalogu lub ścieżkę. Najważniejsze 
+            opcje:
+            <ul>
+              <li><strong>-p</strong> - opcja tworzy katalogi nadrzędne podane
+                w ścieżce o ile te nie istnieją. Za pomocą odpowiednich
+                podstawień powłoki oraz tej opcji można tworzyć całe struktury
+                katalogowe.</li>
+            </ul></li>
+          <li>polecenie <strong>rmdir</strong> - usuwa katalog po warunkiem, że
+            jest on pusty. W przeciwnym razie polecenie zwróci błąd. Chcąc
+            usuwać całe katalogi z danymi oraz podkatalogami należy użyć
+            polecenia <em>rm -rf</em>.</li>
+        </ul>
+        <h3 id="2.4.1.globbing">2.4.1. Nazwy wieloznaczne.</h3>
+        <p>
+          Dzięki możliwością powłoki możemy porównywać proste wzorce z nazwami
+          plików w obrębie aktualnego katalogu roboczego (katalogu w którym
+          się znajdujemy) czynność ta nazywana jest rozwijaniem nazw lub
+          <em>globbingiem</em>. Jednym z elementów biorących udział w 
+          rozwiązywaniu nazw jest gwiazdka (<strong>*</strong>) oznaczająca
+          dowolną ilość dowolnych znaków. Dla przykładu poniższe polecenie:
+        </p>
+<pre class="code-block">
+$ echo *
+</pre>
+        <p>
+          Zwróci nazwy wszystkich plików i katalogów  znajdujących się w 
+          katalogu. Innym
+          znakiem wykorzystywanym przy nazwach wieloznacznych jest
+          znak zapytania (<strong>?</strong>) reprezentuje on jeden dowolny
+          znak, dla wzorca <em>b?at</em> pasującymi nazwami mogą być
+          <em>blat</em> oraz <em>brat</em>. Rozwinięcia nazw dokonuje powłoka
+          przed uruchomieniem, więc jeśli chcemy aby, któreś ze znaków 
+          wieloznacznych trafiło do polecnie to należy umieść je w pojedyńczych
+          cudzysłowach.
+        </p>
+        <h2 id="2.5.proxycommands">2.5. Polecenia pośredniczące</h2>
+        <ul>
+          <li>polecenie <strong>grep</strong> - wyszukuje wzorzec
+          w podanym pliku. Polecenie to korzysta z systemu wzorców nazwanych
+          <strong>wyrażeniami regularnymi</strong>. Najważniejszymi opcjami:
+          <ul>
+            <li><strong>-i</strong> - wyłącza rozróżnianie małych i
+            wielkich liter.</li>
+            <li><strong>-v</strong> - podwoduje odwrócenie wyszukiwania,
+            zwracane są wyniki nie pasujące do wzorca.</li>
+            <li><strong>-e</strong> - wykorzystuje rozszerzony zestaw 
+            instrukcji pozwalajacych na tworzenie wyrażeń regularnych.</li>
+            <li><strong>-o</strong> - opcja powoduje zwrócenie dokładnie
+            tylko tych znaków pasujących do wzorca. Normalnie polecenie zwraca
+            linię z elementami pasującymi do wzorca, w przypadku wielu plików
+            zwraca również nazwę pliku.</li>
+          </ul>
+          Tworzenie wyrażeń regularnych oraz więcej opcji tego polecenia
+          znajduje się na stronie podręcznika uruchamianej poleceniem:
+<pre class="code-block">
+$ man grep
+</pre>
+          Do najważniejszych wyrażeń, które każdy powinien znać należą:
+          <ul>
+            <li><strong>.*</strong> - oznaczające dowolną ilość dowolnych
+              znaków.</li>
+            <li><strong>.</strong> - oznacza jeden dowolny znak.</li>
+          </ul></li>
+          <li>polecenie <strong>less</strong> - wypisuje dane z pliku, lub
+            ze strumienia wykorzysując podział na strony. Jedna strona to jeden
+            ekran. Następne strony są wyświetlane za naciśnięciem <em>spacji</em>
+            stronę możemy cofnąć klawiszem <em>b</em>, zakończyć przeglądanie
+            danych klawiszem <em>q</em>. Dane możemy przeglądać linia po linii
+            używając strzałek. Możliwe jest również wyszukiwanie fraz w danych
+            za pomocą <em>/</em> (wyszukiwanie w przód) lub za pomocą 
+            <em>?</em> (wyszukiwanie w tył).</li>
+          <li>polecenie <strong>pwd</strong> - wyświetla obecny katalog
+            roboczy powłoki (świeżkę na której się znajdujemy). Polecenie
+            niepozorne choć przydatne, ze względu na dowiązania symboliczne
+            (będzie o nich w dalszej części materiału), które mogą przesłaniać
+            ścieżkę wyświetlaną w znaku zachęty. Najważnejsza opcja jest
+            uruchamiana, gdy nie ma żadnej opcji, więc jej opis pominę.
+            Warto dodać, że obecne systemy posiadają polecenie <em>pwd</em>
+            wbudowane w powłokę. Dlatego też opcja <strong>-P</strong>
+            rozwijająca fizyczne ścieżki nie jest automatycznie uruchamiana
+            w przypadku poprostu wydania polecenia <em>pwd</em>, prawdziwe
+            polecenie <em>pwd</em> uruchamiamy:
+<pre class="code-block">
+$ /usr/bin/pwd
+</pre>
+          </li>
+          <li>polecenie <strong>diff</strong> - wszukuje różnice pomiędzy
+            dowoma plikami tekstowymi. Polecenie to posiada wiele różnych opcji
+            formatowania danych wyjściowych, najbardziej czytelnym pozostaje
+            chyba użycie opcji <strong>-u</strong>. Polecenie wykorzystywane
+            programistów oraz system kontroli wersji git.</li>
+          <li>polecenie <strong>file</strong> - polecenie zwraca format pliku
+            podanego jako argument. W uniksach nie potrzeby stosowania
+            rozszerzeń plików, więc to polecenie może pomóc nam dowiedzieć
+            się co zawiera plik.</li>
+          <li>polecenie <strong>find</strong> i <strong>locate</strong> -
+            polecenia te służą do wyszukiwania plików w systemie. Polecenie
+            <em>find</em> wymaga podania katalogu po nazwie polecenia, nazwy
+            wyszukiwanego pliki po opcji <strong>-name</strong> oraz opcji
+            <strong>-print</strong>, która powoduje wyświetlenie na strumieniu
+            standardowego wyjścia nazw plików pasujących do wzorca podanego w
+            opcji <em>-name</em>. Polecenie <strong>locate</strong> na podobne
+            zastosowanie jak <em>find</em> działa jednak od niego szybciej
+            ponieważ bazuje na indeksie przygotowywanym co jakiś czas przez
+            system operacyjny. Może być ono bezużyteczne, kiedy szukamy nowych
+            plików, gdyż mogą być one nie ujęte jeszcze w indeksie.</li>
+          <li>polecenie <strong>head</strong> i <strong>tail</strong> -
+            te polecenia służa do prezentowania wycinka danych czy to ze
+            strumienia lub z pliku. W przypadku polecenia <em>head</em>
+            prezentowane jest <em>n</em> pierwszych linii, domyslnie 10;
+            z kolei polecenie tail prezentuje <em>n</em> koncowych linii.
+            Liczbę linii podajemy bezpośrednio po znaku myślnika
+            (<strong>-</strong>). Z tych dwóch poleceń polecenie <em>tail</em>
+            ma nieco większe zastosowanie niż polecenie <em>head</em>. Mozemy
+            wywołać to polecenie aby wyświetlić dane od linii, numer linii
+            podajemy po znaku plusa (<strong>+</strong>), inna właściwością
+            chyba najważniejszą jest wyświetlanie danych na żywo, używając
+            opcji <strong>-f</strong>, a następnie nazwy pliku lub myślnika
+            gdy dane pochodzą ze strumienia wyjściowego innego polecenia.</li>
+          <li>polecenie <strong>sort</strong> - układa wiersze z pliku
+            tekstowego w porządku alfabetycznym, jeśli na początku wierszy
+            znajdują się liczby to aby je posortować należy użyć opcji
+            <strong>-n</strong>, aby odwrócić sortowanie możemy użyć opcji
+            <strong>-r</strong>.</li>
+        </ul>
+        <h2 id="2.6.passwdandchsh">2.6. Zmiana hasła i powłoki</h2>
+        <p>
+          W celu zmiany hasła należy użyć polecenia <strong>passwd</strong>.
+          Polecenie poprosi o podanie obecnego hasła, po zatwierdzeniu go
+          zostaniemy poproszeni o nowe hasło i jego potwierdzenie (wpisanie
+          ponowne nowego hasła).
+        </p>
+        <p>
+          Zmiana aktywnej powłoki odbywa się za pomocą polecenia
+          <strong>chsh</strong>, albo użyć poleceń odpowiadających nazwom
+          innych powłok, kolejno <strong>ksh</strong> - Korn SHell,
+          <strong>tcsh</strong> - TENEX C SHell. Użycie tych poleceń w 
+          aktywnej powłoce, spowoduje uruchomienie podpowłoki. Zamkniecie
+          jej spowoduje powrót do pierwotnej powłoki.
+        </p>
+        <h2 id="2.7.dotfiles">2.7. Pliki z kropką</h2>
+        <p>
+          Przeglądając pliki nawet w własnym katalogu domowym możemy znaleźć
+          pliki, których nazwa zaczyna się od kropki. Nie które źródła mówią
+          tym o że te pliki są ukryte. Do takich wniosków może dojść,
+          ponieważ te pliki nie są domyślnie wyświetlane przez polecenie
+          <em>ls</em> bez opcji <em>-a</em> lub przez menedżery plików dostępne
+          w desktopowych wersja Linuksa. Jednak te pliki nie różnia się niczym
+          od inny plików, poza właśnie tym przypadkiem opisanym powyżej.
+          Oprócz plików, nazwy katalogów również mogą zaczynać się od kropki.
+          Za pomocą prostego wzorca możemy wyświetlić wszystkie <em>dot-files</em>,
+          jeśli wsród nich trafi się katalog, wówczas zostanie wyświetlona jego
+          nazwa a pod nią jego zawartość. 
+        </p>
+<pre class="code-block">
+$ ls .??*
+</pre>
+        <h2 id="2.8.shellandenvvars">2.8. Zmienne środowiskowe i powłoki</h2>
+        <p>
+          Powłoka może przechowywać zmienne tymczasowe, które mogą przechowywać
+          różne wartości, mogą one kontrolować zachowanie samej powłoki jedną
+          z takich zmiennych jest zmienna <strong>PS1</strong> zawierająca
+          znak zachęty. Takie zmienne najczęsćiej wykorzystywane są w 
+          skryptach powłoki i nazywane są <strong>zmiennymi powłoki</strong>.
+          Definicja zmiennych tego składa się z nazwy zmiennej, operatora
+          przypisania (znaku równości <strong>=</strong>) oraz wartości samej
+          zmiennej.
+        </p>
+<pre class="code-block">
+$ zmienna=12
+</pre>
+        <p>
+          Odwołać się do wartości zmiennej możemy w dowolnym momencie, podając
+          jej nazwę poprzedzoną znakiem dolara (<strong>$</strong>).
+        </p>
+<pre class="code-block">
+$ echo $zmienna
+</pre>
+        <p>
+          <strong>Zmienna środowiskowa</strong> jest podobna do zmiennej
+          powłoki, ale nie jest ściśle związana z powłoką, bowiem do pamięci
+          zmiennych środowiskowych systemach uniksopodobnych mają wszystkie
+          aplikacje, system operacyjny przezkazuje je do każdego programu
+          uruchomionego w powłoce, programy te nie mają jednak dostępu do
+          zmiennych powłoki. Zmienne środowiskowe definiuje się w ten sam 
+          sposób
+          jak zmienne powłoki, jedna aby taka zmienna stała się zmienną
+          środowiskową musi zostać przeniesiona do pamięci tych zmiennych
+          za pomocą polecenia <strong>export</strong>.
+        </p>
+<pre class="code-block">
+$ zmienna=21
+$ export zmienna
+</pre>
+        <p>
+          Nie które programy mogą wykorzystywać zmienne środowiskowe do
+          własnej konfiguracji. Dla przykładu niektóre programy uruchamiane
+          w powłoce korzystają ze zmiennej środowiskowej <em>EDITOR</em>
+          definiujące domyślny program do edycji plików tekstowych.
+          Wykorzystanie zmiennych środowiskowych zapewne jest opisane w
+          na stronie podręcznika programu.
+        </p>
+        <h2 id="2.9path">2.9. Ścieżka poleceń</h2>
+        <p>
+          Istnieje specjalna zmienna środowiskowa <strong>PATH</strong>,
+          przechowywująca katalogi, w których to powłoka będzie szukać
+          programów odpowiadających wpisanym poleceniom. Jeśli wśród
+          przeszukiwanych katalogów znajduje się kilka programów o tej samej
+          nazwie to powłoka uruchomi pierwszy przez nią znaleziony. Ścieżki
+          katalogów w tej zmiennej odzielone są dwukropkiem (<strong>:</strong>).
+          Posiadając swoje programy, możemy również umieść katalog z nim
+          wewnątrz zmiennej <em>$PATH</em>. Opcje dodanie katalogu są dwie
+          i mogą mieć wpływ na funkcjonowanie systemu. Możemy dodać nasz
+          katalog na początku zmiennej, wówczas powłoka zacznie od niego
+          poszukiwania, jednak należy pamiętąc przy tym, aby nazwy programów
+          nie pokrywały się istniejącymi dotychczas poleceniami.
+        </p>
+<pre class="code-block">
+$ PATH=kat:${PATH}
+</pre>
+        <p>
+          Na powyższym przykładzie <code class="code-inline">kat</code>, to 
+          nasz katalog z oprogramowaniem. Możemy jednak skorzystać
+          bezpieczeniejszego rozwiązania - dopisać nasz katalog na końcu listy
+          katalogów zmiennej <em>PATH</em>, wówczas nawet jeśli nasz program 
+          będzie
+          nazywać się jak jedno z instniejących już poleceń w systemie, nie
+          będzie miało to wpływu na działanie systemu.
+        </p>
+<pre class="code-block">
+$ PATH=${PATH}:kat
+</pre>
+        <p>
+          Na powyższych przykładach użyłem znaku dolara wraz z nawiasami
+          klamrowymi. Jest to sposób na separacje nazwy zmiennej od innych
+          znaków, po to aby powłoka nie potraktowała jak w przykładzie powyżej
+          ciągu znaków ":kat" jak części nazwy zmiennej. Przedstawione w
+          przykładach polecenia są nie groźne, jeśli uszkodzimy zawartość
+          zmiennej <em>PATH</em>, to należy zamknąć okno terminala i otworzyć
+          nowe. 
+        </p>
+        <h2 id="2.10.specialchars">2.10. Znaki specjalne</h2>
+        <p>
+          W systemach uniksopodbnych wiele znaków ma szczególne znaczenie.
+          Poniżej znajduje się tabela przedstawiająca wykorzystwane podczas
+          używania systemu znaki specjalne.
+        </p>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Znak</th>
+              <th>Nazwa</th>
+              <th>Opis</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>*</strong></td>
+              <td>gwiazdka</td>
+              <td>Wyrażenie regularne, znak nazwy wieloznacznej</td>
+            </tr>
+            <tr>
+              <td><strong>.</strong></td>
+              <td>kropka</td>
+              <td>Aktualny katalog, ogranicznik nazwy pliku lub hosta</td>
+            </tr>
+            <tr>
+              <td><strong>!</strong></td>
+              <td>wykrzyknik</td>
+              <td>Negacja, historia poleceń</td>
+            </tr>
+            <tr>
+              <td><strong>|</strong></td>
+              <td>potok</td>
+              <td>Potoki poleceń</td>
+            </tr>
+            <tr>
+              <td><strong>/</strong></td>
+              <td>slash</td>
+              <td>Ogranicznik katalogów, polecenie szukania</td>
+            </tr>
+            <tr>
+              <td><strong>\</strong></td>
+              <td>backslash</td>
+              <td>Literały, makra (nigdy katalogi)</td>
+            </tr>
+            <tr>
+              <td><strong>$</strong></td>
+              <td>dolar</td>
+              <td>Oznaczenie zmiennych, koniec wiersza</td>
+            </tr>
+            <tr>
+              <td><strong>'</strong></td>
+              <td>pojedynczy cudzysłów</td>
+              <td>Ciągi znaków literałów</td>
+            </tr>
+            <tr>
+              <td><strong>`</strong></td>
+              <td>lewy cudzysłów</td>
+              <td>Podmiana polecenia</td>
+            </tr>
+            <tr>
+              <td><strong>"</strong></td>
+              <td>podwójny cudzysłów</td>
+              <td>Ciągi znaków pseudoliterałów</td>
+            </tr>
+            <tr>
+              <td><strong>^</strong></td>
+              <td>daszek</td>
+              <td>Negacja, początek wiersza</td>
+            </tr>
+            <tr>
+              <td><strong>~</strong></td>
+              <td>tylda</td>
+              <td>Negacja, skrót katalogu</td>
+            </tr>
+            <tr>
+              <td><strong>#</strong></td>
+              <td>krzyżyk</td>
+              <td>Komentarze, dyrektywy preprocesora, podmiany</td>
+            </tr>
+            <tr>
+              <td><strong>[]</strong></td>
+              <td>nawiasy kwadratowe</td>
+              <td>Zakresy</td>
+            </tr>
+            <tr>
+              <td><strong>{}</strong></td>
+              <td>nawiasy klamrowe</td>
+              <td>Bloki poleceń, zakresy</td>
+            </tr>
+            <tr>
+              <td><strong>_</strong></td>
+              <td>podkreślenie</td>
+              <td>Prosty zamiennik spacji</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Często możemy napotkać symbol daszka (<strong>^</strong>) zastępujący
+          klawisz <em>Control</em>, przez co zapis <em>^C</em> jest równe
+          kombinacji klawiszy <em>Ctrl+C</em>.
+        </p>
+        <h2 id="2.11.commandlineedit">2.11. Edycja wiersza poleceń</h2>
+        <p>
+          Znak zachęty wskazuje wiersz polecenia, który możemy edytować
+          przesuwając kursor za pomocą strzałek. Chcąc powtórzyć jakąś czynność
+          nie musimy pisać na nowo tego polecenia, możemy wybrać je z historii
+          poleceń za pomocą strzałek w góre i w dół. Warto jednak obsługę
+          wiersza poleceń za pomocą strzałek odstawić na bok. Wykorzystując
+          skróty z poniższej tabeli, możemy nimi śmiało zastąpić strzałki. 
+          Istnieją ku temu dwa powody. 
+        </p>
+        <ul>
+          <li>Nie wszystkie klawiatury posiadają strzałki, lub ich użycie jest
+            strasznie nie konfortowe.</li>
+          <li>Wiele programów uniksowych (w tym i linuksowych) obsługuje się
+            za pomocą tzw. biblioteki <strong>GNU Readline</strong> (skróty
+            klawiszowe w tabeli poniżej), a nie za pomocą strzałek.</li>
+        </ul>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Klawisze</th>
+              <th>Operacja</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+               <td><em>Ctrl+b</em></td>
+               <td>Przesunięcie kursora w lewo</td>
+            </tr>
+            <tr>
+              <td><em>Ctrl+f</em></td>
+              <td>Przesunięcie kursora w prawo</td>
+            </tr>
+            <tr>
+              <td><em>Ctrl+p</em></td>
+              <td>Powrót do poprzedniego polecenia (lub przesunięcie kursora
+                w górę)</td>
+            </tr>
+            <tr>
+              <td><em>Ctrl+n</em></td>
+              <td>Przejście do następnego polecenia (lub przesunięcie klawisza
+                w dół)</td>
+            </tr>
+            <tr>
+              <td><em>Ctrl+a</em></td>
+              <td>Przesunięcie kursora na początek wiersza</td> 
+            </tr>
+            <tr>
+              <td><em>Ctrl+e</em></td>
+              <td>Przesunięcie kursora na koniec wiesza</td>
+            </tr>
+            <tr>
+              <td><em>Ctrl+w</em></td>
+              <td>Usunięcie słowa poprzedzjącego kursor</td>
+            </tr>
+            <tr>
+              <td><em>Ctrl+u</em></td>
+              <td>Usunięcie tekstu od kursora do początku wiersza</td>
+            </tr>
+            <tr>
+              <td><em>Ctrl+k</em></td>
+              <td>Usunięcie tekstu od kursora do końca wiersza</td>
+            </tr>
+            <tr>
+              <td><em>Ctrl+Y</em></td>
+              <td>Wyklejanie usuniętego tekstu (na przykłda usuniętego
+                poleceniem <em>Ctrl+u</em>)</td>
+            </tr>
+            <tr>
+              <td><em>Ctrl+h</em></td>
+              <td>Substytut klawisza <em>Backspace</em></td> 
+            </tr>
+            <tr>
+              <td><em>Ctrl+d</em></td>
+              <td>Substytut klawisza <em>delete</em></td>
+            </tr>
+            <tr>
+              <td><em>Ctrl+j, Ctrl+m</em></td>
+              <td>Substytut klawisza <em>enter</em></td>
+            </tr>
+          </tbody>
+        </table>
+        <h2 id="2.12.texteditors">2.12. Edytory tekstu</h2>
+        <p>
+          Na Linuksie mamy podobną ilość edytorów tekstowych do wyboru jak w
+          przypadku systemów MS Windows czy Apple macOS. Jak nie więcej.
+          Co ciekawe macOS, również jest system uniksopodobnym. Więc to co
+          zostało omówione w tym rozdziale również będzie kompatybilne z tym
+          systemem. Wracając jednak do edytorów tekstu. Tak naprawdę to
+          istnieją dwa, na które warto zwrócić uwagę, oba są standardem jeśli
+          chodzi o edycje tekstu i oba wymagają nauki obsługi. Wybór
+          pozostawiam do roztrzygniecia Tobie. 
+        </p>
+        <ul>
+          <li><strong>GNU Emacs</strong> - edytor w którym można zrobić
+            wszystko, od pisania tekstów do wykorzystania go jako menedżer
+            okien. Jego obsługa nie jest zbyt szybka i często by się
+            wydawało proste czynności wymagają użycia kliku poleceń. Wydaje
+            mi się, że nie ma bardziej rozbudowanego uniksowego programu.
+            Pomoc w obsłudze tego edytora, możemy uruchomić naciskając
+            <em>Ctrl+H</em> następnie klawisz <em>t</em>.</li>
+          <li><strong>VIm</strong> - szybki edytor uruchamiany w terminalu,
+            choć można zainstalować wersję graficzną. Obsługuje się go trochę 
+            jak grę. VIm, jest nieco bardziej intuicyjny od Emacsa. Warto
+            dodać, że edytor ten bywa domyślnie doinstalowywany do wielu
+            dystrybucji jak i innych systemów uniksowych, choć tam może
+            występować w podstawowej wersji <strong>Vi</strong>. Chcąc
+            nauczyć się edytora <em>Vim</em>, możemy skorzystać z
+            z instalowanego wraz z edytorem tutoriala, uruchamianego poleceniem
+            <strong>vimtutor</strong>.</li>
+        </ul>
+        <p>
+          Jeśli potrzebujemy edytora, który jest wstanie zatąpić nam
+          środowisko graficzne, wybierzmy edytor <em>Emacs</em>. Jeśli jednak 
+          chcemy
+          poprostu edytować pliki, w każdym możliwym środowisku wybierzmy
+          edytor <em>Vim</em>. Osobiście jestem przyzwyczajony już do edytora
+          <em>Vim</em>.
+        </p>
+        <h2 id="2.13.gettinghelp">2.13. Uzyskiwanie pomocy</h2>
+        <p>
+          Dystrybucje Linuksa są rozporowadzane z dużą ilością różnej
+          dokumentacji. Informacje temat poleceń możemy znaleźć na stronach
+          podręcznika, wydając polecenie <strong>man</strong> i podając jako
+          argument interesujące nas polecenie. Na przykład:
+        </p>
+<pre class="code-block">
+$ man ls
+</pre>
+        <p>
+          W ten sposób uruchomimy stronę podręcznika polecenia <em>ls</em>.
+          Większosć stron podręcznika podaje suche informacje na temat
+          polecenia, nie ma co tam szukać jakiś samouczków. Opcje podawana są
+          usystematyzowany sposób (najczęściej alfabetyczny), nie które
+          strony podręcznika mogą zawierać przykłady.
+        </p>
+        <p>
+          Strony podręcznika możemy przeszukać pod kątem słowa kluczowego, za
+          pomocą opcji <strong>-k</strong>, polecenia <em>man</em>. Wynikiem
+          tego polecenie jest lista poleceń, oraz krótki opis zawierający
+          podane słowo kluczowe, ciekawa jest liczba podana w nawiasie obok
+          nazwy polecenia, jest to <strong>numer rozdziału</strong>.
+        </p>
+        <p>
+          Strony podręcznika są podzielone rozdziały oznaczone numerami, każdy
+          z nich zawiera innego rodzaju strony podręcznika. Rozdziały
+          zostały opisane w tabeli poniżej. 
+        </p>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Rozdział</th>
+              <th>Opis</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1</strong></td>
+              <td>Polecenia użytkownika</td>
+            </tr>
+            <tr>
+              <td><strong>2</strong></td>
+              <td>Niskopoziomowe wywołania systemowe</td>
+            </tr>
+            <tr>
+              <td><strong>3</strong></td>
+              <td>Dokunentacja wysokopoziomowych bibliotek Uniksa</td>
+            </tr>
+            <tr>
+              <td><strong>4</strong></td>
+              <td>Informacje o interfejsach urządzeń i sterownikach</td>
+            </tr>
+            <tr>
+              <td><strong>5</strong></td>
+              <td>Opisy plików (konfiguracji systemu)</td>
+            </tr>
+            <tr>
+              <td><strong>6</strong></td>
+              <td>Gry</td>
+            </tr>
+            <tr>
+              <td><strong>7</strong></td>
+              <td>Formaty plików, konwencje i kodowaniaa (ASCII, przyrostki itd)</td>
+            </tr>
+            <tr>
+              <td><strong>8</strong></td>
+              <td>Polecenia systemowe i serwery</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Jak uzupełnienie tego materiału świetnie sprawdzą się rodziały
+          1,5,7 i 8. Wywołanie konkretnej strony a danego rozdziału wymaga
+          podania jego numeru jak pierwszego argumentu, wówczas polecenie
+          będzie wszukać informacji na temat podanego słowa w danym rodziale.
+          Świetnym przykładem może być, chęć sprawdzenia na stronach
+          podręcznika pliku <em>/etc/passwd</em>. Należy wydać polecenie:
+        </p>
+<pre class="code-block">
+$ man 5 passwd
+</pre>
+        <p>
+          Dość często wykorzystywanym sposóbem na uzyskanie informacji o
+          poleceniach mogą być same polecenia, sprawdźmy czy możemy je
+          uruchomić z opcją <strong>-h</strong> lub <strong>--help</strong>.
+        </p>
+        <p>
+          Projekt GNU jakiś czas temu zadecydował, że będzie używać innego
+          formatu plików pomocy niż strony podręcznika, format nazywana jest
+          <strong>info</strong> lub <strong>texinfo</strong>. Format ten
+          zawiera więcej informacji choć jest od niego bardziej skomplikowany.
+          Przypomina prostą stronę internetowa, otworzoną w terminalowej
+          przeglądarce. Tego typu pliki pomocy uruchamiane są za pomocą
+          polecenia <strong>info</strong>, po czym podaje mu się jako argument
+          interesujące nas polecenie. 
+        </p>
+        <p>
+          Nie które z pakietów umieszczają swoją dokumentację w katalogu
+          <em>/usr/share/doc</em> nie zwracając uwagi na format. Warto
+          pamiętać o tych miejscach szukając pomocy, oczywiście pozostaje na
+          do dyspozycji jeszcze internet.
+        </p>
+        <h2 id="2.14.shellio">2.14. Wejście i wyjście powłoki</h2>
+        <p>
+          Omawiając po krótce powłokę, wspomniałem o strumieniach standardowego
+          wejścia i wyjścia. Wiele poleceń używa wyjścia aby wypisywać
+          wyniki działa lub komunikaty diagonstyczne. Jeśli nie chcemy ich
+          widzieć lub nie nadąrzymy ich analizować możemy je przekierować
+          na przykład do pliku, za pomocą znaku przekierowania (<strong>&gt;</strong>).
+        </p>
+        <p>
+          Używając tego znaku musimy omówić sobie jedną ważną rzecz, znak ten
+          powoduje nadpisanie wszystkiego co znajduje się w pliku. Tego typu
+          czynność nazywana jest <strong>wymazywaniem</strong>
+          (ang. <em>clobbering</em>). Możemy jednak zablokwać to działanie
+          za pomocą odpowiednich ustawień powłoki, dla BASH wystarczy użyć
+          polecenia <code class="code-inline">set -C</code>. Poza blokowaniem
+          wymazywania, istnieje jeszcze jeden znak przekierowania, który
+          powoduje dopisanie przekierowanego wyjścia do pliku:
+          <strong>&gt;&gt;</strong>.
+        </p>
+        <p>
+          Za pomocą przekierowań możemy w prosty sposób połączyć wyjście
+          jednego polecenia z wejściem innego. Służy temu znak <strong>potoku</strong>
+          (<strong>|</strong>). Postawienie ponowej kreski, pomiędzy
+          poleceniami w wierszu polecenia połączy wyjście pierwszego z wejściem
+          drugiego.
+        </p>
+        <h3 id="2.14.1.stderr">2.14.1 Standardowy strumień błędów</h3>
+        <p>
+          Korzystając powyższych znaków przekierowania polecenia, dane
+          wyjściowe programów zostaną przekierowane np. do pliku. Ale
+          komunikaty diagnostyczne nadal są wyświetlane. Dzieje się to dlatego
+          iż komunikaty diagnostyczny wykorzystują trzeci dodatkowy strumień
+          <strong>standardowy strumień błędów</strong> zapisywany skrótowo
+          <strong>stderr</strong>, który podobnie do <em>stdout</em> jest
+          podłączony do terminala.
+        </p>
+        <p>
+          Do przekierowania tego strumienia musimy użyć identyfikatorów
+          strumienii jest to liczba, którą posługuje się jądro do rozrózniania
+          strumieni. W fachowej
+          literaturze bądź dokumentacji możemy natknąć się na termin
+          <strong>deskryptor pliku</strong>. Taki identyfikator dla <em>stderr</em>
+          ma wartość <strong>2</strong>, a dla <em>stdout</em> <strong>1</strong>.
+          Chcąc przekierować <em>stderr</em> do innego pliku musimy podać jego
+          identyfikator przed znakiem przekierowania. Innym przypadkiem jest
+          przekierowanie <em>stderr</em> do tego samego pliku co <em>stdout</em>,
+          wówczas najprostszym sposób jest podłączenie strumienia błedów do
+          standardowego wyjścia za pomocą znaku <strong>&gt;&amp;</strong>
+          podając przekierowywany strumień po lewej stronie znaku (przed nim)
+          a strumień docelowy po prawej (za nim).
+        </p>
+<pre class="code-block">
+$ ls /ffffffff &gt;p 2&gt;&amp;1
+</pre>
+        <h3 id="2.14.2.stdin">2.14.2. Przekierowanie standardowego wejścia</h3>
+        <p>
+          Przekierowanie standardowego wejścia występuję dość rzadko ponieważ
+          większość poleceń przyjmuje plik jako argument, jednak może zdarzyć
+          się potrzeba przekierowania wejścia do polecenia. Służy temu
+          <strong>znak przekierowania wejścia</strong> <strong>&lt;</strong>.
+        </p>
+        <h2 id="2.15.readingerrors">2.15. Odczytywanie komunikatów o błędach</h2>
+        <p>
+          Prędzej czy później gdzieś podczas naszej pracy z powłoką zdarzy
+          się błąd. Ważne jest aby umieć go odczytać i prawidłowo z
+          interpretować.
+        </p>
+        <p>
+          Sam komunikat składa się przeważnie z nazwy polecenia oraz
+          komunikatu błędu, w nie których przypadkach w komunikacie
+          znajduje się nazwa pliku, jednak dotyczy specyficznych komunikatów
+          o błędach. Poniżej znajduje się
+          lista, błędów z którym będziemy się spotykać podczas pracy z systemem 
+          Linux. 
+        </p>
+        <ul>
+          <li><strong>No such file or directory</strong>
+            (<em>nie ma takiego pliku lub katalogu</em>) - występuje gdy
+            plik lub katalog podany jak argument nie istnieje. Innym powodem
+            występowania takiego błędu może być błędnie zapisana nazwa
+            polecenia w skrypcie.</li>
+          <li><strong>File exists</strong> (<em>plik istnieje</em>) - ten
+            problem występuje w momencie gdy próbujemy stworzyć katalog o
+            nazwie pliku, który już istnieje.</li>
+          <li><strong>Not a directory</strong> (<em>nie jest katalogiem</em>),
+            <strong>Is a directory</strong> (<em>jest katalogiem</em>) - błąd
+            występuje w momencie gdy probujemy użycie pliku jak katalogu lub
+            katalogu jak pliku.</li>
+          <li><strong>No space left on device</strong> (<em>brak miejsca w 
+            urządzeniu</em>) - Na pamięci masowej, której próbujemy zapisać
+            dane brakuje wolnego miejsca.</li>
+          <li><strong>Permission denied</strong> 
+            (<em>niewystarczające uprawnienia</em>) - pojawienie się tego błędu
+            może mieć dwa powody, pierwszy to zapis lub odczyt informacji z
+            pliku, do którego nie mamy żadnych uprawnień; drugim jest próba
+            uruchomienia pliku/programu bez ustawionego bitu wykonania. O
+            uprawnieniach będzie w dalszej części tego rodziału.</li>
+          <li><strong>Operation not permitted</strong> (<em>brak zezwolenia
+            na wykonanie operacji</em>) - błąd występuje w momencie gdy
+            spróbujemy zakończyć proces nie należący do nas.</li>
+          <li><strong>Segmentation fault</strong> (<em>błąd segmentacji</em>) - 
+            błąd programisty. Program, który uruchomiliśmy próbował
+            użyskać dostęp do wycinka pamięci, którego nie miał żadnych
+            uprawnień i jego działanie zostało przerwane przez jądro. 
+            Najczęsciej polskie tłumaczenie tego błędu to
+            <em>Naruszenie ochrony pamięci</em>.</li>
+          <li><strong>Bus Error</strong></li>  (<em>błąd magistrali</em>) błąd
+            podobny do <em>Naruszenia ochrony pamięci</em>, jednak w tym
+            przypadku chodzi o dostęp do pamięci w sposób niewłaściwy, a nie
+            dostęp do innego obszaru pamięci.</li>
+        </ul>
+        <p>
+          Jeśli natrafimy na jeden z dwóch ostatnich błędów, to przyczyną mogą
+          być dane przekazane do programu, których on się nie spodziewał.
+        </p>
+        <h2 id="2.16.manipulatingprocesses">2.16. Przeglądanie procesów i
+          manipulowanie nimi</h2>
+        <p>
+          Każdy proces jest programem. Jądro pododobnie jak użytkowników 
+          procesy widzi za pomocą liczbowych identyfikator - 
+          <strong>process ID</strong> - <strong>PID</strong>. Za pomocą
+          polecenia <strong>ps</strong> możemy wylistować wszystkie procesy
+          uruchomione w powłoce. Domyślnie wynik polecenia podzielony jest na
+          cztery kolumny.
+        </p>
+        <ul>
+          <li><strong>PID</strong> - identyfikator procesu</li>
+          <li><strong>TTY</strong> - urządzenie terminala, na którym działa
+            dany proces.</li>
+          <li><strong>STAT</strong> - stan procesu, np. <strong>S</strong>
+            oznacza uśpieje procesu, zaś <strong>R</strong> - jego dzialanie.
+            Wszystkie oznaczenia znajdują się na stronie podręcznika 
+            polecenia.</li>
+          <li><strong>CMD</strong> - treść polecenia, warto jednak zaznaczyć,
+            że procesy mogą ją zmieniać.</li>
+             
+        </ul>
+        <p>
+          Polecenie <em>ps</em>, możemy obsługiwać za pomocą opcji zapisanych w
+          trzech stylach, jednak najbardziej powszechnym jest styl BSD, i to
+          zapis opcji w tym stylu przedstawie.
+        </p>
+        <ul>
+          <li><strong>ps x</strong> - wyświetla wszystkie procesy uruchomione
+            przez aktualnego użytkownika.</li>
+          <li><strong>ps ax</strong> - wyświetla wszystkie procesy działące
+            w systemie.</li>
+          <li><strong>ps u</strong> - wyświetla bardziej szczegółowe informacje
+            o procesach.</li>
+          <li><strong>ps w</strong> - podaje pełne nazwy poleceń, nie
+            ograniczając się do pojedyńczego wiersza.</li>
+        </ul>
+        <p>
+          Tak jak w przypadku innych poleceń, w poleceniu <em>ps</em>, również
+          możemy łączyć opcje, dla przykładu chcąc wyświetlić wszystkie
+          procesy w systemie wraz ze szczegółami należy wydać polecenie
+          <code class="code-inline">ps aux</code>.
+        </p>
+        <p>
+          Wyświetlenie informacji na temat, konkertnych procesów polega na
+          podaniu po opcjach identyfikatora procesu. 
+        </p>
+        <h3 id="2.16.1.processkilling">2.16.1. Przerywanie działania procesów</h3>
+        <p>
+          Możemy zakończyć działanie procesu poprzez wysłanie do niego
+          <strong>sygnału</strong> za pomocą polecenia <strong>kill</strong>.
+          Wykorzystują to polecenie, jądro systemu proszone jest wysłanie 
+          sygnału do wybranego procesu. Domyślnie wysyłanym sygnałem jest 
+          <strong>TERM</strong>, a polecenie do swojego działania potrzebuje
+          tylko identyfikatora <em>PID</em>. 
+        </p>
+        <p>
+          Proces możemy zatrzymać wysyłając do niego sygnał <strong>STOP</strong>.
+          po nazwie sygnału podajemy <em>PID</em>, tak zatrzymany proces da się
+          wznowić za pomocą sygnału <strong>CONT</strong>. Nazwy sygnałów
+          podajemy po myślniku (<strong>-</strong>).
+        </p>
+        <p>
+          Naciśnięcie kombinacji <em>Ctrl+c</em> podczas działania programu w
+          powłoce, jest równoznaczne z wysłaniem sygnału <strong>INT</strong>
+          (ang. <em>Interrupt</em> - przerwanie).
+        </p>
+        <p>
+          Jedną z metod zakończenia procesu jest natychmiastowe zakończenie
+          jego pracy oraz usunięcie go siłą z pamięci, jest to osiągalne
+          poprzez wysłanie do niego sygnału <strong>KILL</strong>. Jest to
+          ostateczność, gdy dany proces nie odpowiada na inne sygnały. Inne
+          sygnały dają procesom możliwość poprzątania po sobie.
+        </p>
+        <p>
+          Oczywiście nie należy przerywać pracy dowolnym procesom, kiedy nie
+          wiemy co robią.
+        </p>
+        <h3 id="2.16.2.jobcontol">2.16.2. Kontrola zadań</h3>
+        <p>
+          Powłoki posiadają mechanizm dzięki, któremu możemy zatrzymywać oraz
+          wznawiać prace procesów za pomocą kombinacji <em>Ctrl+z</em> oraz
+          poleceniami <strong>fg</strong>, <strong>bg</strong>. Ten mechanizm
+          nazywa się <strong>kontolą zadań</strong>. Podczas działania procesu
+          w powłoce, możemy wysłać sygnał <strong>TSTP</strong> (podobny do
+          sygnału STOP), a następnie kiedy zechcemy do niego wrócić to
+          wystarczy wydać polecenie <em>fg</em>, które wznowi działanie
+          polecenia w terminalu, lub polecenia <em>bg</em> wznawiającego
+          działanie procesu w tle.
+        </p>
+        <p>
+          Podobne działanie ma program <em>GNU Screen</em>, który jest
+          multiplekserem terminala, a co najlepsze jesteśmy wstanie odłączyć
+          sesję programu od pierwszego planu i pozostanie ona w
+          niezmienionej postaci, tak długo jak włączony jest komputer.
+        </p>
+        <h3 id="2.16.3.processinbg">2.16.3. Procesy działające w tle</h3>
+        <p>
+          Uruchamiając polecenie w powłoce dostęp do znaku zachęty, a co za tym
+          idzie wolnego wiersza polecenia otrzymujemy dopiero po zakończeniu
+          działania programu. Jednak możemy odłożyć wykonanie polecenia do tła,
+          poczym od razu uzyskamy dostęp znaku zachęty. Jest to przydatna
+          funkcją, gdy uruchamiamy polecenie, którego wykonanie może
+          zająć trochę czasu. Wykonanie odkładamy do tła dopisując
+          ampersand (<strong>&amp;</strong>) na końcu polecenia (jako ostatni
+          argument). Działanie takiego programu
+          może trwać nawet po naszym wylogowaniu. Jeśli proces zakończy
+          działanie zostaniemy o tym poinformowani.
+        </p>
+        <p>
+          Problem związanym z procesami działającymi w tle jest, możliwe
+          pobieranie informacji z standardowego wejścia. Jeśli nie
+          przewidzieliśmy takiego zachowania programu, to wówczas może zostać
+          on zatrzymany lub zakończony. Można go wznowić za pomocą polecenia
+          <em>fg</em> o ile został zatrzymany. Innym problemem jest wypisywanie
+          danych przez proces w tle na standardowe wyjście oraz strumień błędów.
+          Przed uruchomieniem takiego polecenia należy przekierować te
+          strumienie, ponieważ podczas pracy w terminalu z innymi aplikacjami
+          dane ze strumieni mogą zaburzać ich wyświetlanie. Jeśli powłoka 
+          będzie dziwnie się zachowywać, wystarczy wydać polecenie 
+          <strong>reset</strong> i wszystko wróci do normy.
+        </p>
+        <h2 id="2.17.filemodandpermissions">2.17. Tryb pliku i uprawnienia</h2>
+        <p>
+          Każdy plik na Uniksie (więc na Linuksie też), posiada komplet
+          <strong>uprawnień</strong> określajacy czy można go odczytać, 
+          zapisać do niego lub go
+          uruchomić. Pierwsza kolumna wyniku polecenia <code class="code-inline">ls -l</code>
+          zawiera tryb pliku. Dane trybu możemy podzielić na cztery części
+          <strong>Typ</strong>, <strong>Uprawnienia użytkownika (właściciela)</strong>,
+          <strong>Uprawnienia grupy</strong>, <strong>Uprawnienia pozostałych
+          użytkowników.</strong>.
+        </p>
+        <p>
+          Pierwszy znak to typ pliku, jesli występuję w nim myślnik (<strong>-</strong>),
+          to mamy doczynienia ze zwykłym plikiem, innym typem pliku może być
+          litera <strong>d</strong> oznaczająca katalog.
+        </p>
+        <p>
+          Pozostałe znaki, definiują uprawnienia. Dzieli się je na trzy grupy
+          wypisane powyżej, po trzy znaki na każdą z nich. W grupie (zestawie
+          uprawnień, przeznaczonym dla konkretnej grupy lub osoby) mogą
+          wystąpić 4 rodzaje znaków.
+        </p>
+        <ul>
+          <li><strong>r</strong> - oznacza, że plik można czytać.</li>
+          <li><strong>w</strong> - oznacza, że do pliku można pisać.</li>
+          <li><strong>x</strong> - oznacza, że plik można uruchomić.</li>
+          <li><strong>-</strong> - oznacza, brak uprawnienia.</li>
+        </ul>
+        <p>
+          Mówiąc o użytkowniku w pierwszym rodziale, wspomniałem że może być
+          on właścicielem pliku i do niego należy pierwszy zestaw uprawnień.
+          Drugi zestaw określa uprawnienia dla grupy, jaka została przypisana
+          temu plikowi, z tych uprawnień będzie korzystać każdy użytkownik tej
+          grupy, próbujący uzyskać dostęp do pliku. Trzeci grupa, należy do
+          pozostałych użytkowników systemu. Użytkownika <em>root</em> nie
+          obejmują żadne z powyższych grup, choć to może zależć od konfiguracji
+          systemu, mimo to superużytkownik może sobie zmieniać dowolnie
+          uprawnienia.
+        </p>
+        <p>
+          Nie wymieniony na powyższej liście dodatkowym bitem (o uprawnieniach
+          możemy mówić jak o bitach, np. "potrzebuje bitu odczytu aby odczytać
+          dane z pliku") jest bit <strong>s</strong> - wybierz identyfikator
+          użytkownika. Pojawia się on zamiast bitu wykonywania <em>x</em> i
+          tyczy się wyłącznie plików wykonywalnych. Programy z ustawionym tym
+          bitem zawsze uruchamiają się z uprawnieniami ich właściciela bez
+          znaczenia, kto uruchamia ten program. Wiele programów korzysta z tego
+          rozwiązania, aby uzyskać uprawnienia superużytkownika i móc zapisywać
+          dane w różnych plikach systemowych.
+        </p>
+        <h3 id="2.17.1.modifypermissions">2.17.1. Modyfikacja uprawnień</h3>
+        <p>
+          Do zamiany uprawnień wykorzystamy polecenie <strong>chmod</strong>,
+          jako pierwszy podaje się zbiór uprawnień, a następnie bit uprawnienia
+          ze znakiem "+" jeśli chcemy dodać ten bit lub "-" jeśli chcemy ten 
+          bit
+          usunąć. Zbiór uprawnień podajemy za pomocą pierwszych liter 
+          angielskich
+          nazw <strong>u</strong> (ang. <em>user</em>)- użytkownika/właściciel,
+          <strong>g</strong> (ang. <em>group</em>) - grupa, 
+          <strong>o</strong> (ang. <em>others</em>)- pozostali użytkownicy 
+          systemu.
+        </p>
+<pre class="code-block">
+$ chmod go+r test.sh
+</pre>
+        <p>
+          Zbiory uprawnień można łączyć ze sobą, tak jak na powyższym
+          przykładzie lub jeśli chcemy dodać bit do wszystkich zbiorów to
+          możemy je pominąć jak na poniższym przykładzie.
+        </p>
+<pre class="code-block">
+-rw-r--r-- 1 xf0r3m xf0r3m 26 03-08 13:13 test.sh
+$ chmod +x test.sh
+-rwxr-xr-x 1 xf0r3m xf0r3m 26 03-08 13:13 test.sh
+</pre>
+        <p>
+          Przy plikach osobistych, nie warto dawać za dużych oprawnień
+          pozostałym użytkownikom. Chociaż obecnie może mieć to jedynie
+          znaczenie, gdy z serwera korzysta wielu wyspecjalizowanych 
+          użytkowników.
+        </p>
+        <p>
+          Innym sposobem na zmianę uprawnień jest użycie liczb, gdzie każda
+          z trzech liczb określa uprawnienia dla jednego zbioru. Liczby te są
+          sumami bitów, które reprezentowane są przez poszczególne wartości.
+        </p>
+        <ul>
+          <li><em>r</em> - <strong>4</strong></li>
+          <li><em>w</em> - <strong>2</strong></li>
+          <li><em>x</em> - <strong>1</strong></li>
+          <li><em>-</em> - <strong>0</strong></li>
+        </ul>
+<pre class="code-block">
+$ chmod 644 test.sh 
+</pre>
+        <p>
+          Uprawnienia właściciela mają wartość <code class="code-inline">6</code>.
+          co jest równe <em>4+2</em> - <em>u+rw</em>, grupa oraz pozostali mają
+          <code class="code-inline">4</code> co jest identyczne z zapisem
+          <em>go+r</em>. Liczby wykorzysywane tutaj pochodzą z oktalnego 
+          systemu liczbowego. 
+        </p>
+        <p>
+          Zmiana uprawnień nosi nazwę <strong>bezwzględnej</strong>, ponieważ
+          zmieniane są uprawnienia wszystkich grup.
+        </p>
+        <p>
+          Odnośnie uprawnień to istnieje bardzo ważna zależność pomiędzy bitami
+          odczytu oraz wykonania. Nadając katalogowi domowemu uprawnienia
+          <em>rwxr--r--</em> czy <em>744</em>. Pozostali użytkownicy będą
+          mogli odczytać zawartości katalog, ale nie uzyskają dostępu do pliku
+          podając go w jakimś poleceniu na ścieżce, do tego potrzebny jest 
+          jeszcze bit wykonania. 
+        </p>
+        <p>
+          Za pomocą polecenia <strong>umask</strong>, możemy zdefiniować
+          domyślne uprawnienia dla plików. Polecenie to przyjmuje jako 
+          argument te uprawnienia w postaci bezwględnej, które mają zostać
+          usunięte z nowoutworzonych plików i katalogów. Wydanie polecenia
+          umask:
+        </p>
+<pre class="code-block">
+$ umask 022
+</pre>
+        <p>
+          Spowoduje, że nowoutworzone pliki i katalogi będą mięc uprawnienia
+          w postaci <em>rwxr-xr-x</em> lub <em>755</em>. Może wydawać się zbyt
+          liberalne, więc możemy ustawić argument polecenia nas <em>077</em>, 
+          wówczas
+          wszystkie utworzone pliki i katalogi będą wyłącznie dla nas. 
+          Polecenie
+          <em>umask</em>, czesto występuje w plikach konfiguracyjnych powłoki.
+        </p>
+        <h3 id="2.17.2.symlinks">2.17.2. Dowiązania symboliczne</h3>
+        <p>
+          Dowiązanie syboliczne to jest alias będący plikiem wskazującym na
+          inny pliki lub katalog. Można uciec się do jednego słowa, że
+          dowiązanie symboliczne jest poprostu skrótem.
+        </p>
+        <p>
+          Jeśli dowiązanie wskazuje na katalog, to przejście do dowiązania
+          przeniesie nas w miejsce, na które wskazuje. Cel dowiązania nie
+          musi nawet istnieć, jeśli jednak spróbuje przejść pod takie
+          dowiązanie wówczas uzyskamy typowy błąd, o tym że katalog nie
+          istnieje. Dowiązania uniemożliwają również sprawdzenie 
+          charakterystyki
+          wskazywanego elementu, nie będzie wiadomo czy jest to plik, katalog
+          czy inne dowiązanie. Wiele połączonych ze sobą dowiązań symbolicznych
+          nazywane jest <strong>łańcuchem dowiązań</strong>
+        </p>
+        <p>
+          Dowiązania symboliczne tworzone są za pomocą polecenia <strong>ln</strong>
+          z opcją <strong>-s</strong> (<strong>Ważne, aby użyć tej opcji</strong>).
+          Argumentami jest na początku <strong>cel</strong> a poźniej nazwa
+          dowiązania. Zachowanie kolejności argumentów jest ważne, ponieważ
+          możemy utworzyć dowiązanie, które prowadzi do nikąd i wprowadza
+          bałagan (być może w plikach systemowych).
+        </p>
+        <p>
+          Mimo swoich wad dowiązanią są wygodną metodą na współdzielenie plików
+          oraz dodatkowo rozwiązują kilka drobnych problemów.
+        </p>
+        <h2 id="2.18.archivesandcompression">2.18. Archiwizowanie i
+        kompresowanie danych</h2>
+        <p>
+          Przesyłając duża ilość małych plików przez sieć czy tez na pamięć
+          masową, możemy odczuć że trwa to wieki, na pewno trwa to dłużej niż
+          przesłanie jednego dużego pliku. Tutaj przedstawię sposoby na
+          stworzenie
+          jednego większego pliku z całego katalogu, przy czym użyjemy jeszcze
+          kilku algorytmów kompresii, przez co zaoszczędzimy na czasie i trochę
+          na zajmowanym miejscu. 
+        </p>
+        <h3 id="2.18.1.tarprogram">2.18.1. Program tar</h3>
+        <p>
+          Pierwsze narzędzie będzie służyć do tworzenia archiwum. Archiwa
+          łączą pliki i katalogi w jeden plik. <strong>Tar</strong> jest 
+          standardowym program do archiwizacji na uniksach. 
+          Tworzenie archwium za pomocą <em>tar</em> wymaga kilku
+          opcji. Natomiast składania polecenia jest następująca:
+        </p>
+<pre class="code-block">
+$ tar -cvf archiwum.tar plik1 plik2...
+</pre>
+        <p>
+          Opcja <code class="code-inline">-c</code> mówi programowi, że
+          tworzone będzie nowe archiwum, opcja <code class="code-inline">-v</code>
+          włącza komunikaty diagnostyczne wyświetlać one będą po kolei pakowane
+          do archiwum pliki; opcja <code class="code-inline">-f</code>
+          przekazuje programowi informacje o tym, że archwium będzie plikiem.
+          Domyślnie <em>tar</em> tworzył archiwa na taśmach. Obecnie pominięcie
+          tej opcji kończy pracę programu z komunikatem o błędzie. Możemy 
+          natomiast użyć <em>stdout</em> podajac zamiast nazwy archiwum
+          myślnik (<strong>-</strong>). Póki co to archiwum nie jest jeszcze 
+          skompresowane.
+        </p>
+        <h4>Rozpakowywanie pliku</h4>
+        <p>
+          Rozpakowawanie różni się tylko jedną opcją - zamiast <em>-c</em> jest
+          <strong>-x</strong>. Następnie podajemy pozostałe opcje, a na końcu
+          nazwę pliku archiwum.
+        </p>
+        <h4>Wyświetlenie zawartości archiwum</h4>
+        <p>
+          Wypakowanie całego archiwum może nie być do końca porządane, załóżmy
+          że potrzebujemy tylko jednego pliki. Za pomocą polecenia <em>tar</em>
+          z odpowiednim przełącznikiem możemy wyświetlić listę plików w 
+          archiwum. Zamiast <em>-x</em>, używamy
+          <strong>-t</strong> reszta pozostaje taka sama, jeśli archiwum jest
+          duże to możemy podłączyć wyjście <em>tar</em> potokiem do polecenia
+          <em>less</em>. Samego wypakowania dokonujemy podając wypakowywanego
+          pliku za nazwą archiwum.
+        <p>
+        <p>
+          Ostanią dość istotną opcję jest <strong>-p</strong>, która powoduje
+          zachowanie oryginalnych atrybutów plików, jakie miały podczas
+          pakowania. Kiedy superużytkownika używa <em>tar</em>, ta opcja jest
+          domyślnie włączona.
+        </p>
+        <h3 id="2.18.2.gzipprogram">2.18.2. Program gzip</h3>
+        <p>
+          Program <strong>gzip</strong> (<em>GNU zip</em>) jest standardowym 
+          narzędziem kompresującym w systemach uniksowych. Pliki skompresowane
+          za jego pomocą otrzymują rozszerzenie <strong>.gz</strong>.
+          Dekompresuje się je za pomocą polecenia <strong>gunzip</strong>, jako
+          argument podaje się nazwę pliku. Natomiast kompresji dokonuje za
+          pomocą polecenia <strong>gzip</strong>, podając plik do 
+          skompresowania jako argument. 
+        </p>
+        <h3 id="2.18.3.compressedarchives">2.18.3. Skompresowane archiwa
+          <em>tar.gz</em></h3>
+        <p>
+          Obsługę skompresowanych archwów przy użyciu <em>gzip</em>,
+          rozpoczniemy od rozpakowania takiego archiwum. Nie ma sensu używania
+          do tego dwóch osobnych poleceń, jest to z resztą marnowanie zasobów.
+          Chcąc rozpakować skompresowane <em>gzip</em> archiwum, należy użyć
+          polecenia <em>tar</em> a po opcji
+          <em>-x</em> dodać, opcję <em>-z</em> następnie pozostałe czyli
+          <em>-vf</em> i na końcu podać nazwę archiwum. Tak jak na przykładzie: 
+        </p>
+<pre class="code-block">
+$ tar -xzvf archiwum.tar.gz
+</pre>
+        <p>
+          Przy tego typu archiwach, możemy spodziewać się rozszerzenia
+          <strong>.tgz</strong>. Są to te same archiwa, jak te mające 
+          rozszerzenie <em>tar.gz</em>.
+        </p>
+        <p>
+          Przy wyświetlaniu zawartości takiego archiwum, zamieniamy opcję
+          <strong>-x</strong> na <strong>-t</strong>. A chcąc takie archwiwum
+          utworzyć to opcję <strong>-x</strong> na opcję <strong>-c</strong>
+          oraz podać katalog lub listę plików, która ma zostać umieszczona w
+          archiwum po jego nazwie.
+        </p>
+        <h3 id="2.18.4.othercompression">2.18.4. Inne metody kompresji</h3>
+        <p>
+          Poza archiwami spakowanymi za pomocą <em>gzip</em>, możemy też
+          spotkać archiwa spakowane za pomocą <strong>bzip2</strong> oraz
+          <strong>xz</strong>. W przypadku <em>bzip2</em>, to programem
+          dekompresującym jest <strong>bunzip2</strong>, a opcją programu
+          <em>tar</em> jest <strong>-j</strong> (mała litera j). Jeśli
+          natrafimy na archiwum skompresowane <em>xz</em>, to programem
+          dekompresującym jest <strong>unxz</strong>, a opcją programu
+          <em>tar</em> jest <strong>-J</strong> (wielka litera j). 
+        </p>
+        <p>
+          Część dystrybucji wyposażona jest w program <em>unzip</em>
+          pozwalający na rozpakowanie plików <em>.zip</em> przygotowanych
+          pod systemem MS Windows, jak i samo rozpakowywujących się plików
+          <em>.exe</em>. 
+        </p>
+        <h2 id="2.19.filesystemhierarchy">2.19. Hierarchia katalogów</h2>
+        <p>
+          Struktura katalogów głównego, jest utworzona na
+          podstawie <strong>standardu hierarchii systemu plików</strong>,
+          określającego jakie podkatalogi ma zawierać katalog główny, oraz
+          co te podkatalogi mają przechowywać. Poniżej opisano na ten czas
+          najważniejsze z nich.
+        </p>
+        <ul>
+          <li><strong>/bin</strong> - przechowuje pliki binarne przygotowane
+            przez kompilator języka C, w nowocześniejszych systemach mogą to 
+            być
+            skrypty powłoki. W nim przechowywane są te najprostsze polecenia
+            jak <em>cp</em>.</li>
+          <li><strong>/dev</strong> - przechowuje pliku urządzeń.</li>
+          <li><strong>/etc</strong> - katalog zawierający najważniejsze pliki
+            konfiguracji systemu. Znajdują się tutaj pliki haseł, konfiguracji
+            uruchamiania systemu, urządzeń, sieci i innych elementów systemu.</li>
+          <li><strong>/home</strong> - zbiorczy katalog, katalogów domowych
+            użytkowników. Standard wśród wszystkich nowoczesnych uniksów.</li>
+          <li><strong>/lib</strong> - katalog przechowywujący biblioteki.
+            Te pliki przechowują kod, który może być wykorzystywany przez 
+            pliki wykonywalne. Biblioteki możemy podzielić na statyczne lub
+            współdzielone. Tylko biblioteki współdzielone powinny znajdować
+            się w tym katalogu, pozostałe pliki tego typu znajdują się
+            w katalogu <em>/usr/lib</em>.</li>
+          <li><strong>/proc</strong> - udostępnia statystyki o systemie w 
+            postaci interfejsu plików i katalogów.
+          </li>
+          <li><strong>/sys</strong> - ten katalog jest podobny do katalogu
+            <em>/proc</em>, z tym, że tworzy interfejs dla urządzeń oraz
+            systemu. Wiecej informacji na ten temat, znajduje się w następnym
+            rozdziale.
+          </li>
+          <li><strong>/sbin</strong> - w tym katalogu zapisane są systemowe
+            pliki wykonywalne. Programy znajdujące się w katalogach
+            <em>/sbin</em> przeznaczone są do zarządzania systemem, dlatego
+            ten katalog nie występuje na ścieżce zwykłego użytkownika a wiele
+            narzędzi będzie działać tylko z kontem <em>root</em>.
+          </li>
+          <li><strong>/tmp</strong> - w tym katalogu możemy umieszczać pliki
+            tymczasowe, którymi nikt się nie będzie przejmować. Każdy
+            użytkownik może zapisywać i odczytywać pliki z katalogu w tym
+            katalogu, ale nikt nie ma dostępu do plików zapisanych przez innych
+            użytkowników. Nie które programy wykorzystują, ten katalog jako
+            przestrzeń roboczą. Nie należy zapisywać ważnych danych do tego
+            katalogu, gdyż jego zawartość jest przez wiekszość dystrybucji 
+            czyszczona podczas uruchamiania systemu, inne mogą usuwać 
+            starsze pliki co jakiś czas.</li>
+          <li><strong>/usr</strong> - W tym katalogu znajdziemy rozbudowaną,
+            strukturę katalogów, bardzo podobną to katalogu głównego. W tym
+            katalogu zapisana jest większa części systemu Linux.</li>
+          <li><strong>/var</strong> - podkatalog zawierający "zmienne" dane
+            zapisywane przez programy w czasie swojego działania. Tutaj 
+            znajdują się m.in. pliki dzienników systemowych.</li>
+        </ul>
+        <h3 id="2.19.1.othermainsubdirs">2.19.1. Pozostałe katalogi główne</h3>
+        <ul>
+          <li><strong>/boot</strong> - przechowuje plik ładujące jądro systemu
+          w czasie uruchamiania komputera. W większości dystrybucji w tym
+          katalogu przechowywane są właściwe pliki jądra oraz początkowego
+          systemu plików w pamięci RAM. Początkowy system plików pamięci RAM
+          zostanie omówiony w dalszej materiału.</li>
+          <li><strong>/media</strong> - w wielu dystrybucjach jest to główny
+          punkt przyłączania wszystkich mediów wymiennych, takich jak
+          karty pamięci Flash.</li>
+          <li><strong>/opt</strong> - może przechowywać dodatkowe
+          oprogramowanie firm trzecich. W wielu systemach katalog <em>/opt</em>
+          nie jest wykorzystywany.</li>
+        </ul>
+        <h3 id="2.19.2.usrdirectory">2.19.2. Katalog /usr</h3>
+        <p>
+          To właśnie w katalogu <em>/usr</em> znajduje się większość programów
+          i danych przestrzeni użytkownika, a są one rozlokowane po jego
+          podkatalogach. Poniżej znajduje się opis co znajduje się w 
+          poszczególnych podkatalogach tego katalogu:
+        </p>
+        <ul>
+          <li><strong>bin</strong> - większość, jak nie wszystkie
+            ogólnodostępne programy w systemie.</li>
+          <li><strong>include</strong> - przechowuje pliki nagłówkowe
+            wykorzystywane przez kompilator języka C.</li>
+          <li><strong>info</strong> - zawierają strony dokumentacji
+            <em>GNU</em> info.</li>
+          <li><strong>local</strong> - miejsce gdzie administratorzy mogą
+            mogą instalować swoje oprogramowanie, katalog ten może zawierać
+            podobną identyczną strukturę, jak katalog <em>/usr</em> lub
+            katalog główny.</li>
+          <li><strong>man</strong> - przechowuje strony podręcznika
+            systemowego.</li>
+          <li><strong>share</strong> - kiedyś ten katalog był katalogiem
+            współdzielonym między komputerami, obecnie stracił na znaczeniu.
+            Mimo to dalej przechwouje informacje, przeważnie są to pliki ikon, 
+            pliki zawierające znaki
+            towarowe dystrybucji oraz inne dane z których może korzystać wiele
+            programów. Ten katalog może zawierać podkatalogi takie jak
+            <em>man</em> oraz <em>info</em>.</li>
+        </ul>
+        <h3 id="2.19.3.kernelplace">2.19.3. Umiejscowanie jądra w systemie</h3>
+        <p>
+          Wspomniałem już że plik jądra znajduje się w katalogu <em>/boot</em>,
+          plik ten rozpoczyna się od nazwy <strong>vmlinuz</strong>, po tych
+          znakach
+          mogą wystąpić inne inforamcje oznaczające jego wersje. Po załadowaniu
+          jądra przez program rozruchowy, sam plik przestaje być
+          potrzebny. W trakcie pracy systemu operacyjnego jądro wykorzystuje
+          najróżniejsze ładowane i usuwane dodatkowo modułu. <strong>Ładowane
+          moduły jądra</strong> umieszczane są w katalogu <em>/lib/modules</em>.
+        </p>
+        <h2 id="2.20runitasroot">2.20. Uruchamianie poleceń przez superużytkownika</h2>
+        <p>
+          Korzystając z linuksa na naszym osobistym komputerze, przyjdzie taki
+          moment że będziemy musieli skorzystać z konta użytkownika 
+          <em>root</em>. Aby to zrobić możemy przelogować się na jego konto
+          wykonać potrzebne czynności a następnie się wylogować. Ta czyność
+          przyniosła by zamierzony efekt ale nie jest bez wad. Dlatego też
+          możemy skorzystać z polecenia <strong>sudo</strong>, które
+          pozwoli, na uruchomienie polecenia podanego jako arugment 
+          z uprawnieniami
+          superużytkownika. Jeśli polecenie nie występuje w systemie, to jest
+          dobry czas aby przelogować się na użytkownika <em>root</em>, i je
+          zainstalować. Polecenie po zainstalowaniu nie zadziała samo w sobie
+          potrzebne jest jeszcze określenie, którzy użytkownicy mogą używać
+          tego polecenia i co za jego pomocą mogą zrobić. Za to odpowiada
+          pliki <strong>/etc/sudoers</strong>.
+        </p>
+        <h3 id="2.20.1.sudoersfile">2.20.1. Plik /etc/sudoers</h3>
+        <p>
+          Samo polecenie sudo ma bardzo duża ilość opcji, jednak na tym
+          etapie nie skorzystamy z większości z nich. Najprostszym sposobem
+          na konfiguracje pliku <em>/etc/sudoers</em> jest odnalezienie w pliku
+          linii rozpoczynającej się pod słowa <em>root</em> a następnie
+          pod tą linią wpisać linię rozpoczynjącą się nazwy użytkownika oraz
+          dopisaniu kilku opcji, tak jak na poniższym przykładzie.
+        </p>
+<pre class="code-block">
+user ALL=(ALL) ALL
+</pre>
+        <p>
+          Pierwsze <code class="code-inline">ALL</code>, oznaczna dowolny
+          komputer. Drugie
+          <code class="code-inline">(ALL)</code> w nawiasach oznacza, że możemy
+          wydać polecenie jako dowolny użytkownik, być może spotkamy się
+          z takim zapisem w nawiasie (<em>ALL:ALL</em>), oznacza ono dowolnego
+          użytkownika i dowolną grupę. Trzecie <code class="code-inline">ALL</code>
+          oznacza dowolne polecenie.
+        </p>
+        <p>
+          Jeśli drażnić nas będzie ciągłe wpisywanie haseł, to możemy przed
+          trzecim <em>ALL</em> w konfiguracji umieścić opcję 
+          <strong>NOPASSWD</strong>, pamiętając aby pomiędzy te opcje wstawić
+          dwukropek (<strong>:</strong>) bo tak naprawdę określamy jakie
+          polecenia mają być uruchamiane bez podawania hasła.
+        </p>
+        <h2 id="2.21.summary">2.21. Podsumowanie</h2>
+        <p>
+          Po przeczytaniu tego rodziały wydaje mi się, że każdy ma solidne
+          podstawy obsługi systemu Linux z poziomu powłoki. Powłoka jest
+          jednym ze stałych komponentów dystrybucji, a wiele z nich dalej
+          obstaje przy BASH-u, jako domyślnej powłoce.
+        </p>
+        <h1 id=3.devices">3. Urządzenia</h1>
+        <p>
+          Odkąd powstał system Linux, w sposobach prezentowania urządzeń
+          użytkownikowi zachodziło wiele zmian. Na początku tego rodziału
+          omówimy sobie tradycjny system <strong>sysfs</strong>. Aby potem
+          zająć się opisem systemu <strong>udev</strong>, pozwalającego 
+          program przestrzeni użytkownika automatycznie konfigurować oraz
+          używać nowych urządzeń. Poznamy zasady, zgodnie z którymi jądro
+          wysyła do procesów komunikaty przy użyciu systemu <em>udev</em>
+          oraz dowiemy się w jaki sposób one reagują na nie.
+        </p>
+        <h2 id="3.1.devicefiles">3.1. Pliki urządzeń</h2>
+        <p>
+          Jądro udostępnia wiele urządzeń pod postacią plików, co daje nam
+          możliwość prostej manipulacji nimi. Te pliki są często nazywane
+          <strong>węzłami urządzeń</strong>. Korzystać z urządzeń możemy
+          za pomocą zwykłych operacji na plikach. Tego typu rozwiązanie nie
+          jest bez wad dlatego też nie wszystkie urządzenia lub ich funkcje
+          są udostępnianie w ten sposób.
+        </p>
+        <p>
+          Pliki urządzeń są przechowywane w katalogu <strong>/dev</strong>.
+          A najprostszym sposobem interakcji z urządziem jest przekierowanie
+          wyniku jakiegoś polecenia do urządzenia <strong>/dev/null</strong>.
+          Urządzenie to jest miejscem na nie potrzebne nam dane ze strumieni,
+          ponieważ co kolwiek trafi do tego urządzenia, jest przez jądro
+          poprostu ignorowane.
+        </p>
+        <p>
+          Wyświetlając sobie zawartość katalogu w bardziej szczegółowej liście
+          może zauważyć dziwne oznaczenia w trybie pliku. Litery te określają
+          rodziaje urządzeń a wśród nich możemy wyszczególnić:
+        </p>
+        <ul>
+          <li><strong>Urządzenia blokowe - b</strong> - Procesy mogą odczytywać
+            dane z urządzeń blokowych przy użyciu bloków o stałej wielkości.
+            Pamięci masowe są przykładem urządzeń blokowych. Łatwo dzieli się 
+            je na bloki, a ogólna wielkość
+            takiego urządzenia jest stała i można ją zindeskować co daje
+            możliwość jądru na dostępu do dowolnego bloku danych.</li>
+          <li><strong>Urządzenia znakowe - c</strong> - Urządzenia znakowe
+            działają w oparciu o strumienie danych. Do takich urządzeń można
+            zapisywać i odczytywać pojedyńcze znaki. Jądro zazwyczaj wykonuje
+            operacje odczytu i zapisu na fizycznym urządzeniu. Drukarki są 
+            przykładami urządzeń znakowych. Warto wspomnieć, że jądro nie
+            jest w stanie ponownie odczytać danych ze strumienia po przekazaniu
+            ich dalej.</li>
+          <li><strong>Urządzenia potokowe - p </strong> - tzw.
+            <strong>nazwane potoki</strong> są to urządzenia podobne do
+            urządzeń znakowych z tą jednak różnicą, że na drugim końcu
+            strumienia wejścia-wyjścia nie znajduje się fizyczne urządzenia ale
+            inny proces.</li>
+          <li><strong>Urządzenia gniazdkowe - s</strong> - tzw. <strong>gniazda</strong>
+            są interfejsami specjalnego przeznaczenia i służa komunikacji
+            międzyprocesowej. Mogą występować poza katalogiem <em>/dev/</em>.</li>
+        </ul>
+        <p>
+          Inną dość rzucającą się w oczy informacją na listingu katalogu, są
+          dwie liczy odzielone przecinkiem zamiast rozmiaru pliku, jest
+          <strong>numer główny</strong> i <strong>numer poboczny</strong>.
+          Te numer ułatwiają jądru identyfikacje urządzeń. Dla przykładu
+          partycje tego samego dysku mają ten sam <em>numer główny</em> ale
+          inny <em>numer poboczny</em>.  
+        </p>
+        <p>
+          Nie wszystkie urządzenia mają swoje pliki, takim przykładem są
+          interfejsy sieciowe. Jądro wykorzystuje dla nich inny interfejs
+          wejścia-wyjścia.
+        </p>
+        <h2 id="3.2.sysfsdevicepath">3.2. Ścieżka urządzeń sysfs</h2>
+        <p>
+          Ze względu na uproszczoną interakcje z urządzeniami poprzez 
+          odwołowywanie się do pliku w katalogu <em>/dev/</em> oraz fakt, że
+          jądro systemu nadaje plikom z tego katalogu nazwy na podstawie
+          koleności wykrywania urządzenie pod czas uruchamiania systemu
+          Wewnątrz jądra zaimplementowano interfejs <strong>sysfs</strong>,
+          który jest ujednoliconym sposobem prezentacji urządzeń bazującym
+          na atrybutach sprzętowych, mający formę struktury katalogów i plików.
+          Główny katalogiem tego system jest katalog <strong>/sys/devices</strong>.
+          Przykładowa ścieżka dla pierwszego dysku SATA mającego swój plik
+          <em>/dev/sda</em> może wyglądać następująco:
+        </p>
+<pre class="code-block">
+/sys/devices/pci0000:00/0000:00:1f:2/host0/target0:0:0/0:0:0:0/block/sda
+</pre>
+        <p>
+          Warto tutaj zaznaczyć iż, scieżki systemu <em>sysfs</em> nie służą 
+          uzyskaniu dostępu do urządzeń, umożliwają przeglądanie informacji
+          oraz zarządzanie urządzeniami. Dane zawarte na plikach na ścieżkach
+          <em>sysfs</em> powinny być odczytywane przez programy nie przez
+          ludzi.
+        </p>
+        <p>
+          Chcąc sprawdzić scieżkę <em>sysfs</em> dla dowolnego urządzenia z
+          katalogu <em>/dev</em> należało by programu system <em>udev</em>
+          <strong>udevadm</strong>.
+        </p>
+<pre class="code-block">
+$ udevadm info --query=all --name=/dev/sda
+</pre>
+        <p>
+          Wykonując to polecenie dowiemy się przy okazji ile danych można 
+          uzyskać informacji z systemu <em>udev</em>.
+        </p> 
+        <h2 id="3.3.ddcommand">3.3. Polecenie dd</h2>
+        <p>
+          Polecenie jest dość prostym, aczkolwiek przydatnym narzędziem jeśli
+          choodzi o prace z urządzeniami znakowymi czy blokowymi. Jedyną
+          rzeczą, którą robi to polecenie jest odczyt danych z pliku 
+          wejściowego lub ze strumienia i zapisanie go do wyjściowego pliku
+          lub strumienia, przy okazji dokonując pewnych konwersji. Najczęsciej
+          używane przeze mnie polecenie znajduje się poniżej. 
+        </p>
+<pre class="code-block">
+$ sudo dd if=/dev/zero bs=1M of=/dev/sdX count=1
+</pre>
+        <p>
+          Polecenie wykorzystuje uprawnienia superużytkownika, aby uzyskać
+          dostęp do urządzenia blokowego. Samo polecenie zapisuje jeden
+          blok o wielkości 1M za pomocą zer z pliku <em>/dev/zero</em> 
+          (nieskończony strumień zer), co powoduje usunięcie tablicy partycji.
+        </p>
+        
+      </div>
+			<p style="margin: 15px; padding: 0; outline: 0;">
+				2022; COPYLEFT; ALL RIGHTS REVERSED;
+			</p>
+		</body>
+	</html>

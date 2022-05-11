@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/png" href="https://i.ibb.co/khy45hh/mm.png">
+		<style>
+			.code-block {
+				display: block;
+				background-color: silver;
+				font-family: monospace;
+				font-weight: bolder;
+			}
+			.code-inline {
+				background-color: silver;
+				font-family: monospace;
+
+				font-weight: bolder;
+			}
+			p { text-align: justify; }
+		</style>
+	</head>
+	<body style="font-family: monospace;" >
+		<pre>
+		<span style="color: green;">     .~~.   .~~.
+		    '. \ ' ' / .'</span>
+		<span style="color: red;">     .~ .~~~..~.</span>                       _                          _
+		<span style="color: red;">    : .~.'~'.~. :</span>      ___ ___ ___ ___| |_ ___ ___ ___ _ _    ___|_|
+		<span style="color: red;">   ~ (   ) (   ) ~</span>    |  _| .'|_ -| . | . | -_|  _|  _| | |  | . | |
+		<span style="color: red;">  ( : '~'.~.'~' : )</span>   |_| |__,|___|  _|___|___|_| |_| |_  |  |  _|_|
+		<span style="color: red;">   ~ .~ (   ) ~. ~</span>                |_|                 |___|  |_|
+		<span style="color: red">    (  : '~' :  )</span>
+		<span style="color: red;">     '~ .~~~. ~'
+			 '~'</span>
+		</pre>
+
+	<p style="margin: 15px; padding: 0; outline: 0; font-size: 18pt;">
+		&#9760;&nbsp;<a href="https://morketsmerke.github.io">morketsmerke</a>&nbsp;&#9760;
+	</p>
+
+	<div style="margin-left: auto; margin-right: auto; width: 80%;">
+    <h1 style="text-align:center;">Podłączanie 7-calowego ekranu dotykowego do Raspberry Pi</h1>
+    <p>
+      W długi weekend majowy, kolega poprosił mnie podłączenie 7-calowego
+      wyświetlacza do Raspberry Pi. Oczywiście przez podłączenie należy
+      rozumieć fizczne podłączenie oraz skonfigurowanie systemu w taki sposób,
+      aby Raspberry wyświetlało na nim prawidłowo obraz, w optymalnej dla
+      ekranu rozdzielczości. Mój zleceniodawca utknął przy ładowaniu środowiska
+      graficznego. Po powrocie do pracy, wziąłem od niego wyświetlacz i
+      przystąpiłem do działania, nie brałem jego maliny ponieważ chciałem
+      na początku sam dowiedzieć się jak to się podłącza. Na naprawę jego
+      konfiguracji przyjdzie jeszcze czas...
+    </p>
+    <p>
+      Jak każdą świeżą zabawę z malinką, rozpocznam do pobrania najnowszego
+      obrazu i załadowania go na kartę microSD. Dla celów testowych, najlepiej
+      użyć obrazu z preinstalowanym środowiskiem graficznym, najlepiej bez
+      zbędnego (rekomendowanego) oprogramowania.
+    </p>
+<pre class="code-block">
+  $ wget https://downloads.raspberrypi.org/raspios_armhf/images/raspios_armhf-2022-04-07/2022-04-04-raspios-bullseye-armhf.img.xz
+  $ unxz 2022-04-04-raspios-bullseye-armhf.img.xz
+  $ sudo dd if=2022-04-04-raspios-bullseye-armhf.img bs=1M of=/dev/sdX status=progress
+</pre>
+    <p>
+      Gdzie <code class="code-inline">/dev/sdX</code> jest plikiem urządzenia
+      reprezentującym podłączoną kartę microSD. Obraz po rozpakowaniu ma lekko
+      powyżej 4GB. Po nagraniu obrazu zanim włóżymy kartę do urządzenia, możemy
+      już dokonać niezbędnych modyfikacji, tak aby na tym wczesnym etapie nasz
+      ekran już zaczął wyświetlać jakiś obraz. Zmian w pliku dokonujemy
+      w pliku <em>config.txt</em> partycji <em>boot</em>, korzystającej z
+      systemu plków FAT-32. Na samym końcu pliku zapisujemy poniższe linie.
+    </p>
+<pre class="code-block">
+max_usb_current=1
+hdmi_group=2
+hdmi_mode=87
+hdmi_cvt=1024 600 60 6 0 0 0
+hdmi_ignore_edid=0xa5000080
+config_hdmi_boost=2
+</pre>
+    <ul>
+      <li><code class="code-inline">max_usb_current</code> - załączenie
+        maksymalnego możliwego natężenia prądu na USB. Normalnie jest 600 mA,
+        jednak przy użyciu tej opcji, prąd wzrasata do 1,2 A.</li>
+      <li><code class="code-inline">hdmi_group</code> - określa grupę
+        wyświetlaczy korzystających z HDMI. Na przykład telewizory oraz
+        monitory korzystają zupełnie innych standardów. Jednak nie musimy się
+        tym przejmować ponieważ ta opcja oraz opcja poniżej służą jedynie
+        umożliwieniu użycia opcji <code class="code-inline">hdmi_cvt</code>.</li>
+      <li><code class="code-inline">hdmi_mode</code> - definiuje domyślną
+        rodzielczość, odświeżanie oraz aspekt ekranu, jak będziemy mogli
+        zauważyć tryb <code class="code-inline">87</code> znajduje się w poza
+        tabelą (link na końcu artykułu), służy on jedynie umożliwieniu
+        ręcznego ustawienia powyższych cech obrazu aby były prawidłowo
+        wyświelane na podłączonym ekranie.</li>
+      <li><code class="code-inline">hdmi_cvt</code> - umożliwia wpisanie
+        własnych ustawień obrazu, dając możliwość zedefiniowania rozdzielczości,
+        częstotliwości obrazu oraz jego formatu. Pozostałe trzy zera odnoszą
+        się głównie do cech ekranów kineskopowych i mogą zostać pominięte,
+        ponieważ są one domyślną wartość. Warto dodać że ta opcja utworzy
+        tryb hdmi <code class="code-inline">87</code>.</li>
+      <li><code class="code-inline">hdmi_ignore_edid</code> - opcją załącza
+        ignorowanie danych identyfikacyjnych wyświetlacza, jeśli wyświetlacz
+        ich nie posiada. Użycie wartości <code class="code-inline">0xa5000080</code>
+        chroni tę opcję przed omyłkowym przełączeniem.</li>
+      <li><code class="code-inline">config_hdmi_boost</code> - złacza
+        wzmocnienie sygnału HDMI. Ta wartość jest ignorowana przez Raspberry
+        Pi 4. W źródle podano konkretne przypadki, który należy użyć
+        odpowiednich wartości tej opcji.</li>
+    </ul>
+    <p>
+      Źródła:
+      <ol>
+        <li><a href="https://www.youtube.com/watch?v=TYzOhgUmZcw">Konfiguracja wyświetlania obrazu w pliku config.txt</a></li>
+        <li><a href="https://www.raspberrypi.com/documentation/computers/config_txt.html">Opis opcji z konfiguracji pliku /boot/config.txt</a></li>
+      </ol>
+    </p>
+    <p>
+      ~xf0r3m
+    </p>
+	</div>
+		<p style="margin: 15px; padding: 0; outline: 0;">
+			2021; COPYLEFT; ALL RIGHTS REVERSED;
+		</p>
+
+	</body>
+	</html>

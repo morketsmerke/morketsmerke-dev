@@ -38,20 +38,20 @@
 	</p>
 
 	<div style="margin-left: auto; margin-right: auto; width: 80%;">
-    <h1 style="text-align:center;">Podłączanie 7-calowego (1024 x 600) ekranu dotykowego do Raspberry Pi</h1>
+    <h1 style="text-align:center;">Podłączanie 7-calowego ekranu dotykowego (1024x600) do Raspberry Pi</h1>
     <p>
       W długi weekend majowy, kolega poprosił mnie podłączenie 7-calowego
       wyświetlacza do Raspberry Pi. Oczywiście przez podłączenie należy
       rozumieć fizczne podłączenie oraz skonfigurowanie systemu w taki sposób,
-      aby Raspberry wyświetlało na nim prawidłowo obraz, w optymalnej dla
-      ekranu rozdzielczości. Mój zleceniodawca utknął przy ładowaniu środowiska
+      aby wyświetlał obraz, dopasowany do właściwości ekranu.
+      Mój zleceniodawca utknął przy ładowaniu środowiska
       graficznego. Po powrocie do pracy, wziąłem od niego wyświetlacz i
       przystąpiłem do działania, nie brałem jego maliny ponieważ chciałem
       na początku sam dowiedzieć się jak to się podłącza. Na naprawę jego
       konfiguracji przyjdzie jeszcze czas...
     </p>
     <p>
-      Jak każdą świeżą zabawę z malinką, rozpocznam do pobrania najnowszego
+      Jak każdą świeżą zabawę z malinką, rozpoczynam od pobrania najnowszego
       obrazu i załadowania go na kartę microSD. Dla celów testowych, najlepiej
       użyć obrazu z preinstalowanym środowiskiem graficznym, najlepiej bez
       zbędnego (rekomendowanego) oprogramowania.
@@ -62,13 +62,18 @@
   $ sudo dd if=2022-04-04-raspios-bullseye-armhf.img bs=1M of=/dev/sdX status=progress
 </pre>
     <p>
-      Gdzie <code class="code-inline">/dev/sdX</code> jest plikiem urządzenia
+      Na powyższym listingu <code class="code-inline">/dev/sdX</code> jest 
+      plikiem urządzenia
       reprezentującym podłączoną kartę microSD. Obraz po rozpakowaniu ma lekko
-      powyżej 4GB. Po nagraniu obrazu zanim włóżymy kartę do urządzenia, możemy
-      już dokonać niezbędnych modyfikacji, tak aby na tym wczesnym etapie nasz
-      ekran już zaczął wyświetlać jakiś obraz. Zmian w pliku dokonujemy
-      w pliku <em>config.txt</em> partycji <em>boot</em>, korzystającej z
-      systemu plków FAT-32. Na samym końcu pliku zapisujemy poniższe linie.
+      powyżej 4 gigabajtów. Po nagraniu obrazu, zanim włóżymy kartę do 
+      urządzenia
+      możemy dokonać niezbędnych modyfikacji, tak aby nie trzeba było się
+      przełączać między ekranami.
+    </p>
+    <p>
+      Zmian dokonujemy
+      w pliku <em>config.txt</em> na partycji <em>boot</em>. Na samym końcu 
+      pliku zapisujemy poniższe linie.
     </p>
 <pre class="code-block">
 max_usb_current=1
@@ -84,21 +89,24 @@ config_hdmi_boost=2
         jednak przy użyciu tej opcji, prąd wzrasata do 1,2 A.</li>
       <li><code class="code-inline">hdmi_group</code> - określa grupę
         wyświetlaczy korzystających z HDMI. Na przykład telewizory oraz
-        monitory korzystają zupełnie innych standardów. Jednak nie musimy się
-        tym przejmować ponieważ ta opcja oraz opcja poniżej służą jedynie
-        umożliwieniu użycia opcji <code class="code-inline">hdmi_cvt</code>.</li>
+        monitory korzystają zupełnie innych standardów. Monitory podłączane
+        do komputerów jak i omawiany tutaj wyświetlacz należą do grupy
+        oznaczonej przez cyfrę <code class="code-inline">2</code>.</li>
       <li><code class="code-inline">hdmi_mode</code> - definiuje domyślną
-        rodzielczość, odświeżanie oraz aspekt ekranu, jak będziemy mogli
-        zauważyć tryb <code class="code-inline">87</code> znajduje się w poza
-        tabelą (link na końcu artykułu), służy on jedynie umożliwieniu
-        ręcznego ustawienia powyższych cech obrazu aby były prawidłowo
-        wyświelane na podłączonym ekranie.</li>
+        rodzielczość, odświeżanie oraz aspekt ekranu. Na stronie podanej
+        w źródłach znajduje się tabela z trybami HDMI dla grupy 2, nie ma tam 
+        trybu 87.
+        Nadanie tej opcji takiej wartości, pozwoli użyć stworzonego przez opcję
+        <code class="code-inline">hdmi_cvt</code> tryby w drugiej grupie.</li>
       <li><code class="code-inline">hdmi_cvt</code> - umożliwia wpisanie
-        własnych ustawień obrazu, dając możliwość zedefiniowania rozdzielczości,
+        własnych ustawień standardu <em>VESA CVT</em>, dając możliwość 
+        zdefiniowania rozdzielczości,
         częstotliwości obrazu oraz jego formatu. Pozostałe trzy zera odnoszą
         się głównie do cech ekranów kineskopowych i mogą zostać pominięte,
-        ponieważ są one domyślną wartość. Warto dodać że ta opcja utworzy
-        tryb hdmi <code class="code-inline">87</code>.</li>
+        ponieważ w naszym przypadku są to domyślne wartości. Użycie tej opcji
+        wiąże się ze wskazaniem nowego trybu z pomocą opcji
+        <code class="code-inline">hdmi_group</code> oraz
+        <code class="code-inline">hdmi_mode</code>.</li>
       <li><code class="code-inline">hdmi_ignore_edid</code> - opcją załącza
         ignorowanie danych identyfikacyjnych wyświetlacza, jeśli wyświetlacz
         ich nie posiada. Użycie wartości <code class="code-inline">0xa5000080</code>
@@ -110,31 +118,34 @@ config_hdmi_boost=2
     </ul>
     <p>
       Zapisujemy zmiany w pliku. Teraz możemy włożyć kartę do maliny a
-      następnie podłączyć nasz wyświetlacz. 7-calowych wyświetlaczy do RPi jest
+      następnie podłączyć nasz wyświetlacz.
+    </p>
+    <p>
+      7-calowych wyświetlaczy do RPi jest
       dostępnych na rynku bardzo wiele, różnią się one rodzielczością oraz 
       ilością dostępnych złączy. Część z nich to po prostu chińskie klony
       oryginalnego produktu marki <em>WaveShare</em>, i ja również otrzymałem
       taki klon. Głowną różnicą są chyba złącza znajdujące się z tyłu
-      wyświetlacza. Wyświetlacz, który ja otrzymałem wyglądał mniej więcej tak: 
+      wyświetlacza. Wyświetlacz, który ja otrzymałem wyglądał mniej więcej 
+      tak:
     </p>
     <p>
-      <img src="https://i.ibb.co/h7RDQLh/7-inch-display.jpg" alt="7-inch-display" border="0">
+      <img src="https://i.ibb.co/h7RDQLh/7-inch-display.jpg" alt="7-inch-display" border="0" style="width: 100%;">
     </p>
     <p>
-      Mniej więcej, ponieważ zdjęcia nie zrobiłem. A obrazek powyżej jest tylko
-      zdjęciem poglądowym. Oryginalny wyświetlacz 7-calowy firmwy 
-      <em>WaveShare</em> wygląda identycznie jak ten, przedstawiony w ramce
-      oznaczonej <em>7"</em>.
+      Mniej więcej, ponieważ zdjęcia nie zrobiłem, a obrazek powyżej jest tylko
+      zdjęciem poglądowym. Oryginalny wyświetlacz 7-calowy firmy
+      <em>WaveShare</em> został przedstawiony poniżej (przynajmniej jego tył).
     </p>
     <p>
-      <img src="https://i.ibb.co/QXsmbDv/RPi-LCD-Anti-Piracy-l.jpg" alt="RPi-LCD-Anti-Piracy-l" border="0">
+      <img src="https://i.ibb.co/tmPPRr0/7-inch-waveshare.jpg" alt="7-inch-waveshare" border="0" style="width: 100%;">
     </p>
     <p>
       Istotną w naszym przypadku różnicą są złącza. W oryginalny wyświetlacz
       mamy tylko jedno złącze USB, natomiast w klonie dwa i oba podpisane jako
-      "<em>touch</em>". Więc jeśli dysonujemy klonem<strong>Kabel USB 
+      "<em>touch</em>". Więc jeśli dysonujemy klonem <strong>Kabel USB 
       podłączamy po <u>drugiego</u> portu USB, nad przełącznikiem 
-      "<em>backlight</em>"</strong>. Z HDMI to chyba wiadomo. Po podłączeniu
+      "<em>Backlight</em>"</strong>. Z HDMI to chyba wiadomo. Po podłączeniu
       możemy uruchomić Raspberry. Po nieco dłuższym procesie uruchamiania,
       na wyświetlaczu pojawi się fragment obrazu. Obraz wyświetlany przez
       system operacyjny jest w znaczanie większej rozdzielczości niż
@@ -143,9 +154,10 @@ config_hdmi_boost=2
       tworzymy mały skrypt powłoki z poniższych poleceń. Jednak przed
       przystąpieniem do pisania skryptu należy jeszcze poznać nazwę wyjścia
       wideo jaka figuruje na serwerze X Window, za pomocą polecenia
-      <strong>xrandr</strong> jesteśmy w stanie wypisać dostępe w systemie
+      <strong>xrandr</strong> jesteśmy w stanie wypisać dostępne w systemie
       wyjścia wideo, nazwy znajdują się na początku linii nad listą dostępnych
-      rozdzielczości dla danego wyświetlacza. W moim przypadku było to HDMI-2.
+      rozdzielczości dla danego wyświetlacza. W moim przypadku było to 
+      <code class="code-inline">HDMI-2</code>.
     </p>
 <pre class="code-block">
 #!/bin/bash
@@ -156,7 +168,7 @@ xrandr --output HDMI-2 --mode 1024x60_60.00
 </pre>
     <p>
       Wartości użyte w poleceniu <code class="code-inline">xrandr --newmode</code>
-      zostały uzyskane za pomocą poniższego polecenia.
+      zostały uzyskane za pomocą poniższego polecenia:
     </p>
 <pre class="code-block">
 $ cvt 1024 600 60
@@ -167,7 +179,7 @@ $ cvt 1024 600 60
       Niestety aby wyjaśnić kolejne wartości zwracane przez to polecenie,
       trzeby by zagłegić się w lekturę standardu, co wykracza poza ramy tego
       materiału. Najlepiej jest poprostu skopiować fragment wyjścia polecenia
-      <code class="code-inline">cvt</code>, do argumenty polecenia
+      <code class="code-inline">cvt</code>, do argumentu polecenia
       <code class="code-inline">xrandr --newmode</code>.
     </p>
     <p>
@@ -186,12 +198,18 @@ $ cvt 1024 600 60
       że na pewno się uruchomi.
     </p>
     <p>
+      Teraz moży uruchomić ponownie Raspberry. Po uruchomieniu pulpit powinien
+      być idealnie dopasowany do używanego przez nas wyświetlacza.
+    </p>
+    <p>
       Źródła:
       <ol>
         <li><a href="https://www.youtube.com/watch?v=TYzOhgUmZcw">Konfiguracja wyświetlania obrazu w pliku config.txt</a></li>
-        <li><a href="https://www.raspberrypi.com/documentation/computers/config_txt.html">Opis opcji z konfiguracji pliku /boot/config.txt</a></li>
+        <li><a href="https://www.raspberrypi.com/documentation/computers/config_txt.html">Dokumentacja opcji w pliku /boot/config.txt</a></li>
         <li><a href="https://ronboelectronics.en.made-in-china.com/product/usynxqbMlFkW/China-Capacitive-Touch-7-0-Inch-1024X600-HDMI-LCD-Monitor-Panel-with-Driver-Board-for-Raspberry-Pi-PC-Monitor.html">Zdjęcie chińskiego klona wyświetlacza WaveShare</a></li>
-        <li><a href="https://www.waveshare.com/wiki/7inch_HDMI_LCD_(C)">Zdjęcie przedstawiające między innymi oryginalny wyświetlacz</a></li>
+        <li><a href="https://allegro.pl/oferta/lcd-raspberry-pi-tft-7-c-ver-3-1-hdmi-7707088006">Zdjęcie przedstawiające tył oryginalnego wyświetlacza</a></li>
+        <li><a href="https://raspberrypi.stackexchange.com/questions/106569/where-to-put-pi-users-startup-scripts-raspbian-x11">Scieżka do pliku autostartu</a></li>
+        <li><a href="https://www.wikihow.com/Execute-a-Script-at-Startup-on-the-Raspberry-Pi#Using-the-Autostart-File">Co należy wpisać w pliku autostartu</a></li>
       </ol>
     </p>
     <p>
@@ -199,7 +217,7 @@ $ cvt 1024 600 60
     </p>
 	</div>
 		<p style="margin: 15px; padding: 0; outline: 0;">
-			2021; COPYLEFT; ALL RIGHTS REVERSED;
+			2022; COPYLEFT; ALL RIGHTS REVERSED;
 		</p>
 
 	</body>

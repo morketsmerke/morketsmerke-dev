@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="utf-8" />
+			<link rel="icon" type="image/png" href="https://i.ibb.co/khy45hh/mm.png">
+			<style>
+				.code-block {
+					display: block;
+					background-color: silver;
+					font-family: monospace;
+					font-weight: bolder;
+				}
+				.code-inline {
+					background-color: silver;
+					font-family: monospace;
+					font-weight: bolder;
+				}
+				p { text-align: justify; }
+			</style>
+		</head>
+
+
+		<body style="font-family: monospace;" >
+<pre>
+  _______            ___   ______     _      __
+ /_  __(_)___  _____( _ ) /_  __/____(_)____/ /_______
+  / / / / __ \/ ___/ __ \/|/ / / ___/ / ___/ //_/ ___/
+ / / / / /_/ (__  ) /_/  &lt;/ / / /  / / /__/ ,&lt; (__  )
+/_/ /_/ .___/____/\____/\/_/ /_/  /_/\___/_/|_/____/
+     /_/
+</pre>
+
+		<p style="margin: 15px; padding: 0; outline: 0; font-size: 18pt;">
+			&#9760;&nbsp;<a href="https://morketsmerke.github.io/">morketsmerke</a>&nbsp;&#9760;
+		</p>
+
+		<div style="margin-left: auto; margin-right: auto; width: 80%;">
+      <p>
+        W zeszłym tygodniu na mój warszta trafiły dwa laptopy. Jeden zupełnie
+        nowy, zakupiony na potrzeby programu diagnostycznego dla ciężarówek.
+        Drugi zaś nieco już zużyty. Ów program jest rozpowadzany na zasadzie
+        gotowego środowiska znajdującego się na maszynie wirtualnej VMware.
+        Mój zleceniodawca poprosił mnie abym oczyścił ten stary laptop i
+        generalnie przystosował go do tego aby działa na nim tylko ten program
+        nic więcej. Starszy laptop to <em>Dell Inspiron 3542</em> z i3 czwartej
+        generacji, 4GB ramu oraz tradycjnym dyskiem talerzowym o pojemności
+        500GB. Szału nie ma, na VMware ten laptop jest za słaby. Sprawdziłem
+        że sama maszyna ma przydzielone 3 GB, najwyraźniej tyle wymaga.
+      </p>
+      <p>
+        Do głowy przyszedł mi pomysł: a co jeśli by wyciągnąć obraz dysku z
+        maszyny. Na początku straciłem trochę czasu, na szukanie sprawdzonego
+        narzędzia, które musiało zginąć pod czas awarii uszkodzenia przez mnie
+        LVM-u na serwerze plików w warsztacie. No cóż stwierdziłem, że jak
+        nie mam obrazu, to go zrobie. Niestety po odszukaniu na gryzoniu
+        programu w odpowiedniej wersji, nie byłem wstanie utworzyć obrazu płyty
+        gdyż ADK dla Windows 8.1, nie jest już dostępne. Microsoft radzi użycie
+        ADK dla Windows 10, program nie chce jednak tego przyjąć. A utworzone
+        na pendrivie środowisko oparte na Linux, nie miało w ogóle funkcji
+        funkcji utworzenia kopii zapasowej dysku. Więc zacząłem szukać jakiejś
+        alternatywy, najlepiej <em>open source</em> i do głowy wpadła mi
+        <strong>Clonezilla</strong> - to dystrybucja GNU/Linux oparta na
+        Debianie służąca tworzeniu kopii zapasowych partycji czy całych dysków.
+      </p>
+      <p>
+        Obrazy przeznaczone dla i386 oraz amd64 znajdziemy na stronie projektu.
+        Tu warto zaznaczyć, że najpiej jest wybrać jako mirror <em>OSDN</em>.
+        Dla celów testowych przedstawie przypadek, przeniesienia Windows 7 
+        Starter 32 bit na netbooka Acer Aspire One. Aby przenieść system z
+        maszyny wirtualnej najlepiej jest operować, udziałem <em>Samba</em>.
+        Ponieważ te pliki musimy zgrać na fizyczny sprzęt, więc muszą się
+        pojawić na fizycznym nośniku, a <em>Clonezilla</em> jest wstanie 
+        utworzyć backup dysku na udziale sieciowym.
+      </p>
+      <p>
+        Pracę rozpoczynamy od załadowania do wirtualnego napędu obrazu płyt z
+        obrazem iso <em>Clonezilla</em>, do maszyny wirtualnej i uruchomienie
+        jej z tego orazu.
+      </p>
+		</div>
+
+		<p style="margin: 15px; padding: 0; outline: 0;">
+			2022; COPYLEFT; ALL RIGHTS REVERSED;
+		</p>
+
+		</body>
+	</html>

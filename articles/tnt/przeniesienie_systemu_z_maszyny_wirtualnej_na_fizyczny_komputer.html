@@ -70,12 +70,62 @@
         maszyny wirtualnej najlepiej jest operować, udziałem <em>Samba</em>.
         Ponieważ te pliki musimy zgrać na fizyczny sprzęt, więc muszą się
         pojawić na fizycznym nośniku, a <em>Clonezilla</em> jest wstanie 
-        utworzyć backup dysku na udziale sieciowym.
+        utworzyć backup dysku na udziale sieciowym. Tak wygląda maszyna
+        wirtualna, z której będziemy przenosić nasz system
+      </p>
+      <p>
+        <img src="https://i.ibb.co/j5qWW3X/01-clonezilla-okno-z-maszyn.jpg" alt="01-clonezilla-okno-z-maszyn" border="0" style="width: 100%;">
       </p>
       <p>
         Pracę rozpoczynamy od załadowania do wirtualnego napędu obrazu płyt z
         obrazem iso <em>Clonezilla</em>, do maszyny wirtualnej i uruchomienie
-        jej z tego orazu.
+        jej z tego orazu. Z menu programu rozruchowego wybieramy pierwszą,
+        domyślną opcję.
+      </p>
+      <p>
+        Po uruchomieniu zostaniemy zapytani o ustawienia lokalizacyjne takiej
+        jak język (<em>Clonezilla</em> jest po polsku) oraz układ klawiatury
+        (pozostawiamy go domyślnie). Nastepnie uruchamiamy już właściwy
+        proces wybierając opcje <em>Start_Clonezilla</em>.
+      </p>
+      <p>
+        Program może pracować w wielu trybach, jednak nas będzie interesować
+        wyłącznie praca z obrazmi dlatego w następnym oknie wybieramy opcje
+        <em>device-image</em>.
+      </p>
+      <p>
+        Tak jak już wspomniałem na wstępnie, jako miejsca docelowego na obraz
+        wykorzystamy udział samba. Tworząc obrazy na fizycznych maszynach
+        możemy użyć pendrive-a lub dysku zewnetrznego, jednak w naszym
+        przypadku potrzeba by nieco więcej zachodu aby przekazać maszynie dysk
+        zewnętrzny, a i wydajność mogła być niezbyt zadowalająca. Dlatego też
+        teraz wybieramy opcje <em>samba_server</em>. 
+      </p>
+      <p>
+        Przechodząc przez kolejne okna będziemy musieli podać wszystkie
+        parametry potrzebne do połączenia z udziałem. Jednak najpierw musimy
+        dokonać konfiguracji sieci środowiska <em>Clonezilla</em>. Najlepiej
+        aby pobrać ją z serwera DHCP, więc pozostawiamy domyślną opcję
+        <em>dhcp</em>. Po tej konfiguracji przysła pora na podanie parametrów
+        do połączenia się z udziałem.
+      </p>
+      <p>
+        Podajemy kolejno: adres ip serwera <em>Samba</em>, domenę (jeśli domena
+        nie jest
+        ustawiona na serwerze, wybieramy przycisk "Anuluj"), nazwę użytkownika
+        mającego uprawnienia do zapisu na docelowym udziale, nazwę udziału (
+        uwaga, po <em>slashu</em> - jak by to był folder, ale to nazwa udziału).
+        Po podaniu ostatniej informacji, zostaniemy poproszeni o wybór wersji
+        protokołu SMB. Mój serwer to <em>Samba</em> postawiona na Debian 10, 
+        więc pozostawiam tę wartość domyślnie. Kolejną jest "tryb
+        bezpieczestwa", jeśli udział nie stoi na jakimś archaiczym Windowsie
+        pozostawiamy <em>auto</em>. Po zatwierdzeniu tej opcji, zostanie nam
+        wyświetlony monit o potrzebie podania hasła, do udziału. Polecenie
+        pokazane w oknie jest tylko poglądowe i nie ma nic wspólnego z
+        właściwym poleceniem montującym udział, po wybraniu "OK" zostanie
+        zwrócony znak zachęty, proszący o hasło aby podmontować udział. Każdy
+        kto, kiedyś montował udział SMB za pomocą wiersza polecenia będzie
+        znać ten znak.
       </p>
 		</div>
 

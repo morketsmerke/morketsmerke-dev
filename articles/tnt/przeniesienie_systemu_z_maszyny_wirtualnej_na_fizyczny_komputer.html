@@ -127,6 +127,79 @@
         kto, kiedyś montował udział SMB za pomocą wiersza polecenia będzie
         znać ten znak.
       </p>
+      <p>
+        Po prawidłowym podłączeniu udziału, <em>Clonezilla</em> zwróci nam
+        tabelę z informacjami na temat udziału (głównie dostępnej przestrzeni
+        dyskowej oraz punkcie montowania). Po zamontowaniu miejsca docelowego
+        w <em>/home/partimag</em>, pora wybrać tryb pracy programu
+        <em>Clonezilla</em>. Do wyboru będziemy mieli tryb <em>Beginner</em> -
+        początkujący lub <em>Expert</em>. Jako iż jest to moja pierwsza w ogóle
+        styczność z tym narzędziem, sam wybrałem tryb dla początkujących. 
+      </p>
+      <p>
+        Po uruchomieniu programu dla początkujących, musimy zaznaczyć sposób
+        tworzenia kopii. <em>Clonezilla</em> może tworzyć kopie całych dysków 
+        lub
+        poszczególnych partycji. Dla rozpatrywanego przypadku najlepszym
+        rozwiązaniem jest zapisanie całego dysku. Instalacja najnowszych
+        systemów Windows jest zazwyczaj rozbijana na kilka partycji. Zatem
+        wybieramy opcje <em>savedisk</em>.
+      </p>
+      <p>
+        W następnym oknie zostaniem poproszeni o podanie nazwy dla katalogu,
+        w którym przechowywany będzie obraz. To dobry i jedyny moment, aby go
+        opisać. Na przykład: "Windows7_Starter_AOD260", (AOD260 to oznaczenie
+        modelu mojego netbooka).
+      </p>
+      <p>
+        Po utworzeniu odpowiedniego katalogu, pora na wybór dysku źródłowego.
+        Zaznaczamy dysk z listy, przechodzimy na przycisk "OK" i klikamy Enter.
+      </p>
+      <p>
+        W kolejnym pytaniu program za sugeruje man sprawdzenie i ewenualną
+        naprawę systemu plików. Jednak dla systemów takicj jak NTFS jest to 
+        nie możliwe, więc wybieramy opcje <em>-sfsck</em> (pominięcie
+        sprawdzenia systemu plików). Domyślnie <em>Clonezilla</em> chce 
+        sprawdzić
+        poprawność zapisanego obrazu. W tym przypadku zostawiam pełną
+        dowolność. Ja, aby nie przedłużać tworzenia obrazu, czy zakończenia
+        procesu pominołem sprawdzanie obrazu. 
+      </p>
+      <p>
+        Kolejne okno zawiera pytanie o
+        szyforwanie obrazu, tutaj również pozostawiam dowolność, jednak jeśli
+        tworzymy obraz zaszyfrowanego dysku, to sam obraz również dobrze jest
+        zaszyfrować.
+      </p>
+      <p>
+        Przed wykonaniem obrazu należy zdefiniować jeszcze
+        czynność wykonywaną po ukończeniu tego procesu. Co ma zrobić 
+        <em>Clonezilla</em>. Może przejść do wiersza poleceń, wyłączyć lub
+        zrestartować komputer. Może również przjeść menu, z którego wybierzemy
+        czynność, ta czynność jest przydatna kiedy chcemy utworzyć obrazy 
+        większej ilości dysków, ponieważ będzie możliwe z poziomu tego menu
+        ponowne uruchomienie narzędzia z zamontowanym już miejscem docelowym
+        dla obrazu. Tutaj też możemy wybrać dowolnie. Ja wybrałem opcję
+        <em>-choose</em> uruchamiającą owe menu.
+      </p>
+      <p>
+        Teraz kiedy wszystkie ustawienia zostały przyjęte. <em>Clonezilla</em>
+        wyświetli polecenie, którego możemy użyć korzystając z wiersza poleceń,
+        aby utworzyć obraz bez przechodzenia przez te wszystkie okna. Klikamy
+        "Enter" w celu kontynuowania działania programu.
+      </p>
+      <p>
+        Po przetworzeniu kilku informacji o dysku źródłowym, program wyświetli
+        informacje o tym, że zostanie utworzony obraz źródłowego dysku oraz
+        pytanie czy chcemy kontynuować. Potwierdzamy klawiszem "Enter".
+      </p>
+      <p>
+        W tym momencie rozpoczyna pracę już właściwy program <strong>Partclone</strong>
+        znany między innymi z projektu FOG (Free OpenSource Ghost - ma podobne
+        zastosowanie co <em>Clonezilla</em>, jednak jest bardziej ukierunkowny
+        na wykorzystanie sieciowe oraz masowe. Przydaje się przy reinstalacji
+        systemów operacyjnych w szkolnych salach komputerowych).
+      </p>
 		</div>
 
 		<p style="margin: 15px; padding: 0; outline: 0;">

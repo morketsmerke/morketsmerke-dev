@@ -93,52 +93,99 @@
       </p>
       <p>
         Program może pracować w wielu trybach, jednak nas będzie interesować
-        wyłącznie praca z obrazmi dlatego w następnym oknie wybieramy opcje
+        wyłącznie praca z obrazami dlatego w następnym oknie wybieramy opcje
         <em>device-image</em>.
       </p>
       <p>
+        <img src="https://i.ibb.co/zQD7hsk/06-clonezilla-praca-z-obrazami.jpg" alt="06-clonezilla-praca-z-obrazami" border="0" style="width: 50%;">
+      </p>
+      <p>
         Tak jak już wspomniałem na wstępnie, jako miejsca docelowego na obraz
-        wykorzystamy udział samba. Tworząc obrazy na fizycznych maszynach
+        wykorzystamy udział <em>Samba</em>. Tworząc obrazy na fizycznych maszynach
         możemy użyć pendrive-a lub dysku zewnetrznego, jednak w naszym
         przypadku potrzeba by nieco więcej zachodu aby przekazać maszynie dysk
         zewnętrzny, a i wydajność mogła być niezbyt zadowalająca. Dlatego też
         teraz wybieramy opcje <em>samba_server</em>. 
       </p>
       <p>
+        <img src="https://i.ibb.co/d4Gjb4M/07-clonezilla-wybranie-miejsca-docelowego-dla-obrazow.jpg" alt="07-clonezilla-wybranie-miejsca-docelowego-dla-obrazow" border="0" style="width: 50%;">
+      </p>
+      <p>
         Przechodząc przez kolejne okna będziemy musieli podać wszystkie
         parametry potrzebne do połączenia z udziałem. Jednak najpierw musimy
         dokonać konfiguracji sieci środowiska <em>Clonezilla</em>. Najlepiej
         aby pobrać ją z serwera DHCP, więc pozostawiamy domyślną opcję
-        <em>dhcp</em>. Po tej konfiguracji przysła pora na podanie parametrów
+        <em>dhcp</em>. Po tej konfiguracji przyszła pora na podanie parametrów
         do połączenia się z udziałem.
       </p>
       <p>
-        Podajemy kolejno: adres ip serwera <em>Samba</em>, domenę (jeśli domena
-        nie jest
-        ustawiona na serwerze, wybieramy przycisk "Anuluj"), nazwę użytkownika
-        mającego uprawnienia do zapisu na docelowym udziale, nazwę udziału (
-        uwaga, po <em>slashu</em> - jak by to był folder, ale to nazwa udziału).
-        Po podaniu ostatniej informacji, zostaniemy poproszeni o wybór wersji
-        protokołu SMB. Mój serwer to <em>Samba</em> postawiona na Debian 10, 
-        więc pozostawiam tę wartość domyślnie. Kolejną jest "tryb
-        bezpieczestwa", jeśli udział nie stoi na jakimś archaiczym Windowsie
-        pozostawiamy <em>auto</em>. Po zatwierdzeniu tej opcji, zostanie nam
-        wyświetlony monit o potrzebie podania hasła, do udziału. Polecenie
-        pokazane w oknie jest tylko poglądowe i nie ma nic wspólnego z
-        właściwym poleceniem montującym udział, po wybraniu "OK" zostanie
-        zwrócony znak zachęty, proszący o hasło aby podmontować udział. Każdy
-        kto, kiedyś montował udział SMB za pomocą wiersza polecenia będzie
-        znać ten znak.
+        <img src="https://i.ibb.co/gV1M288/08-clonezilla-konfiguracja-karty-sieciowej.jpg" alt="08-clonezilla-konfiguracja-karty-sieciowej" border="0" style="width: 50%;">
+      </p>
+      <p>
+        Podajemy adres ip serwera <em>Samba</em>.
       </p>
       <p>
         <img src="https://i.ibb.co/KNnGdJ2/09-clonezilla-wskazujemy-nazwe-lub-ip-serwera-samba.jpg" alt="09-clonezilla-wskazujemy-nazwe-lub-ip-serwera-samba" border="0" style="width: 50%;">
+      </p>
+      <p>
+        Następnie domenę (jeśli domena nie jest ustawiona na serwerze, 
+        wybieramy przycisk "Anuluj").
+      <p>
         <img src="https://i.ibb.co/R9K6K4Q/10-clonezilla-domena-na-serwerze-samba.jpg" alt="10-clonezilla-domena-na-serwerze-samba" border="0" style="width: 50%;">
+      </p>
+      <p>
+        Teraz podajemy nazwę użytkownika mającego uprawnienia do zapisu na 
+        docelowym udziale.
+      </p>
+      <p>
         <img src="https://i.ibb.co/Yyq2yQ0/11-clonezilla-uzytkownik-udzialu-na-serwerze.jpg" alt="11-clonezilla-uzytkownik-udzialu-na-serwerze" border="0" style="width: 50%;">
+      </p>
+      <p>
+        Nazwę udziału (uwaga), podajemy po <em>slashu</em> - jak by to był 
+        folder, ale to nazwa udziału.
+      </p>
+      <p>
+        <img src="https://i.ibb.co/6gZjZ9j/12-clonezilla-wskazanie-nazwy-udzialu.jpg" alt="12-clonezilla-wskazanie-nazwy-udzialu" border="0" style="width: 50%;">
+      </p>
+      <p>
+        Po podaniu ostatniej informacji, zostaniemy poproszeni o wybór wersji
+        protokołu SMB. Mój serwer to <em>Samba</em> postawiona na Debian 10, 
+        więc pozostawiam tę wartość domyślnie.
+      </p>
+      <p>
+        <img src="https://i.ibb.co/BNggDmq/13-clonezilla-wybranie-wersji-protokolu.jpg" alt="13-clonezilla-wybranie-wersji-protokolu" border="0" style="width: 50%;">
+      </p>
+      <p>
+        Kolejną jest "tryb bezpieczestwa", jeśli udział nie stoi na jakimś 
+        archaiczym Windowsie pozostawiamy <em>auto</em>.
+      </p>
+      <p>
+        <img src="https://i.ibb.co/0fpRTKk/14-clonezilla-wybor-trybu-bezpieczenstwa.jpg" alt="14-clonezilla-wybor-trybu-bezpieczenstwa" border="0" style="width: 50%;">
+      </p>
+      <p>
+        Po zatwierdzeniu tej opcji, zostanie nam wyświetlony monit o potrzebie 
+        podania hasła, do udziału. Polecenie pokazane w oknie jest tylko 
+        poglądowe i nie ma nic wspólnego z właściwym poleceniem montującym 
+        udział.
+      </p>
+      <p>
+        <img src="https://i.ibb.co/0fpRTKk/14-clonezilla-wybor-trybu-bezpieczenstwa.jpg" alt="14-clonezilla-wybor-trybu-bezpieczenstwa" border="0" style="width: 50%;">
+      </p>
+      <p>
+        Po wybraniu "OK" zostanie zwrócony znak zachęty, proszący o hasło aby 
+        podmontować udział. Każdy kto, kiedyś montował udział SMB za pomocą 
+        wiersza poleceń będzie znać ten znak.
+      </p>
+      <p>
+        <img src="https://i.ibb.co/VH2yG42/16-clonezilla-wpisywanie-hasla-do-udzialu.jpg" alt="16-clonezilla-wpisywanie-hasla-do-udzialu" border="0" style="width: 50%;">
       </p>
       <p>
         Po prawidłowym podłączeniu udziału, <em>Clonezilla</em> zwróci nam
         tabelę z informacjami na temat udziału (dostępna przestrzeń dysku,
         punkt montowania).
+      </p>
+      <p>
+        <img src="https://i.ibb.co/g4KqMTL/17-clonezilla-informacja-zwrotna-o-zamontowanym-udziale.jpg" alt="17-clonezilla-informacja-zwrotna-o-zamontowanym-udziale" border="0" style="width: 50%;"> 
       </p>
       <p>
         Po zamontowaniu miejsca docelowego

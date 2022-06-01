@@ -4057,9 +4057,103 @@ $ sudo reboot
         </p>
         <p>
           Na konfiguracje składają się tradycyjne reguły oraz dyrektywy
-          dostępne w rozszerzonej wersji <em>rsyslog</em>. Dyrektywy możem
+          dostępne w rozszerzonej wersji <em>rsyslog</em>. Dyrektywy możemy
           poznać po tym, że rozpoczynają się od symbolu dolara
-          (<strong>$</strong>).
+          (<strong>$</strong>). Natomiast reguły konfiguracyne klasycznej
+          wersji protokołu są nieco bardziej złożone.
+        </p>
+        <p>
+          Reguły protokołu <em>syslog</em> określają sposób przychwytywania
+          komunikatów diagostnycznych oraz docelowe miejsce ich zapisu. Zasady
+          składają się z selektora i akcji, o to kilka z nich.
+        </p>
+<pre class="code-block">
+*.info;mail.none;authpriv.none;cron.none  /var/log/messages
+authpriv.*  /var/log/secure,root
+mail.*      -/var/log/maillog
+*.emerg     :omusrmsg:*
+</pre>
+        <p>
+          Reguły <em>syslog</em> możemy podzielić na dwie części prawą i lewą.
+          Po lewej stronie znajduje się selektor, określający przechwywane
+          dane. Natomiast po prawej znajduje się akcja zazwyczaj jest ścieżka
+          do pliku docelowego dla przychwconych komunikatów. Przy jednej ze
+          ścieżek znajduje się myślnik, który powoduje nie synchronizowanie
+          tego pliku jeśli włączono by synchronizacje (jest ona domyślnie
+          wyłączona). Synchronizacja powoduje znaczny spadek wydajność i może
+          doprowadzić do gubienia komunikatów.
+        </p>
+        <p>
+          Selektor zaś składa się z kolejnych dwóch części: 
+          <strong>funkcji</strong> oraz <strong>priorytetu</strong>. Funkcja
+          określa źródło komunikatów i są one na stałe zaimplementowane w
+          <em>rsyslog</em> a priorytet ich rodzaj, które są następujące
+          (ułożenie według od najniższego do najwyższego):
+        </p>
+<pre class="code-block">
+debug, info, notice, warning, error, crit, alert, emerg
+</pre>
+        <p>
+          Tworząc selektor oddziela się funkcję od priorytetu za pomocą kropki.
+          Priorytet służ do ograniczania wielkość przechwytywanych komunikatów,
+          albowiem <em>rsyslog</em> rozpoczyna przechwytywanie komunikatów od
+          tego priorytetu w górę. Jeśli przypatrzmy się pierwszej linii
+          konfiguracji, zauważy, że do pliku 
+          <code class="code-inline">/var/log/messages</code> będzie
+          spływać masa informacji, ponieważ selektor uwzględnia komunikaty
+          ze wszystkich placów z minimalnym priorytetem 
+          <code class="code-inline">debug</code>. Istnieją jednak pewne
+          wykluczenia. Na selektor może składać się więcej niż jedna para
+          <em>funkcja.priorytet</em>, co również widać w pierwszej linii
+          przykładu. Kolejne pary rozdzielone są średnikami. W omawianym
+          przykładzie, pary mają ten sam priorytet, który nie został
+          uwzględniony na powyższej liście <strong>none</strong> powoduje
+          wyłączenie przechwytywania z użytych w raz z nim funkcji. Tak więc
+          w pierwszej linii przechwytywane będą komunikaty ze wszystkich
+          funkcji z minmalnym priorytetem <code class="code-inline">info</code>,
+          poza takimi funkcjami jak <code class="code-inline">mail</code>,
+          <code class="code-inline">authpriv</code> oraz 
+          <code class="code-inline">cron</code>. Komunikaty będą zapisywane
+          zgodnie z akcją w pliku <code class="code-inline">/var/log/messages</code>.
+        </p>
+        <p>
+          Innymi ciekawymi przypadkami w pokazanymi na przykładzie jest
+          podanie w akcji w drugiej linii dwóch miejsc docelowych. Pliku
+          <code class="code-inline">/var/log/secure</code> oraz nazwy
+          superużytkownika. Podanie jakiej kolwiek nazwy użytkownika w akcji
+          spowoduje przesłanie mu (za pomocą polecenia <strong>write</strong>)
+          komunikatu diagnostycznego, o ile użytkownik zezwala na wyświetlanie
+          tego typu komunikatów (polecenie <strong>mesg</strong>). Chodziaż
+          komunikaty wysłane przez superużytkownika są wyświetlane mimo tych
+          ustawień. Kolejnym przypadkiem związanym z wysyłaniem jest użycie
+          specjalnego <strong>modułu wyjściowego</strong> reprezentującego
+          konkretną akcje, w tym przypadku jest wysyłanie wiadomości do
+          zobrazowane w ostatniej linii przykładu. Jak mogliśmy zauważyć w
+          liniach reguł możemy używać symbolu wieloznacznego gwiazdku
+          (<strong>*</strong>).
+        </p>
+        <p>
+          Dyrektywy nowszej wersji daemona rejestrującego są dość proste
+          do zrozumienia i nie wymgają dodatkowego opisu.
+        </p>
+<pre class="code-block">
+$FileOwner syslog
+$FileGroup adm
+$FileCreateMode 0640
+$DirCreateMode 0775
+$Umask 0022
+</pre>
+        <p>
+          Jeśli chodzi o <em>syslog</em>, to w przypadku usługi rejestrowania
+          może stać się nie wiele złego, jedynym problemem jaki możemy
+          napotkać jest brak przechwytywania komunikatów z powodu 
+          nieuwzględnienia jakiejś funkcji lub priorytetu w selektorze.
+          Niemniej jednak rejestrator systemowy możemy przetestować za pomocą
+          polecenia <strong>logger</strong> podając mu parę 
+          <em>funkcja.priorytet</em> po opcji <strong>-p</strong>
+          (na stronie podręcznika opcja określona jest jako priorytet) oraz
+          komunikat do zapisania. Jeśli priorytet został pominięty, zostanie
+          użyty domyślny <em>user.notice</em>.
         </p>
       </div>
 			<p style="margin: 15px; padding: 0; outline: 0;">

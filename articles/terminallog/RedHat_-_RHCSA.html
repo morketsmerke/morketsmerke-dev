@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-	<html>
-		<head>
-			<meta charset="utf-8" />
-			<link rel="icon" type="image/png" href="https://i.ibb.co/khy45hh/mm.png">
-			<style>
-				.code-block {
-					display: block;
-					background-color: silver;
-					font-family: monospace;
-					font-weight: bolder;
-					text-align: left;
-				}
-				.code-inline {
-					background-color: silver;
-					font-family: monospace;
-					font-weight: bolder;
-				}
-				ul {
-					text-align: left;
-				}
-			</style>
-		</head>
-		<body style="font-family: monospace;" >
+<html>
+  <head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/png" href="https://i.ibb.co/khy45hh/mm.png">
+		<style>
+			.code-block {
+				display: block;
+				background-color: silver;
+				font-family: monospace;
+				font-weight: bolder;
+				text-align: left;
+			}
+			.code-inline {
+				background-color: silver;
+				font-family: monospace;
+				font-weight: bolder;
+			}
+			ul {
+				text-align: left;
+			}
+		</style>
+	</head>
+	<body style="font-family: monospace;" >
 <pre>
  ____          _ _   _       _   
 |  _ \ ___  __| | | | | __ _| |_ 
@@ -30,26 +30,128 @@
 |_| \_\___|\__,_|_| |_|\__,_|\__|
                                  
 </pre>
-<p style="margin: 0; padding: 0; outline: 0; font-size: 18pt;">
-	&#9760;&nbsp;<a href="https://morketsmerke.github.io">morketsmerke</a>&nbsp;&#9760;
-</p>
-			<div style="margin-left: auto; margin-right: auto; width: 80%;">
-        <h1>RedHat - Red Hat Certified System Administrator 8</h1>
-        <p>
-          Chcąc zmienić coś w swoim życiu postanowiłem, że zacznę od pracy.
-          Dalej chciałem pracować w IT (chociaż praca szkolnego administratora
-          jest porównywalna z pracą technika IT, tu ma ktoś problem z system
-          tu trzeba podłączyć rzutnik, szczerze to znudziła się praca tego 
-          typu), tylko na innym stanowisku. Dobrze czułem się pracując z
-          Linuksem, to była moja pasja. Znałem dwa stanowiska na których 
-          mógłbym pracować: Linux System Administrator lub Linux System
-          Engineer. Teraz na rynku pracy jeśli chodzi o IT ważniejsze są 
-          uzyskane certyfikaty i kursy niż wykształcenie. Szukając certyfikatów,
-          które spowodują większe szanse na zatrudnienie, znalazłem dwa.
-          Linux Fundation oraz Red Hat. Po przeczytaniu postu a na Reddit
-          doszedłem do wniosku, że lepszym wyborem będzie Red Hat. 
-        </p>
-			</div>
+    <p style="margin: 0; padding: 0; outline: 0; font-size: 18pt;">
+	    &#9760;&nbsp;<a href="https://morketsmerke.github.io">morketsmerke</a>&nbsp;&#9760;
+    </p>
+		<div style="margin-left: auto; margin-right: auto; width: 80%;">
+      <h1>RedHat - Red Hat Certified System Administrator 8</h1>
+      <p>
+        Chcąc zmienić coś w swoim życiu postanowiłem, że zacznę od pracy.
+        Dalej chciałem pracować w IT (chociaż praca szkolnego administratora
+        jest porównywalna z pracą technika IT, tu ma ktoś problem z system
+        tu trzeba podłączyć rzutnik, szczerze to znudziła się praca tego 
+        typu), tylko na innym stanowisku. Dobrze czułem się pracując z
+        Linuksem, to była moja pasja. Znałem dwa stanowiska na których 
+        mógłbym pracować: Linux System Administrator lub Linux System
+        Engineer. Teraz na rynku pracy jeśli chodzi o IT ważniejsze są 
+        uzyskane certyfikaty i kursy niż wykształcenie. Szukając certyfikatów,
+        które spowodują większe szanse na zatrudnienie, znalazłem dwa.
+        Linux Fundation oraz Red Hat. Po przeczytaniu postu a na Reddit
+        doszedłem do wniosku, że lepszym wyborem będzie Red Hat. Jeśli
+        chodzi o produkcyjne wykorzystanie Linuksa to prym wśród firm
+        wiedzie Red Hat lub jego darmowy odpowiednik. Kiedyś CentOS ale
+        obecnie może być to zarówno Rocky Linux lub Alma Linux, oba są
+        pochodnymi Red Hat. Szukając jakiś materiałów w internecie, które
+        pomogły by mi się przygotować natrafiłem na Amazonie na książke
+        Asghar Ghori pt. <em>RHCSA Red Hat Enterprise Linux 8 (UPDATED): 
+        Training and Exam Preparation Guide (EX200), Second Edition</em>
+        zamówiłem ją na swojego Kindla i zacząłem przygotowywać się do
+        egzaminu. 
+      </p>
+      <h2>Egzamin</h2>
+      <p>
+        Egzamin EX200 dający uprawnienia Red Hat Certified System
+        Administrator jest egzamin praktycznym sprawdzającym umiejętność
+        instalacji, konfiguracji oraz rozwiązywania podstawowych problemów
+        administracyjnych na dystrybucji Red Hat. Egzamin będzie odbywać
+        się w postaci elektronicznej i zdający będzie mięć do dyspozycji
+        dwie maszyny wirtualne do wykonania zadania egzaminacyjnego. Takie
+        też środowisko przygotujemy sobie do nauki. Na dzień 11 listopada
+        2020 (tak jak podaje książka) egzamin obejmować 69 zagadnień jednak
+        ta liczba, ze względu na rozwój technologii jak i samego Red Hata
+        mogła ulec już zmianie.
+      </p>
+      <h2>Zagadnienia</h2>
+      <p>
+        Zagadnienia używane na egzaminie mogą cały czas ewoluować. Na
+        poniższej stronie zostały one opisane.
+        <a href="http://www.redhat.com/training/courses/ex200/examobjective">http://www.redhat.com/training/courses/ex200/examobjective</a>. Obecnie egzamin zadawany jest na
+        RHEL 9, wydany 17 maja 2022. Dość istotną zmianą w produkcji tego
+        systemu jest zmiana <em>upstreamu</em>. Ta wersja Red Hat nie jest
+        już oparta na Fedorze tak jak wszystkie do tej pory, ale na CentOS
+        Stream (wersja non-stream tej dystrybucji nie jest już dostępna stąd
+        rozbicie społeczonościowych dystrybucji do zastosowań produkcyjnych na
+        Rocky oraz Alma Linux) i tej wersji będziemy użwać na maszynach
+        wirtualnych.
+      </p>
+      <h2>Przygotowania</h2>
+      <p>
+        Kiedy uznałem, że chce zdobyć RHCSA, uzyskałem Red Hat na zasadzie
+        <em>Non-cost RHEL Individual Developer Subscription</em>, gdzie
+        istotne informacje znajdują się na stronie podanej poniżej.
+        <a href="https://developers.redhat.com/articles/faqs-no-cost-red-hat-enterprise-linux">https://developers.redhat.com/articles/faqs-no-cost-red-hat-enterprise-linux</a>
+        Przy użyciu tej subskrypcji uzyskamy dostęp do Red Hat przez rok na
+        16 instalacji (bez znaczenia czy to fizyczny komputer, czy maszyna
+        wirtualna). Po tym czasie należy zalogować się ponownie, zakceptować
+        warunki umowy i po 15 do 30 minut powinnimy uzyskać ponowny rok
+        subskrypcji i tak co roku. Wszystko jest opisane na powyższej stronie.
+        System w wersji 8.6 (ponieważ na wersję 9.0, moim zdaniem jest
+        za wcześnie, kiedyś zainstalowałem RHEL 8 na laptopie to non stop
+        otrzymywałem jakieś raporty o błedach) zainstalowałem na komputerze
+        codziennego użytku w pracownii. Najlepszym sposobem na nauczenie się
+        administracji systemu jest jego używanie, a że jest entuzajstą a nie
+        profesjonalistą, mój kontakt z systemami tego typu jest raczej dość
+        mocno ograniczony. Dlatego też przesiadłem się na RHEL, póki co ten
+        system poprostu działa, wcześniej korzystałem z Fedory 35 oraz
+        Debiana 11. Do celów dydaktycznych potrzebujemy peceta lub laptopa
+        z min. procesorem dwurdzeniowym, 8GB pamięci operacyjnej oraz 27GB
+        wolnej przestrzeni na dysku na potrzeby utworzenia maszyn wirtualnych
+        z wymagną przez ćwiczenia przestrzenią dyskową. Do wirtualizacji
+        użyjemy oprogramowania Oracle VirtualBox, dającego najprostszy
+        interfejs do interakcji z maszynami, gdyż przy późniejszych
+        zagadnienia będziemy musieli zmienić jej ustawienia lub dodać kilka
+        urządzeń. Czy ktoś zainstaluje na swoim komputerze RHEL czy nie to
+        już indywidualna sprawa i nie wypłynie ona wykonanie ćwiczeń. Nie
+        mniej jednak, w podpunkcie onośnie maszyn wirtualnych tego rodziału
+        przedstawie skrypt powłoki, który po uruchomiony będzie tworzyć
+        automatycznie maszyny wymagane do wykonania ćwiczeń. Ale póki co 
+        przedstawie teraz instalacje Oracle VirtualBox na RHEL 8.6.
+      </p>
+      <h3>Instalacja Oracle VirtualBox na RHEL 8.6</h3>
+      <p>
+        Pierwszą czynnością jest uruchomienie przeglądarki i przejście pod
+        adres: <a href="https://www.virtualbox.org/wiki/Linux_Downloads">https://www.virtualbox.org/wiki/Linux_Downloads</a>, na samym dole strony znajdują się pliki repozytorium
+        dla kilku dystrybucji Linuksa. Pobieramy ten przeznaczony dla RHEL
+        następnie przenosimy go do wskazanego na stronie katalogu. Następnie
+        możemy wydać polecenie:
+      </p>
+<pre class="code-block">
+$ sudo yum install VirtualBox
+</pre>
+      <p>
+        Po instalacji, przełączamy się w terminalu na użytkownika <em>root</em>.
+        Następnie wydajemy poniższe polecenia:
+      </p>
+<pre class="code-block">
+$ sudo su
+# akmods
+Checking kmods exist for 4.18.0-372.9.1.el8.x86_64         [  OK  ]
+# systemctl restart vboxdrv.service
+</pre>
+      <p>
+        Teraz Oracle VirtualBox jest gotów do działania.
+      </p>
+      <h3>Pozyskanie obrazu ISO z Red Hat Enterprise Linux 9</h3>
+      <p>
+        Aby uzyskać takowy obraz musimy zarejestrować się w subskrypcji dla
+        indywidualnych deweloperów. Przechodzimy na stronę <a href="https://developers.redhat.com/register">https://developers.redhat.com/register</a> i rejestrujemy się. Następnie
+        logujemy i po zalogowaniu przechodzimy na stronę: <a href="https://developers.redhat.com/products/rhel/download">https://developers.redhat.com/products/rhel/download</a>.
+        w sekcji <em>All Downloads</em> znajdują się wszystkie dostępne wersje
+        Red Hat objęte jeszcze wsparciem. Nas będzie interesować wyłącznie
+        wersja 9 i tą też pobieramy, oczywiście dla architektury <em>x86_64</em>
+        w wersji DVD.
+      </p>
+		</div>
 			<p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;
 			</p>

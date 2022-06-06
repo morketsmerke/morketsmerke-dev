@@ -106,11 +106,16 @@
         Debiana 11. Do celów dydaktycznych potrzebujemy peceta lub laptopa
         z min. procesorem dwurdzeniowym, 8GB pamięci operacyjnej oraz 27GB
         wolnej przestrzeni na dysku na potrzeby utworzenia maszyn wirtualnych
-        z wymagną przez ćwiczenia przestrzenią dyskową. Do wirtualizacji
+        z wymagną przez ćwiczenia przestrzenią dyskową oraz możliwością
+        wirtualzacji 64-bitowych systemów. Do tego celu 
         użyjemy oprogramowania Oracle VirtualBox, dającego najprostszy
         interfejs do interakcji z maszynami, gdyż przy późniejszych
         zagadnienia będziemy musieli zmienić jej ustawienia lub dodać kilka
-        urządzeń. Czy ktoś zainstaluje na swoim komputerze RHEL czy nie to
+        urządzeń, oczywiście jeśli ktoś czuje się mocny w innych środowiskach
+        może użyć swojego ulubionego, nie mniej jednak w trakcie nauki będzie
+        trzeba dokonać kilku zmian w na tych maszynach, a opisy zamieszczone
+        tutaj będą dotyczyć głównie VirtualBox. Czy ktoś zainstaluje na swoim 
+        komputerze RHEL czy nie to
         już indywidualna sprawa i nie wypłynie ona wykonanie ćwiczeń. Nie
         mniej jednak, w podpunkcie onośnie maszyn wirtualnych tego rodziału
         przedstawie skrypt powłoki, który po uruchomiony będzie tworzyć
@@ -151,9 +156,163 @@ Checking kmods exist for 4.18.0-372.9.1.el8.x86_64         [  OK  ]
         wersja 9 i tą też pobieramy, oczywiście dla architektury <em>x86_64</em>
         w wersji DVD.
       </p>
+      <h3>Tworzenie maszyn wirtualnych VirtualBox z RHEL</h3>
+      <p>
+        Tworzenie maszyn wirtualnych VirtualBox, nie jest zaganieniem
+        egzaminacyjnym. Na egzaminie dostaniem dostęp do dwóch zdalnych
+        maszyn. Teoretycznie można by użyć fizycznych maszyn o ile ktoś ma
+        do takowych dostęp, jednak do drugiej maszyny trzeba dodać aż 7 dysków,
+        więc użycie wirtualki, to chyba jedyne efektywne rozwiązanie. Poniżej
+        znajdują się wymagania jakie powinna spełniać każda z nich:
+      </p>
+      <ul>
+        <li><strong>RHEL9-VM1</strong>:
+          <ul>
+            <li>64-Bitowy Red Hat Enterprise Linux 9.0,</li>
+            <li>1 wirtualny procesor,</li>
+            <li>1024 MB pamięci operacyjnej,</li>
+            <li>10GB dysk twardy, wyłącznie na instalacje systemu,</li>
+            <li>Karta sieciowa ustawiona na bridged.</li>
+          </ul></li>
+        <li><strong>RHEL9-VM2</strong>:
+          <ul>
+            <li>64-bitowy Red Hat Enterprise Linux 9.0,</li>
+            <li>1 wirtualny procesor</li>
+            <li>2048 MB pamięci operacyjnej</li>
+            <li>10 GB dysk twardy, na instalacje systemu</li>
+            <li>4 x 250 MB dysk twardy, dla ćwiczeń z LVM</li>
+            <li>1 x 4 GB dysk twardy, dla ćwiczeń z VDO</li>
+            <li>1 x 1 GB dysk twardy, dla ćwiczeń ze Stratis</li>
+          </ul></li>
+      </ul>
+      <p>
+        Maszyny możemy utworzyć ręcznie, podąrzając za wskazówkami przewodnik,
+        w przypadku drugiej maszyny dodatkowe dyski trzeba będzie dodać z
+        poziomu ustawień maszyny. Drugą możliwością jest skorzystanie z dwóch
+        poniższych skryptów kolejno dla
+      </p>
+      <ul>
+        <li><strong>RHEL9-VM1</strong>:
+<pre class="code-block">
+#!/bin/bash
+
+vboxmanage=$(which vboxmanage);
+vmname="RHEL9-VM1";
+bridged_if="wlp1s0";
+
+$vboxmanage createvm --name $vmname --ostype RedHat_64 --register;
+
+$vboxmanage createhd --filename "$HOME/VirtualBox VMs/${vmname}/OS.vdi" --size \
+1024000 --format VDI --variant Standard;
+$vboxmanage storagectl $vmname --name SATA0 --add sata;
+
+$vboxmanage modifyvm $vmname --memory 1024;
+$vboxmanage modifyvm $vmname --graphicscontroller vmsvga;
+$vboxmanage modifyvm $vmname --nic1 bridged;
+$vboxmanage modifyvm $vmname --bridgeadapter1 $bridged_if;
+
+$vboxmanage storageattach $vmname --storagectl SATA0 --port 0 --type hdd --medium \
+"$HOME/VirtualBox VMs/${vmname}/OS.vdi";
+$vboxmanage storageattach $vmname --storagectl SATA0 --port 1 --type dvddrive \
+--medium "$HOME/Pobrane/rhel-baseos-9.0-x86_64-dvd.iso";
+</pre>
+        </li>
+        <li><strong>RHEL9-VM2</strong>:
+<pre class="code-block">
+#!/bin/bash
+
+vboxmanage=$(which vboxmanage);
+vmname="RHEL9-VM2";
+bridged_if="wlp1s0";
+
+$vboxmanage createvm --name $vmname --ostype RedHat_64 --register;
+$vboxmanage createhd --filename "$HOME/VirtualBox VMs/${vmname}/OS.vdi" --size \
+1024000 --format VDI --variant Standard;
+
+$vboxmanage createhd --filename "$HOME/VirtualBox VMs/${vmname}/VDO.vdi" --size \
+4096 --format VDI --variant Standard;
+$vboxmanage createhd --filename "$HOME/VirtualBox VMs/${vmname}/Stratis.vdi" \
+--size 1024 --format VDI --variant Standard;
+
+$vboxmanage storagectl $vmname --name SATA0 --add sata;
+$vboxmanage modifyvm $vmname --memory 2048;
+$vboxmanage modifyvm $vmname --graphicscontroller vmsvga;
+$vboxmanage modifyvm $vmname --nic1 bridged;
+$vboxmanage modifyvm $vmname --bridgeadapter1 $bridged_if;
+
+$vboxmanage storageattach $vmname --storagectl SATA0 --port 0 --type hdd --medium \
+"$HOME/VirtualBox VMs/${vmname}/OS.vdi";
+
+i=1;
+while [ $i -le 4 ]; do
+  $vboxmanage createhd --filename "$HOME/VirtualBox VMs/${vmname}/LVM${i}.vdi" --size \
+  250 --format VDI --variant Standard;
+  $vboxmanage storageattach $vmname --storagectl SATA0 --port $i --type hdd --medium \
+  "$HOME/VirtualBox VMs/${vmname}/LVM${i}.vdi";
+  i=$((i + 1));
+done
+
+$vboxmanage storageattach $vmname --storagectl SATA0 --port 5 --type hdd --medium \
+"$HOME/VirtualBox VMs/${vmname}/VDO.vdi";
+$vboxmanage storageattach $vmname --storagectl SATA0 --port 6 --type hdd --medium \
+"$HOME/VirtualBox VMs/${vmname}/Stratis.vdi";
+
+$vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
+--medium "$HOME/Pobrane/rhel-baseos-9.0-x86_64-dvd.iso";
+
+</pre>
+        </li>
+      </ul>
+      <p>
+        Powyższe skrypt są również dostępne na moim profilu na github-ie. Pod
+        poniższymi linkami.
+      </p>
+      <ul>
+        <li><strong>RHEL9-VM1</strong>:<a href="https://github.com/xf0r3m/docs/raw/main/RHCSA/RHEL9-VM1.sh">https://github.com/xf0r3m/docs/raw/main/RHCSA/RHEL9-VM1.sh</a></li>
+        <li><strong>RHEL9-VM2</strong>:<a href="https://github.com/xf0r3m/docs/raw/main/RHCSA/RHEL9-VM2.sh">https://github.com/xf0r3m/docs/raw/main/RHCSA/RHEL9-VM2.sh</a></li>
+      </ul>
+      <p>
+        Korzystając ze skryptów <strong>należy pamiętać o zmianie intefejsu
+        sieciowego</strong> wykorzystywanego do mostkowania. Zmienna
+        <code class="code-inline">bridge_if</code>.
+      </p>
+      <p>
+        Po utworzeniu maszyn przyszedł czas na instalację.
+      </p>
+      <h3>Instalacja Red Hat Enterprise Linux 9.0</h3>
+      <p>
+        Zaraz po uruchomieniu maszyny rozpocznie się proces ładowania
+        zawartości płyty. Menu bootowania płyty zwiera trzy opcje. 
+      </p>
+      <ol>
+        <li><em>Install Red Hat Enterprise Linux 9.0</em></li>
+        <li><em>Test this media & install Red Hat Enterprise Linux 9.0</em></li>
+        <li><em>Troubleshooting</em></li>
+      </ol>
+      <p>
+        Domyślnie zaznaczoną jest opcja numer 2. Mamy minutę na zmianę
+        decyzji. Naciśnięcie dowolnego klawisza zatrzymuje odliczanie. Dając
+        nam czas do namysłu, jednak na ten moment nie co za bardzo rozmyślać
+        dlatego też wybieramy opcję numer 1. Po wybraniu tej opcji nastąpi
+        uruchomie systemu oraz instalatora. Instalator używany przez RHEL oraz
+        jemu pochodne nazywa się <strong>Anaconda</strong>. Swoje działanie
+        rozpoczyna jeszcze w trybie tekstowym, następnie domyślnie uruchamia
+        tryb graficzny, gdzie odbywa się konfiguracja a następnie instalacja.
+        Nie mniej jednak instalacja w trybie tekstowym jest również możliwa.
+        Podczas instalacji, poza głównym instalatorem będziemy mieć do
+        dyspozycji 6 konsol virtualnych, które pozwalają na rozwiązanie 
+        ewentualnych problemów podczas instalacji, dając dostęp do powłoki oraz
+        wyświetlając zawarte w plikach komunikaty diagnostyczne. Pliki z
+        komunikatami na czas instalacji przechowywane są w katalogu 
+        <em>/tmp</em>, poinstalacji zostaną one przeniesione do katalogu
+        <em>/var/log/anaconda</em>. Według mnie jest dość przydatna
+        funkcjonalność, ponieważ na podstawie czasu modyfikacji tych plików
+        możemy dowiedzić się kiedy system został zainstalowany. Poniżej
+        znajduje się lista, opisująca za co odpowiada konkretna konsola.
+      </p>
 		</div>
-			<p style="margin: 15px; padding: 0; outline: 0;">
+	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;
-			</p>
-		</body>
-	</html>
+		</p>
+	</body>
+</html>

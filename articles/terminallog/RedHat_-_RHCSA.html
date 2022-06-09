@@ -173,6 +173,8 @@ Checking kmods exist for 4.18.0-372.9.1.el8.x86_64         [  OK  ]
             <li>1024 MB pamięci operacyjnej,</li>
             <li>10GB dysk twardy, wyłącznie na instalacje systemu,</li>
             <li>Karta sieciowa ustawiona na bridged.</li>
+            <li>Nazwa hosta ustawioną na server1.example.com</li>
+            <li>Stały adres IP, pozwalający na swobodną komunikację w sieci</li>
           </ul></li>
         <li><strong>RHEL9-VM2</strong>:
           <ul>
@@ -183,6 +185,8 @@ Checking kmods exist for 4.18.0-372.9.1.el8.x86_64         [  OK  ]
             <li>4 x 250 MB dysk twardy, dla ćwiczeń z LVM</li>
             <li>1 x 4 GB dysk twardy, dla ćwiczeń z VDO</li>
             <li>1 x 1 GB dysk twardy, dla ćwiczeń ze Stratis</li>
+            <li>Nazwa hosta ustawioną na server2.example.com</li>
+            <li>Stały adres IP, pozwalający na swobodną komunikację w sieci</li>
           </ul></li>
       </ul>
       <p>
@@ -203,7 +207,7 @@ bridged_if="wlp1s0";
 $vboxmanage createvm --name $vmname --ostype RedHat_64 --register;
 
 $vboxmanage createhd --filename "$HOME/VirtualBox VMs/${vmname}/OS.vdi" --size \
-1024000 --format VDI --variant Standard;
+10240 --format VDI --variant Standard;
 $vboxmanage storagectl $vmname --name SATA0 --add sata;
 
 $vboxmanage modifyvm $vmname --memory 1024;
@@ -227,7 +231,7 @@ bridged_if="wlp1s0";
 
 $vboxmanage createvm --name $vmname --ostype RedHat_64 --register;
 $vboxmanage createhd --filename "$HOME/VirtualBox VMs/${vmname}/OS.vdi" --size \
-1024000 --format VDI --variant Standard;
+10240 --format VDI --variant Standard;
 
 $vboxmanage createhd --filename "$HOME/VirtualBox VMs/${vmname}/VDO.vdi" --size \
 4096 --format VDI --variant Standard;
@@ -320,6 +324,90 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         zderzmy się w potencjalnej raczej będą systemami o zasięgu
         międzynarodowym, prawdopodobnie już o tym wspominałem ale egzamin
         pozwalający uzyskać certyfikacje RHCSA również będzie po angielsku.
+        Dlatego też instalować jak i korzystać z systemu będziemy w języku
+        angielskim, na pierwszym ekranie wybieramy <em>English</em>
+        pozostawiając wariant <em>English (United States)</em>. Następnym
+        ekranem jest <em>Installation Summary</em> (lewy górny róg), jest tak
+        jakby pulpit programu instalacyjnego, na nim występują komponenty,
+        które możemy skonfigurować. W wersji 9.0, te komponenty są podzielone
+        na 4 sekcje: <em>Localization</em>, <em>Software</em>, <em>System</em>
+        oraz <em>User Settings</em>. W pierwszym procesie instalacji,
+        przejdziemy przez wszystkie z nich.
+      </p>
+      <p>
+        Zwróć my uwagę na to, iż system sam dokonał wstępnej konfiguracji
+        instalatora, na pozostało jedynie sprawdzić oraz skonfigurować tylko
+        te opcje oznaczone znakiem ostrzegawczym oraz czerwoną podpowiedzią po
+        ich konfiguracji program umożliwi nam zainstalowanie systemu.
+      </p>
+      <p>
+        W sekcji lokalizacyjne do ustawienia są takie opcje, układ klawiatury,
+        język, oraz data i czas. Podczas ładowania pierwszego okna (moment 
+        wybrania języka instalacji), instalator na podstawie informacji GeoIP
+        postara się określić naszą przybliżoną lokalizację, o ile posiada on
+        na tym momencie połączenie z internetem. Dlatego też możemy
+        spotkać się z samoinstnie wybranym języku instalacji ustawionym na
+        Polski. Język został zmieniony, ale wybrana strefa czasowa może
+        pozostać, wręcz powinna. Dzięki tej funkcji możemy zaoszczędzić czas,
+        i przejść do kolejnej sekcji.
+      </p>
+      <p>
+        Kolejną sekcja dotyczy oprogramowania, tutaj konfigurowane będzie
+        na przykład połączenie z firmą Red Hat. RHEL jest system 
+        licencjonowanym i jeśli chcemy skorzystać z oficjalnych repozytoriów
+        należy "podłączyć" system do naszego konta założonego w celu
+        pozyskania obrazu płyty. Jednak na razie nie trzeba tego, będzie to
+        do zrobienia na późniejszych etapach nauki administracji systemu.
+        Kolejną opcją jest <em>Installation Source</em>, konfigurąc tę opcję 
+        możemy
+        wybrać czy będzięmy korzystać pod czas instalacji z obrazu płyty lub
+        sieciowego repozytorium lub Red Hat CDN. Z racji tego, iż ściągneliśmy 
+        pełny obraz
+        ważący kilka gigabajtów, nie ma sensu używać instalacji sieciowej.
+        Tego typu źródło instalacji należy wybrać w momencie gdy pobraliśmy
+        minimalistyczną wersję obrazu, dlatego też zostaniemy przy standardowym
+        wyborze <em>Local media</em>. Ta opcja pozwala też na dodanie podczas
+        instalacji dodatkowego repozytorium, jednak na tym etapie nie będziemy
+        się tym zajmować. Ostanią opcją z tej sekcji jest <em>Software
+        selection</em>, ta opcja daje nam możliwość, wyboru rodzaju instalacji.
+        Na potrzeby nauki, wybierzemy opcję <em>Server with GUI</em>, jeśli
+        będziemy instalować RHEL na naszym komputerze do codziennego użytku
+        możemy wybrać <em>Workstation</em>. Wybierając rodzaj instalacji po
+        lewej stronie, po prawej wyświetają się dodatkowe pakiety lub
+        warianty do zainstalowania.
+      </p>
+      <p>
+        Sekcja <em>System</em>, służy głównie do wyboru docelowego miejsca dla
+        instalacji za pomocą opcji <em>Instalation Destination</em>, gdzie
+        wskazujemy docelowy dysk do instalacji, możemy go spartycjonować 
+        ręcznie jak utworzyć lub utworzyć szyfrowany wolumin. Toworząc
+        szyfrowany wolumin, bardzo ważny jest układ klawiatury. Innymi opcjami
+        póki co dla nas ważnymi jest <em>Network &amp; Host name</em>, w
+        założeniach zadania, może być wymagane ustawienie odpowiedniego adresu
+        oraz nazwy dla maszyny. Tak jest w naszym przypadku, to te opcje
+        ustawiamy właśnie tam. Pozostałe opcje tej sekcji, poki co nie są
+        dla nas istotne.
+      </p>
+      <p>
+        Ostatnia sekcja ustawia hasło dla superużytkownika oraz tworzą konto
+        dla pierwszego użytkownika. Nie musi on posiadać uprawnień
+        administratora i nie będzie ich miał. Opcja utworzenia użytkownika
+        może się nie mieścić na ekranie, podczas instalacji systemu maszynie
+        witualnej, dlatego nie należy przjmować, że jej nie ma.
+      </p>
+      <p>
+        Teraz kiedy wszyskie (te istotne dla instalacji) zostały opisane możemy
+        zainstalować system zgodnie założeniami pierwsze maszyny i powtorzyć
+        to na drugiej. I to jest pierwsze ćwiczenie.
+      </p>
+      <h3>Ćwiczenie 1: Instalacja Red Hat Enterprise Linux 9</h3>
+      <p>
+        Zainstaluj zgodnie założeniami podanymi w podrozdziale 
+        <em>Tworzenie maszyn wirtualnych VirtualBox z RHEL</em> oraz sugestiami
+        podanymi podczas opisu procesu instalacji. Red Hat
+        Enterprise Linux 9 na maszynie wirtualnej <em>RHEL-VM1</em>. Następnie
+        powtórz tę czynność drugiej maszynie przeznaczonej do laboratorium.
+        Pamiętaj, że założenia dla drugiej maszyny różnią się.
       </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">

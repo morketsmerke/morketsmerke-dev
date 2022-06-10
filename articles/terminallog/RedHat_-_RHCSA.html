@@ -304,18 +304,32 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         tryb graficzny, gdzie odbywa się konfiguracja a następnie instalacja.
         Nie mniej jednak instalacja w trybie tekstowym jest również możliwa.
         Podczas instalacji, poza głównym instalatorem będziemy mieć do
-        dyspozycji 6 konsol virtualnych, które pozwalają na rozwiązanie 
-        ewentualnych problemów podczas instalacji, dając dostęp do powłoki oraz
-        wyświetlając zawarte w plikach komunikaty diagnostyczne. Pliki z
-        komunikatami na czas instalacji przechowywane są w katalogu 
+        dyspozycji 
+        multipekser terminala, który do momentu uruchomienia właściwego 
+        instalatora (w wersji graficznej) był główną konsolą. W multiplekserze
+        będzie my mieć dostęp do komunikatów diagnostyczny, które w wersji 8
+        RHEL był wyświetlane na oddzielnych konsolach; kilka powłok z
+        uprawnieniami superużytkownika (uruchomione na konsolach 2, 3 i 5) 
+        oraz konsolę z komunikatami przechwytywanymi przez główny 
+        rejestrator systemu <em>syslog</em>. Udostępnienie tych funkcjonalności
+        podczas instalacji systemu, może pomóc w ewentualnym namierzeniu i
+        naprawie problemów z instalacją.
+        Pliki z komunikatami na czas instalacji przechowywane są w katalogu 
         <em>/tmp</em>, poinstalacji zostaną one przeniesione do katalogu
         <em>/var/log/anaconda</em>. Według mnie jest dość przydatna
         funkcjonalność, ponieważ na podstawie czasu modyfikacji tych plików
         możemy dowiedzić się kiedy system został zainstalowany. Poniżej
-        znajduje się lista, opisująca za co odpowiada konkretna konsola.
+        znajduje się lista, opisująca za co odpowiada konkretna konsola
+        (kolejny ekran, dostępny po naciśnięciu klawiszy Ctrl + Alt + F1 - F6).
       </p>
       <ul>
-        <li></li>
+        <li><strong>CTLR + ALT + F1</strong> - multiplekser terminala,</li>
+        <li><strong>CTRL + ALT + F2</strong> - powłoka z dostępem do root,</li>
+        <li><strong>CTRL + ALT + F3</strong> - powłoka z dostępem do root,</li>
+        <li><strong>CTRL + ALT + F4</strong> - komunikaty diagnostyczne
+            rejestrator <em>syslog</em>.</li>
+        <li><strong>CTRL + ALT + F5</strong> - powłoka z dostępem do root,</li>
+        <li><strong>CTRL + ALT + F6</strong> - tryb graficzny.</li>
       </ul>
       <p>
         Instalacja Red Hat Enterprise Linux rozpoczyna się od wyboru języka
@@ -409,6 +423,24 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         powtórz tę czynność drugiej maszynie przeznaczonej do laboratorium.
         Pamiętaj, że założenia dla drugiej maszyny różnią się.
       </p>
+      <h3>Ćwiczenie 2: Logowanie zdalne do RHEL</h3>
+      <p>
+        Wykorzystując program do obsługi protokołu SSH dla twoje systemu
+        operacyjnego zaloguj się na superużytkownika. Pamiętaj o tym, że
+        bezpośrednie logowanie na superużytkownika wymagało zaznaczenia opcji
+        podczas ustawiania hasła dla niego.
+      </p>
+      <h2>Podsumowanie</h2>
+      <p>
+        W tym rozdziale przezszliśmy przez proces instalacji RHEL.
+        Dowiedzielśmy się, że możliwe jest instalacja w trybie tekstowym oraz
+        oraz, że nienależy ona do najtrudniejszych. Warto zwrócić uwagę na to
+        iż jeśli do tej pory korzystaliśmy z jakiś materiałów to dotyczą one
+        wersji 8 RHEL, my będziemy korzystać z wersji 9, bo to na niej w 2022
+        roku będziemy zdawać egzamin, a między tymi wersjami jest kilka zmian.
+        W następnym rozdziale zapoznamy się z środowiskiem graficznym,
+        strukturą katalogów oraz podstawowym narzędziami do pracy w powłoce.
+      </p> 
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

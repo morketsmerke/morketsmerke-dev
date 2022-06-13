@@ -703,6 +703,123 @@ $ nazwa_polecenia [opcje] [argumenty]
         <em>ls</em> również możemy mieć doczynienia długi opcjami np. zamiast
         <em>-a</em> możemy użyć <em>--all</em>.
       </p>
+      <h3>2.3.2. Wyświetlenie bierzącego katalogu roboczego</h3>
+      <p>
+        Na pierwszy rzut oka mogłoby się wydawać po co nam to polecenie,
+        skoro w znaku zachęty na RHEL jest wyświetlona nazwa bierzącego
+        katalogu. Polecenie <strong>pwd</strong> wyświetla ścieżkę do
+        bierzącego katalogu, a po drugie to polecenie ma bardzo ważną cechę
+        związaną z dowiązaniami, ale o tym będzie przy dowiązaniach. Do
+        normalnych zastosować <em>pwd</em> nie potrzebuje żadnej opcji, ani
+        żadnego argumentu.
+      </p>
+<pre class="code-block">
+$ pwd
+</pre>
+      <h3>2.3.3. Poruszanie się wśrod katalogów</h3>
+      <p>
+        Generalnie do zmiany bierzącego katalogu, czy też to przejść z do 
+        innego katalogu służy polecenie <strong>cd</strong>. Pozwala on na
+        kilka sztuczek.
+      </p>
+      <ul>
+        <li>Powrót do katalogu domowowego nie wymaga przy tym poleceniu żadnego
+          argumentu ani opcji, wystarczy wydać polecenie <em>cd</em>.</li>
+        <li>Polecenie zapamiętuje poprzedni katalog roboczy i powrót do niego
+          wymaga podania polceniu <em>cd</em> myślnika (<strong>-</strong>)
+          jako argumentu</li>
+        <li>W ścieżka chcąć skrócić sobie pisanie, możemy użyć tyldy
+          (<strong>~</strong>) jako przedstawienia katalogu domowego.</li>
+        <li>Chcąc przenieść się do katalogu nadrzędnego względem bierzącego
+          nie musimy znać jego nazyw wystarczy że poleceniu <em>cd</em> podamy
+          dwie kropki (<strong>..</strong>)</li>
+      </ul>
+      <h3>2.3.4. Identyfikacja urządzenia terminala</h3>
+      <p>
+        Czasmi może zajść potrzeba zidentyfikowania własnego urządania 
+        terminalowego służy do tego polecenie <strong>tty</strong>. Jeśli 
+        wynikiem działania tego polecenie będzie <em>/dev/pts*</em> oznacza to,
+        że korzystamy z emulatora terminala np. programu Terminal w środowisku
+        GNOME. Jeśli naszę urządzenie to <em>/dev/tty*</em> oznacza to, że
+        korzystamy z jednej wirtualnych konsol dostępnych na komputerze.
+      </p>
+      <h3>2.3.5. Czas systemowy oraz załadowanie procesora</h3>
+      <p>
+        W większości dostępnych uniksów zapewne dostępne będzie polecenie 
+        <strong>uptime</strong>. To nie pozorne polecenie zawraca dużą ilość
+        informacji.
+      </p>
+      <ul>
+        <li>Czas systemowy,</li>
+        <li>Ilość czasu jaka upłyneła od uruchomienia systemu (tzw. 
+            <em>uptime</em>),</li>
+        <li>Ilość zalogowanych do systemu użytkowników,</li>
+        <li>Średnie załadowanie procesora w przeciągu minuty, 5 i 15 minut, ta
+            wartość pokazuje zużycie procesora, podając wartości ułamkowe jeśli
+            np. w ciągu jednej minuty jeden z wątków procesora był wykorzystany
+            w 50%. Jeśli posiadamy procesor wielordzeniowy, ten wskaźnik może
+            wskazywać wartości powyżej 1, oznacza to że procesy wykorzystują
+            już więcej niż jeden wątęk/rdzeń.</li>.
+      </ul>
+      <h3>2.3.6. Czyszczenie ekranu powłoki</h3>
+      <p>
+        Do czyszczenia terminala ze zbędnego wyjścia poleceń służy polcenie
+        <strong>clear</strong> lub kombinacja klawiszy <em>CTRL+l</em>.
+      </p>
+      <h3>2.3.7. Określanie ścieżki polecenia</h3>
+      <p>
+        Czasami w pewnych konfiguracjach lub też w skryptach powłoki niezbędne
+        będzie podanie ścieżki do konkretnego programu kryjącego się za nazwą
+        polecenia, w RHEL możemy zrobić to na trzy sposoby wykorzystując do
+        tego rózne polecenia. Polecenia podałem w przykładzie w raz z
+        informacją zwracaną przez polecenie.
+      </p>
+<pre class="code-block">
+$ which ls
+alias ls='ls --color=auto'
+	/usr/bin/ls
+
+$ whereis ls
+ls: /usr/bin/ls /usr/share/man/man1/ls.1.gz /usr/share/man/man1p/ls.1p.gz
+
+$ type ls
+ls jest aliasem do ls --color=auto'
+</pre>
+      <p>
+        Które z tych poleceń będzie właściwe to już zależy, do czego będą nam
+        potrzebne tego typu informacje.
+      </p>
+      <h3>2.3.7. Wyświetlenie informacji o systemie</h3>
+      <p>
+        Polecenie <strong>uname</strong>, należy to poleceń, które są dość
+        nie pozorne ale za pomocą jego opcji możemy wydobyć wersję użytego
+        jądra, archtekturę systemu itp. informacje. Polecenie bez podania
+        żadnej z opcji zwraca wyłącznie nazwę systemu i jest <em>Linux</em>.
+        Aby wydobyć wszelkie możliwe przez to polecenie informacje możemy 
+        użyć opcji <em>-a</em>. Resztę opcji znajdziemy na stronach
+        podręcznika (o tym będzie w dalszej częście materiału).
+      </p>
+<pre class="code-block">
+$ uname -a 
+Linux latitude-e5270 5.14.0-70.13.1.el9_0.x86_64 #1 SMP PREEMPT Thu Apr 14 12:42:38 EDT 2022 x86_64 x86_64 x86_64 GNU/Linux
+</pre>
+      <h3>2.3.8. Wyświetlanie informacji o procesorze</h3>
+      <p>
+        W RHEL możemy łatwo sprawdzić informacje na temat zainstalowanego w
+        naszym komputerze procesora, w przystępny sposób. Do dyspozycji mamy
+        bowiem polecenie <strong>lscpu</strong>. Wyświetla ono wszystkie
+        dostępne informacje jakie może znaleźć w systemie na temat tego
+        komponentu.
+      </p>
+      <h2>2.4. Uzyskiwanie pomocy</h2>
+      <h3>2.4.1. Strony podręcznika</h3>
+      <p>
+        W dystrybucjach Linuksa nie tylko w RHEL możemy znaleźć duża bazę
+        zawierającą opisy poleceń, plików konfiguracyjnych oraz innych
+        komponentów takich jak biblioteki. Służą temu strony podręcznika. Aby
+        uzyskać do nich dostęp wystarczy wydać polecenie <strong>man</strong>
+        podając jako argument interesujący na komponent. 
+      </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

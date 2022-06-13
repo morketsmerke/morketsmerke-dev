@@ -34,7 +34,8 @@
 	    &#9760;&nbsp;<a href="https://morketsmerke.github.io">morketsmerke</a>&nbsp;&#9760;
     </p>
 		<div style="margin-left: auto; margin-right: auto; width: 80%;">
-      <h1>RedHat - Red Hat Certified System Administrator 8</h1>
+      <h1 style="text-align: center;">RedHat - Red Hat Certified System 
+        Administrator 9</h1>
       <p>
         Chcąc zmienić coś w swoim życiu postanowiłem, że zacznę od pracy.
         Dalej chciałem pracować w IT (chociaż praca szkolnego administratora
@@ -440,7 +441,268 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         roku będziemy zdawać egzamin, a między tymi wersjami jest kilka zmian.
         W następnym rozdziale zapoznamy się z środowiskiem graficznym,
         strukturą katalogów oraz podstawowym narzędziami do pracy w powłoce.
+      </p>
+      <h1>2. Poruszenia się po systemie RHEL 9</h1> 
+      <p>
+        Wykonując ćwiczenia z pierwszego rozdziału, zainstalowaliśmy sobie
+        Red Hat w wersji 9 na maszynie wirtualnej. Jako wariant wyboru
+        oprogramowania wybraliśmy <em>Server with GUI</em> i od drobnego
+        omówienia środowiska graficznego rozpocznę ten rodział.
+      </p>
+      <h2>2.1. Środowisko graficzne RHEL 9</h2>
+      <p>
+        Red Hat jest dystrybucją Linuksa przeznaczoną do zastosowań
+        produkcyjnych, więc system tego typu musi wykazywać się dużą
+        stabilnością. Znaczące zmiany są wprowadzane raczej w dużych wydania
+        jak RHEL 9, takim znaczącym przeskokiem jest zmiana linii jądra z
+        4.18 (w przypadku RHEL 8) na 5.14 (w przypadku RHEL 9) oraz zastąpienie
+        klasycznego serwera X Window protokołem Wayland, to jednak nastąpiło z
+        wydaniem RHEL 8. Zmiany w RHEL 9, odnośnie środowiska graficznego
+        to przejście z Gnome 3.38 na Gnome 40, ta zmiana przyniosła również
+        odświerzenie menedżera wyświetlania lub menedżera logowania czym w
+        przypadku środowiska Gnome jest GDM. Większość elementów pozostała
+        taka sama na górnej belce mamy datę oraz czas w prawyn górnym rogu
+        do wyboru opcje ułatwień dostępu, wskaźnik połączenia sieciowego oraz
+        porozwinięciu możliwość regulacji głośności i jasności ekranu oraz 
+        wyłączenia komputera. Wiecej opcji w tym miejscu pojawi się dopiero 
+        po zalogowaniu, będzie można zmienić kilka ustawień jak np. sieć
+        bezprzewodwą. Zmianie uległ również sposób prezentacji kont użytkownika.
+        Z racji tego iż <em>root</em> nie jest zwykłym użytkownikiem nie będzie
+        pojawiać się na liscie, ale zalogowanie na niego jest możliwe za pomocą
+        kliknięcia w "Not Listed?" pod listą użytkowników, wówczas będzie mogli
+        ręcznie podać nazwę użytkownika oraz hasło. Ekranem startowym po
+        zalogowaniu jest ekran <em>Activities</em>, który pozwala na podgląd
+        wykonywanych czynności, rozpoczęcie nowych (wybierają aplikacje z 
+        z doka lub z pełnej listy aplikacji, która jest dostępna po kliknięciu
+        na ikonę 9 kropek w doku) oraz przełacznie się między obszarami
+        roboczymi. Domyślnie GNOME daje dostęp do dwóch przestrzeni roboczych,
+        gdy tylko przeniesiemy aplikację do na nowy obszar, GNOME udostępni
+        nam kolejny i tak dalej. Wyszukiwarka nad podgląd obszaru roboczego
+        daje możliwość wyszukiwania nie tylko aplikacji ale także ustawień co
+        jest raczej normą w GNOME od wersji 3. Na doku znajdują się ulubione
+        aplikacje, które możemy usuwać i dodawać za pomocą PPM i następnie
+        wybierając dodaj lub usuń z ulubionych.
+      </p>
+      <h2>2.2. Struktura katalogowa w uniksach</h2>
+      <p>
+        Zanim jednak przjedziemy do obsługi wiersza polecenia omówimy sobie
+        hierachiczną strukturę katalogów, która występuje nie tylko w RHEL ale
+        i w innych uniksach, ponieważ HFS (<em>ang. Hierarchy File System</em>)
+        jest ogólnym standardem. Na uniksach możemy spotkać się z trzema typami
+        systemów plików.
+      </p>
+      <ul>
+        <li><strong><em>Disk-based</em> - dyskowe</strong> - są to klasyczne
+          pliki i katalogi przechowywane bezpośrednio na dysku.</li>
+        <li><strong><em>Network-based</em> - sieciowe</strong> - są to udziały
+          podmontowane w naszych systemach za pomocą róznych protokołów, nie
+          tylko SMB.</li>
+        <li><strong><em>Memory-based</em> - wirtualne</strong> - te systemy
+          plików są tworzone przez procesy potrzeby działania systemu, takim
+          systemem może być katalog <em>/dev</em> lub <em>/tmp</em>. Ich
+          trwałość często zależy od tego jak długo system pozostaje włączony
+          lub od wewnętrznych ustaleń samego systemu.</li>
+      </ul>
+      <p>
+        Struktura plików i katalogów na uniksach ma postać odwrócone drzewa.
+        Korzeń (katalog główny) znajduje się na szczycie struktury i odniego
+        rozchodzą się poszczególne gałęzie (podkatalogi), gałęzię mogą zawierać
+        kolejne rozgałezienia i tworzyć całe struktury, na gałęziach
+        znajdują się również liscie czyli pliki i na liściach struktura się
+        kończy.
+      </p>
+      <p>
+        Dostęp do konkretnych plików i katalogów w strukturze określany jest
+        za pomocą ścieżek. Scieżki określają położenie plików i katalogów
+        wewnątrz HFS.
+        Separatorem elementów ścieżki (posczególnych pod katalogów), jest
+        ukośnik, slash (<strong>/</strong>).
+      </p>
+      <p>
+        Podczas pracy z elemtami systemu plików, jakim są foldery oraz katalogi
+        możemy spotkać <strong>scieżki bezwzględne</strong> zaczynające się od
+        katalogu głównego, lub <strong>ściezki względne</strong> zaczynające
+        się od następnego elementu znajdującego w obecnym katalogu robocznym
+        (tym katalogu, w którym się obecnie znajdujemy).
+      </p>
+      <p>
+        Katalog główny jest miejscem do przechwywania wszystkich plików, jakie
+        znajdują się w systemie, jest pierwszy element znajdujący się na
+        ścieżce (bezwzględnej) i oznaczny jest on poprostu ukośnikiem
+        (<strong>/</strong>), od tego katalogu zaczyna się cała struktura.
+        Poniżej znajduje się lista najważniejsych podkatalogów katalogu
+        głównego, każdy z nich ma swoje znaczenie w systemie.
+      </p>
+      <ul>
+        <li><strong>/boot</strong> (<em>disk-based</em>) - katalog ten
+            przedchowuje jądro, <em>initramfs</em> oraz konfiguracje programu
+            rozruchowego.</li>
+        <li><strong>/dev</strong> (<em>memory-based</em>) - katalog ten
+            przechowuje pliki urządzeń służące do odwoływania się do
+            rzeczywistego sprzętu podczas komunikacji. Pliki te są tworzone
+            przez usługę <em>udevd</em> podczas podłączania urządzenia oraz
+            rozruchu systemu.</li>
+        <li><strong>/etc</strong> (<em>disk-based</em>) - skrót <em>etc</em>
+            możemy rozwinąć do <em>ang. etcetera</em> lub <em>ang. extended
+            text configration</em>. Jest to miejsce do przechwywania plików
+            konfirugracyjnych różnych programów.</li>
+        <li><strong>/home</strong> (<em>disk-based</em>) - ten katalog
+            przechowuje, katalogi domowe użytkowników.</li>
+        <li><strong>/opt</strong> (<em>disk-based</em>) - katalog przeznaczony
+            na dodatkowe oprogramowanie instalowane w systemie.</li>
+        <li><strong>/proc</strong> (<em>memory-based</em>) - wirtualna 
+            struktura podkatalogów, zawierająca informacje o procesach oraz
+            różne informacje o systemie, np. informacje o procesorze.</li>
+        <li><strong>/run</strong> (<em>memory-based</em>) - katalog
+            przechowywujący pliku wykorzystywane przez procesy podczas
+            wykonywania ich czynności. W tym katalogu znajduje się również
+            podkatalog <em>media</em> zawierący punkt monotowania automatycznie
+            montowanych w systemie dysków wymiennych.</li>
+        <li><strong>/sys</strong> (<em>memory-based</em>) - katalog
+            przechowuje informacje o urządzeniach, sterownikach. Pewne
+            funkcjonalności jądra również są zawarte w tym katalogu. Informacje
+            z tego katalogu są używane przez jądro obsługi urządzeń.</li>
+        <li><strong>/tmp</strong> (<em>memory-based</em>) - miejsce 
+            przechowywania plików tymczasowych okres przechowywania tych 
+            plików to 10 dni, lub ponowne uruchomienie komputera.</li>
+        <li><strong>/usr</strong> (<em>disk-based</em>) - skrót <em>usr</em>,
+            należy rozwinąć jako <em>ang. UNIX System Resources</em>. Ten
+            katalog jest kolejną dużą strukturą katalogów w systemie. W tym
+            katalog przechowywane są wszystkie programy, więc wiekszość 
+            systemu. Na poniższej liście znajdują się rozpisane podkatalogi
+            tego katalogu:
+            <ul>
+              <li><strong>/usr/bin</strong> - katalog przechowuje większosć
+                  plików binarnych, wykorzystywanych w systemie, programy oraz
+                  polecenia.</li>
+              <li><strong>/usr/sbin</strong> - narzędzia administracyjne
+                  niedostępne dla zwykłych użytkowników, poza kilkoma
+                  programami. Ten katalog często nie jest ujęty podczas 
+                  wyszuiwania poleceń.</li>
+              <li><strong>/usr/lib</strong>, <strong>/usr/lib64</strong> - 
+                  biblioteki współdzielone oraz pliki statyczne, nie których
+                  programów typu init.</li>
+              <li><strong>/usr/include</strong> - pliki nagłówkowe języka C</li>
+              <li><strong>/usr/local</strong> - miejsce przechowywania
+                  zewnętrznych programów administracyjnych instalowane i
+                  wykorzystywane przez administatorów, ten katalog zawiera w
+                  sobie podobną strukturę katalogą jak sam <em>/usr</em>.</li>
+              <li><strong>/usr/share</strong> - miejsce przechowywania stron
+                  podręcznika, dokumentacji czy przykładowych plików 
+                  konfiguracyjnych.</li>
+            </ul>
+        </li>
+        <li><strong>/var</strong> (<em>disk-based</em>) - katalog na zmienne
+            dane, katalog podobnie do <em>/usr</em> ma wewnątrz wiele znaczący
+            podkatalogów, których opis znajduje się poniżej:
+            <ul>
+              <li><strong>/var/log</strong> - katalog na pliki dzienników,
+                zbierane nie tylko z głównego rejestratora, ale i funkcji
+                rejestrowania utrzymwane przez same usługi.</li>
+              <li><strong>/var/opt</strong> - katalog na zmienne dane
+                oprogramowania instalowanego w katalogu <em>/opt</em></li>
+              <li><strong>/var/spool</strong> - katalog ten przechowuje dane
+                zanim zostaną przekazane lub pobrane przez właściwe komponenty.</li>
+              <li><strong>/var/tmp</strong> - katalog przechowuje duże pliki
+                tymczasowe. Pliki przeżywają uruchomienie ponowne systemu.
+                Czas ich istnienia w tym katalog to 30 dni.</li>
+            </ul>
+        </li>
+      </ul>
+      <p>
+        Za pomocą polecenia <strong>tree</strong>, możemy wyświetlić strukturę
+        katalogą w postaci drzewa, jednak najpierw nauczymy się korzystać z
+        poleceń w RHEL.
+      </p>
+      <h2>2.3. Obsługa wiersza poleceń i najprostsze polecenia</h2>
+      <p>
+        Obsługa wiersza poleceń zależy w znacznym stopniu od powłoki, ponieważ
+        to ona zajmuj się jego interpretacją i koniec końców wykonaniem
+        programu, którego nazwę podaliśmy chcą wykonać polecenie. Aby móc
+        skorzystać w RHEL z wiersza poleceń musimy albo uruchomić w środowisku
+        graficznym aplikację <strong>Terminal</strong>, lub zalogować się
+        zdalnie za pomocą protokołu SSH. Uruchomienie terminala lub zalogowanie
+        się przez SSH uruchomi powłokę, która swoją gotowość na otrzymywanie
+        poleceń obwieści wyświetleniem <strong>znaku zachęty</strong>.
       </p> 
+      <p>
+        Znak zachęty jest wskaźnikiem za kursorem po którym możemy wprowadzać 
+        do systemu
+        polecenia. Kiedyś znaki zachęty były pojedyńczymi znakmi informującymi
+        o uprawnieniach z jakimi działa proces powłoki (o tym za chwilę). Teraz
+        znaki zwracają nazwę użytkownika, nazwę komputera oraz obecny katalog
+        roboczy wewnątrz nawiasu kwadratowego, następnie zanim znajduje się
+        znak krzyżyka (<strong>#</strong>), mówiący że powłoka działa
+        uprawnieniami użytkownika <em>root</em> lub symbol dolara 
+        (<strong>$</strong>), mówiący że połoka działa z uprawnieniami zwykłego
+        użytkownika. Poniżej przedstawiłem oba znaki:
+      </p>
+<pre class="code-block">
+[root@server1 ~]#
+
+[user@server1 ~]$
+</pre>
+      <p>
+        W różnych dystrybucjach, znak zachęty może różnorako wyglądąć. Możemy
+        dostować do własnych potrzeb, wiele osób korzysta z jak najmniejszych
+        znaków zachęty, aby zaoszczedzić miejsce w wierszu polecenia. Teraz
+        możemy już wydawać polecenia.
+      </p>
+      <p>
+        Kazde polecenie w jakim kolwiek uniksie, składa się z nazwy polecenia,
+        ewentualnych opcji oraz ewentualnych argumentów. Nie wszystkie
+        polecenia do uzyskania żądanych przez nas efektów.  
+      </p>
+<pre class="code-block">
+$ nazwa_polecenia [opcje] [argumenty]
+</pre>
+      <p>
+        Przez cały kurs będziemy poznawać jakieś polecenia ale w tym momencie
+        nauczymy się najprostszych znich.
+      </p>
+      <h3>2.3.1. Listowanie zawartości katalogu</h3>
+      <p>
+        Aby wyświetlić zawartość katalogu w powłoce, możemy użyć polecenia
+        <strong>ls</strong>. Polecenie bez podania argumentu w postaci
+        katalogu wyświetli zawartość folderu, w którym się znajdujemy.
+        Najważniejszymi opcjami między innymi są:
+      </p>
+      <ul>
+        <li><strong>-a</strong> - wyświetlanie wszystkich, elementów w katalogu
+            także tych, które normalnie nie są wyświetlane (plik i foldery,
+            których nazwa rozpoczyna się od kropki).</li>
+        <li><strong>-l</strong> - wyświetlenie szczegółowych informacji na
+            temat elementów. Informacja zwraca przez polecenie jest wówczas
+            podzielona na 7 pól, które kolejno oznaczają: typ pliku oraz
+            uprawnienia; liczbę dowiązań; nazwę użytkownika (właściciela pliku);
+            nazwę grupy do której należy ten plik; rozmiar w bajtach; czas
+            modyfikacji oraz nazwę elementu.</li>
+        <li><strong>-ld</strong> - wyświetla szczegółową informacje na temat
+            podanego jak argument katalog, bez wyświetlania jego zawartości.
+            Jeśli nie podamy argumentu polecenie wyświetli informacje na temat
+            bierzącego katalogu.</li>
+        <li><strong>-lh</strong> - wyświetli szczegółowo informacje
+            na temat elementów w katalogu, wyświetlając ich rozmiar w
+            przeskalowanych wartościach, co ułatwi odczytanie go przez 
+            człowieka.</li>
+        <li><strong>-lt</strong> - wyświetli szczegółową listę elementów
+            posortową względem czasu modyfikacji od najnowszego pliku.</li>
+        <li><strong>-ltr</strong> - działanie podobne to <em>-lt</em>, ale
+            odwrócone, elementy zostaną wyświetlone od najstarszego.</li>
+        <li><strong>-R</strong> - wyświetlenie elementów w sposób 
+            rekurencyjny. Polecenie z tą opcją wyświetli zawartość katalogów
+            wraz z ich podkatalogami itd.</li>
+      </ul>
+      <p>
+        Podczas korzystania z wielu programów możemy natknąć się na wiele opcji
+        jednak one dzielą się na długie i krótkie, opcje krótkie występują w
+        postaci pojedyńczego znaku poprzedzonego jednym myślnikiem
+        (<strong>-</strong>). Opcje długie występuje w postaci pojedyńczego
+        (najczęsciej, ponieważ to zależy od programu) poprzedzone dwoma 
+        myślnikami (<strong>--</strong>). W przypadku tak prostych poleceń jak
+        <em>ls</em> również możemy mieć doczynienia długi opcjami np. zamiast
+        <em>-a</em> możemy użyć <em>--all</em>.
+      </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

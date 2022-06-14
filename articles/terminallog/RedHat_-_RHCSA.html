@@ -431,7 +431,7 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         bezpośrednie logowanie na superużytkownika wymagało zaznaczenia opcji
         podczas ustawiania hasła dla niego.
       </p>
-      <h2>Podsumowanie</h2>
+      <h2 id="ch1summary">Podsumowanie</h2>
       <p>
         W tym rozdziale przezszliśmy przez proces instalacji RHEL.
         Dowiedzielśmy się, że możliwe jest instalacja w trybie tekstowym oraz
@@ -442,14 +442,14 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         W następnym rozdziale zapoznamy się z środowiskiem graficznym,
         strukturą katalogów oraz podstawowym narzędziami do pracy w powłoce.
       </p>
-      <h1>2. Poruszenia się po systemie RHEL 9</h1> 
+      <h1 id="2.1.firststepsinRHEL9">2. Poruszenia się po systemie RHEL 9</h1> 
       <p>
         Wykonując ćwiczenia z pierwszego rozdziału, zainstalowaliśmy sobie
         Red Hat w wersji 9 na maszynie wirtualnej. Jako wariant wyboru
         oprogramowania wybraliśmy <em>Server with GUI</em> i od drobnego
         omówienia środowiska graficznego rozpocznę ten rodział.
       </p>
-      <h2>2.1. Środowisko graficzne RHEL 9</h2>
+      <h2 id="2.1.serverwithgui">2.1. Środowisko graficzne RHEL 9</h2>
       <p>
         Red Hat jest dystrybucją Linuksa przeznaczoną do zastosowań
         produkcyjnych, więc system tego typu musi wykazywać się dużą
@@ -483,7 +483,7 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         aplikacje, które możemy usuwać i dodawać za pomocą PPM i następnie
         wybierając dodaj lub usuń z ulubionych.
       </p>
-      <h2>2.2. Struktura katalogowa w uniksach</h2>
+      <h2 id="2.2.hfs">2.2. Struktura katalogowa w uniksach</h2>
       <p>
         Zanim jednak przjedziemy do obsługi wiersza polecenia omówimy sobie
         hierachiczną strukturę katalogów, która występuje nie tylko w RHEL ale
@@ -614,7 +614,8 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         katalogą w postaci drzewa, jednak najpierw nauczymy się korzystać z
         poleceń w RHEL.
       </p>
-      <h2>2.3. Obsługa wiersza poleceń i najprostsze polecenia</h2>
+      <h2 id="2.3.usingcli">>2.3. Obsługa wiersza poleceń i najprostsze 
+      polecenia</h2>
       <p>
         Obsługa wiersza poleceń zależy w znacznym stopniu od powłoki, ponieważ
         to ona zajmuj się jego interpretacją i koniec końców wykonaniem
@@ -660,7 +661,7 @@ $ nazwa_polecenia [opcje] [argumenty]
         Przez cały kurs będziemy poznawać jakieś polecenia ale w tym momencie
         nauczymy się najprostszych znich.
       </p>
-      <h3>2.3.1. Listowanie zawartości katalogu</h3>
+      <h3 id="2.3.1.ls">2.3.1. Listowanie zawartości katalogu</h3>
       <p>
         Aby wyświetlić zawartość katalogu w powłoce, możemy użyć polecenia
         <strong>ls</strong>. Polecenie bez podania argumentu w postaci
@@ -703,7 +704,7 @@ $ nazwa_polecenia [opcje] [argumenty]
         <em>ls</em> również możemy mieć doczynienia długi opcjami np. zamiast
         <em>-a</em> możemy użyć <em>--all</em>.
       </p>
-      <h3>2.3.2. Wyświetlenie bierzącego katalogu roboczego</h3>
+      <h3 id="2.3.2.pwd">2.3.2. Wyświetlenie bierzącego katalogu roboczego</h3>
       <p>
         Na pierwszy rzut oka mogłoby się wydawać po co nam to polecenie,
         skoro w znaku zachęty na RHEL jest wyświetlona nazwa bierzącego
@@ -716,7 +717,7 @@ $ nazwa_polecenia [opcje] [argumenty]
 <pre class="code-block">
 $ pwd
 </pre>
-      <h3>2.3.3. Poruszanie się wśrod katalogów</h3>
+      <h3 id="2.3.3.cd">2.3.3. Poruszanie się wśrod katalogów</h3>
       <p>
         Generalnie do zmiany bierzącego katalogu, czy też to przejść z do 
         innego katalogu służy polecenie <strong>cd</strong>. Pozwala on na
@@ -734,7 +735,7 @@ $ pwd
           nie musimy znać jego nazyw wystarczy że poleceniu <em>cd</em> podamy
           dwie kropki (<strong>..</strong>)</li>
       </ul>
-      <h3>2.3.4. Identyfikacja urządzenia terminala</h3>
+      <h3 id="2.3.4.tty">2.3.4. Identyfikacja urządzenia terminala</h3>
       <p>
         Czasmi może zajść potrzeba zidentyfikowania własnego urządania 
         terminalowego służy do tego polecenie <strong>tty</strong>. Jeśli 
@@ -743,7 +744,7 @@ $ pwd
         GNOME. Jeśli naszę urządzenie to <em>/dev/tty*</em> oznacza to, że
         korzystamy z jednej wirtualnych konsol dostępnych na komputerze.
       </p>
-      <h3>2.3.5. Czas systemowy oraz załadowanie procesora</h3>
+      <h3 id="2.3.5.uptime">2.3.5. Czas systemowy oraz załadowanie procesora</h3>
       <p>
         W większości dostępnych uniksów zapewne dostępne będzie polecenie 
         <strong>uptime</strong>. To nie pozorne polecenie zawraca dużą ilość
@@ -761,12 +762,12 @@ $ pwd
             wskazywać wartości powyżej 1, oznacza to że procesy wykorzystują
             już więcej niż jeden wątęk/rdzeń.</li>.
       </ul>
-      <h3>2.3.6. Czyszczenie ekranu powłoki</h3>
+      <h3 id="2.3.6.clear">2.3.6. Czyszczenie ekranu powłoki</h3>
       <p>
         Do czyszczenia terminala ze zbędnego wyjścia poleceń służy polcenie
         <strong>clear</strong> lub kombinacja klawiszy <em>CTRL+l</em>.
       </p>
-      <h3>2.3.7. Określanie ścieżki polecenia</h3>
+      <h3 id="2.3.7.which">2.3.7. Określanie ścieżki polecenia</h3>
       <p>
         Czasami w pewnych konfiguracjach lub też w skryptach powłoki niezbędne
         będzie podanie ścieżki do konkretnego programu kryjącego się za nazwą
@@ -789,7 +790,7 @@ ls jest aliasem do ls --color=auto'
         Które z tych poleceń będzie właściwe to już zależy, do czego będą nam
         potrzebne tego typu informacje.
       </p>
-      <h3>2.3.7. Wyświetlenie informacji o systemie</h3>
+      <h3 id="2.3.8.uname">2.3.8. Wyświetlenie informacji o systemie</h3>
       <p>
         Polecenie <strong>uname</strong>, należy to poleceń, które są dość
         nie pozorne ale za pomocą jego opcji możemy wydobyć wersję użytego
@@ -803,7 +804,7 @@ ls jest aliasem do ls --color=auto'
 $ uname -a 
 Linux latitude-e5270 5.14.0-70.13.1.el9_0.x86_64 #1 SMP PREEMPT Thu Apr 14 12:42:38 EDT 2022 x86_64 x86_64 x86_64 GNU/Linux
 </pre>
-      <h3>2.3.8. Wyświetlanie informacji o procesorze</h3>
+      <h3 id="2.3.9.lscpu">2.3.8. Wyświetlanie informacji o procesorze</h3>
       <p>
         W RHEL możemy łatwo sprawdzić informacje na temat zainstalowanego w
         naszym komputerze procesora, w przystępny sposób. Do dyspozycji mamy
@@ -811,14 +812,215 @@ Linux latitude-e5270 5.14.0-70.13.1.el9_0.x86_64 #1 SMP PREEMPT Thu Apr 14 12:42
         dostępne informacje jakie może znaleźć w systemie na temat tego
         komponentu.
       </p>
-      <h2>2.4. Uzyskiwanie pomocy</h2>
-      <h3>2.4.1. Strony podręcznika</h3>
+      <h2 id="2.4.gettinghelp">>2.4. Uzyskiwanie pomocy</h2>
+      <h3 id="2.4.1.manpages">2.4.1. Strony podręcznika</h3>
       <p>
         W dystrybucjach Linuksa nie tylko w RHEL możemy znaleźć duża bazę
         zawierającą opisy poleceń, plików konfiguracyjnych oraz innych
         komponentów takich jak biblioteki. Służą temu strony podręcznika. Aby
         uzyskać do nich dostęp wystarczy wydać polecenie <strong>man</strong>
-        podając jako argument interesujący na komponent. 
+        podając jako argument interesujący na komponent. Nie zawsze musi być
+        to polecenie. Strony podręcznika są podzielone na rozdziały czy też
+        sekcje ich opisy oraz numery sa zawarte w na (o ironio) stronie
+        podręcznika polecenia <em>man</em>. Wydaj poniższe polecenie aby
+        zapoznać się z nim oraz z ich organizacją.
+      </p>
+<pre class="code-block">
+$ man man
+</pre>
+      <p>
+        Różne komponenty na Linuksie mogą mieć takie same nazwy. Polecenie
+        <em>man</em> zwraca pierwsze znalezione wystąpienie jeśli wpisując
+        polecenie <code class="code-inline">man passwd</code> otrzymamy
+        informacje na temat polecenia, ale jeśli interesowałoby nas poznanie
+        szczegółów pliku <em>/etc/passwd</em> musimy podać przed nazwą, numer
+        sekcji odpowiedzialny za pliki konfiguracyjne.
+      </p>
+<pre class="code-block">
+$ man 5 passwd
+</pre>
+      <p>
+        Strony podręcznika, możemy przeszukiwać pod kątem występowania słów
+        kluczowych, w przypadku kiedy znamy zagadnienie ale nie znamy
+        odpowiedniego polecenia. Do tego celu możemy użyć opcji <em>-k</em>
+        polecenia man lub polecenia <strong>apropos</strong>. Wynik działania
+        tych programów jest taki sam.
+      </p>
+<pre class="code-block">
+$ apropos dos
+dos2unix (1)         - konwerter formatu plików tekstowych między systemami DOS/Mac a Uniksem
+mac2unix (1)         - konwerter formatu plików tekstowych między systemami DOS/Mac a Uniksem
+unix2dos (1)         - konwerter formatu plików tekstowych między systemami DOS/Mac a Uniksem
+unix2mac (1)         - konwerter formatu plików tekstowych między systemami DOS/Mac a Uniksem
+dosfsck (8)          - check and repair MS-DOS FAT filesystems
+dosfslabel (8)       - set or get MS-DOS filesystem label or volume ID
+fatlabel (8)         - set or get MS-DOS filesystem label or volume ID
+filesystems (5)      - Linux filesystem types: ext, ext2, ext3, ext4, hpfs, iso9660, JFS, minix, msdo...
+fs (5)               - Linux filesystem types: ext, ext2, ext3, ext4, hpfs, iso9660, JFS, minix, msdo...
+fsck.fat (8)         - check and repair MS-DOS FAT filesystems
+fsck.msdos (8)       - check and repair MS-DOS FAT filesystems
+fsck.vfat (8)        - check and repair MS-DOS FAT filesystems
+mkdosfs (8)          - create an MS-DOS FAT filesystem
+mkfs.fat (8)         - create an MS-DOS FAT filesystem
+mkfs.msdos (8)       - create an MS-DOS FAT filesystem
+mkfs.vfat (8)        - create an MS-DOS FAT filesystem
+vdosetuuid (8)       - sets a new uuid for the vdo volume stored on a backing store
+vdostats (8)         - Display configuration and statistics of VDO volumes
+</pre>
+      <p>
+        W pierwszej kolumnie znajduje się nazwa komponentu, w drugiej numer
+        sekcji a następnie krótki opis.
+      </p>
+      <p>
+        Szukając opisu polecenia możemy posiłkować się poleceniem 
+        <strong>whatis</strong>. Polecenie to poszukuje konkretnego komponentu
+        na stronach podręcznika, a nie słowa kluczowego.
+      </p>
+<pre class="code-block">
+$ whatis xdg-open 
+xdg-open (1)         - opens a file or URL in the user's preferred application
+</pre>
+      <p>
+        Polecenie <em>whatis</em>, zachowuje się identycznie jak polecenie
+        <em>man</em> z opcją <em>-f</em>.
+      </p>
+      <h3 id="2.4.2.helpincommand">2.4.2. Pomoc w samym poleceniu</h3>
+      <p>
+        Inny sposobem niż wertowanie stron podręcznika w celu znalezienia
+        odpowiedniej opcji jest po prostu wywołanie polecenie a opcją
+        <strong>--help</strong>.
+      </p>
+<pre class="code-block">
+$ ranger --help
+Usage: ranger [options] [path]
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -d, --debug           activate debug mode
+  -c, --clean           don't touch/require any config files.
+  --logfile=file        log file to use, '-' for stderr
+  --cachedir=dir        change the cache directory.
+                        (/home/xf0r3m/.cache/ranger)
+  -r dir, --confdir=dir
+                        change the configuration directory.
+                        (/home/xf0r3m/.config/ranger)
+  --datadir=dir         change the data directory.
+                        (/home/xf0r3m/.local/share/ranger)
+  --copy-config=which   copy the default configs to the local config
+                        directory. Possible values: all, rc, rifle, commands,
+                        commands_full, scope
+  --choosefile=OUTFILE  Makes ranger act like a file chooser. When opening a
+                        file, it will quit and write the name of the selected
+                        file to OUTFILE.
+  --choosefiles=OUTFILE
+                        Makes ranger act like a file chooser for multiple
+                        files at once. When opening a file, it will quit and
+                        write the name of all selected files to OUTFILE.
+  --choosedir=OUTFILE   Makes ranger act like a directory chooser. When ranger
+                        quits, it will write the name of the last visited
+                        directory to OUTFILE
+  --selectfile=filepath
+                        Open ranger with supplied file selected.
+  --show-only-dirs      Show only directories, no files or links
+  --list-unused-keys    List common keys which are not bound to any action.
+  --list-tagged-files=tag
+                        List all files which are tagged with the given tag,
+                        default: *
+  --profile             Print statistics of CPU usage on exit.
+  --cmd=COMMAND         Execute COMMAND after the configuration has been read.
+                        Use this option multiple times to run multiple
+                        commands.
+</pre>
+      <p>
+        Posiadanie tej opcji nie jest standardem, wiec nie wszystkie będą ją
+        mieć.
+      </p>
+      <h3 id="2.4.3.texinfo">2.4.3. Dokumentacja texinfo</h3>
+      <p>
+        Projekt GNU, za proponował zmianę formatu dokumentacji programów, z
+        suchych stron podręcznika do dokumentów przypominających ksiązkę lub
+        inne dokumenty. Strony podręcznika nadal są podstawowym źródłem
+        wiedzy na temat systemu i jego komponentów w niego wbudowanym. Nie
+        mniej jednak jeśli uznamy, że zawartość strony podręcznika nie jest
+        dla zadowalająca może spojrzeć też tam, o ile ten format jest
+        zainstalowany w naszym systemie. Dostęp do niego uzyskujemy za pomocą
+        polecenia <strong>info</strong> lub <strong>pinfo</strong>, następnie
+        podając nazwę polecenia jako argument. Wydając samo polecenie
+        <em>info</em>, możemy zobaczyć ile dokumentacji w formacie
+        <em>texinfo</em> znajdue się w systemie.
+      </p>
+      <h3 id="2.4.4.usrsharedoc">2.4.4. /usr/share/doc</h3>
+      <p>
+        Innym miejscem przechowującym jakieś informacje na temat poleceń czy
+        też programów może być katalog <em>/usr/share/doc</em>. Możemy w nim
+        znaleźć na przykład domyślny plik konfiguracyjny (oczywiście zależy to
+        czy zostanie on dodany do paczki z oprogramowniem). Nie należy jednak
+        od razu skreślać tego, katalogu często mogą znajdować się tam
+        informacje, których nie znajdziemy na stronach podręcznika czy w
+        formacie <em>info</em> np. tutoriale lub gotowe konfiguracje.
+      </p>
+      <h3 id="2.4.5.rhdocs">2.4.5. Dokumentacja Red Hat Enterprise Linux</h3>
+      <p>
+        Innym źródłem informacji na temat obsługi systemu jest dokumentacja
+        Red Hat dostępna w internecie (dla RHEL 9) pod tym adresem:
+        <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9</a>
+      </p>
+      <p>
+        Każdy zebranych tam tematów możemy pobrać w formacie HTML, PDF oraz
+        ePub (czytniki e-booków).
+      </p>
+      <p>
+        <strong>Odnośnie egzaminu:</strong><br />
+        Na egzaminie możemy korzystać ze wszystkie co jest dostępne w systemie
+        warto pamiętać o tym. Jeśli będziemy mieć problem z poleceniem
+        <em>man</em>, warto wydać polecenie <strong>mandb</strong> odświerzy
+        to bazę danych stron podręcznika.
+      </p>
+      <h3>Ćwiczenie 1: Nawigacja pośród katalogów Linuksa</h3>
+      <p>
+        Jako zwykły użytkownik na maszynie wirtualnej <em>server1</em>, 
+        wyświetl ścieżkę na której
+        się znajdujesz. W tym samym katalogu wyświetl wszystkie pliki.
+        Przjedź do katalogu <em>/etc</em> następnie wyświetl ścieżkę na której
+        się znajdujesz, następnie powróć do poprzedniego katalogu i jeszcze
+        raz wyświetl ścieżkę.
+      </p>
+      <h3>Ćwiczenie 2: Rożne zadania</h3>
+      <p>
+        Jako zwykły użytkownik na maszynie <em>server1</em> w terminalu 
+        polecenie <em>tty</em>.
+        Następnie uruchom kilka kart terminala wydaj w nich to samo polecenie
+        i porównaj zwracane wartości. Wyświetl czas pracy systemu oraz 
+        średnie obciążenie procesora. Za pomocą trzech poznanych poleceń 
+        wyświetl lokalizacje polecenia <em>vgs</em>.
+      </p>
+      <h3>Ćwiczenie 3: Informacje o systemie</h3>
+      <p>
+        Jako zwykły użytkownik na maszynie <em>server1</em>
+        za pomocą poznanego polecenia wyświetl wszystkie informacje o systemie
+        (oczywście w miarę możliwości polecenia). Następnie użyj innego
+        polecenia aby sprawdzić informacje na temat zainstalowanego procesora
+        w systemie.
+      </p>
+      <h3>Ćwiczenie 4: Używanie pomocy</h3>
+      <p>
+        Jako zwykły użytkownik na maszynie <em>server1</em>
+        Wyświetl strone podręcznika polecenia <em>uname</em> oraz stronę
+        podręcznika dla pliku <em>/etc/shadow</em>. Wykonaj trzy polecenia:
+        <code class="code-inline">apropos ext4</code>,
+        <code class="code-inline">man -k ext4</code>,
+        <code class="code-inline">whatis group</code>. Czym różnią się
+        informacje zwracane przez te polecenia.
+      </p>
+      <h2 id="ch2summary">Podsumowanie</h2>
+      <p>
+        W tym rozdziale skupiliśmy się na podstawach obsługi systemu,
+        poznaliśmy środowisko graficzne. Odświerzyliśmy sobie informacje na
+        temat hierachicznego systemu plików, wykorzystywanego w uniksach.
+        Zapoznaliśmy się z terminalem i podstawowymi polecenia. Na koniec
+        dowiedzieliśmy się gdzie możemy szukać pomocy na temat poleceń, plików
+        konfiguracyjnych i tego typu rzeczy.
       </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">

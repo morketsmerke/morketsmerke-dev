@@ -1231,6 +1231,247 @@ Options:
         dowiedzieliśmy się gdzie możemy szukać pomocy na temat poleceń, plików
         konfiguracyjnych i tego typu rzeczy.
       </p>
+      <h1 id="3.fileoperations">3. Operacje na plikach</h1>
+      <p>
+        W poprzedni rodziale poznaliśmy podstawy poruszania się po systemie,
+        przejrzeliśmy środowisko graficzne, zapoznaliśmy się z wierszem
+        polecenia oraz z najbardziej podstawowymi poleceniami. Było to swoiste
+        zapoznanie z systemem operacyjny. Teraz pora w nim trochę popracować.
+        Ludzie zazwyczaj kiedy wspomagają swoją prace komputerem, pracują na
+        danych. Te dane są zazwyczaj zebrane w pliki. Od omówienia rodzajów
+        plików dostępnych na Linuksie ale i nie tylko rozpoczniemy ten rozdział.
+      </p> 
+      <h2 id="3.1.filetypes">3.1. Rodzaje plików</h2>
+      <p>
+        W Uniksach możemy wymienić 7 rodzajów różnych plików. W tych systemach
+        nie jest istotne rozszerzenie oraz zawartość tych plików. Dla systemu
+        zawsze będzie to <strong>zwykły plik</strong>. Wszystkie pliki nie
+        wymienione na poniższej liście, które przyjdą na do głowy są plikami
+        zwykłymi.
+      </p>
+      <p>
+        Zatem w Uniksach możemy wyróżnić takie rodzaje plików jak:
+      </p>
+      <ul>
+        <li><strong>Plik zwykły</strong> - plik zwykłe przechowywują dane, są
+          to wszelkiej maści pliki tekstowe, pliki binarne z programami oraz
+          inne.</li>
+        <li><strong>Katalog</strong> - jest struktura organizacyjna systemu
+          plików, stosowana w celach organizacyjnych zwykłych plików w systemie
+          plików.</li>
+        <li><strong>Plik urządzenia znakowego</strong> - w przypadku określenia
+          <em>znakowy</em> stosuje się także określenie <strong>surowy</strong>
+          (ang. <em>raw</em>). Pliki te wykorzystywane są do komunikacji z
+          urządzaniami wykorzysującymi interfejs szeregowy.</li>
+        <li><strong>Pliki urządzeń blokowych</strong> - Pliki te wykorzystywane
+          są do komunikacji z urządzeniami wykorzystującymi interfejs
+          równoległy. Głównie są to dyski.</li>
+        <li><strong>Dowiązania symboliczne</strong> - przypominają skróty z
+          z innych systemów operacyjnych. Jest to plik wskazujący na inny
+          plik lub katalog.</li>
+        <li><strong>Nazwane potoki, gniazda</strong> - są to pliki, które
+          służą komunikacji miedzyprocesowej. Omawianie ich tutaj wychodzi
+          poza ramy tego materiału.</li>
+      </ul>
+      <p>
+        Nie ma się też za bardzo co rozwodzić nad każdym z tych typów plików.
+        Wskaźnikiem rodzaju pliku podczas wyświetlania zawartości katalogu
+        jest pierwszy znak w pierwszej kolumnie informacji zwracanej przez
+        polecenie <em>ls -l</em>. Informacje zwracane dla poszczególnych
+        typów pliku wyglądają następująco:
+      </p>
+<pre class="code-block">
+#Zwykły plik:
+[root@server1 ~]# ls -l anaconda-ks.cfg 
+-rw-------. 1 root root 1197 Jun  9 19:59 anaconda-ks.cfg
+
+#Katalog:
+[root@server1 ~]# ls -ld bzipped/
+drwxr-xr-x. 3 root root 17 Jun 16 18:14 bzipped/
+
+#Urządzenie znakowe:
+[root@server1 ~]# ls -l /dev/console
+crw--w----. 1 root tty 5, 1 Jun 17 15:20 /dev/console
+
+#Urządzenie blokowe:
+[root@server1 ~]# ls -l /dev/sda1
+brw-rw----. 1 root disk 8, 1 Jun 17 15:20 /dev/sda1
+
+#Dowiązanie symboliczne:
+[root@server1 ~]# ls -l soft10 
+lrwxrwxrwx. 1 root root 6 Jun 16 17:30 soft10 -&gt; file10
+</pre>
+      <p>
+        Pierwsze znaki, pierwszej kolumny róznią się od siebie w zależności
+        od typu plików. Jest jeszcze kilka róznic. Pliki urządzeń nie posiadają
+        rozmiaru, tylko dwie liczby oddzielone od siebie przecinkiem. Te liczby
+        to numer główny oraz numer poboczny. Numer główny określa rodzaj
+        urządzenia, z kolei numer podobczny jest jego unikalny identyfikatorem
+        w systemie. Innym rodzajem, który jest plikiem, ale jednak nie plikiem
+        jest dowiązanie symboliczne wrócimy do tego typu plików poźniej.
+      </p>
+      <p>
+        Te informacje które są zwracane oprócz nazwy pliku przez polecenie,
+        które wyświetla zawartość katalogu to tak zwane 
+        <strong>meta-dane</strong>, bardziej szczegółowo możemy wyświetlić je
+        za pomocą polecenia <strong>stat</strong>. Na poniższym przykładzie
+        zamieszczono bardziej szczegółowe meta-dane zwykłego pliki z
+        poprzedniego przykładu:
+      </p>
+<pre class="code-block">
+[root@server1 ~]# stat anaconda-ks.cfg 
+  File: anaconda-ks.cfg
+  Size: 1197      	Blocks: 8          IO Block: 4096   regular file
+Device: fd00h/64768d	Inode: 6126703     Links: 1
+Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (    0/    root)
+Context: system_u:object_r:admin_home_t:s0
+Access: 2022-06-16 10:37:11.765639347 +0200
+Modify: 2022-06-09 19:59:42.592326645 +0200
+Change: 2022-06-09 19:59:42.592326645 +0200
+ Birth: 2022-06-09 19:59:42.237318552 +0200
+</pre>
+      <p>
+        Zwykłe pliki na Uniksach nie muszą mieć rozszerzenia, wiec aby przed
+        uruchomieniem pliku upewnić się co to jest mamy do dyspozycji takie
+        narzędzie jak program <strong>file</strong>, który zbada zawartość
+        podanego mu w argumencie pliku. 
+      </p>
+<pre class="code-block">
+[root@server1 ~]# file test 
+test: Bourne-Again shell script, ASCII text executable
+</pre>
+      <p>
+        Plik nie ma rozszerzenia <em>.sh</em> a mimo to pozostaje skryptem
+        powłoki.
+      </p>
+      <h2 id="3.2.compressionandarchiving">3.2. Kompresja i archiwizowanie</h2>
+      <p>
+        Kompresja pozwala na zmnieszenie objętości plików za pomocą
+        zaawansowanych algorytmów, dzięki czemu możemy zaoszczędzić miejsce
+        na dysku, jednak wadą takiego przechowywania danych jest dłuższy
+        czas oczekiwania na ich gotowość do pracy ponieważ dane przed tym
+        należy zdekompresować. Archizowanie może służyć to zebranie wielu
+        małych plików w jeden duży. Na Uniksach możemy wymieć dwa natywne
+        narzędzia służące do kompresji i jedno do archiwizowania.
+      </p>
+      <h3 id="3.2.1.gzip">3.2.1 gzip</h3>
+      <p>
+        Natywnym i dostępnym na każdym systemie sposobem na kompresje danych
+        jest <strong>gzip</strong>. Algorytmy zawarte w tym narzędziu
+        kompresują dane, powodując ich mniejszą objętość. Narzędzie do każdego
+        skompresowanego pliku dodaje rozszerzenie <em>.gz</em>. Aby 
+        skompresować plik wystarczy podać jego nazwę lub ścieżkę do niego jako
+        argument poleceniu <em>gzip</em>.
+      </p>
+<pre class="code-block">
+#Plik przed kompresją
+[root@server1 ~]# ls -l fstab 
+-rw-r--r--. 1 root root 579 Jun 16 11:07 fstab
+
+#Plik po kompresji
+[root@server1 ~]# ls -l fstab.gz 
+-rw-r--r--. 1 root root 350 Jun 16 11:07 fstab.gz
+</pre>
+      <p>
+        Jak możemy zauważyć rozmiar pliku zmniejszył sie. Zwróćmy uwagę na to
+        iż narzędzie nie działa na kopii pliki tylko kompresuje bezpośrednio
+        podany plik. Aby plik zdekompresować możemy użyć polecenia 
+        <strong>gunzip</strong>
+      </p>
+<pre class="code-block">
+[root@server1 ~]# gunzip fstab.gz
+</pre>
+      <p>
+        Dla plików skompresowanych za pomocą polecenia <em>gzip</em>, możemy
+        podejrzeć listę skompresowanych plików (w przypadku jednego pliku
+        może być to użyteczne do wyświetlenia statystki kompresji) 
+        wykorzystując 
+        opcje <em>-t</em> i podając jako argument skompresowany plik.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# gzip -l fstab.gz 
+         compressed        uncompressed  ratio uncompressed_name
+                350                 579  43.7% fstab
+</pre>
+      <h3 id="3.2.2.bzip">3.2.2 bzip2</h3>
+      <p>
+        Program <em>bzip2</em> jest obecnie standardem kompresji, wśród wielu
+        Uniksów. Jest wolniejszy od <em>gzip</em>, ale skompresowane przez
+        niego pliki są mniejsze. Więc pozostaje w naszej gestii, który z nich
+        będziemy stosować. Do skompresowanych przez <em>bzip2</em> plików
+        dodawane jest rozszerzenie <em>.bz2</em>. A kompresja za pomocą tego
+        narzędzia wygląda następująco:
+      </p>
+<pre class="code-block">
+[root@server1 ~]# ls -lh test
+-rw-r--r--. 1 root root 250M Jun 17 17:21 test
+[root@server1 ~]# bzip2 test 
+[root@server1 ~]# ls -lh test.bz2 
+-rw-r--r--. 1 root root 210 Jun 17 17:23 test.bz2
+</pre>
+      <p>
+        Dekompresja takiego pliku takiego pliku wyglada analogicznie do
+        narzędzia <em>gunzip</em>.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# bunzip2 test.bz2
+[root@server1 ~]# ls -lh test 
+-rw-r--r--. 1 root root 250M Jun 17 17:25 test
+</pre>
+      <p>
+        W przypadku polecenia <em>bzip2</em> nie mamy możliwośći wyświetlenia
+        listy skompresowanych plików (statystyk kompresji).
+      </p>
+      <h3 id="3.2.3.tar">3.2.3. tar</h3>
+      <p>
+        Program <strong>tar</strong> nie służy do kompresji, a do archiwizcji 
+        jego zadaniem jest stworzenie jednego pliku z wielu innych plików lub 
+        z całego katalogu. Na początku program swojego istnienia program 
+        <em>tar</em> domyślnie tworzył archiwa na napędach taśmowych, dlatego
+        też jeśli ma on tworzyć archiwum do pliku potrzebna będzie odpowiednia
+        opcja, i ta funkcjonalność pozostała po dziś dzień.
+      </p>
+      <p>
+        Opcje tego programu możemy podawać na trzy różne sposoby, wpisując
+        z myślnikami każdą opcje po kolei, wypisując opcje pod jednym
+        myślnikiem, lub nie używać myślnika w ogóle. Do stworzenia archiwum
+        potrzebujemy dwóch opcji, pierwszej <em>-c</em> - tworzącej archiwum
+        oraz drugiej <em>-f</em> - nakazujące stworzenie archiwum w podanym
+        jako argument opcji pliki. Poniżej znajdują się opisane wyżej użycia
+        polecenia <em>tar</em> do stworzenia archiwum.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# tar -c -f etc_tarred.tar /etc
+tar: Removing leading `/' from member names
+[root@server1 ~]# tar -cf etc_tarred1.tar /etc
+tar: Removing leading `/' from member names
+[root@server1 ~]# tar cf etc_tarred2.tar /etc
+tar: Removing leading `/' from member names
+</pre>
+      <p>
+        Zwróćmy uwagę na komunikat programu, który usuwa ze scieżek
+        wskazujących pliki (ponieważ użyłem ścieżki bezwzględnej) początkowy
+        ukośnik, aby przy wypakowywaniu nie nadpisać ważnych plików 
+        systemowych. Warto dodać, iż ja tworzyłem te archiwa jako 
+        superużytkownik, w momencie gdy <em>root</em> używa polecenia
+        <em>tar</em>, używana jest domyślnie opcja <em>-p</em>, która powoduje
+        zachowanie wszystkich atrybutów plików, w przypadku zwykłego
+        użytkownika ta opcja musi zostać jawnie podana.
+      </p>
+      <p>
+        Rozpakowanie archiwum wymaga podania opcji <em>-x</em> oraz opcji
+        <em>-f</em> ze wskazaniem pliku archiwum.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# tar -xf etc_tarred1.tar -C /tmp
+[root@server1 ~]# ls -ld /tmp/etc
+drwxr-xr-x. 132 root root 8192 Jun 17 15:20 /tmp/etc
+</pre>
+      <p>
+        W tym przykładzie użyłem jeszcze jednej ważnej opcji <em>-C</em>, która
+        nakazuje poleceniu <em>tar</em> zmianę katalogu przed wypakowaniem
+        archiwum.
+      </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

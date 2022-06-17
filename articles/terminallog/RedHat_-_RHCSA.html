@@ -19,6 +19,15 @@
 			ul {
 				text-align: left;
 			}
+      .toc {
+        list-style-type: none;
+      }
+      p {
+        text-align: justify;
+      }
+      .exam_tip {
+        border: solid 1px black;
+      }
 		</style>
 	</head>
 	<body style="font-family: monospace;" >
@@ -36,16 +45,71 @@
 		<div style="margin-left: auto; margin-right: auto; width: 80%;">
       <h1 style="text-align: center;">RedHat - Red Hat Certified System 
         Administrator 9</h1>
+      <h2>Spis treści</h2>
+      <ul class="toc">
+        <li><a href="#1.introduction">1. Wstęp</a>
+          <ul class="toc">
+            <li><a href="#1.1.exam">1.1. Egzamin</a></li>
+            <li><a href="#1.2.examobjectives">1.2. Zagadnienia</a></li>
+            <li><a href="#1.3.exampreparation">1.3. Przygotowania</a>
+              <ul class="toc">
+                <li><a href="#1.3.1.vboxinstallationonrhel">1.3.1. Instalacja Oracle VirtualBox na RHEL 8.6.</a></li>
+                <li><a href="#1.3.2.gettingrheliso">1.3.2. Pozyskiwanie obrazu ISO z Red Hat Enterprise Linux 9</a></li>
+                <li><a href="#1.3.3.createvmwithrhel">1.3.3. Tworzenie maszyn wirtualnych VirtualBox z RHEL</a></li>
+                <li><a href="#1.3.4.rhelinstallation">1.3.4. Instalacja Red Hat Enterprise Linux 9.0</a></li>
+              </ul> 
+            <li><a href="#exec1.1">Ćwiczenie: 1-1</a></li>
+            <li><a href="#exec1.2">Ćwiczenie: 1-2</a></li>
+            <li><a href="#ch1summary">Podsumowanie</a></li>
+          </ul>
+        </li>
+        <li><a href="#2.firststepsinRHEL9">2. Poruszanie się po systemie RHEL 9</a>
+          <ul class="toc">
+            <li><a href="#2.1.serverwithgui">2.1. Środowisko graficzne RHEL 9</a></li>
+            <li><a href="#2.2.hfs">2.2. Struktura katalogowa w Uniksach</a></li>
+            <li><a href="#2.3.usingcli">2.3. Obsługa wiersza poleceń i najprostsze polecenia</a>
+              <ul class="toc">
+                <li><a href="#2.3.1.ls">2.3.1. Listowanie zawartości katalogu</a></li>
+                <li><a href="#2.3.2.pwd">2.3.2. Wyświetlanie bierzącego katalogu</a></li>
+                <li><a href="#2.3.3.cd">2.3.3. Poruszanie się wśród katalogów</a></li>
+                <li><a href="#2.3.4.tty">2.3.4. Identyfikacja urządzenia terminala</a></li>
+                <li><a href="#2.3.5.uptime">2.3.5. Czas systemowy oraz załadowanie procesora</a></li>
+                <li><a href="#2.3.6.clear">2.3.6. Czyszczenie ekranu powłoki</a></li>
+                <li><a href="#2.3.7.which">2.3.7. Określanie ścieżki polecenia</a></li>
+                <li><a href="#2.3.8.uname">2.3.8. Wyświetlenie informacji o systemie</a></li>
+                <li><a href="#2.3.9.lscpu">2.3.9. Wyświetlenie informacji o procesorze</a></li>
+              </ul>
+            </li>
+            <li><a href="#2.4.gettinghelp">2.4. Uzyskiwanie pomocy</a>
+              <ul class="toc">
+                <li><a href="#2.4.1.manpages">2.4.1. Strony podręcznika</a></li>
+                <li><a href="#2.4.2.helpincommand">2.4.2. Pomoc w samym poleceniu</a></li>
+                <li><a href="#2.4.3.texinfo">2.4.3. Dokumentacja texinfo</a></li>
+                <li><a href="#2.4.4.usrsharedoc">2.4.4. /usr/share/doc</a></li>
+                <li><a href="#2.4.5.rhdocs">2.4.5. Dokumentacja Red Hat Enterprise Linux</a></li>
+              </ul>
+            </li>
+            <li><a href="#exec2.1">Ćwiczenie: 2-1</a></li>
+            <li><a href="#exec2.2">Ćwiczenie: 2-2</a></li>
+            <li><a href="#exec2.3">Ćwiczenie: 2-3</a></li>
+            <li><a href="#exec2.4">Ćwiczenie: 2-4</a></li>
+            <li><a href="#ch2summary">Podsumowanie</a></li>
+          </ul>
+        </li>
+      </ul>
+      <h1 id="1.introduction">1. Wstęp</h1>
       <p>
         Chcąc zmienić coś w swoim życiu postanowiłem, że zacznę od pracy.
-        Dalej chciałem pracować w IT (chociaż praca szkolnego administratora
-        jest porównywalna z pracą technika IT, tu ma ktoś problem z system
+        Dalej chciałem pracować w IT, tylko na innym stanowisku (praca 
+        szkolnego administratora
+        jest porównywalna z pracą technika IT, tu ma ktoś problem z systemem,
         tu trzeba podłączyć rzutnik, szczerze to znudziła się praca tego 
-        typu), tylko na innym stanowisku. Dobrze czułem się pracując z
+        typu).  Dobrze czułem się pracując z
         Linuksem, to była moja pasja. Znałem dwa stanowiska na których 
         mógłbym pracować: Linux System Administrator lub Linux System
         Engineer. Teraz na rynku pracy jeśli chodzi o IT ważniejsze są 
-        uzyskane certyfikaty i kursy niż wykształcenie. Szukając certyfikatów,
+        uzyskane certyfikaty i odbyte kursy niż wykształcenie. Szukając 
+        certyfikatów,
         które spowodują większe szanse na zatrudnienie, znalazłem dwa.
         Linux Fundation oraz Red Hat. Po przeczytaniu postu a na Reddit
         doszedłem do wniosku, że lepszym wyborem będzie Red Hat. Jeśli
@@ -54,42 +118,43 @@
         obecnie może być to zarówno Rocky Linux lub Alma Linux, oba są
         pochodnymi Red Hat. Szukając jakiś materiałów w internecie, które
         pomogły by mi się przygotować natrafiłem na Amazonie na książke
-        Asghar Ghori pt. <em>RHCSA Red Hat Enterprise Linux 8 (UPDATED): 
+        Asghara Ghori pt. <em>RHCSA Red Hat Enterprise Linux 8 (UPDATED): 
         Training and Exam Preparation Guide (EX200), Second Edition</em>
         zamówiłem ją na swojego Kindla i zacząłem przygotowywać się do
         egzaminu. 
       </p>
-      <h2>Egzamin</h2>
+      <h2 id="1.1.exam">1.1. Egzamin</h2>
       <p>
         Egzamin EX200 dający uprawnienia Red Hat Certified System
         Administrator jest egzamin praktycznym sprawdzającym umiejętność
         instalacji, konfiguracji oraz rozwiązywania podstawowych problemów
         administracyjnych na dystrybucji Red Hat. Egzamin będzie odbywać
         się w postaci elektronicznej i zdający będzie mięć do dyspozycji
-        dwie maszyny wirtualne do wykonania zadania egzaminacyjnego. Takie
+        dwie maszyny wirtualne do wykonania zadań egzaminacyjnych. Takie
         też środowisko przygotujemy sobie do nauki. Na dzień 11 listopada
         2020 (tak jak podaje książka) egzamin obejmować 69 zagadnień jednak
         ta liczba, ze względu na rozwój technologii jak i samego Red Hata
         mogła ulec już zmianie.
       </p>
-      <h2>Zagadnienia</h2>
+      <h2 id="1.2.examobjectives">1.2. Zagadnienia</h2>
       <p>
-        Zagadnienia używane na egzaminie mogą cały czas ewoluować. Na
-        poniższej stronie zostały one opisane.
+        Zagadnienia używane na egzaminie mogą cały czas ewoluować. Odnośnik
+        obok przedstawia aktualne zagadnienia egzaminacyjne.
         <a href="http://www.redhat.com/training/courses/ex200/examobjective">http://www.redhat.com/training/courses/ex200/examobjective</a>. Obecnie egzamin zadawany jest na
         RHEL 9, wydany 17 maja 2022. Dość istotną zmianą w produkcji tego
         systemu jest zmiana <em>upstreamu</em>. Ta wersja Red Hat nie jest
         już oparta na Fedorze tak jak wszystkie do tej pory, ale na CentOS
-        Stream (wersja non-stream tej dystrybucji nie jest już dostępna stąd
+        Stream (nowa wersja non-stream tej dystrybucji nie jest już dostępna 
+        stąd
         rozbicie społeczonościowych dystrybucji do zastosowań produkcyjnych na
         Rocky oraz Alma Linux) i tej wersji będziemy użwać na maszynach
         wirtualnych.
       </p>
-      <h2>Przygotowania</h2>
+      <h2 id="1.3.exampreparation">1.3. Przygotowania</h2>
       <p>
         Kiedy uznałem, że chce zdobyć RHCSA, uzyskałem Red Hat na zasadzie
         <em>Non-cost RHEL Individual Developer Subscription</em>, gdzie
-        istotne informacje znajdują się na stronie podanej poniżej.
+        istotne informacje znajdują się w odnośniku obok.
         <a href="https://developers.redhat.com/articles/faqs-no-cost-red-hat-enterprise-linux">https://developers.redhat.com/articles/faqs-no-cost-red-hat-enterprise-linux</a>
         Przy użyciu tej subskrypcji uzyskamy dostęp do Red Hat przez rok na
         16 instalacji (bez znaczenia czy to fizyczny komputer, czy maszyna
@@ -105,25 +170,26 @@
         mocno ograniczony. Dlatego też przesiadłem się na RHEL, póki co ten
         system poprostu działa, wcześniej korzystałem z Fedory 35 oraz
         Debiana 11. Do celów dydaktycznych potrzebujemy peceta lub laptopa
-        z min. procesorem dwurdzeniowym, 8GB pamięci operacyjnej oraz 27GB
+        z min. dwurdzeniowym procesorem, 8GB pamięci operacyjnej oraz 27GB
         wolnej przestrzeni na dysku na potrzeby utworzenia maszyn wirtualnych
         z wymagną przez ćwiczenia przestrzenią dyskową oraz możliwością
-        wirtualzacji 64-bitowych systemów. Do tego celu 
+        wirtualizacji 64-bitowych systemów. Do tego celu 
         użyjemy oprogramowania Oracle VirtualBox, dającego najprostszy
         interfejs do interakcji z maszynami, gdyż przy późniejszych
-        zagadnienia będziemy musieli zmienić jej ustawienia lub dodać kilka
+        zagadnieniach będziemy musieli zmienić jej ustawienia lub dodać kilka
         urządzeń, oczywiście jeśli ktoś czuje się mocny w innych środowiskach
         może użyć swojego ulubionego, nie mniej jednak w trakcie nauki będzie
         trzeba dokonać kilku zmian w na tych maszynach, a opisy zamieszczone
         tutaj będą dotyczyć głównie VirtualBox. Czy ktoś zainstaluje na swoim 
-        komputerze RHEL czy nie to
+        komputerze RHEL czy nie to,
         już indywidualna sprawa i nie wypłynie ona wykonanie ćwiczeń. Nie
-        mniej jednak, w podpunkcie onośnie maszyn wirtualnych tego rodziału
-        przedstawie skrypt powłoki, który po uruchomiony będzie tworzyć
+        mniej jednak, w podpunkcie odnośnie maszyn wirtualnych tego rodziału
+        przedstawie skrypt powłoki, który po uruchomieniu utworzy
         automatycznie maszyny wymagane do wykonania ćwiczeń. Ale póki co 
         przedstawie teraz instalacje Oracle VirtualBox na RHEL 8.6.
       </p>
-      <h3>Instalacja Oracle VirtualBox na RHEL 8.6</h3>
+      <h3 id="1.3.1.vboxinstallationonrhel">1.3.1. Instalacja Oracle VirtualBox 
+        na RHEL 8.6</h3>
       <p>
         Pierwszą czynnością jest uruchomienie przeglądarki i przejście pod
         adres: <a href="https://www.virtualbox.org/wiki/Linux_Downloads">https://www.virtualbox.org/wiki/Linux_Downloads</a>, na samym dole strony znajdują się pliki repozytorium
@@ -147,7 +213,23 @@ Checking kmods exist for 4.18.0-372.9.1.el8.x86_64         [  OK  ]
       <p>
         Teraz Oracle VirtualBox jest gotów do działania.
       </p>
-      <h3>Pozyskanie obrazu ISO z Red Hat Enterprise Linux 9</h3>
+      <p>
+        W przypadku RHEL 9, jeśli ktoś używa, to instalacja wydaje się jeszcze
+        prostsza, gdyż do instalacji możemy użyć <strong>RPMFusion</strong>. Po 
+        załadowaniu tych repozytoriów do swojego systemu możemy od razu wydać
+        polecenie:
+      </p>
+<pre class="code-block">
+$ sudo yum install VirtualBox
+</pre>
+      <p>
+        W wersji 8.6, zapewne również możemy skorzystać z <em>RPMFusion</em>.
+        Ja zanim się dowiedziałem że VirtualBox jest dostępny w tych
+        repozytoriach, instalowałem go za pomocą instrukcji zawartej na stronie
+        Virtualbox, do której link znajduje się powyżej.
+      </p>
+      <h3 id="1.3.2.gettingrheliso">1.3.2. Pozyskanie obrazu ISO z Red Hat 
+        Enterprise Linux 9</h3>
       <p>
         Aby uzyskać takowy obraz musimy zarejestrować się w subskrypcji dla
         indywidualnych deweloperów. Przechodzimy na stronę <a href="https://developers.redhat.com/register">https://developers.redhat.com/register</a> i rejestrujemy się. Następnie
@@ -157,14 +239,15 @@ Checking kmods exist for 4.18.0-372.9.1.el8.x86_64         [  OK  ]
         wersja 9 i tą też pobieramy, oczywiście dla architektury <em>x86_64</em>
         w wersji DVD.
       </p>
-      <h3>Tworzenie maszyn wirtualnych VirtualBox z RHEL</h3>
+      <h3 id="1.3.3.createvmwithrhel">1.3.3. Tworzenie maszyn wirtualnych 
+        VirtualBox z RHEL</h3>
       <p>
         Tworzenie maszyn wirtualnych VirtualBox, nie jest zaganieniem
-        egzaminacyjnym. Na egzaminie dostaniem dostęp do dwóch zdalnych
+        egzaminacyjnym. Na egzaminie dostaniemy dostęp do dwóch zdalnych
         maszyn. Teoretycznie można by użyć fizycznych maszyn o ile ktoś ma
         do takowych dostęp, jednak do drugiej maszyny trzeba dodać aż 7 dysków,
-        więc użycie wirtualki, to chyba jedyne efektywne rozwiązanie. Poniżej
-        znajdują się wymagania jakie powinna spełniać każda z nich:
+        więc użycie wirtualnej maszyny, to chyba jedyne efektywne rozwiązanie. 
+        Poniżej znajdują się wymagania jakie powinna spełniać każda z nich:
       </p>
       <ul>
         <li><strong>RHEL9-VM1</strong>:
@@ -174,7 +257,7 @@ Checking kmods exist for 4.18.0-372.9.1.el8.x86_64         [  OK  ]
             <li>1024 MB pamięci operacyjnej,</li>
             <li>10GB dysk twardy, wyłącznie na instalacje systemu,</li>
             <li>Karta sieciowa ustawiona na bridged.</li>
-            <li>Nazwa hosta ustawioną na server1.example.com</li>
+            <li>Nazwa hosta ustawiona na server1.example.com</li>
             <li>Stały adres IP, pozwalający na swobodną komunikację w sieci</li>
           </ul></li>
         <li><strong>RHEL9-VM2</strong>:
@@ -186,12 +269,12 @@ Checking kmods exist for 4.18.0-372.9.1.el8.x86_64         [  OK  ]
             <li>4 x 250 MB dysk twardy, dla ćwiczeń z LVM</li>
             <li>1 x 4 GB dysk twardy, dla ćwiczeń z VDO</li>
             <li>1 x 1 GB dysk twardy, dla ćwiczeń ze Stratis</li>
-            <li>Nazwa hosta ustawioną na server2.example.com</li>
+            <li>Nazwa hosta ustawiona na server2.example.com</li>
             <li>Stały adres IP, pozwalający na swobodną komunikację w sieci</li>
           </ul></li>
       </ul>
       <p>
-        Maszyny możemy utworzyć ręcznie, podąrzając za wskazówkami przewodnik,
+        Maszyny możemy utworzyć ręcznie, podążając za wskazówkami przewodnika,
         w przypadku drugiej maszyny dodatkowe dyski trzeba będzie dodać z
         poziomu ustawień maszyny. Drugą możliwością jest skorzystanie z dwóch
         poniższych skryptów kolejno dla
@@ -245,11 +328,14 @@ $vboxmanage modifyvm $vmname --graphicscontroller vmsvga;
 $vboxmanage modifyvm $vmname --nic1 bridged;
 $vboxmanage modifyvm $vmname --bridgeadapter1 $bridged_if;
 
-$vboxmanage storageattach $vmname --storagectl SATA0 --port 0 --type hdd --medium \
+$vboxmanage storageattach $vmname --storagectl SATA0 --port 0 --type dvddrive \
+--medium "$HOME/Pobrane/rhel-baseos-9.0-x86_64-dvd.iso";
+
+$vboxmanage storageattach $vmname --storagectl SATA0 --port 1 --type hdd --medium \
 "$HOME/VirtualBox VMs/${vmname}/OS.vdi";
 
-i=1;
-while [ $i -le 4 ]; do
+i=2;
+while [ $i -le 5 ]; do
   $vboxmanage createhd --filename "$HOME/VirtualBox VMs/${vmname}/LVM${i}.vdi" --size \
   250 --format VDI --variant Standard;
   $vboxmanage storageattach $vmname --storagectl SATA0 --port $i --type hdd --medium \
@@ -257,14 +343,10 @@ while [ $i -le 4 ]; do
   i=$((i + 1));
 done
 
-$vboxmanage storageattach $vmname --storagectl SATA0 --port 5 --type hdd --medium \
-"$HOME/VirtualBox VMs/${vmname}/VDO.vdi";
 $vboxmanage storageattach $vmname --storagectl SATA0 --port 6 --type hdd --medium \
+"$HOME/VirtualBox VMs/${vmname}/VDO.vdi";
+$vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type hdd --medium \
 "$HOME/VirtualBox VMs/${vmname}/Stratis.vdi";
-
-$vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
---medium "$HOME/Pobrane/rhel-baseos-9.0-x86_64-dvd.iso";
-
 </pre>
         </li>
       </ul>
@@ -284,10 +366,11 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
       <p>
         Po utworzeniu maszyn przyszedł czas na instalację.
       </p>
-      <h3>Instalacja Red Hat Enterprise Linux 9.0</h3>
+      <h3 id="1.3.4.rhelinstallation">1.3.4. Instalacja Red Hat Enterprise 
+        Linux 9.0</h3>
       <p>
         Zaraz po uruchomieniu maszyny rozpocznie się proces ładowania
-        zawartości płyty. Menu bootowania płyty zwiera trzy opcje. 
+        zawartości płyty. Menu bootowania płyty zawiera trzy opcje. 
       </p>
       <ol>
         <li><em>Install Red Hat Enterprise Linux 9.0</em></li>
@@ -299,10 +382,12 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         decyzji. Naciśnięcie dowolnego klawisza zatrzymuje odliczanie. Dając
         nam czas do namysłu, jednak na ten moment nie co za bardzo rozmyślać
         dlatego też wybieramy opcję numer 1. Po wybraniu tej opcji nastąpi
-        uruchomie systemu oraz instalatora. Instalator używany przez RHEL oraz
-        jemu pochodne nazywa się <strong>Anaconda</strong>. Swoje działanie
+        uruchomienie systemu oraz instalatora. Instalator używany przez RHEL 
+        oraz dystrybucje z nim związane
+        nazywa się <strong>Anaconda</strong>. Swoje działanie
         rozpoczyna jeszcze w trybie tekstowym, następnie domyślnie uruchamia
-        tryb graficzny, gdzie odbywa się konfiguracja a następnie instalacja.
+        tryb graficzny, gdzie odbywa się konfiguracja instalcji a następnie 
+        już właściwa instalacja.
         Nie mniej jednak instalacja w trybie tekstowym jest również możliwa.
         Podczas instalacji, poza głównym instalatorem będziemy mieć do
         dyspozycji 
@@ -316,7 +401,7 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         podczas instalacji systemu, może pomóc w ewentualnym namierzeniu i
         naprawie problemów z instalacją.
         Pliki z komunikatami na czas instalacji przechowywane są w katalogu 
-        <em>/tmp</em>, poinstalacji zostaną one przeniesione do katalogu
+        <em>/tmp</em>, po instalacji zostaną one przeniesione do katalogu
         <em>/var/log/anaconda</em>. Według mnie jest dość przydatna
         funkcjonalność, ponieważ na podstawie czasu modyfikacji tych plików
         możemy dowiedzić się kiedy system został zainstalowany. Poniżej
@@ -328,7 +413,7 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         <li><strong>CTRL + ALT + F2</strong> - powłoka z dostępem do root,</li>
         <li><strong>CTRL + ALT + F3</strong> - powłoka z dostępem do root,</li>
         <li><strong>CTRL + ALT + F4</strong> - komunikaty diagnostyczne
-            rejestrator <em>syslog</em>.</li>
+            rejestratora <em>syslog</em>.</li>
         <li><strong>CTRL + ALT + F5</strong> - powłoka z dostępem do root,</li>
         <li><strong>CTRL + ALT + F6</strong> - tryb graficzny.</li>
       </ul>
@@ -336,7 +421,7 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         Instalacja Red Hat Enterprise Linux rozpoczyna się od wyboru języka
         procesu instalacji. Chcąc pracować już w takim prawowitym IT, należy
         posługiwać się językiem angielskim i to technicznym. Systemy z którymi
-        zderzmy się w potencjalnej raczej będą systemami o zasięgu
+        zderzmy się w potencjalnej pracy raczej będą systemami o zasięgu
         międzynarodowym, prawdopodobnie już o tym wspominałem ale egzamin
         pozwalający uzyskać certyfikacje RHCSA również będzie po angielsku.
         Dlatego też instalować jak i korzystać z systemu będziemy w języku
@@ -352,11 +437,11 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
       <p>
         Zwróć my uwagę na to, iż system sam dokonał wstępnej konfiguracji
         instalatora, na pozostało jedynie sprawdzić oraz skonfigurować tylko
-        te opcje oznaczone znakiem ostrzegawczym oraz czerwoną podpowiedzią po
+        te opcje oznaczone znakiem ostrzegawczym oraz czerwoną podpowiedzią. Po
         ich konfiguracji program umożliwi nam zainstalowanie systemu.
       </p>
       <p>
-        W sekcji lokalizacyjne do ustawienia są takie opcje, układ klawiatury,
+        W sekcji lokalizacyjnej do ustawienia są takie opcje, układ klawiatury,
         język, oraz data i czas. Podczas ładowania pierwszego okna (moment 
         wybrania języka instalacji), instalator na podstawie informacji GeoIP
         postara się określić naszą przybliżoną lokalizację, o ile posiada on
@@ -372,10 +457,10 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         licencjonowanym i jeśli chcemy skorzystać z oficjalnych repozytoriów
         należy "podłączyć" system do naszego konta założonego w celu
         pozyskania obrazu płyty. Jednak na razie nie trzeba tego, będzie to
-        do zrobienia na późniejszych etapach nauki administracji systemu.
-        Kolejną opcją jest <em>Installation Source</em>, konfigurąc tę opcję 
-        możemy
-        wybrać czy będzięmy korzystać pod czas instalacji z obrazu płyty lub
+        do zrobienia na późniejszych etapach nauki administracji systemem.
+        Kolejną opcją jest <em>Installation Source</em> (Źródło instalacji),
+        konfigurąc tę opcję możemy
+        wybrać czy będziemy korzystać pod czas instalacji z obrazu płyty lub
         sieciowego repozytorium lub Red Hat CDN. Z racji tego, iż ściągneliśmy 
         pełny obraz
         ważący kilka gigabajtów, nie ma sensu używać instalacji sieciowej.
@@ -393,10 +478,11 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
       </p>
       <p>
         Sekcja <em>System</em>, służy głównie do wyboru docelowego miejsca dla
-        instalacji za pomocą opcji <em>Instalation Destination</em>, gdzie
+        instalacji. W opcji <em>Instalation Destination</em>,
         wskazujemy docelowy dysk do instalacji, możemy go spartycjonować 
-        ręcznie jak utworzyć lub utworzyć szyfrowany wolumin. Toworząc
-        szyfrowany wolumin, bardzo ważny jest układ klawiatury. Innymi opcjami
+        ręcznie lub automatycznie możemy również zaszyfrować instalacje,
+        jeśli jest taka potrzeba. W przypadku szyfrowania danych 
+        bardzo ważny jest układ klawiatury. Innymi opcjami
         póki co dla nas ważnymi jest <em>Network &amp; Host name</em>, w
         założeniach zadania, może być wymagane ustawienie odpowiedniego adresu
         oraz nazwy dla maszyny. Tak jest w naszym przypadku, to te opcje
@@ -404,18 +490,18 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         dla nas istotne.
       </p>
       <p>
-        Ostatnia sekcja ustawia hasło dla superużytkownika oraz tworzą konto
+        Ostatnia sekcja ustawia hasło dla superużytkownika oraz tworzy konto
         dla pierwszego użytkownika. Nie musi on posiadać uprawnień
         administratora i nie będzie ich miał. Opcja utworzenia użytkownika
         może się nie mieścić na ekranie, podczas instalacji systemu maszynie
-        witualnej, dlatego nie należy przjmować, że jej nie ma.
+        witualnej, dlatego nie należy przejmować, że jej nie ma.
       </p>
       <p>
         Teraz kiedy wszyskie (te istotne dla instalacji) zostały opisane możemy
         zainstalować system zgodnie założeniami pierwsze maszyny i powtorzyć
         to na drugiej. I to jest pierwsze ćwiczenie.
       </p>
-      <h3>Ćwiczenie 1: Instalacja Red Hat Enterprise Linux 9</h3>
+      <h3 id="exec1.1">Ćwiczenie 1: Instalacja Red Hat Enterprise Linux 9</h3>
       <p>
         Zainstaluj zgodnie założeniami podanymi w podrozdziale 
         <em>Tworzenie maszyn wirtualnych VirtualBox z RHEL</em> oraz sugestiami
@@ -424,7 +510,7 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         powtórz tę czynność drugiej maszynie przeznaczonej do laboratorium.
         Pamiętaj, że założenia dla drugiej maszyny różnią się.
       </p>
-      <h3>Ćwiczenie 2: Logowanie zdalne do RHEL</h3>
+      <h3 id="exec1.2">Ćwiczenie 2: Logowanie zdalne do RHEL</h3>
       <p>
         Wykorzystując program do obsługi protokołu SSH dla twoje systemu
         operacyjnego zaloguj się na superużytkownika. Pamiętaj o tym, że
@@ -442,7 +528,7 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         W następnym rozdziale zapoznamy się z środowiskiem graficznym,
         strukturą katalogów oraz podstawowym narzędziami do pracy w powłoce.
       </p>
-      <h1 id="2.1.firststepsinRHEL9">2. Poruszenia się po systemie RHEL 9</h1> 
+      <h1 id="2.firststepsinRHEL9">2. Poruszenia się po systemie RHEL 9</h1> 
       <p>
         Wykonując ćwiczenia z pierwszego rozdziału, zainstalowaliśmy sobie
         Red Hat w wersji 9 na maszynie wirtualnej. Jako wariant wyboru
@@ -464,8 +550,8 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         taka sama na górnej belce mamy datę oraz czas w prawyn górnym rogu
         do wyboru opcje ułatwień dostępu, wskaźnik połączenia sieciowego oraz
         porozwinięciu możliwość regulacji głośności i jasności ekranu oraz 
-        wyłączenia komputera. Wiecej opcji w tym miejscu pojawi się dopiero 
-        po zalogowaniu, będzie można zmienić kilka ustawień jak np. sieć
+        wyłączenia komputera. Wiecej opcji w tym miejscu będzie dostępne dopiero 
+        po zalogowaniu. Będzie można zmienić kilka ustawień jak np. sieć
         bezprzewodwą. Zmianie uległ również sposób prezentacji kont użytkownika.
         Z racji tego iż <em>root</em> nie jest zwykłym użytkownikiem nie będzie
         pojawiać się na liscie, ale zalogowanie na niego jest możliwe za pomocą
@@ -479,16 +565,16 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         gdy tylko przeniesiemy aplikację do na nowy obszar, GNOME udostępni
         nam kolejny i tak dalej. Wyszukiwarka nad podgląd obszaru roboczego
         daje możliwość wyszukiwania nie tylko aplikacji ale także ustawień co
-        jest raczej normą w GNOME od wersji 3. Na doku znajdują się ulubione
+        jest normą w GNOME od wersji 3. Na doku znajdują się ulubione
         aplikacje, które możemy usuwać i dodawać za pomocą PPM i następnie
         wybierając dodaj lub usuń z ulubionych.
       </p>
-      <h2 id="2.2.hfs">2.2. Struktura katalogowa w uniksach</h2>
+      <h2 id="2.2.hfs">2.2. Struktura katalogowa w Uniksach</h2>
       <p>
-        Zanim jednak przjedziemy do obsługi wiersza polecenia omówimy sobie
+        Zanim jednak przejedziemy do obsługi wiersza poleceń omówimy sobie
         hierachiczną strukturę katalogów, która występuje nie tylko w RHEL ale
-        i w innych uniksach, ponieważ HFS (<em>ang. Hierarchy File System</em>)
-        jest ogólnym standardem. Na uniksach możemy spotkać się z trzema typami
+        i w innych Uniksach, ponieważ HFS (<em>ang. Hierarchy File System</em>)
+        jest ogólnym standardem. Na Uniksach możemy spotkać się z trzema typami
         systemów plików.
       </p>
       <ul>
@@ -496,15 +582,16 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
           pliki i katalogi przechowywane bezpośrednio na dysku.</li>
         <li><strong><em>Network-based</em> - sieciowe</strong> - są to udziały
           podmontowane w naszych systemach za pomocą róznych protokołów, nie
-          tylko SMB.</li>
+          tylko SMB. Plik <em>network-based</em> są plikami <em>disk-based</em>,
+          ale na innych komputerach.</li>
         <li><strong><em>Memory-based</em> - wirtualne</strong> - te systemy
-          plików są tworzone przez procesy potrzeby działania systemu, takim
+          plików są tworzone przez procesy na potrzeby działania systemu, takim
           systemem może być katalog <em>/dev</em> lub <em>/tmp</em>. Ich
           trwałość często zależy od tego jak długo system pozostaje włączony
           lub od wewnętrznych ustaleń samego systemu.</li>
       </ul>
       <p>
-        Struktura plików i katalogów na uniksach ma postać odwrócone drzewa.
+        Struktura plików i katalogów na Uniksach ma postać odwróconego drzewa.
         Korzeń (katalog główny) znajduje się na szczycie struktury i odniego
         rozchodzą się poszczególne gałęzie (podkatalogi), gałęzię mogą zawierać
         kolejne rozgałezienia i tworzyć całe struktury, na gałęziach
@@ -515,14 +602,15 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         Dostęp do konkretnych plików i katalogów w strukturze określany jest
         za pomocą ścieżek. Scieżki określają położenie plików i katalogów
         wewnątrz HFS.
-        Separatorem elementów ścieżki (posczególnych pod katalogów), jest
+        Separatorem elementów ścieżki (posczególnych podkatalogów), jest
         ukośnik, slash (<strong>/</strong>).
       </p>
       <p>
-        Podczas pracy z elemtami systemu plików, jakim są foldery oraz katalogi
-        możemy spotkać <strong>scieżki bezwzględne</strong> zaczynające się od
-        katalogu głównego, lub <strong>ściezki względne</strong> zaczynające
-        się od następnego elementu znajdującego w obecnym katalogu robocznym
+        Podczas pracy z elementami jak foldery oraz pliki możemy używać
+        <strong>scieżęk bezwzględnych</strong> zaczynające się od
+        katalogu głównego, lub <strong>ścieżek względnych</strong>
+        zaczynających
+        się od elementu znajdującego w obecnym katalogu robocznym
         (tym katalogu, w którym się obecnie znajdujemy).
       </p>
       <p>
@@ -530,12 +618,12 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         znajdują się w systemie, jest pierwszy element znajdujący się na
         ścieżce (bezwzględnej) i oznaczny jest on poprostu ukośnikiem
         (<strong>/</strong>), od tego katalogu zaczyna się cała struktura.
-        Poniżej znajduje się lista najważniejsych podkatalogów katalogu
+        Poniżej znajduje się lista najważniejszych podkatalogów katalogu
         głównego, każdy z nich ma swoje znaczenie w systemie.
       </p>
       <ul>
         <li><strong>/boot</strong> (<em>disk-based</em>) - katalog ten
-            przedchowuje jądro, <em>initramfs</em> oraz konfiguracje programu
+            przechowuje jądro, <em>initramfs</em> oraz konfiguracje programu
             rozruchowego.</li>
         <li><strong>/dev</strong> (<em>memory-based</em>) - katalog ten
             przechowuje pliki urządzeń służące do odwoływania się do
@@ -544,8 +632,8 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
             rozruchu systemu.</li>
         <li><strong>/etc</strong> (<em>disk-based</em>) - skrót <em>etc</em>
             możemy rozwinąć do <em>ang. etcetera</em> lub <em>ang. extended
-            text configration</em>. Jest to miejsce do przechwywania plików
-            konfirugracyjnych różnych programów.</li>
+            text configration</em>. Jest to miejsce do przechowywania plików
+            konfiguracyjnych różnych programów.</li>
         <li><strong>/home</strong> (<em>disk-based</em>) - ten katalog
             przechowuje, katalogi domowe użytkowników.</li>
         <li><strong>/opt</strong> (<em>disk-based</em>) - katalog przeznaczony
@@ -554,14 +642,14 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
             struktura podkatalogów, zawierająca informacje o procesach oraz
             różne informacje o systemie, np. informacje o procesorze.</li>
         <li><strong>/run</strong> (<em>memory-based</em>) - katalog
-            przechowywujący pliku wykorzystywane przez procesy podczas
+            przechowywujący pliki wykorzystywane przez procesy podczas
             wykonywania ich czynności. W tym katalogu znajduje się również
             podkatalog <em>media</em> zawierący punkt monotowania automatycznie
             montowanych w systemie dysków wymiennych.</li>
         <li><strong>/sys</strong> (<em>memory-based</em>) - katalog
             przechowuje informacje o urządzeniach, sterownikach. Pewne
             funkcjonalności jądra również są zawarte w tym katalogu. Informacje
-            z tego katalogu są używane przez jądro obsługi urządzeń.</li>
+            z tego katalogu są używane przez jądro do obsługi urządzeń.</li>
         <li><strong>/tmp</strong> (<em>memory-based</em>) - miejsce 
             przechowywania plików tymczasowych okres przechowywania tych 
             plików to 10 dni, lub ponowne uruchomienie komputera.</li>
@@ -573,20 +661,20 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
             tego katalogu:
             <ul>
               <li><strong>/usr/bin</strong> - katalog przechowuje większosć
-                  plików binarnych, wykorzystywanych w systemie, programy oraz
-                  polecenia.</li>
+                  plików binarnych, wykorzystywanych w systemie, programów oraz
+                  poleceń.</li>
               <li><strong>/usr/sbin</strong> - narzędzia administracyjne
                   niedostępne dla zwykłych użytkowników, poza kilkoma
                   programami. Ten katalog często nie jest ujęty podczas 
-                  wyszuiwania poleceń.</li>
+                  wyszukiwania poleceń.</li>
               <li><strong>/usr/lib</strong>, <strong>/usr/lib64</strong> - 
                   biblioteki współdzielone oraz pliki statyczne, nie których
                   programów typu init.</li>
               <li><strong>/usr/include</strong> - pliki nagłówkowe języka C</li>
               <li><strong>/usr/local</strong> - miejsce przechowywania
-                  zewnętrznych programów administracyjnych instalowane i
-                  wykorzystywane przez administatorów, ten katalog zawiera w
-                  sobie podobną strukturę katalogą jak sam <em>/usr</em>.</li>
+                  zewnętrznych programów instalowanych i
+                  wykorzystywanych przez administatorów, ten katalog zawiera w
+                  sobie podobną strukturę katalogową jak sam <em>/usr</em>.</li>
               <li><strong>/usr/share</strong> - miejsce przechowywania stron
                   podręcznika, dokumentacji czy przykładowych plików 
                   konfiguracyjnych.</li>
@@ -598,7 +686,7 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
             <ul>
               <li><strong>/var/log</strong> - katalog na pliki dzienników,
                 zbierane nie tylko z głównego rejestratora, ale i funkcji
-                rejestrowania utrzymwane przez same usługi.</li>
+                rejestrowania samych usług.</li>
               <li><strong>/var/opt</strong> - katalog na zmienne dane
                 oprogramowania instalowanego w katalogu <em>/opt</em></li>
               <li><strong>/var/spool</strong> - katalog ten przechowuje dane
@@ -614,7 +702,7 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         katalogą w postaci drzewa, jednak najpierw nauczymy się korzystać z
         poleceń w RHEL.
       </p>
-      <h2 id="2.3.usingcli">>2.3. Obsługa wiersza poleceń i najprostsze 
+      <h2 id="2.3.usingcli">2.3. Obsługa wiersza poleceń i najprostsze 
       polecenia</h2>
       <p>
         Obsługa wiersza poleceń zależy w znacznym stopniu od powłoki, ponieważ
@@ -633,9 +721,9 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
         o uprawnieniach z jakimi działa proces powłoki (o tym za chwilę). Teraz
         znaki zwracają nazwę użytkownika, nazwę komputera oraz obecny katalog
         roboczy wewnątrz nawiasu kwadratowego, następnie zanim znajduje się
-        znak krzyżyka (<strong>#</strong>), mówiący że powłoka działa
+        znak krzyżyka (<strong>#</strong>) mówiący, że powłoka działa
         uprawnieniami użytkownika <em>root</em> lub symbol dolara 
-        (<strong>$</strong>), mówiący że połoka działa z uprawnieniami zwykłego
+        (<strong>$</strong>) mówiący, że połoka działa z uprawnieniami zwykłego
         użytkownika. Poniżej przedstawiłem oba znaki:
       </p>
 <pre class="code-block">
@@ -645,21 +733,28 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type dvddrive \
 </pre>
       <p>
         W różnych dystrybucjach, znak zachęty może różnorako wyglądąć. Możemy
-        dostować do własnych potrzeb, wiele osób korzysta z jak najmniejszych
+        dostować go do własnych potrzeb, wiele osób korzysta z jak 
+        najmniejszych
         znaków zachęty, aby zaoszczedzić miejsce w wierszu polecenia. Teraz
         możemy już wydawać polecenia.
       </p>
       <p>
-        Kazde polecenie w jakim kolwiek uniksie, składa się z nazwy polecenia,
+        Kazde polecenie w jakimkolwiek Uniksie, składa się z nazwy polecenia,
         ewentualnych opcji oraz ewentualnych argumentów. Nie wszystkie
-        polecenia do uzyskania żądanych przez nas efektów.  
+        polecenia do uzyskania żądanych przez nas efektów wymagają opcji czy
+        argumentów.  
       </p>
 <pre class="code-block">
 $ nazwa_polecenia [opcje] [argumenty]
 </pre>
       <p>
+        Każde polecenie przed zatwierdzeniem możemy edytować, za pomocą
+        strzałek lub skrótów klawiszowych dostarczanych przez bibliotekę
+        <em>GNU Readline</em>. Więcej na ten temat znajdziemy w internecie.
+      </p>
+      <p>
         Przez cały kurs będziemy poznawać jakieś polecenia ale w tym momencie
-        nauczymy się najprostszych znich.
+        nauczymy się najprostszych z nich.
       </p>
       <h3 id="2.3.1.ls">2.3.1. Listowanie zawartości katalogu</h3>
       <p>
@@ -673,13 +768,13 @@ $ nazwa_polecenia [opcje] [argumenty]
             także tych, które normalnie nie są wyświetlane (plik i foldery,
             których nazwa rozpoczyna się od kropki).</li>
         <li><strong>-l</strong> - wyświetlenie szczegółowych informacji na
-            temat elementów. Informacja zwraca przez polecenie jest wówczas
-            podzielona na 7 pól, które kolejno oznaczają: typ pliku oraz
+            temat elementów. Informacja zwracana przez polecenie jest wówczas
+            podzielona na 9 pól, które kolejno oznaczają: typ pliku oraz
             uprawnienia; liczbę dowiązań; nazwę użytkownika (właściciela pliku);
             nazwę grupy do której należy ten plik; rozmiar w bajtach; czas
             modyfikacji oraz nazwę elementu.</li>
         <li><strong>-ld</strong> - wyświetla szczegółową informacje na temat
-            podanego jak argument katalog, bez wyświetlania jego zawartości.
+            podanego jak argument katalogu, bez wyświetlania jego zawartości.
             Jeśli nie podamy argumentu polecenie wyświetli informacje na temat
             bierzącego katalogu.</li>
         <li><strong>-lh</strong> - wyświetli szczegółowo informacje
@@ -692,34 +787,77 @@ $ nazwa_polecenia [opcje] [argumenty]
             odwrócone, elementy zostaną wyświetlone od najstarszego.</li>
         <li><strong>-R</strong> - wyświetlenie elementów w sposób 
             rekurencyjny. Polecenie z tą opcją wyświetli zawartość katalogów
-            wraz z ich podkatalogami itd.</li>
+            wraz z zawartością ich podkatalogów itd.</li>
       </ul>
       <p>
-        Podczas korzystania z wielu programów możemy natknąć się na wiele opcji
-        jednak one dzielą się na długie i krótkie, opcje krótkie występują w
+        Poniżej znajduje się przykład najczęściej wykorzystywanego polecenia
+        <em>ls</em> wraz z opcjami:
+      </p>
+<pre class="code-block">
+[root@server1 ~]# ls -al
+total 10576
+dr-xr-x---. 17 root root    4096 Jun 16 18:49 .
+dr-xr-xr-x. 18 root root     235 Jun  9 19:46 ..
+-rw-------.  1 root root    1197 Jun  9 19:59 anaconda-ks.cfg
+-rw-------.  1 root root    3908 Jun 16 18:50 .bash_history
+-rw-r--r--.  1 root root      18 Aug 10  2021 .bash_logout
+-rw-r--r--.  1 root root     141 Aug 10  2021 .bash_profile
+-rw-r--r--.  1 root root     429 Aug 10  2021 .bashrc
+drwxr-xr-x.  3 root root      17 Jun 16 18:14 bzipped
+drwx------.  8 root root     120 Jun 13 10:55 .cache
+-rw-r--r--.  1 root root      11 Jun 16 13:10 catfile1
+drwx------.  9 root root    4096 Jun 13 13:42 .config
+-rw-r--r--.  1 root root     100 Aug 10  2021 .cshrc
+drwxr-xr-x.  2 root root       6 Jun 13 10:55 Desktop
+drwxr-xr-x.  4 root root      30 Jun 16 16:44 dir20
+drwxr-xr-x.  2 root root       6 Jun 13 10:55 Documents
+drwxr-xr-x.  2 root root       6 Jun 13 10:55 Downloads
+drwxr-xr-x.  3 root root      55 Jun 16 11:34 etc
+-rw-r--r--.  1 root root 4986788 Jun 16 18:13 etc-bzipped.tar.bz2
+-rw-r--r--.  1 root root 5772869 Jun 16 18:12 etc-gzipped.tar.gz
+-rw-r--r--.  2 root root       0 Jun 16 17:26 file10
+-rw-r--r--.  2 root root       0 Jun 16 17:26 file20
+-rw-r--r--.  1 root root     579 Jun 16 11:07 fstab
+drwxr-xr-x.  3 root root      17 Jun 16 18:14 gzipped
+-rw-------.  1 root root      42 Jun 16 18:22 .lesshst
+drwx------.  3 root root      19 Jun 13 10:55 .local
+drwxr-xr-x.  2 root root       6 Jun 13 10:55 Music
+drwxr-xr-x.  2 root root       6 Jun 13 10:55 Pictures
+drwxr-xr-x.  2 root root       6 Jun 13 10:55 Public
+lrwxrwxrwx.  1 root root       6 Jun 16 17:30 soft10 -&gt; file10
+-rw-r--r--.  1 root root     129 Aug 10  2021 .tcshrc
+drwxr-xr-x.  2 root root       6 Jun 13 10:55 Templates
+drwxr-xr-x.  2 root root       6 Jun 13 10:55 Videos
+-rw-------.  1 root root    8264 Jun 16 18:38 .viminfo
+-rw-r--r--.  1 root root     464 Jun 16 18:38 vipractice
+</pre>
+      <p>
+        Podczas korzystania z wielu programów możemy natknąć się na wiele opcji.
+        Dzielą się one na długie i krótkie, opcje krótkie występują w
         postaci pojedyńczego znaku poprzedzonego jednym myślnikiem
         (<strong>-</strong>). Opcje długie występuje w postaci pojedyńczego
-        (najczęsciej, ponieważ to zależy od programu) poprzedzone dwoma 
+        (najczęsciej, ponieważ to zależy od programu) słowa poprzedzonego dwoma 
         myślnikami (<strong>--</strong>). W przypadku tak prostych poleceń jak
-        <em>ls</em> również możemy mieć doczynienia długi opcjami np. zamiast
+        <em>ls</em> również możemy użyć długich opcji np. zamiast
         <em>-a</em> możemy użyć <em>--all</em>.
       </p>
       <h3 id="2.3.2.pwd">2.3.2. Wyświetlenie bierzącego katalogu roboczego</h3>
       <p>
         Na pierwszy rzut oka mogłoby się wydawać po co nam to polecenie,
         skoro w znaku zachęty na RHEL jest wyświetlona nazwa bierzącego
-        katalogu. Polecenie <strong>pwd</strong> wyświetla ścieżkę do
-        bierzącego katalogu, a po drugie to polecenie ma bardzo ważną cechę
+        katalogu. Polecenie <strong>pwd</strong> wyświetla ścieżkę bezwzględną 
+        do bierzącego katalogu, a po drugie to polecenie ma bardzo ważną cechę
         związaną z dowiązaniami, ale o tym będzie przy dowiązaniach. Do
         normalnych zastosować <em>pwd</em> nie potrzebuje żadnej opcji, ani
         żadnego argumentu.
       </p>
 <pre class="code-block">
-$ pwd
+[root@server1 ~]# pwd
+/root
 </pre>
       <h3 id="2.3.3.cd">2.3.3. Poruszanie się wśrod katalogów</h3>
       <p>
-        Generalnie do zmiany bierzącego katalogu, czy też to przejść z do 
+        Generalnie do zmiany bierzącego katalogu, czy przejścia z/do 
         innego katalogu służy polecenie <strong>cd</strong>. Pozwala on na
         kilka sztuczek.
       </p>
@@ -735,19 +873,33 @@ $ pwd
           nie musimy znać jego nazyw wystarczy że poleceniu <em>cd</em> podamy
           dwie kropki (<strong>..</strong>)</li>
       </ul>
+      <p>
+        Poniżej zamieściłem przykłady kilku z nich.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# cd -
+/home/user
+[root@server1 user]# cd ..
+[root@server1 home]# cd 
+</pre>
       <h3 id="2.3.4.tty">2.3.4. Identyfikacja urządzenia terminala</h3>
       <p>
         Czasmi może zajść potrzeba zidentyfikowania własnego urządania 
         terminalowego służy do tego polecenie <strong>tty</strong>. Jeśli 
         wynikiem działania tego polecenie będzie <em>/dev/pts*</em> oznacza to,
         że korzystamy z emulatora terminala np. programu Terminal w środowisku
-        GNOME. Jeśli naszę urządzenie to <em>/dev/tty*</em> oznacza to, że
+        GNOME lub połączenia zdalnego za pomocą protokołu SSH. 
+        Jeśli naszę urządzenie to <em>/dev/tty*</em> oznacza to, że
         korzystamy z jednej wirtualnych konsol dostępnych na komputerze.
       </p>
+<pre class="code-block">
+[root@server1 ~]# tty
+/dev/pts/0
+</pre>
       <h3 id="2.3.5.uptime">2.3.5. Czas systemowy oraz załadowanie procesora</h3>
       <p>
-        W większości dostępnych uniksów zapewne dostępne będzie polecenie 
-        <strong>uptime</strong>. To nie pozorne polecenie zawraca dużą ilość
+        W większości dostępnych Uniksów zapewne dostępne będzie polecenie 
+        <strong>uptime</strong>. To niepozorne polecenie zawraca dużą ilość
         informacji.
       </p>
       <ul>
@@ -758,21 +910,29 @@ $ pwd
         <li>Średnie załadowanie procesora w przeciągu minuty, 5 i 15 minut, ta
             wartość pokazuje zużycie procesora, podając wartości ułamkowe jeśli
             np. w ciągu jednej minuty jeden z wątków procesora był wykorzystany
-            w 50%. Jeśli posiadamy procesor wielordzeniowy, ten wskaźnik może
+            w 50% otrzymamy wynik 0.50. Jeśli posiadamy procesor wielordzeniowy, 
+            ten wskaźnik może
             wskazywać wartości powyżej 1, oznacza to że procesy wykorzystują
             już więcej niż jeden wątęk/rdzeń.</li>.
       </ul>
+<pre class="code-block">
+[root@server1 ~]# uptime
+ 13:28:40 up 8 min,  1 user,  load average: 0.00, 0.12, 0.12
+</pre>
       <h3 id="2.3.6.clear">2.3.6. Czyszczenie ekranu powłoki</h3>
       <p>
         Do czyszczenia terminala ze zbędnego wyjścia poleceń służy polcenie
         <strong>clear</strong> lub kombinacja klawiszy <em>CTRL+l</em>.
       </p>
+<pre class="code-block">
+[root@server1 ~]# clear
+</pre>
       <h3 id="2.3.7.which">2.3.7. Określanie ścieżki polecenia</h3>
       <p>
         Czasami w pewnych konfiguracjach lub też w skryptach powłoki niezbędne
         będzie podanie ścieżki do konkretnego programu kryjącego się za nazwą
         polecenia, w RHEL możemy zrobić to na trzy sposoby wykorzystując do
-        tego rózne polecenia. Polecenia podałem w przykładzie w raz z
+        tego różne polecenia. Polecenia podałem w przykładzie w raz z
         informacją zwracaną przez polecenie.
       </p>
 <pre class="code-block">
@@ -788,15 +948,17 @@ ls jest aliasem do ls --color=auto'
 </pre>
       <p>
         Które z tych poleceń będzie właściwe to już zależy, do czego będą nam
-        potrzebne tego typu informacje.
+        potrzebne tego typu informacje. Polecenie <em>whereis</em> wydaje się
+        szczególnie pomocne.
       </p>
       <h3 id="2.3.8.uname">2.3.8. Wyświetlenie informacji o systemie</h3>
       <p>
-        Polecenie <strong>uname</strong>, należy to poleceń, które są dość
-        nie pozorne ale za pomocą jego opcji możemy wydobyć wersję użytego
-        jądra, archtekturę systemu itp. informacje. Polecenie bez podania
-        żadnej z opcji zwraca wyłącznie nazwę systemu i jest <em>Linux</em>.
-        Aby wydobyć wszelkie możliwe przez to polecenie informacje możemy 
+        Polecenie <strong>uname</strong>, należy do poleceń, które są dość
+        niepozorne, ale za pomocą jego opcji możemy otrzymać wersję użytego
+        jądra, archtekturę systemu i tym podobne informacje. Polecenie bez 
+        podania
+        żadnej z opcji zwraca wyłącznie nazwę systemu i jest to <em>Linux</em>.
+        Aby otrzymać wszelkie zwracane przez to polecenie informacje możemy 
         użyć opcji <em>-a</em>. Resztę opcji znajdziemy na stronach
         podręcznika (o tym będzie w dalszej częście materiału).
       </p>
@@ -804,15 +966,60 @@ ls jest aliasem do ls --color=auto'
 $ uname -a 
 Linux latitude-e5270 5.14.0-70.13.1.el9_0.x86_64 #1 SMP PREEMPT Thu Apr 14 12:42:38 EDT 2022 x86_64 x86_64 x86_64 GNU/Linux
 </pre>
-      <h3 id="2.3.9.lscpu">2.3.8. Wyświetlanie informacji o procesorze</h3>
+      <h3 id="2.3.9.lscpu">2.3.9. Wyświetlanie informacji o procesorze</h3>
       <p>
         W RHEL możemy łatwo sprawdzić informacje na temat zainstalowanego w
-        naszym komputerze procesora, w przystępny sposób. Do dyspozycji mamy
+        naszym komputerze procesora w przystępny sposób. Do dyspozycji mamy
         bowiem polecenie <strong>lscpu</strong>. Wyświetla ono wszystkie
         dostępne informacje jakie może znaleźć w systemie na temat tego
         komponentu.
       </p>
-      <h2 id="2.4.gettinghelp">>2.4. Uzyskiwanie pomocy</h2>
+<pre class="code-block">
+[root@server1 ~]# lscpu
+Architecture:            x86_64
+  CPU op-mode(s):        32-bit, 64-bit
+  Address sizes:         39 bits physical, 48 bits virtual
+  Byte Order:            Little Endian
+CPU(s):                  1
+  On-line CPU(s) list:   0
+Vendor ID:               GenuineIntel
+  Model name:            Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
+    CPU family:          6
+    Model:               78
+    Thread(s) per core:  1
+    Core(s) per socket:  1
+    Socket(s):           1
+    Stepping:            3
+    BogoMIPS:            5004.62
+    Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush
+                          mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl xtopology
+                          nonstop_tsc cpuid tsc_known_freq pni pclmulqdq monitor ssse3 cx16 pcid sse4_1 
+                         sse4_2 x2apic movbe popcnt aes xsave avx rdrand hypervisor lahf_lm abm 3dnowpre
+                         fetch invpcid_single pti fsgsbase avx2 invpcid rdseed clflushopt md_clear flush
+                         _l1d
+Virtualization features: 
+  Hypervisor vendor:     KVM
+  Virtualization type:   full
+Caches (sum of all):     
+  L1d:                   32 KiB (1 instance)
+  L1i:                   32 KiB (1 instance)
+  L2:                    256 KiB (1 instance)
+  L3:                    3 MiB (1 instance)
+NUMA:                    
+  NUMA node(s):          1
+  NUMA node0 CPU(s):     0
+Vulnerabilities:         
+  Itlb multihit:         KVM: Mitigation: VMX unsupported
+  L1tf:                  Mitigation; PTE Inversion
+  Mds:                   Mitigation; Clear CPU buffers; SMT Host state unknown
+  Meltdown:              Mitigation; PTI
+  Spec store bypass:     Vulnerable
+  Spectre v1:            Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+  Spectre v2:            Mitigation; Retpolines, STIBP disabled, RSB filling
+  Srbds:                 Unknown: Dependent on hypervisor status
+  Tsx async abort:       Not affected
+</pre>
+      <h2 id="2.4.gettinghelp">2.4. Uzyskiwanie pomocy</h2>
       <h3 id="2.4.1.manpages">2.4.1. Strony podręcznika</h3>
       <p>
         W dystrybucjach Linuksa nie tylko w RHEL możemy znaleźć duża bazę
@@ -830,8 +1037,8 @@ $ man man
 </pre>
       <p>
         Różne komponenty na Linuksie mogą mieć takie same nazwy. Polecenie
-        <em>man</em> zwraca pierwsze znalezione wystąpienie jeśli wpisując
-        polecenie <code class="code-inline">man passwd</code> otrzymamy
+        <em>man</em> zwraca pierwsze znalezione wystąpienie, jeśli wpiszemy
+        polecenie <code class="code-inline">man passwd</code> to otrzymamy
         informacje na temat polecenia, ale jeśli interesowałoby nas poznanie
         szczegółów pliku <em>/etc/passwd</em> musimy podać przed nazwą, numer
         sekcji odpowiedzialny za pliki konfiguracyjne.
@@ -843,8 +1050,8 @@ $ man 5 passwd
         Strony podręcznika, możemy przeszukiwać pod kątem występowania słów
         kluczowych, w przypadku kiedy znamy zagadnienie ale nie znamy
         odpowiedniego polecenia. Do tego celu możemy użyć opcji <em>-k</em>
-        polecenia man lub polecenia <strong>apropos</strong>. Wynik działania
-        tych programów jest taki sam.
+        polecenia <em>man</em> lub polecenia <strong>apropos</strong>. Wynik 
+        działania tych programów jest taki sam.
       </p>
 <pre class="code-block">
 $ apropos dos
@@ -933,30 +1140,32 @@ Options:
                         commands.
 </pre>
       <p>
-        Posiadanie tej opcji nie jest standardem, wiec nie wszystkie będą ją
-        mieć.
+        Posiadanie tej opcji nie jest standardem, wiec nie wszystkie polecenia
+        będą ją mieć.
       </p>
       <h3 id="2.4.3.texinfo">2.4.3. Dokumentacja texinfo</h3>
       <p>
-        Projekt GNU, za proponował zmianę formatu dokumentacji programów, z
+        Projekt GNU, zaproponował zmianę formatu dokumentacji programów, z
         suchych stron podręcznika do dokumentów przypominających ksiązkę lub
-        inne dokumenty. Strony podręcznika nadal są podstawowym źródłem
-        wiedzy na temat systemu i jego komponentów w niego wbudowanym. Nie
-        mniej jednak jeśli uznamy, że zawartość strony podręcznika nie jest
+        inne dokumenty. Strony podręcznika nadal są podstawowym i wybudowanym
+        (w większość dystrybcji) źródłem  wiedzy na temat systemu i jego 
+        komponentów. 
+        Nie mniej jednak jeśli uznamy, że zawartość strony podręcznika nie jest
         dla zadowalająca może spojrzeć też tam, o ile ten format jest
         zainstalowany w naszym systemie. Dostęp do niego uzyskujemy za pomocą
         polecenia <strong>info</strong> lub <strong>pinfo</strong>, następnie
         podając nazwę polecenia jako argument. Wydając samo polecenie
         <em>info</em>, możemy zobaczyć ile dokumentacji w formacie
-        <em>texinfo</em> znajdue się w systemie.
+        <em>texinfo</em> znajduje się w systemie.
       </p>
       <h3 id="2.4.4.usrsharedoc">2.4.4. /usr/share/doc</h3>
       <p>
         Innym miejscem przechowującym jakieś informacje na temat poleceń czy
         też programów może być katalog <em>/usr/share/doc</em>. Możemy w nim
-        znaleźć na przykład domyślny plik konfiguracyjny (oczywiście zależy to
-        czy zostanie on dodany do paczki z oprogramowniem). Nie należy jednak
-        od razu skreślać tego, katalogu często mogą znajdować się tam
+        znaleźć na przykład domyślne plik konfiguracyjne wielu usług 
+        (oczywiście zależy to czy zostaną one dodany do paczek z 
+        oprogramowaniem). Nie należy jednak
+        od razu skreślać tego katalogu, często mogą znajdować się tam
         informacje, których nie znajdziemy na stronach podręcznika czy w
         formacie <em>info</em> np. tutoriale lub gotowe konfiguracje.
       </p>
@@ -970,23 +1179,23 @@ Options:
         Każdy zebranych tam tematów możemy pobrać w formacie HTML, PDF oraz
         ePub (czytniki e-booków).
       </p>
-      <p>
+      <p class="exam_tip">
         <strong>Odnośnie egzaminu:</strong><br />
-        Na egzaminie możemy korzystać ze wszystkie co jest dostępne w systemie
-        warto pamiętać o tym. Jeśli będziemy mieć problem z poleceniem
-        <em>man</em>, warto wydać polecenie <strong>mandb</strong> odświerzy
+        Na egzaminie możemy korzystać ze wszystkiego co jest dostępne w systemie
+        warto pamiętać o tym. Jeśli będziemy mieć problemy z poleceniem
+        <em>man</em>, warto wydać polecenie <strong>mandb</strong> odświeży
         to bazę danych stron podręcznika.
       </p>
-      <h3>Ćwiczenie 1: Nawigacja pośród katalogów Linuksa</h3>
+      <h3 id="exec2.1">Ćwiczenie 1: Nawigacja pośród katalogów Linuksa</h3>
       <p>
         Jako zwykły użytkownik na maszynie wirtualnej <em>server1</em>, 
         wyświetl ścieżkę na której
         się znajdujesz. W tym samym katalogu wyświetl wszystkie pliki.
-        Przjedź do katalogu <em>/etc</em> następnie wyświetl ścieżkę na której
+        Przjedź do katalogu <em>/etc</em> następnie wyświetl ścieżkę, na której
         się znajdujesz, następnie powróć do poprzedniego katalogu i jeszcze
         raz wyświetl ścieżkę.
       </p>
-      <h3>Ćwiczenie 2: Rożne zadania</h3>
+      <h3 id="exec2.2">Ćwiczenie 2: Rożne zadania</h3>
       <p>
         Jako zwykły użytkownik na maszynie <em>server1</em> w terminalu 
         polecenie <em>tty</em>.
@@ -995,29 +1204,29 @@ Options:
         średnie obciążenie procesora. Za pomocą trzech poznanych poleceń 
         wyświetl lokalizacje polecenia <em>vgs</em>.
       </p>
-      <h3>Ćwiczenie 3: Informacje o systemie</h3>
+      <h3 id="exec2.3">Ćwiczenie 3: Informacje o systemie</h3>
       <p>
         Jako zwykły użytkownik na maszynie <em>server1</em>
         za pomocą poznanego polecenia wyświetl wszystkie informacje o systemie
         (oczywście w miarę możliwości polecenia). Następnie użyj innego
-        polecenia aby sprawdzić informacje na temat zainstalowanego procesora
-        w systemie.
+        polecenia aby sprawdzić informacje na temat zainstalowanego w
+        komputerze procesora.
       </p>
-      <h3>Ćwiczenie 4: Używanie pomocy</h3>
+      <h3 id="exec2.4">Ćwiczenie 4: Używanie pomocy</h3>
       <p>
         Jako zwykły użytkownik na maszynie <em>server1</em>
-        Wyświetl strone podręcznika polecenia <em>uname</em> oraz stronę
+        Wyświetl stronę podręcznika polecenia <em>uname</em> oraz stronę
         podręcznika dla pliku <em>/etc/shadow</em>. Wykonaj trzy polecenia:
         <code class="code-inline">apropos ext4</code>,
         <code class="code-inline">man -k ext4</code>,
         <code class="code-inline">whatis group</code>. Czym różnią się
-        informacje zwracane przez te polecenia.
+        informacje zwracane przez te polecenia?
       </p>
       <h2 id="ch2summary">Podsumowanie</h2>
       <p>
         W tym rozdziale skupiliśmy się na podstawach obsługi systemu,
         poznaliśmy środowisko graficzne. Odświerzyliśmy sobie informacje na
-        temat hierachicznego systemu plików, wykorzystywanego w uniksach.
+        temat hierachicznego systemu plików wykorzystywanego w Uniksach.
         Zapoznaliśmy się z terminalem i podstawowymi polecenia. Na koniec
         dowiedzieliśmy się gdzie możemy szukać pomocy na temat poleceń, plików
         konfiguracyjnych i tego typu rzeczy.

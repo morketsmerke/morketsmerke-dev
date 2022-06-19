@@ -650,9 +650,10 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type hdd --mediu
             przechowuje informacje o urządzeniach, sterownikach. Pewne
             funkcjonalności jądra również są zawarte w tym katalogu. Informacje
             z tego katalogu są używane przez jądro do obsługi urządzeń.</li>
-        <li><strong>/tmp</strong> (<em>memory-based</em>) - miejsce 
-            przechowywania plików tymczasowych okres przechowywania tych 
-            plików to 10 dni, lub ponowne uruchomienie komputera.</li>
+        <li><strong>/tmp</strong> (<em>disk-based</em>) - miejsce 
+            przechowywania plików tymczasowych, plik złożone w tym katalogu
+            przetrwają ponowne uruchomienie komputera. Okres przechowywania 
+            tych plików to 10 dni.</li>
         <li><strong>/usr</strong> (<em>disk-based</em>) - skrót <em>usr</em>,
             należy rozwinąć jako <em>ang. UNIX System Resources</em>. Ten
             katalog jest kolejną dużą strukturą katalogów w systemie. W tym
@@ -1471,6 +1472,535 @@ drwxr-xr-x. 132 root root 8192 Jun 17 15:20 /tmp/etc
         W tym przykładzie użyłem jeszcze jednej ważnej opcji <em>-C</em>, która
         nakazuje poleceniu <em>tar</em> zmianę katalogu przed wypakowaniem
         archiwum.
+      </p>
+      <p>
+        Za pomocą opcji <em>-t</em>, możemy podejrzeć zawartość archiwum.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# tar -tvf etc_tarred2.tar
+drwxr-xr-x root/root         0 2022-06-17 15:20 etc/
+lrwxrwxrwx root/root         0 2022-06-09 19:47 etc/mtab -&gt; ../proc/self/mounts
+-rw-r--r-- root/root       579 2022-06-09 19:44 etc/fstab
+-rw------- root/root         0 2022-06-09 19:44 etc/crypttab
+drwxr-xr-x root/root         0 2022-06-09 19:47 etc/lvm/
+drwxr-xr-x root/root         0 2022-06-09 19:44 etc/lvm/devices/
+-rw-r--r-- root/root       286 2022-06-09 19:44 etc/lvm/devices/system.devices
+drwx------ root/root         0 2022-06-09 20:48 etc/lvm/archive/
+-rw------- root/root      1891 2022-06-09 20:48 etc/lvm/archive/rhel_00000-557804270.vg
+drwx------ root/root         0 2022-06-09 20:48 etc/lvm/backup/
+-rw------- root/root      1890 2022-06-09 20:48 etc/lvm/backup/rhel
+drwx------ root/root         0 2022-02-16 13:01 etc/lvm/cache/
+-rw-r--r-- root/root    111694 2022-02-16 13:01 etc/lvm/lvm.conf
+-rw-r--r-- root/root      2299 2022-02-16 13:01 etc/lvm/lvmlocal.conf
+...
+</pre>
+      <p>
+        Chcąc dodać plik do archiwum, wystarczy użyć opcji <em>-r</em> nie
+        trzeba go rozpakowywać i dodawać tych plikiów wystarczy wskazać
+        archiwum a następnie pliki, które chce się dodać.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# tar -rvf etc_tarred2.tar vipractice.bz2 
+vipractice.bz2
+
+[root@server1 ~]# tar -tvf etc_tarred2.tar
+...
+-rw-r--r-- root/root       208 2022-06-09 19:46 etc/.updated
+-rw-r--r-- root/root       307 2022-06-16 18:38 vipractice.bz2
+</pre>
+      <p>
+        Dodawaniu plików nie służy wyłącznia opcja <em>-r</em>, ale również
+        <em>-u</em>, która dodaje nowsze pliki na końcu archwium przez to
+        wyświetlając zawrtość takiego archiwum, możemy zobaczyć pliki o tych
+        samych nazwach. Te nazwy oczywiście odpowiadają różnym wersjom tych
+        plików.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# tar -uvf etc_tarred.tar /etc/nanorc
+tar: Removing leading `/' from member names
+/etc/nanorc
+tar: Removing leading `/' from hard link targets
+
+[root@server1 ~]# tar -tvf etc_tarred2.tar
+...
+-rw-r--r-- root/root       208 2022-06-09 19:46 etc/.updated
+-rw-r--r-- root/root     10373 2022-06-19 09:47 etc/nanorc
+</pre>
+      <p>
+        Po zebraniu wszystkich plików do archiwum, może ono przybrać na
+        rozmiarze. Polecenie <em>tar</em>, pozwala na zastosowanie poznanych
+        wcześniej algorytmów kompresji.
+      </p>
+      <ul>
+        <li><strong>gzip:</strong> opcja <em>-z</em>
+<pre class="code-block">
+[root@server1 ~]# tar -czf etc-gzipped.tar.gz /etc
+</pre>
+        </li>
+        <li><strong>bzip2:</strong> opcja <em>-j</em>
+<pre class="code-block">
+[root@server1 ~]# tar -cjf etc-bzipped.tar.bz2 /etc
+</pre>
+        </li>
+      </ul>
+      <p>
+        Rozpakowując skompresowane archiwa w RHEL możemy rozpakować podając
+        takie same opcje jak w przypadku nie skompresowanych archiwów.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# tar -xf etc-gzipped.tar.gz -C /tmp
+</pre>
+      <p>
+        Program rozpozna po zawartości pliku algortym kompresji. Wiecej
+        informacji na temat polecenia <em>tar</em> znajduje na stronie
+        podręcznika.
+      </p>
+      <p class="exam_tip">
+        Na egzaminie będziemy mieć określną ilość czasu na wykonanie zadań
+        egzaminacyjnych, dlatego też operacje kompresji czy archiwizacji
+        plików będą przeprowadzane na małych plikach, aby nie tracić czasu.
+      </p> 
+      <h2 id="3.3.vim">3.3. Edycja plików za pomocą edytora Vim</h2>
+      <p>
+        Podczas wykonywania zadań związanych z administracją system, niezbędna
+        może być edycja jakiegoś pliku. Edytor <strong>Vim</strong> jest 
+        standardem jeśli
+        chodzi o edycje plików. Ten edytor w wersji podstawowej jaką jest
+        program <em>Vi</em> jest dostępny w większości Uniksów. W przypadku
+        w wielu dystrybucji Linuksa preinstalowany jest <em>Vim</em>. Lepiej
+        jest nauczyć się rozwiązania, które możemy zastosować beż żadnej
+        ingerencji w system (bez instalacji ulubionego edytora, który znamy).
+      </p>
+      <p>
+        Edytor <em>Vim</em> może działać w trzech trybach:
+      </p>
+      <ul>
+        <li><strong>tryb poleceń</strong> - domyślny tryb pracy programu,
+          <em>Vim</em> oczekuje na wprowadzenie polecenia. Ten tryb jest
+          uruchamiany w momencie uruchomienia programu. Polecenia są
+          przypisane do poszczególnych znaków na klawiaturze.</li>
+        <li><strong>tryb wprowadzania</strong> - tryb ten służy do edycji
+          tekstu, uruchamiany za pomocą polecenia <em>i</em> lub <em>a</em>.</li>
+        <li><strong>tryb ostatniej lini</strong> - ten tryb możemy również
+          nazwać wierszem polecenia. Urchamiany jest poprzez wciśniecie
+          dwukropka (<strong>:</strong>) w trybie poleceń. Po tym znaku
+          podajemy polecenie.</li> 
+      </ul>
+      <h3 id="3.3.1.startingvim">3.3.1. Podstawy obsługi Vim</h3>
+      <p>
+        Edytor vim uruchamiamy, jak każde inne polecenie. Podając jego nazwę
+        w wierszu polecenia. Podczas uruchamiania możemy podać plik jako
+        argument, lub też użyć polecenia trybu ostatniej linii <em>:o</em>
+        po czym podać ścieżkę do pliku.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# vim test.txt
+</pre>
+      </p>
+        Poruszanie po tekscie odbywa się w trybie poleceń za pomocą klawiszy:
+      </p>
+      <ul>
+        <li><strong>h</strong> - przesunięcie kursora w lewo</li>
+        <li><strong>j</strong> - przesunięcie kursora w dół</li>
+        <li><strong>k</strong> - przesunięcie kursora w górę</li>
+        <li><strong>l</strong> - przesunięcie kursora w prawo</li>
+      </ul>
+      <p>
+        Przejście do edycji tekstu, wymaga użycia polecenia <strong>i</strong> 
+        co spowoduje rozpoczęcie edycji w pozycji kursora lub polecenia 
+        <strong>a</strong>, które spowoduje przesunięcie kursora o jedną 
+        pozycję i rozpoczęcie edycji, polecenie <em>a</em> możemy tłumczyć 
+        jako dopisywanie (ang. <em>append</em>), a <em>i</em> jako wprowadzanie 
+        (ang. <em>insert</em>).
+      </p>
+      <p>
+        Opuszczenie trybu wprowadzania i powrót do trybu polecenia wymagania
+        naciśnięcia klawisza <em>Esc</em> (escape). Przjście do trybu polecenia
+        jest wymgane, aby przenieść kursor w inne miejsce. W tym trybie również
+        zapisuje oraz opuszczamy edytor. Zmiany w tekscie również możemy
+        porzućić, nie musimy ich zapisywać poniżej umieściłem kilka poleceń
+        trybu ostatniej linii, służacych od zapisywania i opuszczania edytora.
+      </p>
+      <ul>
+        <li><strong>:w</strong> - zapisanie zmian w pliku oraz pozostanie w
+          w edytorze</li>
+        <li><strong>:x</strong> - zapisanie zmian w pliku oraz opuszczenie
+          <em>Vim</em></li>
+        <li><strong>:q</strong> - opuszczenie <em>Vim</em>.</li>
+      </ul>
+      <p>
+        Każdej z tych opcji może towarzyszyć wykrzyknik (<strong>!</strong>),
+        więc jeśli chcielibyśmy porzucić zmiany w pliku i wyjść należy użyć
+        polecenia <em>:q!</em>. Możemy czasami spotkać się z uprawnieniami,
+        które nie pozwolą nam zapisać zmian w pliku. Rozwiązać tego typu
+        problem możemy dwa sposoby, wymusić zapisanie zamian za pomocą
+        wykrzyknika, lub podać ścieżkę do nowego pliku poleceniu <em>:w</em>.
+      </p>
+      <h3 id="3.3.2.othervimcommands">3.3.2. Pozostałe polecenia Vim</h3>
+      <p>
+        Vim posiada bogatą kolekcję poleceń trybu polecnia oraz trybu ostatniej
+        linii, na poniższej liście znajdują się część z nich, możemy
+        wykorzystać je do sprawniejszego używania edytora <em>Vim</em>.
+      </p>
+      <p><strong>Komendy trybu poleceń:</strong></p>
+      <ul>
+        <li><strong>^ - Shift + 6</strong> - Przeniesie kursora na początek
+          linii.</li>
+        <li><strong>$ - Shift + 4</strong> - Przeniesie kursora na koniec 
+          linii.</li>
+        <li><strong>Ctrl+f</strong> - przewinięcie tekstu o jedną stronę w
+          przód.</li>
+        <li><strong>Ctrl+b</strong> - przewinięcie tesktu o jedną stronę w
+          tył.</li>
+        <li><strong>x</strong> - usunięcie znaku wskazywanego przez kursor,
+          znak tak naprawdę zostaje wycięty, i poźniej może zostać wklejony.</li>
+        <li><strong>dd</strong> - usunięcie/wycięcie całej linii, linia
+          podobnie jak znak może zostać wklejona.</li>
+        <li><strong>v</strong> - przejście <em>Vim</em> w tryb wizualny
+          (tutaj nie omawiany), pozwala zaznaczać tekst co ułatwia kopiowanie
+          oraz wycinanie.</li>
+        <li><strong>y</strong> - kopiowanie zaznaczenia w trybie wizualnym.</li>
+        <li><strong>d</strong> - wycinanie/usuwanie w trybie wizualnym.</li>
+        <li><strong>p</strong> - wklejanie.</p>
+        <li><strong>u</strong> - cofnięcie się o jedną zmianę, odpowiednik
+          <em>Ctrl+z</em>.</li>
+        <li><strong>Ctrl+r</strong> - tzw. redo, powrót do stanu przed
+          cofnięciem zmiany. Czasami bardzo przydatna funkcja.</li>
+        <li><strong>. - kropka</strong> - powtórzenie ostatniego polecenia.
+          Jeśli ostatnim poleceniem było wprowadzanie, to, to polecenie wklei
+          cały wprowadzony tekst do momentu zmiany polecenia.</li>
+        <li><strong>/ - slash</strong> - przeszukiwanie tekstu w przód.</li>
+        <li><strong>? - znak zapytania</strong> - przeszukiwanie tekstu w tył.</li>
+        <li><strong>n</strong> - następne wystąpienie frazy w tekście</li>
+        <li><strong>N</strong> - poprzednie wystąpienie frazy w tekscie. W
+          przypadku przeszukiwania w tył, działanie poleceń <em>n</em> oraz
+          <em>N</em> jest odwrócone.</li>
+      </ul>
+      <p>
+        W przypadku tryb poleceń, możemy zwielokrotnić działanie tych poleceń,
+        stawiając liczbę wykonywania tego polecenia. Na przykład jeśli chcemy
+        usunąć 3 linie to zamiast wydawać trzykrotnie polecenie <em>dd</em>,
+        możemy nacisnąć <em>3</em> następnie <em>dd</em> i trzy linie spod
+        kursora zostaną usunięte/wycięte.
+      </p>
+      <p><strong>Polecenia trybu ostatniej linii:</strong></p>
+      <ul>
+        <li><strong>:set number</strong> - ustawienia numerowanie linii.</li>
+        <li><strong>:o</strong> - otwiera plik, jako argument podajemy ścieżekę
+          do pliku.</li>
+        <li><strong>:%s/old/new</strong> - zamiana pierwszego wstąpienia słowa 
+          <em>old</em> słowem <em>new</em>.</li>
+        <li><strong>:%s/old/new/g</strong> - zamiana wszystkich wystąpień słowa
+          <em>old</em> słowem <em>new</em>.</li> 
+      </ul>
+      <p>
+        Podczas korzystania <em>Vim</em> istotna jest praktyka. Dlatego trzeba
+        przesiąść się na niego i zacząć tworzyć w nim pliki.
+      </p>
+      <p class="exam_tip">
+        Podczas egzaminu, możemy spotkać się z zadaniem w którym trzeba
+        zmienić jakiś plik. Dostępność <em>Vim</em> na maszynie
+        egzaminacyjnej jest niemal pewna, dlatego też nauczenie się jego 
+        obsługi jest dość istotne.
+      </p>
+      <h2 id="3.4.filesanddirectories">3.4. Pliki i katalogi</h2>
+      <p>
+        Jaka kolwiek praca z komputerem prędzej czy poźniej będzie wymagać
+        operacji na plikach i katalogach. Poniżej przedstawiam najprostsze
+        czynności takie możemy wykonywać na tych elementach. 
+      </p>
+      <h3 id="3.4.1.createfilesanddirs">3.4.1. Tworzenie plików i katalogów</h3>
+      <p>
+        Tworzenie plików może zrealizować na kilka sposób. Jednym z nich jest
+        wykorzystanie polecenia <strong>touch</strong>, które służy generalnie
+        do uaktualnienia czasów dostępu oraz modyfikacji, jednak kiedy podany
+        plik nie istnieje to zostanie on utworzony przez to polecenie.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# touch plik1
+[root@server1 ~]# ls -l plik1
+-rw-r--r--. 1 root root 0 Jun 19 14:52 plik1
+</pre>
+      <p>
+        Jak widać na powyższym przykładzie został utworzony plik, którego
+        wielkość to całe 0 bajtów. Innym sposobem na utworzenie katalog jest
+        wykorzystanie polecenia <em>Vim</em>, w którym zapisując zmiany w 
+        nowym pliku, tworzymy go mimochodem. Ostanim ze sposobów jest
+        utworzenie plików ze strumienia (stumienie będą opisywane w dalszej
+        części tego materiału), za pomocą polecenia <strong>cat</strong>,
+        który omówimy sobie w następnym podrozdziale. Wydając następujące
+        polecenie:
+      </p>
+<pre class="code-block">
+[root@server1 ~]# cat &gt; plik2
+test1
+test2
+test3
+test4
+test5
+</pre>
+      <p>
+        Uruchamiając to polecenie przełączymy strumienie tak, aby wszystko
+        co zostanie wpisane do terminala trafi do pliku (w dużym skrócie). Taką
+        edycję pliku możemy zakończyć naciskając kombinacje klawiszy
+        <em>Ctrl+d</em>.
+      </p>
+      <p>
+        Za tworzenie katalogów odpowiedzialne jest polecenie 
+        <strong>mkdir</strong>. Polecenie to utworzy katalog o nazwie podanej
+        jako argument. Ważną opcją tego polecenia jest <em>-p</em>, za pomocą
+        które jesteśmy wstanie tworzyć z poziomu pojedyńczego polecenia całe
+        struktury katalogów. Opcja ta powoduje utworzenie katalogów podanych
+        na ścieżce, które nie istnieją.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# mkdir dir1
+</pre>
+      <h3 id="3.4.2.listingfiles">3.4.2. Wyświetlanie zawartości pliku</h3>
+      <p>
+        Na Uniksach do wyświetlania zawartości plików mamy kilka rozwiązań
+        pierwszym z nich jest wspomanianie już polecenie <strong>cat</strong>.
+        Polecenie wyświetli zawartość pliku podanego jako argument w terminalu.  
+      </p>
+<pre class="code-block">
+[root@server1 ~]# cat plik2 
+test1
+test2
+test3
+test4
+test5
+</pre>
+      <p>
+        Na Uniksach, obok polecenia <em>cat</em> występuje polecenie
+        <strong>tac</strong>, która ma takie samo zastosowanie jak to wyżej
+        wymienione, wyświetlając je jednak odwrotnie od końca. Poniższy
+        przykład zaraz to zobrazuje:
+      </p>
+<pre class="code-block">
+[root@server1 ~]# tac plik2 
+test5
+test4
+test3
+test2
+test1
+</pre>
+      <p>
+        Podczas wyświetlania dużych plików ich zawartość może mieścić się na
+        ekranie, czy też w oknie terminala. Do wyświetlania tego typu plików
+        wykorzystuje się takie polecenia jak <strong>more</strong> czy
+        <strong>less</strong>. Oba dzielą wyświetloną treść plików na strony
+        wielkości ekranu czy terminala. Program <em>more</em> nie jest za
+        bardzo zaawansowanym narzędziem, wyświetlając pliki za jego pomocą nie
+        mamy zbyt duże pola manewru. Możemy przesuwać stronę po stronie, do
+        końca pliku. Nie możemy się cofnąć, dlatego jeśli chcielibyśmy wróć do
+        poprzedniej strony, musielibyśmy zakończyć działanie programu i
+        uruchomić go od nowa. Dlatego też znacznie lepszym rozwiązaniem jest
+        wykorzystanie polecenia <em>less</em>, który pozwala poruszać się
+        po tekscie w góre i w dół, ale również pozwala na wyszukiwanie, oraz
+        możemy go obsługiwać za pomocą klawiszy znanych z nawigacji programem
+        <em>Vim</em>. Program <em>less</em> uruchomi się szybciej niż, program
+        <em>more</em> ponieważ nie musi on załadować całego pliku od razu.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# less /var/log/messages
+</pre>
+      <p>
+        Ostatnim już sposoben na wyświetlenie zawartości plików jest, użycie
+        polecenia <strong>head</strong> oraz <strong>tail</strong>, ich
+        zadaniem jest wyświetlenie kilku początkowych (domyślnie 10) linii
+        z podanego jako argument pliku - polecenie <em>head</em> lub kilku
+        ostatnich (również 10) linii z podanego pliku - polecenie <em>tail</em>.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# tail /var/log/messages
+Jun 19 13:59:33 server1 systemd[1]: Finished dnf makecache.
+Jun 19 14:18:23 server1 cupsd[964]: REQUEST localhost - - "POST / HTTP/1.1" 200 182 Renew-Subscription successful-ok
+Jun 19 15:16:43 server1 cupsd[964]: REQUEST localhost - - "POST / HTTP/1.1" 200 182 Renew-Subscription successful-ok
+Jun 19 15:28:22 server1 systemd[1]: Starting dnf makecache...
+Jun 19 15:28:23 server1 dnf[2173]: Updating Subscription Management repositories.
+Jun 19 15:28:23 server1 dnf[2173]: Unable to read consumer identity
+Jun 19 15:28:23 server1 dnf[2173]: This system is not registered with an entitlement server. You can use subscription-manager to register.
+Jun 19 15:28:23 server1 dnf[2173]: Metadata cache refreshed recently.
+Jun 19 15:28:23 server1 systemd[1]: dnf-makecache.service: Deactivated successfully.
+Jun 19 15:28:23 server1 systemd[1]: Finished dnf makecache.
+</pre>
+      <p>
+        Domyślną ilość wypisywanych linii możemy regulować poprzez podanie po
+        myślniku (<strong>-</strong>) żądanej liczby.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# tail -5 /var/log/messages
+Jun 19 15:28:23 server1 dnf[2173]: Unable to read consumer identity
+Jun 19 15:28:23 server1 dnf[2173]: This system is not registered with an entitlement server. You can use subscription-manager to register.
+Jun 19 15:28:23 server1 dnf[2173]: Metadata cache refreshed recently.
+Jun 19 15:28:23 server1 systemd[1]: dnf-makecache.service: Deactivated successfully.
+Jun 19 15:28:23 server1 systemd[1]: Finished dnf makecache.
+</pre>
+      <p>
+        Polecenie <em>less</em> ma jedną bardzo istoną opcję, która pozwala
+        śledzić na bierząco zmiany w pliku, ta opcja to <em>-f</em>.
+      </p>
+      <p>
+        Poleceniem związanym z zawartością plików, ale nie z jej wyświetlaniem
+        może być polecenie <strong>wc</strong>, które domyślnie wyświetla
+        ilość linii, liczbe słów oraz bajtów. 
+      </p>
+<pre class="code-block">
+[root@server1 ~]# wc /var/log/messages
+  639  7503 61333 /var/log/messages
+</pre>
+      <h3 id="3.4.3.copyingandmoving">3.4.3. Kopiowanie i przenoszenie plików
+        i katalogów</h3>
+      <p>
+        Pracując z plikami, być może wystąpi potrzeba skopiowania danych bądź
+        przeniesienia danych w inne miejsce. Za operacje kopiowania
+        odpowiedzialnie jest polecenie <strong>cp</strong>. Jako pierwszy
+        argument przyjmuje ono scieżkę lub plik źródłowy, jako drugi ścieżke
+        lub plik docelowy.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# cp plik2 plik3
+</pre>
+      <p>
+        W przypadku gdy dany plik już istnieje w podanym katalogu polecenie
+        zapyta się czy nadpisać docelowy plik, ale tylko w przypadku
+        użytkownika, bowiem on w konfiguracji swojej powłoki posiada 
+        <em>alias</em>
+        (nazwę zastępcza) <em>cp</em> dla polecenia <em>cp -i</em>, opcja
+        <em>-i</em> włącz tryb interaktywy, czyli właśnie takie pytania.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# cp plik1 plik3 
+cp: overwrite 'plik3'? n
+</pre>
+      <p>
+        Za pomocą polecenia <em>cp</em> możemy kopiować całe katalogi z
+        podkatalogami przy użyciu opcji <em>-r</em>, która włacza kopiowanie
+        rekrencyjne. Jeśli atrybuty plików są dla nas waża, to żeby nie
+        nadpisać ich należy użyć opcji <em>-p</em>.
+      </p>
+      <p>
+        Za przenoszenie plików odpowiedzialne jest polecenie 
+        <strong>mv</strong>, które ma jeszcze jedną ważną cechę ukrytą w
+        mechnice swojego działa. Otóż jeśli będzie przenośić plik lub katalog
+        w ramach tego samego katalogu, to zmieni on tylko swoją nazwę.
+      </p>
+      <p>
+        Polecenie <em>mv</em> w przypadku superużytkownika, posiada podobny
+        alias co w przypadku polecenia <em>cp</em>, polecenie jest uruchamiane
+        domyślnie z opcją pytającą o nadpisanie elementu docelowego.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# mv plik1 plik3 
+mv: overwrite 'plik3'? n
+</pre>
+      <p>
+        Polecenie <em>mv</em> nie potrzebuje żadnej opcji, aby
+        przenieść cały katalog wraz z podkatalogami.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# mv gzipped /tmp
+[root@server1 ~]# ls -ld /tmp/gzipped/
+drwxr-xr-x. 3 root root 17 Jun 16 18:14 /tmp/gzipped/
+</pre>
+      <h3 id="3.4.5.removefilesanddirs">3.4.5. Usuwanie plików i katalogów</h3>
+      <p>
+        Zbędne plik i katalogi możemy usunąć, za pomocą polecenia <em>rm</em>.
+        Polecenie do usunięcie katalogu wymaga podania nazwy pliku jako
+        argumentu.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# rm plik1 
+rm: remove regular empty file 'plik1'? y
+</pre>
+      <p>
+        Polecenie <em>rm</em> również jest aliasem, z tą samą opcją co
+        <em>cp</em> czy <em>mv</em>. Aby usunąć cały katalog wraz
+        podkatalogami, należy użyć kolejno opcji <em>-r</em> -
+        uruchamiającej usuwanie rekurencjne oraz opcji <em>-f</em>,
+        wymuszające odpowiedź <em>y</em> na wszystkie pytania
+      </p>
+<pre class="code-block">
+[root@server1 ~]# rm -rf /tmp/etc
+</pre>
+      <p>
+        Usuwanie plików i katalogów posiadając uprawnienia superużytkownika,
+        może skończyć się katastrofą. Pomyłka w tym poleceniu może uszkodzić
+        system. Dlatego też należy zachować szczególną ostrożność przy
+        korzystaniu z tego polecenia, a w szcególności w połączeniu z
+        <strong>nazwami wieloznacznymi</strong> (będzie o tym przy okazji
+        omawiania powłoki BASH).
+      </p>
+      <p>
+        Do usuwania pustych katalogów, możemy użyć polecenia 
+        <strong>rmdir</strong>, jak i opcji <em>-d</em> polecenia <em>rm</em>.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# rm -d dir1/
+rm: remove directory 'dir1/'? y
+[root@server1 ~]# rmdir dir2
+</pre>
+      <p class="exap_tip">
+        Polecenia manipulacji plikami są podstawowymi czynnościami związnymi
+        z administracją każdego Uniksa, więc warto przyswoić wiedzę zebraną
+        w tym podrozdziale. 
+      </p>
+      <h2 id="3.6.links">3.6. Dowiązania</h2>
+      <p>
+        Wśród systemów uniksowych, możemy w kategoriach manipulacji plikami
+        wyróżnić takie elementy jak <strong>dowiązania</strong>. Dowiązania
+        są najprościej rzecz biorąc elementami, które wskazują na inne pliki.
+        Dowiązania możemy podzielić na <strong>twarde</strong> oraz 
+        <em>symboliczne</em>.
+      </p>
+      <h3 id="3.6.1.hardlinks">3.6.1. Dowiązania twarde</h3>
+      <p>
+        <strong>Twarde dowiązania</strong> nie są same w sobie stricte plikami.
+        Pliki bowiem znajdują na urządzeniach służacych do przechowywania
+        danych. Systemy plików przechowują meta-dane plików, ich atrybuty oraz
+        informacje w jakich obszarch, której z pamięci masowych należy szukać
+        zawartości pliku, aby ludzie mogli się nimi posługiwać używa się nazw
+        plików. Taką własnie nazwą jest twarde dowiązanie. Dla eksperymentu
+        utworzymy pusty plik, o nazwie <em>hard1</em>, oto jego artybuty
+      </p>
+<pre class="code-block">
+[root@server1 ~]# ls -li hard1 
+6043841 -rw-r--r--. 1 root root 0 Jun 19 17:31 hard1
+</pre>
+      <p>
+        Pierwsza kolumna zawiera numer <strong>i-node</strong> jest to 
+        identyfikator
+        wpisu w bazie danych systemu plików, ktory zawiera meta-informacje na
+        temat pliku. W trzeciej kolumnie atrybutów znajduje się wartość
+        <code class="code-inline">1</code>. Ta kolumna przedstawia ilość
+        dowiązań twardych. Każdy zwykły plik posiada co najmniej 
+        dowiązanie - identyfikującą bezpośrednio plik nazwę. Tworząc kolejne
+        twarde dowiązanie, podłączamy kolejną nazwę tego pliku. Teraz utworzmy
+        dowiązanie o nazwie <em>hard2</em> do pliku <em>hard1</em>.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# ln hard1 hard2
+[root@server1 ~]# ls -li hard*
+6043841 -rw-r--r--. 2 root root 0 Jun 19 17:31 hard1
+6043841 -rw-r--r--. 2 root root 0 Jun 19 17:31 hard2
+</pre>
+      <p>
+        Zwróć my uwagę na to, iż <code class="code-inline">hard2</code>
+        wskazuje na ten sam numer <em>i-node</em>, czyli wskazuje na ten sam
+        pliki. Liczba dowiązań uległa zmianie tak samo w przypadku
+        <code class="code-inline">hard1</code> jak i 
+        <code class="code-inline">hard2</code>, ponieważ na ten sam plik
+        wskazują dwa dowiązania. Usuń my teraz plik <em>hard1</em>.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# rm hard1
+rm: remove regular empty file 'hard1'? y
+[root@server1 ~]# ls -li hard*
+6043841 -rw-r--r--. 1 root root 0 Jun 19 17:31 hard2
+</pre>
+      <p>
+        Można by rzec, że plik przeżył. Ponieważ nie został on bez dowiązania.
+        Systemy plików, pliki bez dowiązań uznają za usunięte.
       </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">

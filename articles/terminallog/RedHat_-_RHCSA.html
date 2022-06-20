@@ -96,6 +96,42 @@
             <li><a href="#ch2summary">Podsumowanie</a></li>
           </ul>
         </li>
+        <li><a href="#3.fileoperations">3. Operacje na plikach</a>
+          <ul class="toc">
+            <li><a href="#3.1.filetypes">3.1. Rodzaje plików</a>
+            <li><a href="#3.2.compressionandarchiving">3.2. Kompresja i archiwizowanie</a>
+              <ul class="toc">
+                <li><a href="#3.2.1.gzip">3.2.1. gzip</a></li>
+                <li><a href="#3.2.2.bzip">3.2.2. bzip2</a></li>
+                <li><a href="#3.2.3.tar">3.2.3. tar</a></li>
+              </ul>
+            </li>
+            <li><a href="#3.3.vim">3.3. Edycja plików za pomocą edytora Vim</a>
+              <ul class="toc">
+                <li><a href="#3.3.1.startingvim">3.3.1. Podstawy obsługi Vim</a></li>
+                <li><a href="#3.3.2.othervimcommands">3.3.2. Pozostałe polecenia Vim</a></li>
+              </ul>
+            </li>
+            <li><a href="#3.4.filesanddirectories">3.4. Pliki i katalogi</a>
+              <ul class="toc">
+                <li><a href="#3.4.1.createfilesanddirs">3.4.1. Tworzenie plików i katalogów</a></li>
+                <li><a href="#3.4.2.listingfiles">3.4.2. Wyświetlanie zawartości pliku</a></li>
+                <li><a href="#3.4.3.copyingandmoving">3.4.3. Kopiowanie i przenoszenie plików</a></li>
+                <li><a href="#3.4.5.removefilesanddirs">3.4.5. Usuwanie plików i katalogów</a></li>
+              </ul>
+            </li>
+            <li><a href="#3.5.links">3.5. Dowiązania</a>
+              <ul class="toc">
+                <li><a href="#3.5.1.hardlinks">3.5.1. Dowiązanie twarde</a></li>
+                <li><a href="#3.5.2.symlinks">3.5.2. Dowiązanie symboliczne</a></li>
+              </ul>
+            </li>
+            <li><a href="#exec3.1">Ćwiczenie 1: Archiwa</a></li>
+            <li><a href="#exec3.2">Ćwiczenie 2: Praktyka z Vim-a</a></li>
+            <li><a href="#exec3.3">Ćwiczenie 3: Manipulacja plikami</a></li>
+            <li><a href="ch3summary">Podsumowanie</a></li>
+          </ul>
+        </li>
       </ul>
       <h1 id="1.introduction">1. Wstęp</h1>
       <p>
@@ -1355,7 +1391,7 @@ test: Bourne-Again shell script, ASCII text executable
         małych plików w jeden duży. Na Uniksach możemy wymieć dwa natywne
         narzędzia służące do kompresji i jedno do archiwizowania.
       </p>
-      <h3 id="3.2.1.gzip">3.2.1 gzip</h3>
+      <h3 id="3.2.1.gzip">3.2.1. gzip</h3>
       <p>
         Natywnym i dostępnym na każdym systemie sposobem na kompresje danych
         jest <strong>gzip</strong>. Algorytmy zawarte w tym narzędziu
@@ -1394,7 +1430,7 @@ test: Bourne-Again shell script, ASCII text executable
          compressed        uncompressed  ratio uncompressed_name
                 350                 579  43.7% fstab
 </pre>
-      <h3 id="3.2.2.bzip">3.2.2 bzip2</h3>
+      <h3 id="3.2.2.bzip">3.2.2. bzip2</h3>
       <p>
         Program <em>bzip2</em> jest obecnie standardem kompresji, wśród wielu
         Uniksów. Jest wolniejszy od <em>gzip</em>, ale skompresowane przez
@@ -1691,7 +1727,14 @@ tar: Removing leading `/' from hard link targets
         <li><strong>:%s/old/new</strong> - zamiana pierwszego wstąpienia słowa 
           <em>old</em> słowem <em>new</em>.</li>
         <li><strong>:%s/old/new/g</strong> - zamiana wszystkich wystąpień słowa
-          <em>old</em> słowem <em>new</em>.</li> 
+          <em>old</em> słowem <em>new</em>.</li>
+        <li><strong>:6,11co4</strong> - polecenie kopiuje zawrtość linii od
+          6 do 11 i wkleja ją po 4 linii.</li>
+        <li><strong>:3,5m6</strong> - polecenie przenosii linię od 3 do 5 na
+          miejsce po linii numer 6.</li>
+        <li><strong>:6,8d</strong> - polecenie usuwa linie od 6 do 8.</li>
+        <li><strong>:r</strong> - polecenie wprowadza w miejscu kursora
+          zawartość pliku podanego jako argument.
       </ul>
       <p>
         Podczas korzystania <em>Vim</em> istotna jest praktyka. Dlatego trzeba
@@ -1945,7 +1988,7 @@ rm: remove directory 'dir1/'? y
         z administracją każdego Uniksa, więc warto przyswoić wiedzę zebraną
         w tym podrozdziale. 
       </p>
-      <h2 id="3.6.links">3.6. Dowiązania</h2>
+      <h2 id="3.5.links">3.5. Dowiązania</h2>
       <p>
         Wśród systemów uniksowych, możemy w kategoriach manipulacji plikami
         wyróżnić takie elementy jak <strong>dowiązania</strong>. Dowiązania
@@ -1953,7 +1996,7 @@ rm: remove directory 'dir1/'? y
         Dowiązania możemy podzielić na <strong>twarde</strong> oraz 
         <em>symboliczne</em>.
       </p>
-      <h3 id="3.6.1.hardlinks">3.6.1. Dowiązania twarde</h3>
+      <h3 id="3.5.1.hardlinks">3.5.1. Dowiązania twarde</h3>
       <p>
         <strong>Twarde dowiązania</strong> nie są same w sobie stricte plikami.
         Pliki bowiem znajdują na urządzeniach służacych do przechowywania
@@ -1976,7 +2019,8 @@ rm: remove directory 'dir1/'? y
         dowiązań twardych. Każdy zwykły plik posiada co najmniej 
         dowiązanie - identyfikującą bezpośrednio plik nazwę. Tworząc kolejne
         twarde dowiązanie, podłączamy kolejną nazwę tego pliku. Teraz utworzmy
-        dowiązanie o nazwie <em>hard2</em> do pliku <em>hard1</em>.
+        dowiązanie o nazwie <em>hard2</em> do pliku <em>hard1</em>. Dowiązania
+        towrzymy za pomocą polecenia <strong>ln</strong>.
       </p>
 <pre class="code-block">
 [root@server1 ~]# ln hard1 hard2
@@ -2001,6 +2045,82 @@ rm: remove regular empty file 'hard1'? y
       <p>
         Można by rzec, że plik przeżył. Ponieważ nie został on bez dowiązania.
         Systemy plików, pliki bez dowiązań uznają za usunięte.
+      </p>
+      <h3 id="3.5.2.symlinks">3.5.2. Dowiązania symboliczne</h3>
+      <p>
+        Innym rodzajem dowiązań są <strong>dowiązania symboliczne</strong>, są
+        one często porównywane do skrótów znanych z systemów Windows i tak
+        na prawdę taka jest ich rola. Dowiązania symboliczne mają wskazywać
+        na inne pliki. W przeciwieństwie do dowiązań twardych, te dowiązania
+        są jednak odrębnymi plikami (tak jakby), posiadają one bowiem wpis
+        w bazie danych systemu plików, ale w miejscu przeznaczonym na adres
+        przechowywania danych pliku na dysku lub innej pamięci znajduje się
+        scieżka pliku źródłowego, na który wskazuje dowiązania. Za tem tego
+        rodzaju elementy mają własne atrybuty. Wielkość dowiązania
+        symbolicznego zalezy od ilość znaków na ścieżce do pliku źródłowego.
+        Dowiązania symboliczne tworzymy za pomocą tego samego narzędzia co
+        dowiązania twarde, dodając tylko opcję <em>-s</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ln -s symfile symlink1
+[user@server1 ~]$ ls -l symlink1
+lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
+</pre>
+      <p>
+        Dowiązania symboliczne mogą być wydawać się, że są w wstanie zastąpić
+        kopiowanie. Kopiując plik, odwzrowywuje się jego zwartość w innym
+        miejscu na pamięci masowej, tworząc odrębny nienaruszony plik. Tworząc
+        dowiązanie, podłączamy się pod istniejący już plik, który może być
+        nie tylko przez użytkowników, ale też programy. Dowiązania symboliczne
+        możemy użyć jak wymienionego wcześniej skrótu, chcąc zaoszczędzić
+        sobie pisania długich ścieżek do odrębnych miejsc w systemie
+        ewentualnie ułatwić pisanie ścieżek w skryptach oraz programach.
+      </p>
+      <h3 id="exec3.1">Ćwiczenie 1: Archiwa</h3>
+      <p>
+        Na maszynie <em>server1</em> jako zwykły użytkownik, utwórz
+        skompresowane za pomocą programu <em>gzip</em> archiwum z zawartością
+        katalogu <em>/etc</em>. Powtórz czynność tym razem z użyciem programu
+        <em>bzip2</em>. Porównaj wielkość tych archiwów. Na koniec rozpakuj
+        oba archiwa bez zaznaczania algorytmu kompresji (bez podawania
+        odpowiedniej opcji).
+      </p>
+      <h3 id="exec3.2">Ćwiczenie 2: Praktyka z Vim-a</h3>
+      <p>
+        Na maszynie <em>server1</em> jako zwykły użytkownik, utworz przepisując
+        treść ćwiczenia nr. 1, każde zdanie w odrębnej linii, zapisz zmiany w 
+        pliku o nazwie <em>vimpractice</em> i zamknij edytor. Otwórz plik w
+        edytorze ponownie, wyświetl numery linii. Skopiuj linię 2 i 3 na koniec
+        pliku, tak aby było łącznie 6 linii. Przenieś linię nr. 3 w miejsce
+        pierwszej. Przejdź na koniec pliku i dodaj do niego zawartośc w pliku
+        <em>.bash_profile</em> (znajdziesz go w katalogu domowym użytkownika).
+        Zamień wszystkie wszystkie wystąpienia słowa <em>profile</em> na
+        <em>pro file</em>. Usuń linię od 5 do 8, zapisz zmiany w pliku i
+        opuść edytor. Na koniec wyświetl podsumowanie pliku za pomocą polecenia
+        <em>wc</em>.
+      </p>
+      <h3 id="exec3.3">Ćwiczenia 3: Manipulacja plikami</h3>
+      <p>
+        Na maszynie <em>server1</em> jako zwykły użytkownik, utwórz jeden
+        dowolny plik oraz jeden katalog, wyświetl ich atrybuty, sprawdź
+        uprawnienia, nazwę właściciela oraz grupę do której ten plik należy.
+        Co się stanie gdy spróbujesz przenieć utworzony wcześniej plik do
+        katalogu <em>/var/log</em>. Przenieś plik oraz katalog do katalogu
+        <em>/tmp</em>. Utwórz duplikat pliku i zmień jego nazwę na jakąkolwiek 
+        inną. Usuń wszystkie pliki utworzone na potrzeby tego ćwiczenia.
+      </p>
+      <h3 id="ch3summary">Podsumowanie</h3>
+      <p>
+        W tym rozdziale zapoznaliśmy się, z typowymi zadaniami związanymi z
+        administracją plikami w systemie. Poznaliśmy edytor Vim, którego
+        nauka wymaga zachodu, aczkolwiek nie pójdzie ona na marne. Ten edytor
+        w uboższej podstawowej wersji w postaci programu <em>Vi</em> 
+        spotkamy w każdym Uniksie, zatem będzie potrafili sprawnie edytować
+        pliki w każdym systemie, niezależnie od tego czy nasz ulubiony edytor
+        jest dostępny. Ciekawszą rzeczą w tym rodziale z pewnością były 
+        dowiązania symboliczne. W następnym rodziale skupimy się na
+        uprawnieniach plików i katlogów, oraz przekonamy się jak potężnym
+        narzędziem jest polecenie <em>find</em>.
       </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">

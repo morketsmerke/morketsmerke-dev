@@ -2147,6 +2147,399 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
         uprawnieniach plików i katlogów, oraz przekonamy się jak potężnym
         narzędziem jest polecenie <em>find</em>.
       </p>
+      <h1 id="4.advancedfilemanagement">4. Zawansowane zarządzanie plikami</h1> 
+      <p>                                                                       
+        W uniksach możemy zabezpieczyć, każdy plik oraz katalog przed           
+        ingerencją innych użytkowników służą temu przypisywane tym elementom    
+        uprawnienia.                                                            
+      </p>                                                                      
+      <h2 id="4.1.basicspermission">4.1. Uprawnienia podstawowe</h2>            
+      <p>                                                                       
+        Uprawnienia przypisywane są w trzech klasach, klasie użytkownika        
+        (<strong>u</strong>) nazwywanego również właścicielem elementu; grupie  
+        (<strong>g</strong>), do której ten plik należy oraz                    
+        oraz innym użytkownikom systemu (<strong>o</strong>), ta klasa          
+        uprawnień jest również oznaczna jako uprawnienia publiczne.             
+      </p>                                                                      
+      <p>                                                                       
+        Każdej z tych klas możemy przypisać odpowiednie uprawniania takie jak:  
+        prawo do odczytu (<strong>r</strong>), prawo do zapisu                  
+        (<strong>w</strong>) oraz prawo do wykonania (<strong>x</strong>).
+      </p>
+      <p>
+        Za nim zaczniemy zmieniać uprawnienia nauczymy się je identyfikować.
+        Uprawnienia do pliku możemy wyświetlić za pomocą polecenia <em>ls -l</em>
+        lub polecenia <em>stat</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l file1
+-rw-r--r--. 1 user user 0 Jun 21 14:21 file1
+</pre>
+      <p>
+        Upraweniania znajdują się w pierwszej kolumnie:
+        <code class="code-inline">-rw-r--r--.</code>, łącznie 11 znaków, ale
+        nas będą interesować tylko 9 w środku. Pierwszy znak oznacza typ plików
+        ty pliku, natomiast kropka związana jest z kontekstem <em>SELinux</em>,
+        nie będzie się teraz tym zajmować. Te dziewieć pól są to miejsca
+        przeznaczone na uprawnienia poszczególnych klas. Pierwsze trzy pola 
+        z lewej to uprawnienia użytkownika (właściciela), kolejne trzy pola
+        to uprawnienia grupy do której należy ten plik natomiast pozostałe 
+        trzy to uprawnienia publiczne, stosowane wobec użytkowników nie
+        związanych z tym elementem. Uprawnienia przypisane każdej z klas
+        układają się kolejno w <em>rwx</em>, myślnik na którymś z tych miejsce
+        oznacza brak takiego prawa w danej klasie.
+      </p>
+      <p>
+        Każde określonych praw pozwala nam, na wykonanie innych czynności
+        związanych z tym elementem. Prawo <em>read</em> pozwala na odczyt
+        zawartości pliku oraz możliwość jego skopiowania, w przypadku
+        katalogów pozwala na wyświetlenie jego zawartości. Prawo <em>write</em>
+        pozwala na modyfikowanie elementu, wraz z jego usunięciem. Ostatnie
+        prawo <em>execute</em> pozwala na uruchomienie pliku o ile jest to
+        plik wykonywalny, w przypadku katalogów to prawo jest niezbędne aby
+        użytkownik przejść do niego (za pomocą polecenia <em>cd</em>).
+      </p>
+      <p>
+        Zatem w przypadku tego pliku, właściciel może czytać i pisać, a grupa
+        oraz wszyscy inni mogą tylko czytać, dla nich wówczas ten plik jest
+        plikiem tylko do odczytu.
+      </p>
+      <p>
+        Prawdopodobnie kiedyś bedziemy chcieli ukryć jakieś pliki lub będziemy
+        musieli dać uprawnienia jednemu z użytkowników do innych plików
+        w systemie. Wymagana wówczas będzie zmiana uprawnień.
+      </p>
+      <p>
+        Poszczególnym klasom (<strong>u</strong>, <strong>g</strong>, 
+        <strong>o</strong>) możemy nadać (<strong>+</strong>), obebrać
+        (<strong>-</strong>)
+        lub przypisać (<strong>=</strong>) odpowiednie uprawnienia. Do
+        manipulacji uprawnieniami służy polecenie <strong>chmod</strong>,
+        przyjmuje jako pierwszy argument sekwencje zmiany uprawnień a jako
+        drugi plik lub katalog, którego mają się tyczyć uprawnienia.
+      </p> 
+      <p>
+        Załóżmy, że plik z powyższego przykładu jest skryptem i musimy nadać
+        użytkownikowi prawo do wykonania, grupie prawo do zapisu i wykonania
+        a pozostałym użytkownikom zabrać uprawnienia, ponieważ ten plik nie
+        powinien być stosowany poza grupą. Aby zrealizować tę zmianę
+        uprawnień należy wydać poniższe polecenie:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ chmod u+x,g+wx,o-r file1
+</pre>
+      <p>
+        Po zmianie uprawnienia do tego pliku prezentują się w następujący
+        sposób:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l file1
+-rwxrwx---. 1 user user 0 Jun 21 14:21 file1
+</pre>
+      <p>
+        Zapis uprawnień w tej postacji, który swoją drogą nazwa sie zapisem
+        symbolicznym, wymaga dużo pisania. Uprawnienia można zmieniać łatwiej
+        jednak wymagać to będzie więcej myślenia. 
+      </p>
+      <p>
+        Każde z omówionych wcześniej praw posiada swoją wagę, te wagi sumują
+        się dając uprawnienia dla konkretnej klasy. A więc: prawo do odczytu
+        (<strong>r</strong>) posiada wagę <strong>4</strong>, prawo do zapisu
+        posiada wagę <strong>2</strong> a prawo do wykonywania posiada wagę
+        <strong>1</strong>. Brak prawa ma wagę <strong>0</strong>. Tak złożone
+        razem sumy tych wag dają uprawnienia
+        do pliku czy katalogu. Chcąc określić uprawnienia pliku z pierwszego
+        przykładu jescze przed zmianą uprawnień, będą one wynosić:
+        <strong>644</strong>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l file1
+-rw-r--r--. 1 user user 0 Jun 21 14:21 file1
+----------------------------------------------
+u = rw- = 4 + 2 + 0 = 6
+g = r-- = 4 + 0 + 0 = 4
+o = r-- = 4 + 0 + 0 = 4
+ugo = 644
+</pre>
+      <p>
+        Natomiast uprawnienia po zmianie katalogo bedą wynosić:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l file1
+-rwxrwx---. 1 user user 0 Jun 21 14:21 file1
+----------------------------------------------
+u = rwx = 4 + 2 + 1 = 7
+g = rwx = 4 + 2 + 1 = 7
+o = --- = 0 + 0 + 0 = 0
+ugo = 770
+</pre>
+      <p>
+        W ten sposób przeliczonymi uprawnieniami (tzw. uprawnieniami 
+        bezwględnymi, ponieważ przypisują one uprawnienia każdej z klas) możemy
+        posługiwać się podczas ich zmiany przy użyciu polecenia <em>chmod</em>
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ chmod -v 644 file1
+mode of 'file1' changed from 0770 (rwxrwx---) to 0644 (rw-r--r--)
+[user@server1 ~]$ chmod -v 770 file1
+mode of 'file1' changed from 0644 (rw-r--r--) to 0770 (rwxrwx---)
+</pre>
+      <p>
+        Na powyższym przykładzie zastosowałem opcję <em>-v</em>, która
+        wyświetla jak zmieniają się uprawnienia oraz postać symboliczną
+        uprawnienień. W przypadku wyświetlonej wartości liczbowej, pierwsze
+        zero z lewej strony jest miejscem na uprawnienia specjalne o których
+        będzie za chwilę, w przypadku standardowych uprawnienień nie ma ono
+        znaczenia.
+      </p>
+      <p>
+        Zapis uprawnień bezwzględny w zapisie symbolicznym wyglądał by
+        następująco:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ chmod -v u=rw,g=r,o=r file1
+mode of 'file1' changed from 0770 (rwxrwx---) to 0644 (rw-r--r--)
+</pre>
+      <p>
+        Definiując uprawnienia bezwzględne, posługujemy się cyframi od 0 do 7.
+        Są wszystkie cyfry systemu liczbowego o podstawie 8 (tzw. ósemkowy lub
+        oktalny) dlatego też często nazwa się takie ustalanie uprawnień trybem
+        oktalnym. 
+      </p>
+      <p>
+        Podczas ustalania uprawnień dla plików lub katalogów, nie ma znaczenia
+        jakiego trybu użyjemy, nie ma lepszego i gorszego. Jest tryb
+        czytelniejszy oraz szybszy do zapisania.
+      </p>
+      <p>
+        Na koniec jako ciekawostke podam iż istnieje czwarta dodatkowa klasa
+        wszystkie klasy (<strong>a</strong>), za jej pomocą można nadawać,
+        odbierać i przypisywać takie same uprawnienia dla wszystkich klas.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ chmod -v a=rwx file1
+mode of 'file1' changed from 0644 (rw-r--r--) to 0777 (rwxrwxrwx)
+</pre>
+      <h3 id="4.1.1.defaultpermissions">4.1.1. Uprawnienia domyślne</h3>
+      <p>
+        Każdy nowoutworzony plik czy katalog Uniksie ma juz z góry przypisane 
+        uprawnienia i są nimi 666 dla plików oraz 777 dla katalogów. 
+        Uprawnienia te są korygowane za pomocą wartości <strong>umask</strong>. 
+      </p>
+      <p>
+        Wartość <em>umask</em> (ang. <em>user mask</em>) jest maską uprawnień
+        stosowaną na tworzonych przez użytkowników nowych plikach i katalogach.
+        Każdy użytkownik ma swoją idywidualną maskę i może ją dowolnie zmieniać.
+        Maska ma za zadanie usunięcie tych praw, których nie życzymy sobie
+        widzieć w poszczególnych klasach. Aby wyświetlić maskę użytkownika
+        należy wydać poniższe polecenie: 
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ umask
+0022
+</pre>
+      <p>
+        Maska w przypadku RHEL 9 wygląda tak jak na powyszym przykładzie. Ta
+        wartość usunie z klasy grupy oraz z klasy pozostałych użytkowników
+        prawo do zapisu. Rachunek uprawnień jest bardzo prosty.
+      </p>
+<pre class="code-block">
+#W przypadku plików:
+
+0666
+0022 -
+------
+0644
+
+#W przypadku katalogów:
+
+0777
+0022 -
+------
+0755
+</pre>
+      <p>
+        Chcąc zmienić maskę wystarczy wydać polecenie:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ umask 002
+[user@server1 ~]$ umask
+0002
+</pre>
+      <p>
+        Tak zdefiniowana maska usunie tylko prawo do zapisu w klasie
+        pozostałych użytkowników dla każdego nowego pliku i katalogu. Maska
+        o tej wartości była domyślną maską dla zwykłych użytkowników w RHEL 8.
+      </p>
+      <h2 id="4.2.specialpermissions">4.2. Uprawnienia specjalne</h2>
+      <p>
+        Poza podstawowym rodzajem uprawnien w Uniksach istnieją dodatkowe
+        uprawnienia, których zadaniem może być podniesienie uprawnień w
+        systemie, zaoszczędzenie czasu lub ochrona przed skasowaniem pliku w
+        miejscach gdzie wszyscy mają uprawnienia zapisu. Teraz omówim sobie
+        każdy z nich.
+      </p>
+      <h3 id="4.2.1.setuid">4.2.1. Uprawnienia bitu setuid</h3>
+      <p>
+        Każde z podstawowych praw, możemy określić mianej bitu, z uprawnieniami
+        specjalnymi jest podobnie, każde z nich jest kolejnym bitem (prawem) o
+        szególnym znaczeniu. Tak jest i tym przypadku. Bit 
+        <strong>setuid</strong> służy do podniesienia uprawnień. Jest on
+        oznaczany małą lub wielką literą <em>s</em> w klasie
+        użytkownika/właściciela. Ma on 
+        zastosowanie głównie na plikach wykonywalnych. Kiedy uruchomimy program
+        z ustawionym takim bitem, program ten będzie działać z uprawnieniami
+        właściciela tego pliku. Bit ten jest wykorzystywany jest najcześciej
+        do uruchomienia programu z uprawnieniami superużytkownika, przez 
+        zwykłego użytkownika. Takim przykładem może być program <strong>su</strong>,
+        który służy przełączaniu się miedzy użytkownikami, bez tego bitu
+        przelogowanie nie było by możliwe. Dla eksperymentu możemy usunać ten
+        bit, następnie spróbować jako zwykły użytkownik przelogować na kogoś
+        innego. 
+      </p>
+<pre class="code-block">
+[root@server1 ~]# chmod -v u-s /usr/bin/su
+mode of '/usr/bin/su' changed from 4755 (rwsr-xr-x) to 0755 (rwxr-xr-x)
+[user@server1 ~]$ su user100
+Password: 
+su: Authentication failure
+</pre>
+      <p>
+        Jak widać przełączanie się na użytkownika user100 nie powiodło sie
+        mimo iż polecenie zapytało o hasło (polecenie <em>su</em> nie pyta o
+        hasło tylko superużytkownika). Zwróćmy również uwagę na to jak wygląda
+        bit <em>setuid</em> w oktalnym zapisie uprawnień. Do wskazywania 
+        uprawnień specjalnych wykorzystywana jest nieużywana przy zwykłych
+        uprawnieniach czwarta liczba całkiem z lewej strony. Teraz przywrócimy
+        ten bit temu programowi.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# chmod -v +4000 /usr/bin/su
+mode of '/usr/bin/su' changed from 0755 (rwxr-xr-x) to 4755 (rwsr-xr-x)
+[user@server1 ~]$ su user100
+Password: 
+[user100@server1 user]$ 
+</pre>
+      <p>
+        Podczas przywracania uprawnień, nie naruszyłem tych podstawowych
+        uzywając wartości <code class="code-inline">+4000</code>, nie
+        potrzeba wskazywać klasy, ponieważ program sam wie, że ten bit należy
+        nadać w klasie właściela. 
+      </p>
+      <p>
+        Czasami bit <em>setuid</em> może występować w postaci wielkiej litery
+        <em>S</em>, oznacza to tyle iż w klasie właściciela nie występuje
+        prawo do wykonywania (bit <em>x</em>).
+      </p>
+      <h3 id="4.2.2.setgid">4.2.2. Uprawnienia bitu setgid</h3>
+      <p>
+        Zastosowania bitu <strong>setgid</strong>, mogą być dwa jedno podobne
+        do bitu <em>setuid</em>, ale tyczące się grupy, drugie zaś dotyczy się
+        katalogów, z ustawionym tym bitem. Bit <em>setgit</em> oznaczany jest
+        małą lub wielką literą <em>s</em> w klasie grupy. 
+      </p>
+      <p>
+        Kiedy katalog posiada ustawiony bit <em>setgid</em>, to grupa, która
+        jest właścicielem takiego katalogu będzie przypisywana jako grupa
+        każdemu nowemu elementowi utworzonemu w tym katalogu. 
+      </p>
+<pre class="code-block">
+[user2000@server1 sdir]$ ls -ld /sdir
+drwxrws--T. 3 root sgrp2 65 Jun 21 17:31 /sdir
+[user2000@server1 sdir]$ mkdir user2000dir
+[user2000@server1 sdir]$ ls -l
+total 4
+-rw-rw-r--. 1 user1000 sgrp2 5 Jun 20 16:00 user1000file
+drwxrwsr-x. 2 user2000 sgrp2 6 Jun 21 17:30 user2000dir
+[user2000@server1 sdir]$ touch user2000file
+[user2000@server1 sdir]$ ls -l
+total 4
+-rw-rw-r--. 1 user1000 sgrp2 5 Jun 20 16:00 user1000file
+drwxrwsr-x. 2 user2000 sgrp2 6 Jun 21 17:30 user2000dir
+-rw-rw-r--. 1 user2000 sgrp2 0 Jun 21 17:31 user2000file
+</pre>
+      <p>
+        Katalog <em>/sdir</em> jest własnością grupy <em>sgrp2</em> oraz
+        posiada ustawiowiony bit <em>setgid</em> (bit <em>s</em> w miejscu
+        <em>x</em> w klasie grupy). Utworzyłem katalog oraz plik, oba elementy
+        odziedziczyły grupę <em>sgrp2</em> właśnie dzięki tym uprawnieniom.
+        Zwróćmy uwagę również na fakt iż nowoutworzony katalog odziedziczył
+        również bit <em>setgid</em>. Tego typu funkcjonalność możemy
+        wykorzystać tworząc katalogi do pracy grupowej, aby zaoszczędzić
+        użytkownikom grupy zmianę uprawnień przy każdym nowym pliku lub
+        podkatalogu w tym folderze.
+      </p>
+      <p>
+        Innym przykładem jest wykorzystanie pliku wykonywalnego z ustawionym
+        bitem <em>setgid</em>. Weźmy pod lupe taki taki plik jak program
+        <strong>write</strong>, ten program służy do przesyłania wiadomości
+        między użytkownikami (między terminalami).
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l /usr/bin/write 
+-rwxr-sr-x. 1 root tty 24472 Feb 24 11:25 /usr/bin/write
+</pre>
+      <p>
+        Posiada on bit <em>setgid</em>, którym pozwoli mu w tym przypadku
+        skorzystać z uprawnień grupy na plikach urządzeń. Pierwsza konsola
+        wirtualna w systemie:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l /dev/tty0 
+crw--w----. 1 root tty 4, 0 Jun 21 15:13 /dev/tty0
+</pre>
+      <p>
+        Grupa <em>tty</em> posiada prawo do zapisu na tym urządzeniu. Sprawdźmy
+        jeszcze pierwsze urządzenie pseudoterminala (okno programu
+        <em>Terminal</em> lub połączenie przez SSH).
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l /dev/pts/0
+crw--w----. 1 user tty 136, 0 Jun 21 17:51 /dev/pts/0
+</pre>
+      <p>
+        Tutaj grupa również posiada prawo zapisu. Usuwanie i przypisywanie
+        tego bitu ponownie jest analogiczne to bitu <em>setuid</em>, wymaga
+        tylko zmiany kilku wartości
+      </p>
+<pre class="code-block">
+[root@server1 ~]# chmod -v g-s /usr/bin/write
+mode of '/usr/bin/write' changed from 2755 (rwxr-sr-x) to 0755 (rwxr-xr-x)
+[root@server1 ~]# chmod -v +2000 /usr/bin/write
+mode of '/usr/bin/write' changed from 0755 (rwxr-xr-x) to 2755 (rwxr-sr-x)
+</pre>
+      <p>
+        Przeglądając atrybuty plików i katalogów możemy natknąć sie na bit
+        <em>setgid</em> zapisany wielką literą, jest to ten sam bit, tylko że
+        w klasie grupy brakuje prawa do wykonania (bitu <em>x</em>).
+      </p>
+      <h3 id="4.2.3.stickybit">4.2.3. Uprawnienia bitu sticky</h3>
+      <p>
+        Bit <strong>sticky</strong> ma za zadanie zabezpieczyć pliki i katalogi
+        przed nieuprawnionym usunięciem w ogólodostępnych katalogach (tam
+        gdzie wszyscy mają prawo do zapisu). Jeśli katalog ma ustawiony taki
+        bit, to wówczas tylko właściciel pliku bądź podkatalogu będzie mógł go
+        usunąć. Bit <em>sticky</em> oznaczany jest za pomocą małej lub
+        wielkiej litery <em>t</em> w klasie publicznej 
+        (pozostałych użytkowników). 
+      </p>
+      <p>
+        Usunięcie lub przypisanie tego bitu może odbywać się tak jak w
+        przypadku poprzednich bitów.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# chmod -v -o-t /sdir
+mode of '/sdir' changed from 3770 (rwxrws--T) to 2770 (rwxrws---)
+[root@server1 ~]# chmod -v +1000 /sdir
+mode of '/sdir' changed from 2770 (rwxrws---) to 3770 (rwxrws--T)
+</pre>
+      <p>
+        Tutaj zwróćmy uwagę na to iż bit <em>sticky</em> jest zapisany wielką
+        literą, otóż działanie tego bitu się nie zmienia, jest jedynie 
+        informacja, że klasie publicznej brakuje prawa do wykonywania
+        (<em>x</em>). Wszystkie bity specjalne umieszczane w poszczególnych
+        klasach, rezydują w miejscu prawa do wykonywania.
+      </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

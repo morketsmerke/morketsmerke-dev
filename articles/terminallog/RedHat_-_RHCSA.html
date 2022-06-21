@@ -1273,18 +1273,19 @@ Options:
         W poprzedni rodziale poznaliśmy podstawy poruszania się po systemie,
         przejrzeliśmy środowisko graficzne, zapoznaliśmy się z wierszem
         polecenia oraz z najbardziej podstawowymi poleceniami. Było to swoiste
-        zapoznanie z systemem operacyjny. Teraz pora w nim trochę popracować.
+        zapoznanie się z systemem operacyjny. Teraz pora w nim trochę 
+        po pracować.
         Ludzie zazwyczaj kiedy wspomagają swoją prace komputerem, pracują na
         danych. Te dane są zazwyczaj zebrane w pliki. Od omówienia rodzajów
-        plików dostępnych na Linuksie ale i nie tylko rozpoczniemy ten rozdział.
+        plików dostępnych na Linuksie rozpoczniemy ten rozdział.
       </p> 
       <h2 id="3.1.filetypes">3.1. Rodzaje plików</h2>
       <p>
         W Uniksach możemy wymienić 7 rodzajów różnych plików. W tych systemach
         nie jest istotne rozszerzenie oraz zawartość tych plików. Dla systemu
-        zawsze będzie to <strong>zwykły plik</strong>. Wszystkie pliki nie
-        wymienione na poniższej liście, które przyjdą na do głowy są plikami
-        zwykłymi.
+        zawsze będzie to <strong>zwykły plik</strong>. Wszystkie pliki
+        niewymienione na poniższej liście, które przyjdą nam do głowy są 
+        plikami zwykłymi.
       </p>
       <p>
         Zatem w Uniksach możemy wyróżnić takie rodzaje plików jak:
@@ -1294,13 +1295,13 @@ Options:
           to wszelkiej maści pliki tekstowe, pliki binarne z programami oraz
           inne.</li>
         <li><strong>Katalog</strong> - jest struktura organizacyjna systemu
-          plików, stosowana w celach organizacyjnych zwykłych plików w systemie
+          plików, stosowana w celach porządkowych zwykłych plików w systemie
           plików.</li>
         <li><strong>Plik urządzenia znakowego</strong> - w przypadku określenia
           <em>znakowy</em> stosuje się także określenie <strong>surowy</strong>
           (ang. <em>raw</em>). Pliki te wykorzystywane są do komunikacji z
           urządzaniami wykorzysującymi interfejs szeregowy.</li>
-        <li><strong>Pliki urządzeń blokowych</strong> - Pliki te wykorzystywane
+        <li><strong>Pliki urządzeń blokowych</strong> - Pliki tych używa się
           są do komunikacji z urządzeniami wykorzystującymi interfejs
           równoległy. Głównie są to dyski.</li>
         <li><strong>Dowiązania symboliczne</strong> - przypominają skróty z
@@ -1312,10 +1313,10 @@ Options:
       </ul>
       <p>
         Nie ma się też za bardzo co rozwodzić nad każdym z tych typów plików.
-        Wskaźnikiem rodzaju pliku podczas wyświetlania zawartości katalogu
-        jest pierwszy znak w pierwszej kolumnie informacji zwracanej przez
-        polecenie <em>ls -l</em>. Informacje zwracane dla poszczególnych
-        typów pliku wyglądają następująco:
+        Rodzaju pliku możemy ustalić podczas wyświetlania zawartości katalogu.
+        Wskaźnikiem jest pierwszy znak w pierwszej kolumnie informacji 
+        zwracanej przez polecenie <em>ls -l</em>. Informacje zwracane dla 
+        poszczególnych typów pliku wyglądają następująco:
       </p>
 <pre class="code-block">
 #Zwykły plik:
@@ -1344,16 +1345,16 @@ lrwxrwxrwx. 1 root root 6 Jun 16 17:30 soft10 -&gt; file10
         rozmiaru, tylko dwie liczby oddzielone od siebie przecinkiem. Te liczby
         to numer główny oraz numer poboczny. Numer główny określa rodzaj
         urządzenia, z kolei numer podobczny jest jego unikalny identyfikatorem
-        w systemie. Innym rodzajem, który jest plikiem, ale jednak nie plikiem
-        jest dowiązanie symboliczne wrócimy do tego typu plików poźniej.
+        w systemie. Innym rodzajem, jest dowiązanie symboliczne, które nazwa
+        wskazuje na ścieżke innego pliku, ale do tego typu plików 
+        wrócimy poźniej.
       </p>
       <p>
         Te informacje które są zwracane oprócz nazwy pliku przez polecenie,
-        które wyświetla zawartość katalogu to tak zwane 
-        <strong>meta-dane</strong>, bardziej szczegółowo możemy wyświetlić je
-        za pomocą polecenia <strong>stat</strong>. Na poniższym przykładzie
-        zamieszczono bardziej szczegółowe meta-dane zwykłego pliki z
-        poprzedniego przykładu:
+        <em>ls</em> z odpowiednią opcją to tak zwane 
+        <strong>meta-dane</strong>. Większą ich ilość możemy wyświetlić za
+        pomocą polecenia <strong>stat</strong>. Na poniższym przykładzie
+        zamieszczono więcej meta-danych zwykłego pliku z poprzedniego przykładu:
       </p>
 <pre class="code-block">
 [root@server1 ~]# stat anaconda-ks.cfg 
@@ -1368,8 +1369,8 @@ Change: 2022-06-09 19:59:42.592326645 +0200
  Birth: 2022-06-09 19:59:42.237318552 +0200
 </pre>
       <p>
-        Zwykłe pliki na Uniksach nie muszą mieć rozszerzenia, wiec aby przed
-        uruchomieniem pliku upewnić się co to jest mamy do dyspozycji takie
+        Zwykłe pliki na Uniksach nie muszą mieć rozszerzenia, więc aby przed
+        uruchomieniem pliku upewnić się co to jest, mamy do dyspozycji takie
         narzędzie jak program <strong>file</strong>, który zbada zawartość
         podanego mu w argumencie pliku. 
       </p>
@@ -1385,18 +1386,18 @@ test: Bourne-Again shell script, ASCII text executable
       <p>
         Kompresja pozwala na zmnieszenie objętości plików za pomocą
         zaawansowanych algorytmów, dzięki czemu możemy zaoszczędzić miejsce
-        na dysku, jednak wadą takiego przechowywania danych jest dłuższy
-        czas oczekiwania na ich gotowość do pracy ponieważ dane przed tym
-        należy zdekompresować. Archizowanie może służyć to zebranie wielu
-        małych plików w jeden duży. Na Uniksach możemy wymieć dwa natywne
+        na dysku. Wadą takiego przechowywania danych jest dłuższy
+        czas oczekiwania na ich gotowość do pracy, ponieważ dane przed tym
+        należy zdekompresować. Archizowanie może służyć do zebrania wielu
+        małych plików w jeden duży. Na Uniksach możemy wymienić dwa natywne
         narzędzia służące do kompresji i jedno do archiwizowania.
       </p>
       <h3 id="3.2.1.gzip">3.2.1. gzip</h3>
       <p>
         Natywnym i dostępnym na każdym systemie sposobem na kompresje danych
         jest <strong>gzip</strong>. Algorytmy zawarte w tym narzędziu
-        kompresują dane, powodując ich mniejszą objętość. Narzędzie do każdego
-        skompresowanego pliku dodaje rozszerzenie <em>.gz</em>. Aby 
+        kompresują dane, powodując zmniejszenie ich objętość. Narzędzie do 
+        każdego skompresowanego pliku dodaje rozszerzenie <em>.gz</em>. Aby 
         skompresować plik wystarczy podać jego nazwę lub ścieżkę do niego jako
         argument poleceniu <em>gzip</em>.
       </p>
@@ -1405,12 +1406,15 @@ test: Bourne-Again shell script, ASCII text executable
 [root@server1 ~]# ls -l fstab 
 -rw-r--r--. 1 root root 579 Jun 16 11:07 fstab
 
+#Kompresja
+[root@server1 ~]# gzip fstab
+
 #Plik po kompresji
 [root@server1 ~]# ls -l fstab.gz 
 -rw-r--r--. 1 root root 350 Jun 16 11:07 fstab.gz
 </pre>
       <p>
-        Jak możemy zauważyć rozmiar pliku zmniejszył sie. Zwróćmy uwagę na to
+        Jak możemy zauważyć rozmiar pliku zmniejszył się. Zwróćmy uwagę na to
         iż narzędzie nie działa na kopii pliki tylko kompresuje bezpośrednio
         podany plik. Aby plik zdekompresować możemy użyć polecenia 
         <strong>gunzip</strong>
@@ -1423,7 +1427,7 @@ test: Bourne-Again shell script, ASCII text executable
         podejrzeć listę skompresowanych plików (w przypadku jednego pliku
         może być to użyteczne do wyświetlenia statystki kompresji) 
         wykorzystując 
-        opcje <em>-t</em> i podając jako argument skompresowany plik.
+        opcje <em>-l</em> i podając jako argument skompresowany plik.
       </p>
 <pre class="code-block">
 [root@server1 ~]# gzip -l fstab.gz 
@@ -1461,8 +1465,8 @@ test: Bourne-Again shell script, ASCII text executable
       </p>
       <h3 id="3.2.3.tar">3.2.3. tar</h3>
       <p>
-        Program <strong>tar</strong> nie służy do kompresji, a do archiwizcji 
-        jego zadaniem jest stworzenie jednego pliku z wielu innych plików lub 
+        Program <strong>tar</strong> nie służy do kompresji, a do archiwizcji.
+        Jego zadaniem jest stworzenie jednego pliku z wielu innych plików lub 
         z całego katalogu. Na początku program swojego istnienia program 
         <em>tar</em> domyślnie tworzył archiwa na napędach taśmowych, dlatego
         też jeśli ma on tworzyć archiwum do pliku potrzebna będzie odpowiednia
@@ -1474,7 +1478,7 @@ test: Bourne-Again shell script, ASCII text executable
         myślnikiem, lub nie używać myślnika w ogóle. Do stworzenia archiwum
         potrzebujemy dwóch opcji, pierwszej <em>-c</em> - tworzącej archiwum
         oraz drugiej <em>-f</em> - nakazujące stworzenie archiwum w podanym
-        jako argument opcji pliki. Poniżej znajdują się opisane wyżej użycia
+        jako argument opcji pliku. Poniżej znajdują się opisane wyżej użycia
         polecenia <em>tar</em> do stworzenia archiwum.
       </p>
 <pre class="code-block">
@@ -1533,7 +1537,8 @@ drwx------ root/root         0 2022-02-16 13:01 etc/lvm/cache/
       <p>
         Chcąc dodać plik do archiwum, wystarczy użyć opcji <em>-r</em> nie
         trzeba go rozpakowywać i dodawać tych plikiów wystarczy wskazać
-        archiwum a następnie pliki, które chce się dodać.
+        archiwum a następnie pliki, które chce się dodać. Plik zostanie dodany
+        na koniec archiwum.
       </p>
 <pre class="code-block">
 [root@server1 ~]# tar -rvf etc_tarred2.tar vipractice.bz2 
@@ -1545,9 +1550,10 @@ vipractice.bz2
 -rw-r--r-- root/root       307 2022-06-16 18:38 vipractice.bz2
 </pre>
       <p>
-        Dodawaniu plików nie służy wyłącznia opcja <em>-r</em>, ale również
-        <em>-u</em>, która dodaje nowsze pliki na końcu archwium przez to
-        wyświetlając zawrtość takiego archiwum, możemy zobaczyć pliki o tych
+        Dodawaniu plików do archiwum nie służy wyłącznia opcja <em>-r</em>, ale
+        również
+        <em>-u</em>, która dodaje nowsze pliki na końcu archwium.
+        Wyświetlając zawrtość takiego archiwum, możemy zobaczyć pliki o tych
         samych nazwach. Te nazwy oczywiście odpowiadają różnym wersjom tych
         plików.
       </p>
@@ -1563,9 +1569,9 @@ tar: Removing leading `/' from hard link targets
 -rw-r--r-- root/root     10373 2022-06-19 09:47 etc/nanorc
 </pre>
       <p>
-        Po zebraniu wszystkich plików do archiwum, może ono przybrać na
-        rozmiarze. Polecenie <em>tar</em>, pozwala na zastosowanie poznanych
-        wcześniej algorytmów kompresji.
+        Po zebraniu wszystkich plików do archiwum, może okazać się że jest to
+        sporych rozmiarów plik. Polecenie <em>tar</em>, pozwala na zastosowanie
+        poznanych wcześniej algorytmów kompresji podczas tworzenia archwium.
       </p>
       <ul>
         <li><strong>gzip:</strong> opcja <em>-z</em>
@@ -1618,7 +1624,7 @@ tar: Removing leading `/' from hard link targets
         <li><strong>tryb wprowadzania</strong> - tryb ten służy do edycji
           tekstu, uruchamiany za pomocą polecenia <em>i</em> lub <em>a</em>.</li>
         <li><strong>tryb ostatniej lini</strong> - ten tryb możemy również
-          nazwać wierszem polecenia. Urchamiany jest poprzez wciśniecie
+          nazwać wierszem polecenia. Urchamiany jest poprzez wciśnięcie
           dwukropka (<strong>:</strong>) w trybie poleceń. Po tym znaku
           podajemy polecenie.</li> 
       </ul>
@@ -1650,10 +1656,12 @@ tar: Removing leading `/' from hard link targets
         (ang. <em>insert</em>).
       </p>
       <p>
-        Opuszczenie trybu wprowadzania i powrót do trybu polecenia wymagania
-        naciśnięcia klawisza <em>Esc</em> (escape). Przjście do trybu polecenia
-        jest wymgane, aby przenieść kursor w inne miejsce. W tym trybie również
-        zapisuje oraz opuszczamy edytor. Zmiany w tekscie również możemy
+        Opuszczenie trybu wprowadzania i powrót do trybu polecenia wymaga
+        naciśnięcia klawisza <em>Esc</em> (<em>escape</em>). Przjście do trybu 
+        polecenia
+        jest wymagane, aby przenieść kursor w inne miejsce. W tym trybie 
+        również poprzez polecenia ostatniej linii zapisujemy zmiany w pliku
+        oraz opuszczamy edytor. Zmiany w tekscie również możemy
         porzućić, nie musimy ich zapisywać poniżej umieściłem kilka poleceń
         trybu ostatniej linii, służacych od zapisywania i opuszczania edytora.
       </p>
@@ -1670,11 +1678,13 @@ tar: Removing leading `/' from hard link targets
         polecenia <em>:q!</em>. Możemy czasami spotkać się z uprawnieniami,
         które nie pozwolą nam zapisać zmian w pliku. Rozwiązać tego typu
         problem możemy dwa sposoby, wymusić zapisanie zamian za pomocą
-        wykrzyknika, lub podać ścieżkę do nowego pliku poleceniu <em>:w</em>.
+        wykrzyknika (działa to tylko w przypadku, gdy superużytkownik chce
+        zapisać zmiany w pliku tylko odczytu), lub podać ścieżkę do nowego 
+        pliku poleceniu <em>:w</em>.
       </p>
       <h3 id="3.3.2.othervimcommands">3.3.2. Pozostałe polecenia Vim</h3>
       <p>
-        Vim posiada bogatą kolekcję poleceń trybu polecnia oraz trybu ostatniej
+        Vim posiada bogatą kolekcję poleceń trybu poleceń oraz trybu ostatniej
         linii, na poniższej liście znajdują się część z nich, możemy
         wykorzystać je do sprawniejszego używania edytora <em>Vim</em>.
       </p>
@@ -1689,7 +1699,7 @@ tar: Removing leading `/' from hard link targets
         <li><strong>Ctrl+b</strong> - przewinięcie tesktu o jedną stronę w
           tył.</li>
         <li><strong>x</strong> - usunięcie znaku wskazywanego przez kursor,
-          znak tak naprawdę zostaje wycięty, i poźniej może zostać wklejony.</li>
+          znak tak naprawdę zostaje wycięty i poźniej może zostać wklejony.</li>
         <li><strong>dd</strong> - usunięcie/wycięcie całej linii, linia
           podobnie jak znak może zostać wklejona.</li>
         <li><strong>v</strong> - przejście <em>Vim</em> w tryb wizualny
@@ -1700,10 +1710,10 @@ tar: Removing leading `/' from hard link targets
         <li><strong>p</strong> - wklejanie.</p>
         <li><strong>u</strong> - cofnięcie się o jedną zmianę, odpowiednik
           <em>Ctrl+z</em>.</li>
-        <li><strong>Ctrl+r</strong> - tzw. redo, powrót do stanu przed
+        <li><strong>Ctrl+r</strong> - tzw. <em>redo</em>, powrót do stanu przed
           cofnięciem zmiany. Czasami bardzo przydatna funkcja.</li>
         <li><strong>. - kropka</strong> - powtórzenie ostatniego polecenia.
-          Jeśli ostatnim poleceniem było wprowadzanie, to, to polecenie wklei
+          Jeśli ostatnim poleceniem było wprowadzanie, to polecenie wklei
           cały wprowadzony tekst do momentu zmiany polecenia.</li>
         <li><strong>/ - slash</strong> - przeszukiwanie tekstu w przód.</li>
         <li><strong>? - znak zapytania</strong> - przeszukiwanie tekstu w tył.</li>
@@ -1714,21 +1724,22 @@ tar: Removing leading `/' from hard link targets
       </ul>
       <p>
         W przypadku tryb poleceń, możemy zwielokrotnić działanie tych poleceń,
-        stawiając liczbę wykonywania tego polecenia. Na przykład jeśli chcemy
+        wprowadzając liczbę wykonywania tego polecenia przed poleceniem. Na 
+        przykład jeśli chcemy
         usunąć 3 linie to zamiast wydawać trzykrotnie polecenie <em>dd</em>,
         możemy nacisnąć <em>3</em> następnie <em>dd</em> i trzy linie spod
         kursora zostaną usunięte/wycięte.
       </p>
       <p><strong>Polecenia trybu ostatniej linii:</strong></p>
       <ul>
-        <li><strong>:set number</strong> - ustawienia numerowanie linii.</li>
-        <li><strong>:o</strong> - otwiera plik, jako argument podajemy ścieżekę
+        <li><strong>:set number</strong> - włącza numerowanie linii.</li>
+        <li><strong>:o</strong> - otwiera plik, jako argument podajemy ścieżkę
           do pliku.</li>
         <li><strong>:%s/old/new</strong> - zamiana pierwszego wstąpienia słowa 
           <em>old</em> słowem <em>new</em>.</li>
         <li><strong>:%s/old/new/g</strong> - zamiana wszystkich wystąpień słowa
           <em>old</em> słowem <em>new</em>.</li>
-        <li><strong>:6,11co4</strong> - polecenie kopiuje zawrtość linii od
+        <li><strong>:6,11co4</strong> - polecenie kopiuje zawartość linii od
           6 do 11 i wkleja ją po 4 linii.</li>
         <li><strong>:3,5m6</strong> - polecenie przenosii linię od 3 do 5 na
           miejsce po linii numer 6.</li>
@@ -1771,7 +1782,7 @@ tar: Removing leading `/' from hard link targets
         nowym pliku, tworzymy go mimochodem. Ostanim ze sposobów jest
         utworzenie plików ze strumienia (stumienie będą opisywane w dalszej
         części tego materiału), za pomocą polecenia <strong>cat</strong>,
-        który omówimy sobie w następnym podrozdziale. Wydając następujące
+        które omówimy sobie w następnym podrozdziale. Wydając następujące
         polecenie:
       </p>
 <pre class="code-block">
@@ -1802,7 +1813,7 @@ test5
       <h3 id="3.4.2.listingfiles">3.4.2. Wyświetlanie zawartości pliku</h3>
       <p>
         Na Uniksach do wyświetlania zawartości plików mamy kilka rozwiązań
-        pierwszym z nich jest wspomanianie już polecenie <strong>cat</strong>.
+        pierwszym z nich jest wspomnianie już polecenie <strong>cat</strong>.
         Polecenie wyświetli zawartość pliku podanego jako argument w terminalu.  
       </p>
 <pre class="code-block">
@@ -1815,9 +1826,9 @@ test5
 </pre>
       <p>
         Na Uniksach, obok polecenia <em>cat</em> występuje polecenie
-        <strong>tac</strong>, która ma takie samo zastosowanie jak to wyżej
-        wymienione, wyświetlając je jednak odwrotnie od końca. Poniższy
-        przykład zaraz to zobrazuje:
+        <strong>tac</strong>, które ma takie samo zastosowanie jak to wyżej
+        wymienione, wyświetlając jednak zawartość plik odwrotnie od końca. 
+        Poniższy przykład zaraz to zobrazuje:
       </p>
 <pre class="code-block">
 [root@server1 ~]# tac plik2 
@@ -1832,23 +1843,22 @@ test1
         ekranie, czy też w oknie terminala. Do wyświetlania tego typu plików
         wykorzystuje się takie polecenia jak <strong>more</strong> czy
         <strong>less</strong>. Oba dzielą wyświetloną treść plików na strony
-        wielkości ekranu czy terminala. Program <em>more</em> nie jest za
+        wielkości ekranu bądź terminala. Program <em>more</em> nie jest za
         bardzo zaawansowanym narzędziem, wyświetlając pliki za jego pomocą nie
-        mamy zbyt duże pola manewru. Możemy przesuwać stronę po stronie, do
-        końca pliku. Nie możemy się cofnąć, dlatego jeśli chcielibyśmy wróć do
-        poprzedniej strony, musielibyśmy zakończyć działanie programu i
-        uruchomić go od nowa. Dlatego też znacznie lepszym rozwiązaniem jest
+        mamy zbyt dużego pola manewru. Możemy przesuwać stronę po stronie, do
+        końca pliku. Dlatego też znacznie lepszym rozwiązaniem jest
         wykorzystanie polecenia <em>less</em>, który pozwala poruszać się
-        po tekscie w góre i w dół, ale również pozwala na wyszukiwanie, oraz
-        możemy go obsługiwać za pomocą klawiszy znanych z nawigacji programem
-        <em>Vim</em>. Program <em>less</em> uruchomi się szybciej niż, program
-        <em>more</em> ponieważ nie musi on załadować całego pliku od razu.
+        po tekscie w góre i w dół, ale również pozwala na wyszukiwanie fraz 
+        w tekscie, możemy również nawigować po za pomocą klawiszy znanych z 
+        programu <em>Vim</em>. Program <em>less</em> uruchomi się szybciej niż,
+        program <em>more</em>, ponieważ nie musi on załadować całego pliku od 
+        razu.
       </p>
 <pre class="code-block">
 [root@server1 ~]# less /var/log/messages
 </pre>
       <p>
-        Ostatnim już sposoben na wyświetlenie zawartości plików jest, użycie
+        Ostatnim już sposobem na wyświetlenie zawartości plików jest, użycie
         polecenia <strong>head</strong> oraz <strong>tail</strong>, ich
         zadaniem jest wyświetlenie kilku początkowych (domyślnie 10) linii
         z podanego jako argument pliku - polecenie <em>head</em> lub kilku
@@ -1896,9 +1906,9 @@ Jun 19 15:28:23 server1 systemd[1]: Finished dnf makecache.
         i katalogów</h3>
       <p>
         Pracując z plikami, być może wystąpi potrzeba skopiowania danych bądź
-        przeniesienia danych w inne miejsce. Za operacje kopiowania
+        przeniesienia danych w inne miejsce. Za operację kopiowania
         odpowiedzialnie jest polecenie <strong>cp</strong>. Jako pierwszy
-        argument przyjmuje ono scieżkę lub plik źródłowy, jako drugi ścieżke
+        argument przyjmuje ono ścieżkę lub plik źródłowy, jako drugi ścieżkę
         lub plik docelowy.
       </p>
 <pre class="code-block">
@@ -1907,10 +1917,10 @@ Jun 19 15:28:23 server1 systemd[1]: Finished dnf makecache.
       <p>
         W przypadku gdy dany plik już istnieje w podanym katalogu polecenie
         zapyta się czy nadpisać docelowy plik, ale tylko w przypadku
-        użytkownika, bowiem on w konfiguracji swojej powłoki posiada 
-        <em>alias</em>
-        (nazwę zastępcza) <em>cp</em> dla polecenia <em>cp -i</em>, opcja
-        <em>-i</em> włącz tryb interaktywy, czyli właśnie takie pytania.
+        superużytkownika, bowiem on w konfiguracji swojej powłoki posiada 
+        <em>alias</em> (nazwę zastępcza) <em>cp</em> dla polecenia 
+        <em>cp -i</em>, opcja <em>-i</em> włącz tryb interaktywy, czyli właśnie
+        takie pytania.
       </p>
 <pre class="code-block">
 [root@server1 ~]# cp plik1 plik3 
@@ -1918,14 +1928,14 @@ cp: overwrite 'plik3'? n
 </pre>
       <p>
         Za pomocą polecenia <em>cp</em> możemy kopiować całe katalogi z
-        podkatalogami przy użyciu opcji <em>-r</em>, która włacza kopiowanie
-        rekrencyjne. Jeśli atrybuty plików są dla nas waża, to żeby nie
+        podkatalogami przy użyciu opcji <em>-r</em>, która włącza kopiowanie
+        rekurencyjne. Jeśli atrybuty plików są dla nas ważne, to żeby nie
         nadpisać ich należy użyć opcji <em>-p</em>.
       </p>
       <p>
         Za przenoszenie plików odpowiedzialne jest polecenie 
         <strong>mv</strong>, które ma jeszcze jedną ważną cechę ukrytą w
-        mechnice swojego działa. Otóż jeśli będzie przenośić plik lub katalog
+        mechanice swojego działa. Otóż jeśli będzie przenosić plik lub katalog
         w ramach tego samego katalogu, to zmieni on tylko swoją nazwę.
       </p>
       <p>
@@ -1961,7 +1971,7 @@ rm: remove regular empty file 'plik1'? y
         <em>cp</em> czy <em>mv</em>. Aby usunąć cały katalog wraz
         podkatalogami, należy użyć kolejno opcji <em>-r</em> -
         uruchamiającej usuwanie rekurencjne oraz opcji <em>-f</em>,
-        wymuszające odpowiedź <em>y</em> na wszystkie pytania
+        wymuszające odpowiedź <em>y</em> na wszystkie pytania.
       </p>
 <pre class="code-block">
 [root@server1 ~]# rm -rf /tmp/etc
@@ -1992,7 +2002,7 @@ rm: remove directory 'dir1/'? y
       <p>
         Wśród systemów uniksowych, możemy w kategoriach manipulacji plikami
         wyróżnić takie elementy jak <strong>dowiązania</strong>. Dowiązania
-        są najprościej rzecz biorąc elementami, które wskazują na inne pliki.
+        są najprościej rzecz biorąc są elementami, które wskazują na inne pliki.
         Dowiązania możemy podzielić na <strong>twarde</strong> oraz 
         <em>symboliczne</em>.
       </p>
@@ -2013,14 +2023,14 @@ rm: remove directory 'dir1/'? y
       <p>
         Pierwsza kolumna zawiera numer <strong>i-node</strong> jest to 
         identyfikator
-        wpisu w bazie danych systemu plików, ktory zawiera meta-informacje na
+        wpisu w bazie danych systemu plików, ktory zawiera meta-dane na
         temat pliku. W trzeciej kolumnie atrybutów znajduje się wartość
         <code class="code-inline">1</code>. Ta kolumna przedstawia ilość
-        dowiązań twardych. Każdy zwykły plik posiada co najmniej 
+        dowiązań twardych. Każdy zwykły plik posiada co najmniej jedno 
         dowiązanie - identyfikującą bezpośrednio plik nazwę. Tworząc kolejne
         twarde dowiązanie, podłączamy kolejną nazwę tego pliku. Teraz utworzmy
         dowiązanie o nazwie <em>hard2</em> do pliku <em>hard1</em>. Dowiązania
-        towrzymy za pomocą polecenia <strong>ln</strong>.
+        tworzymy za pomocą polecenia <strong>ln</strong>.
       </p>
 <pre class="code-block">
 [root@server1 ~]# ln hard1 hard2
@@ -2034,7 +2044,11 @@ rm: remove directory 'dir1/'? y
         pliki. Liczba dowiązań uległa zmianie tak samo w przypadku
         <code class="code-inline">hard1</code> jak i 
         <code class="code-inline">hard2</code>, ponieważ na ten sam plik
-        wskazują dwa dowiązania. Usuń my teraz plik <em>hard1</em>.
+        wskazują dwa dowiązania. Zawartość pliku możemy zmieniać odwołując
+        czy to do <em>hard1</em> czy <em>hard2</em>, tak samo jest 
+        z atrybutami, ponieważ obie nazwy wskazują na ten sam węzeł
+        <em>i-node</em> (wpis w bazie danych systemu plików), jeśli usuń my 
+        teraz plik <em>hard1</em>, to tak naprawdę usuniemy jedno z dowiązań.
       </p>
 <pre class="code-block">
 [root@server1 ~]# rm hard1
@@ -2043,21 +2057,24 @@ rm: remove regular empty file 'hard1'? y
 6043841 -rw-r--r--. 1 root root 0 Jun 19 17:31 hard2
 </pre>
       <p>
-        Można by rzec, że plik przeżył. Ponieważ nie został on bez dowiązania.
-        Systemy plików, pliki bez dowiązań uznają za usunięte.
+        Dowiązania twarde mogą powodować bałagan w plikach, ponieważ mimo
+        usunięcia on dalej istnieje pod inną nazwą. Dopiero usunięcie
+        wszystkich dowiązań, ostatecznie kończy egzystencje pliku w pamięci
+        masowej, ponieważ systemy plików, pliki bez dowiązań uznają za
+        nie potrzebne i realokują miejsce przechowania zawartości tego pliku.
       </p>
       <h3 id="3.5.2.symlinks">3.5.2. Dowiązania symboliczne</h3>
       <p>
-        Innym rodzajem dowiązań są <strong>dowiązania symboliczne</strong>, są
-        one często porównywane do skrótów znanych z systemów Windows i tak
+        Innym rodzajem dowiązań jest <strong>dowiązanie symboliczne</strong>.
+        Często są one porównywane do skrótów znanych z systemów Windows i tak
         na prawdę taka jest ich rola. Dowiązania symboliczne mają wskazywać
         na inne pliki. W przeciwieństwie do dowiązań twardych, te dowiązania
         są jednak odrębnymi plikami (tak jakby), posiadają one bowiem wpis
         w bazie danych systemu plików, ale w miejscu przeznaczonym na adres
         przechowywania danych pliku na dysku lub innej pamięci znajduje się
-        scieżka pliku źródłowego, na który wskazuje dowiązania. Za tem tego
+        scieżka do pliku źródłowego, na który wskazuje dowiązanie. Zatem tego
         rodzaju elementy mają własne atrybuty. Wielkość dowiązania
-        symbolicznego zalezy od ilość znaków na ścieżce do pliku źródłowego.
+        symbolicznego zależy od ilość znaków na ścieżce do pliku źródłowego.
         Dowiązania symboliczne tworzymy za pomocą tego samego narzędzia co
         dowiązania twarde, dodając tylko opcję <em>-s</em>.
       </p>
@@ -2071,10 +2088,18 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
         kopiowanie. Kopiując plik, odwzrowywuje się jego zwartość w innym
         miejscu na pamięci masowej, tworząc odrębny nienaruszony plik. Tworząc
         dowiązanie, podłączamy się pod istniejący już plik, który może być
-        nie tylko przez użytkowników, ale też programy. Dowiązania symboliczne
+        zmieniony
+        nie tylko przez użytkowników, ale też programy. Dowiązania 
+        symbolicznego
         możemy użyć jak wymienionego wcześniej skrótu, chcąc zaoszczędzić
         sobie pisania długich ścieżek do odrębnych miejsc w systemie
         ewentualnie ułatwić pisanie ścieżek w skryptach oraz programach.
+      </p>
+      <p>
+        Przechodząc do folderu wskazywanego przez dowiązanie symboliczne
+        wyświetlimy scieżkę obecnego katalogu roboczego, zobaczymy ścieżkę
+        z uwzględeniem tego dowiązania. Aby odkryć prawdziwą ścieżkę należy
+        polecenia <strong>pwd</strong> z opcją <em>-P</em>.
       </p>
       <h3 id="exec3.1">Ćwiczenie 1: Archiwa</h3>
       <p>
@@ -2104,7 +2129,7 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
         Na maszynie <em>server1</em> jako zwykły użytkownik, utwórz jeden
         dowolny plik oraz jeden katalog, wyświetl ich atrybuty, sprawdź
         uprawnienia, nazwę właściciela oraz grupę do której ten plik należy.
-        Co się stanie gdy spróbujesz przenieć utworzony wcześniej plik do
+        Co się stanie gdy spróbujesz przenieść utworzony wcześniej plik do
         katalogu <em>/var/log</em>. Przenieś plik oraz katalog do katalogu
         <em>/tmp</em>. Utwórz duplikat pliku i zmień jego nazwę na jakąkolwiek 
         inną. Usuń wszystkie pliki utworzone na potrzeby tego ćwiczenia.

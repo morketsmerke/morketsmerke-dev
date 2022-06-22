@@ -2371,6 +2371,27 @@ mode of 'file1' changed from 0644 (rw-r--r--) to 0777 (rwxrwxrwx)
         pozostałych użytkowników dla każdego nowego pliku i katalogu. Maska
         o tej wartości była domyślną maską dla zwykłych użytkowników w RHEL 8.
       </p>
+      <h2 id="4.1.2.changefileowner">4.1.2. Zmiana właściciela oraz grupy pliku</h2>
+      <p>
+        Do zmiany właściciela pliku oraz grupy, do której on należy służy
+        polecenie <strong>chown</strong>, który przyjmuje jako pierwszy
+        argument trzy możliwe wersje: parę <strong>właściciel:grupa</strong>;
+        samego właściela lub nazwę grup poprzedzoną dwukropkiem
+        (<strong>:</strong>) a następnie pliki. Poniższy przykład obrazuje
+        wszystkie trzy możliwe zmiany właściciela oraz grup, do której należy
+        plik.
+      </p>
+<pre class="code-block">
+[root@server1 tmp]# chown user100:user100 acluser
+[root@server1 tmp]# ls -l acluser 
+-rw-rw-r--. 1 user100 user100 9 Jun 22 18:25 acluser
+[root@server1 tmp]# chown user acluser
+[root@server1 tmp]# ls -l acluser 
+-rw-rw-r--. 1 user user100 9 Jun 22 18:25 acluser
+[root@server1 tmp]# chown :user acluser
+[root@server1 tmp]# ls -l acluser
+-rw-rw-r--. 1 user user 9 Jun 22 18:25 acluser
+</pre>
       <h2 id="4.2.specialpermissions">4.2. Uprawnienia specjalne</h2>
       <p>
         Poza podstawowym rodzajem uprawnien w Uniksach istnieją dodatkowe
@@ -2539,6 +2560,308 @@ mode of '/sdir' changed from 2770 (rwxrws---) to 3770 (rwxrws--T)
         informacja, że klasie publicznej brakuje prawa do wykonywania
         (<em>x</em>). Wszystkie bity specjalne umieszczane w poszczególnych
         klasach, rezydują w miejscu prawa do wykonywania.
+      </p>
+      <h2 id="4.3.find">4.3. Polecenie find</h2>
+      <p>
+        Polecenie <strong>find</strong>, jak sama nazwa wskazuje służy do
+        wyszukiwania poleceń. Najczęściej jest ono wykorzystywane przez
+        użytkowników w podstawowym zakresie, zwracają gigantyczną ilość danych.
+        Często korzystając z tego narzędzia nie wykorzystuje się w pełni jego
+        potencjału, który ukrywa się w dużej ilości opcji zawężających wyniki
+        poszukiwania oraz możliwości wykonania akcji w wyszukanych plikach.
+      </p>
+      <p>
+        Najprostszy sposób na użycie polecenia <em>find</em> znajduje się 
+        poniżej:
+      </p>
+<pre class="code-block">
+[root@server1 user]# find / -name network
+/run/systemd/network
+/tmp/gzipped/etc/sysconfig/network
+/tmp/gzipped/etc/vmware-tools/scripts/vmware/network
+/etc/sysconfig/network
+/etc/vmware-tools/scripts/vmware/network
+/root/bzipped/etc/sysconfig/network
+/root/bzipped/etc/vmware-tools/scripts/vmware/network
+/usr/lib/systemd/network
+</pre>
+      <p>
+        Polecenie przeszukało cały główny system plików pod kątem plików
+        o nazwie <code class="code-inline">network</code>. Sama opcja
+        <code class="code-inline">-name</code> jest zawężeniem wyników
+        wyszukiwania, bez tej opcji polecenie zwróciłoby wszystkie pliki
+        znalezione w podanym katalogu czyli w tym przypadku minimum kilka 
+        tysięcy.
+      </p>
+      <p>
+        Poniżej zamiesczam najważniejsze opcje służące do bardziej
+        szczegółowego wyszukiwania plików.
+      </p>
+      <ul>
+        <li><strong>-iname</strong> - wyszukuje plików o nazwie podanej jako
+          argument tej opcji, ignorując przy tym wielkość znaków.
+<pre class="code-block">
+[root@server1 user]# find . -iname do*
+./Downloads
+./Documents
+./.cache/mozilla/firefox/r7fvuapl.default-default/cache2/doomed
+</pre>
+        </li>
+        <li><strong>-size</strong> - wyszukiwanie plików na podstawie rozmiaru
+          plików. Jeśli chcemy aby program znalazł pliki mniejsze niż podana
+          wartość stawiamy przed nią myślnik (<strong>-</strong>), a jeśli
+          większe to (<strong>+</strong>). Poniższy przykład zaprezentuje
+          wyszukiwanie plików powyżej 1G w moim katalogu domowym:
+<pre class="code-block">
+[xf0r3m@latitude-e5270 ~]$ find ~ -size +1G -exec ls -ldh {} \;
+-rw-r--r--. 1 xf0r3m xf0r3m 2,1G 06-18 18:12 /home/xf0r3m/Pobrane/Fedora-MATE_Compiz-Live-x86_64-35/Fedora-MATE_Compiz-Live-x86_64-35-1.2.iso
+-rw-r--r--. 1 xf0r3m xf0r3m 1,4G 06-18 19:44 /home/xf0r3m/Pobrane/Fedora-LXDE-Live-x86_64-35-1.2.iso
+-rwxr-xr-x. 1 xf0r3m xf0r3m 11G 2017-01-25  /home/xf0r3m/Pobrane/rhel-8.6-x86_64-dvd.iso
+-rwxr-xr-x. 1 xf0r3m xf0r3m 8,0G 2017-02-11  /home/xf0r3m/Pobrane/rhel-baseos-9.0-x86_64-dvd.iso
+-rwxr-xr-x. 1 xf0r3m xf0r3m 2,9G 06-21 19:50 /home/xf0r3m/Dokumenty/RHEL9-VM1_21.06.ova
+-rwxr-xr-x. 1 xf0r3m xf0r3m 2,3G 06-21 19:54 /home/xf0r3m/Dokumenty/RHEL9-VM2_21.06.ova
+-rwxr-xr-x. 1 xf0r3m xf0r3m 2,6G 06-21 20:00 /home/xf0r3m/Dokumenty/RHEL8-VM1_21.06.ova
+-rw-------. 1 xf0r3m xf0r3m 6,2G 06-22 16:06 '/home/xf0r3m/VirtualBox VMs/RHEL9-VM1/RHEL9-VM1_21.06-disk001.vmdk'
+-rw-------. 1 xf0r3m xf0r3m 4,8G 06-21 22:26 '/home/xf0r3m/VirtualBox VMs/RHEL9-VM2/RHEL9-VM2_21.06-disk001.vmdk'
+-rw-------. 1 xf0r3m xf0r3m 6,3G 06-21 22:28 '/home/xf0r3m/VirtualBox VMs/RHEL8-VM1/RHEL8-VM1_21.06-disk001.vmdk'
+</pre>
+          Opcję <code class="code-block">-exec</code>, omówimy pod koniec
+          tego podrozdziału. 
+        </li>
+        <li><strong>-user, -group</strong> - wyszukiwanie plików na podstawie
+          nazwy właściciela oraz grupy do której plik należy. W przykładzie
+          przedstawie polecenie, które wyszuka wszystkie pliki należące do
+          użytkownika <em>user</em>, ale i nie należące do grupy sgrp2:
+<pre class="code-block">
+[root@server1 user]# find / -user user -not -group sgrp2 
+/dev/pts/0
+/proc/1688
+/proc/1688/task
+/proc/1688/task/1688
+/proc/1688/task/1688/fd
+/proc/1688/task/1688/fd/0
+/proc/1688/task/1688/fd/1
+/proc/1688/task/1688/fd/2
+...
+</pre>
+          Aby zanegować, któreś z kryteriów należy poprzedzić je opcją
+          <em>-not</em> lub wykrzyknikiem (<strong>!</strong>).
+        </li>
+        <li><strong>-maxdepth, -mindepth</strong> - te opcje wskazują poleceniu
+          <em>find</em>, jak głęboko strukturę katalogów ma sięgać polecenie
+          podczas wyszukiwania (<em>-maxdepth</em>) lub od którego poziomu
+          podkatalogów ma zacząć wyszukiwanie (<em>-mindepth</em>).
+<pre class="code-block">
+[root@server1 user]# find / -maxdepth 3 -name network
+/run/systemd/network
+/etc/sysconfig/network
+
+[root@server1 user]# find / -mindepth 4 -name network
+/tmp/gzipped/etc/sysconfig/network
+/tmp/gzipped/etc/vmware-tools/scripts/vmware/network
+/etc/vmware-tools/scripts/vmware/network
+/root/bzipped/etc/sysconfig/network
+/root/bzipped/etc/vmware-tools/scripts/vmware/network
+/usr/lib/systemd/network
+</pre>
+          Zwróćmy uwagę na to, iż te opcje są opcjami globalnymi, nie mają
+          bezpośredniego wpływu na wyszukiwanie, dlatego też należy je
+          umieszczać przed opcjami mający zawęzić kryteria.
+        </li>
+        <li><strong>-type</strong> - wyszukiwanie pliku na podstawie typu
+          plików. Poniższy przykład pokazauje również jak zapisać różne
+          wartości przy jednej opcji:
+<pre class="code-block">
+[root@server1 user]# find / -type p,s -exec ls -ld {} \;
+srwxr-xr-x. 1 chrony chrony 0 Jun 22  2022 /run/chrony/chronyd.sock
+srwxr-xr-x. 1 root root 0 Jun 22  2022 /run/mcelog-client
+srw-rw-rw-. 1 root root 0 Jun 22  2022 /run/.heim_org.h5l.kcm-socket
+srw-rw-rw-. 1 root root 0 Jun 22  2022 /run/avahi-daemon/socket
+srw-rw-rw-. 1 root root 0 Jun 22  2022 /run/lsm/ipc/simc
+srw-rw-rw-. 1 root root 0 Jun 22  2022 /run/lsm/ipc/sim
+srw-rw-rw-. 1 root root 0 Jun 22  2022 /run/cups/cups.sock
+prw-------. 1 root root 0 Jun 22  2022 /run/initctl
+prw-------. 1 root root 0 Jun 22  2022 /run/dmeventd-client
+prw-------. 1 root root 0 Jun 22  2022 /run/dmeventd-server
+</pre>
+        Polecenie wyszukuje w systemie wszyskie gniazda i nazwane potoki
+        (typy plików, nieomawiane w tym materiale). Jak widać inna wartość dla
+        tej opcji należy podać po przecinku.
+      </li>
+      <li><strong>-mtime, -mmin</strong> - wyszukiwanie pliku na podstawie
+        ilości czasu upłyniętego od daty ostatniej modyfikacji, z czego
+        opcja <em>-mtime</em> przyjmuje wartości w liczbie dni, która upłynęła
+        od ostatniej modyfikacji, a <em>-mmin</em> w minutach.
+<pre class="code-block">
+[xf0r3m@latitude-e5270 ~]$ find ~ -maxdepth 2 -mtime -7
+/home/xf0r3m
+/home/xf0r3m/.mozilla/firefox
+/home/xf0r3m/.local/share
+/home/xf0r3m/Pobrane
+/home/xf0r3m/Pobrane/Fedora-MATE_Compiz-Live-x86_64-35.torrent
+/home/xf0r3m/Pobrane/Fedora-MATE_Compiz-Live-x86_64-35
+/home/xf0r3m/Pobrane/Fedora-LXDE-Live-x86_64-35.torrent
+/home/xf0r3m/Pobrane/Fedora-LXDE-Live-x86_64-35-1.2.iso
+/home/xf0r3m/Pobrane/Fedora-Workstation-Live-x86_64-35.torrent
+
+[xf0r3m@latitude-e5270 ~]$ find ~ -maxdepth 3 -mmin -360
+/home/xf0r3m
+/home/xf0r3m/.mozilla/firefox
+/home/xf0r3m/.mozilla/firefox/qlw3f0ci.default-default
+/home/xf0r3m/.local/share
+/home/xf0r3m/.local/share/gnome-shell
+/home/xf0r3m/.local/share/gvfs-metadata
+/home/xf0r3m/.local/share/recently-used.xbel
+/home/xf0r3m/.local/share/ranger
+/home/xf0r3m/.local/state/wireplumber
+/home/xf0r3m/Dokumenty/docs/.git
+/home/xf0r3m/Dokumenty/docs/angielski
+</pre>
+        Powyższe polecenia przedstawiają pliki, które były modyfikowane w
+        przeciągu 7 ostatnich dni, oraz 6 ostatnich godzin. Użyłem tutaj
+        również modyfikatorów głębokości.
+      </li>
+      <li><strong>-perm</strong> - wyszukiwanie plików na podstawie uprawnień.
+        Chcąc wyszukać pliki po konkretnych podajemy uprawnienia pliku w
+        wersji oktalnej po opcji. Możemy skorzystać z innych opcji wprowadzania
+        uprawnień: uprawnienień minimalnych podanych po myślniku
+        (<strong>-</strong>), wówczas każdy z podanych tam praw będzie musiało
+        wystąpić w danej klasie lub uprawnień dowolnych podanych po ukośniku
+        (<strong>/</strong>), wówczas przypasowany zostanie plik, który będzie
+        posiadać, minimum jedno z praw, z minimum jednej klasy.
+<pre class="code-block">
+[root@server1 user]# find / -perm 111 -exec ls -ld {} \;
+---x--x--x. 1 root root 87168 Aug 26  2021 /usr/bin/sudoreplay
+
+[root@server1 user]# find /dev -type c -perm -222 -exec ls -ld {} \;
+crw-rw-rw-. 1 root kvm 10, 241 Jun 22  2022 /dev/vhost-vsock
+crw-rw-rw-. 1 root kvm 10, 238 Jun 22  2022 /dev/vhost-net
+crw-rw-rw-. 1 root root 10, 196 Jun 22  2022 /dev/vfio/vfio
+crw-rw-rw-. 1 root root 10, 200 Jun 22  2022 /dev/net/tun
+crw-rw-rw-. 1 root render 226, 128 Jun 22  2022 /dev/dri/renderD128
+crw-rw-rw-. 1 root root 10, 229 Jun 22  2022 /dev/fuse
+crw-rw-rw-. 1 root tty 5, 2 Jun 22 17:28 /dev/ptmx
+crw-rw-rw-. 1 root tty 5, 0 Jun 22  2022 /dev/tty
+crw-rw-rw-. 1 root root 1, 9 Jun 22  2022 /dev/urandom
+crw-rw-rw-. 1 root root 1, 8 Jun 22  2022 /dev/random
+crw-rw-rw-. 1 root root 1, 7 Jun 22  2022 /dev/full
+crw-rw-rw-. 1 root root 1, 5 Jun 22  2022 /dev/zero
+crw-rw-rw-. 1 root root 1, 3 Jun 22  2022 /dev/null
+
+[root@server1 user]# find /dev -type c -perm /222 -exec ls -ld {} \;
+crw-rw----. 1 root dialout 4, 64 Jun 22 17:30 /dev/ttyS0
+crw-rw-rw-. 1 root tty 5, 2 Jun 22 17:30 /dev/ptmx
+crw-r--r--. 1 root root 10, 235 Jun 22 17:30 /dev/autofs
+</pre>
+        Powyżej przedstawiłem wymienione sposoby na zapis uprawnień w przy
+        opcji <em>-perm</em>. Tej opcji możemy również przekazać uprawnienia
+        w postaci symbolicznej na przykład:
+<pre class="code-block">
+[root@server1 user]# find /usr -perm -u=s -exec ls -ld {} \;
+-rwsr-xr-x. 1 root root 36880 Feb 16 15:46 /usr/bin/fusermount3
+-rwsr-xr-x. 1 root root 74880 Dec  3  2021 /usr/bin/chage
+-rwsr-xr-x. 1 root root 78744 Dec  3  2021 /usr/bin/gpasswd
+-rwsr-xr-x. 1 root root 42448 Dec  3  2021 /usr/bin/newgrp
+-rwsr-xr-x. 1 root root 36872 Jan 12 18:21 /usr/bin/fusermount
+-rwsr-xr-x. 1 root root 49152 Feb 24 11:25 /usr/bin/mount
+-rwsr-xr-x. 1 root root 36784 Feb 24 11:25 /usr/bin/umount
+-rwsr-xr-x. 1 root root 57616 Feb 24 11:25 /usr/bin/su
+-rwsr-xr-x. 1 root root 32608 Mar 11 16:34 /usr/bin/pkexec
+-rwsr-xr-x. 1 root root 53704 Aug  9  2021 /usr/bin/crontab
+-rwsr-xr-x. 1 root root 32648 Aug 10  2021 /usr/bin/passwd
+---s--x--x. 1 root root 185456 Aug 26  2021 /usr/bin/sudo
+-rwsr-xr-x. 1 root root 16240 Oct 15  2021 /usr/bin/vmware-user-suid-wrapper
+-rws--x--x. 1 root root 32712 Feb 24 11:25 /usr/bin/chfn
+-rws--x--x. 1 root root 24464 Feb 24 11:25 /usr/bin/chsh
+-rwsr-xr-x. 1 root root 57920 Aug  9  2021 /usr/bin/at
+-rwsr-xr-x. 1 root root 16128 Dec  2  2021 /usr/sbin/pam_timestamp_check
+-rwsr-xr-x. 1 root root 24544 Dec  2  2021 /usr/sbin/unix_chkpwd
+-rwsr-xr-x. 1 root root 15608 Mar 10 18:18 /usr/sbin/grub2-set-bootflag
+-rws--x--x. 1 root root 45232 Dec  9  2021 /usr/sbin/userhelper
+-rwsr-xr-x. 1 root root 20416 Mar 11 16:34 /usr/lib/polkit-1/polkit-agent-helper-1
+-rwsr-x---. 1 root sssd 119512 Jan 17 20:47 /usr/libexec/sssd/krb5_child
+-rwsr-x---. 1 root sssd 53240 Jan 17 20:47 /usr/libexec/sssd/ldap_child
+-rwsr-x---. 1 root sssd 28536 Jan 17 20:47 /usr/libexec/sssd/proxy_child
+-rwsr-x---. 1 root sssd 32656 Jan 17 20:47 /usr/libexec/sssd/selinux_child
+-rwsr-x---. 1 root dbus 36848 Aug  9  2021 /usr/libexec/dbus-1/dbus-daemon-launch-helper
+-rwsr-xr-x. 1 root root 16104 Feb 10 11:13 /usr/libexec/Xorg.wrap
+-rwsr-x---. 1 root cockpit-wsinstance 57600 Mar  3 13:28 /usr/libexec/cockpit-session
+</pre>
+        Powysze polecenie szuka wszystkich programów z ustawionym bitem
+        <em>setuid</em>.
+      </li>
+      </ul>
+      <h3 id="4.3.1.actionoptions">4.3.1. Opcje akcji polecenia find</h3>
+      <p>
+        Na powyższych przykładach stosowałem wielkrotnie dodatkową opcję
+        <code class="code-inline">-exec</code>. Ta opcja jest opcją akcji
+        podejmowaną na pliku gdy tylko zostanie znaleziony. Składania opcji
+        <em>-exec</em> może wyglądać następująco:
+      </p>
+<pre class="code-block">
+$ find ... -exec ls -ld {} \;
+</pre>
+      <p>
+        Po opcji <em>-exec</em> podajemy zwykłe polecenie, tak jak gdybyśmy
+        wpisywali je do wiersza polecenia. Odniesieniu do znalezionego pliku
+        służy zapisana para nawiasów klamrowych 
+        <code class="code-inline">{}</code> każde polecenie wydawane za pomocą
+        opcji <em>-exec</em> czy innej musi zostać za terminowane
+        zacytowanym średnikiem (<strong>\;</strong>), ponieważ jest koniec
+        polecenia wprowadzonego to tej opcji, a nie koniec polecenia
+        <em>find</em>. Wynik działania przykładowego użycia opcji 
+        <em>-exec</em> znajduje sie w przykładach na początku tego 
+        podrozdziału.
+      </p>
+      <p>
+        Poza poleceniem <em>-exec</em>, istnieją jeszcze dwa polecenia akcji
+        <strong>-delete</strong>, które usuwa pliki oraz <strong>-ok</strong>,
+        które różni się tym od <em>-exec</em>, że pyta sie użytkownika czy
+        wykonać podane polecnie na pliku.
+      </p>
+      <p class="exam_tip">
+        Polecenie <em>find</em>, wydaje się bardzo pomocne, posiada masę opcji
+        część znich znajduje się tutaj, pozostałe są rozpisane na stronach
+        podręcznika. Powinniśmy umieć się posługiwać tym narzędziem, zarówno
+        zaweżać obszar poszukiwania jak i prawidłowo używać opcji 
+        <em>-exec</em>.
+      </p>
+      <h2 id="4.4.acl">4.4. Lista kontroli dostępu</h2>
+      <p>
+        Oprócz klasycznego zestawu uprawnień w Uniksach oraz określenia
+        właściciela i grupy do której należy plik bądź katalog, w RHEL możemy
+        dodatkowo wskazać innych użytkowników oraz grupy i przypisać im 
+        uprawnienia
+        nieżależne od tych klasycznych (<strong>standardu ugo/rwx</strong>).
+        Temu właśnie służy <strong>Lista kontroli dostępu</strong>. Ten
+        mechanizm obsługiwany jest za pomocą dwóch poleceń, pierwszym z nich
+        jest <strong>getfacl</strong> i służy ono do wypisania listy kontroli
+        dostępu. Stwórzmy w katalogu <em>/tmp</em> plik o nazwie 
+        <em>aclfile</em>, następnie wykonajmy polecenie <em>getfacl</em>
+        podając ten plik jako argument.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ cd /tmp
+[user@server1 tmp]$ touch acluser
+[user@server1 tmp]$ getfacl acluser 
+# file: acluser
+# owner: user
+# group: user
+user::rw-
+group::rw-
+other::r--
+
+[user@server1 tmp]$ ls -l acluser
+-rw-rw-r--. 1 user user 9 Jun 22 18:25 acluser
+</pre>
+      <p>
+        Kiedy plik niema zdefiniowanych żadnych dodatkowych użytkowników oraz
+        grup, jego lista kontroli dostępu jest równoznaczna z klasycznymi 
+        uprawnieniami Uniksa. Listy kontroli dostępu możemy modyfikować 
+        za pomocą polecenia <strong>setfacl</strong>. Zanim jednak poznamy
+        jak należy modyfikować ACL, poniżej znajduje się lista najważniejszych
+        opcji tego polecenia. Są one dość istotne, ponieważ pozwalają na 
+        manipulowanie ACL elementu.
       </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">

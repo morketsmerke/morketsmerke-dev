@@ -2370,6 +2370,12 @@ mode of 'file1' changed from 0644 (rw-r--r--) to 0777 (rwxrwxrwx)
         Tak zdefiniowana maska usunie tylko prawo do zapisu w klasie
         pozostałych użytkowników dla każdego nowego pliku i katalogu. Maska
         o tej wartości była domyślną maską dla zwykłych użytkowników w RHEL 8.
+        Wartość maski zdefiniowanej z poziomu wiersza poleceń, utrzyma się
+        tylko przez otwartej sesji terminala. Po jego zamknięciu lub
+        wylogowaniu się maska wróci do poprzedniej wartości. Jeśli chcemy aby
+        wartości tej maski została zapisana na stałe należy umieść polecenie
+        <em>umask</em> w jedem z plików uruchomieniowych powłoki, będzie o tym
+        w dalszej części tego materiału.
       </p>
       <h2 id="4.1.2.changefileowner">4.1.2. Zmiana właściciela oraz grupy pliku</h2>
       <p>
@@ -2861,7 +2867,259 @@ other::r--
         za pomocą polecenia <strong>setfacl</strong>. Zanim jednak poznamy
         jak należy modyfikować ACL, poniżej znajduje się lista najważniejszych
         opcji tego polecenia. Są one dość istotne, ponieważ pozwalają na 
-        manipulowanie ACL elementu.
+        manipulowanie listami elementu.
+      </p>
+      <ul>
+        <li><strong>-b</strong> - usuwa wszystkie listy dostępowe,</li>
+        <li><strong>-d</strong> - ustawia listy jako domyślne,</li>
+        <li><strong>-k</strong> - usuwa wszystkie listy domyślne,</li>
+        <li><strong>-m</strong> - modyfikuje lub ustawia listy,</li>
+        <li><strong>-n</strong> - chroni przed automatycznym przeliczaniem
+          maski,</li>
+        <li><strong>-R</strong> - ustawia listy rekurencyjnie, listy katalogu
+          są stoswane na elementy w nim zawarte,</li>
+        <li><strong>-x</strong> - usuwa pojedyńczą listę.</li>
+      </ul>
+      <p>
+        Listy kontroli możemy zastoswać dla trzech podmiotów:
+      </p>
+      <ul>
+        <li><strong>użytkownika</strong>:
+          <code class="code-inline">u[ser]:nazwa/uid:uprawnienia</code></li>
+        <li><strong>grupy</strong>:
+          <code class="code-inline">g[roup]:nazwa/gid:uprawnienia</code></li>
+        <li><strong>innych</strong>:
+          <code class="code-inline">o[ther]:uprawnienia</code></li>
+      </ul>
+      <p>
+        To co zostało ujęte w nawiasach kwadratorych, jest zapisem opcjonalny.
+        Identyfikator podmiotu możemy zapisać albo za pomocą numerów <em>UID</em>
+        oraz <em>GID</em>, lub za pomocą nazw. Uprawnienia mogą być podane
+        za pomocą symboli lub sumy wag dla pojedyńczej klasy. Ustawię teraz
+        listę dla jednego z użytkowników w systemie.
+      </p>
+<pre class="code-block">
+[user@server1 tmp]$ setfacl -m u:user100:rw acluser
+[user@server1 tmp]$ ls -l acluser
+-rw-rw-r--+ 1 user user 9 Jun 22 18:25 acluser
+</pre>
+      <p>
+        Pierwsze polecenie ustawia prawo do czytania oraz pisania użytkownikowi
+        <code class="code-inline">user100</code> za pomocą list dostępu.
+        Wyświetliłem szczegóły pliku. Zwróćmy uwagę na to, iż kropka na końcu
+        uprawnień została zastąpiona plusem (<strong>+</strong>), taki zapis
+        informuje użytkowników, że uprawnienia tego pliku są rozszerzone za
+        pomocą ACL. Teraz przyjrzymy sie jak wygląda taka lista w ujęciu ACL:
+      </p>
+<pre class="code-block">
+[user@server1 tmp]$ getfacl -c acluser
+user::rw-
+user:user100:rw-
+group::rw-
+mask::rw-
+other::r--
+</pre>
+      <p>
+        W tym przykładzie użyłem opcji <em>-c</em>, która nie wyświetla
+        wcześniej pokazywanego nagłówka. Nie jest on nam potrzebny. Nowy wpis
+        pojawiście pod wpisem właśiciela. Mówi on wprost, że użytkownik
+        <code class="code-inline">user100</code> posiada prawo do czytania oraz
+        modyfikowania pliku <code class="code-inline">acluser</code>, mimo iż
+        na podstawie klasycznych uprawnień oraz praw własności nie jest on 
+        nijak związany z tym plikiem.
+      </p>
+      <p>
+        Poza uprawnienia dla użytkownika pojawi się wpis oznaczony słowem
+        <code class="code-inline">mask</code>. Jest to maska list kontroli,
+        i wyznacza ona maksymalne uprawnienia jakie można dać danemu
+        podmiotowi. Przy każdej zmianie list kontroli dostosowuje się ona do
+        najwyższych uprawnień na liście. Dodam teraz drugie użytkownika z
+        wyższymi od <em>user100</em> uprawnieniami, bedziemy mogli wówczas
+        zaobserowować jak zmienia się maska.
+      </p>
+<pre class="code-block">
+[user@server1 tmp]$ setfacl -m u:user200:7 acluser
+[user@server1 tmp]$ getfacl -c acluser
+user::rw-
+user:user100:rw-
+user:user200:rwx
+group::rw-
+mask::rwx
+other::r--
+</pre>
+      <p>
+        Maska została ponownie przeliczona i wskazuje teraz uprawnienia o
+        sumie wag równej 7 (<em>rwx</em>). Teraz wymuszę inną wartość dla
+        maski:
+      </p>
+<pre class="code-block">
+[user@server1 tmp]$ setfacl -m m:4 acluser 
+[user@server1 tmp]$ getfacl -c acluser
+user::rw-
+user:user100:rw-		#effective:r--
+user:user200:rwx		#effective:r--
+group::rw-			    #effective:r--
+mask::r--
+other::r--
+</pre>
+      <p>
+        Teraz przy zdefiniowanych przez nas listach użytkowników, pojawił się
+        komentarz <code class="code-inline">#effective:r--</code>. Oznacza to,
+        iż uprawnienia zostały zmniejszone ponieważ, przekraczają nałożoną na 
+        plik maskę list kontroli. Zrócmy uwagę również na to ograniczenie
+        uprawnień maską dotknęło grupę, do której należy plik. Usunę teraz
+        wszystkie listy, ponieważ nie są one już nam potrzebne.
+      </p>
+<pre class="code-block">
+[user@server1 tmp]$ setfacl -b acluser
+[user@server1 tmp]$ getfacl -c acluser
+user::rw-
+group::r--
+other::r--
+</pre>
+      <p>
+        Po usunięciu list, z tak rygorystczną maską możemy zaobserwować, 
+        zostały zmodyfikowane uprawnienia grupy, dlatego też przed usunięciem
+        list, należy ustawić maskę aby odzworowywała wcześniejsze uprawnienia.
+      </p>
+      <h3 id="4.4.1.defaultacl">4.4.1. Domyślne listy kontroli dostępu</h3>
+      <p>
+        Domyślne listy kontroli wersji są stosowane w udostępnionych
+        katalogach, aby zapewnić spójny zestaw uprawnień dla elementów w nim
+        zawartych. Listy kontroli zdefiniowane dla takiego katalogu są
+        dzieczone przez elementy, które się w nim znajdują, dzięki czemu
+        nie trzeba poprawiać uprawnień przy każdym nowym pliku lub katalogu.
+        Dziedziczenie nieco różni się w przypadku plików i podkatalogów:  
+      </p>
+      <ul>
+        <li>Pliki otrzymują domyślne listy katalogu nadrzędnego jako zwykłe
+          listy kontoli dostępu (<em>access ACL</em>, poznaliśmy je na
+          początku tego podrozdziału).</li>
+        <li>Podkatalogi przyjmują od katalogu nadrzędnego zarówno, zwykłe jak
+          i domyślnie listy kontroli.</li>
+      </ul>
+      <p>
+        Domyślnie listy definiuje się tak samo jak zwykłe, jednak robi się to
+        tylko na katalogach wraz z dodatkową opcją polecenia <em>setfacl</em>
+        <em>-d</em>. Utworze teraz podkatalog o nazwie projekty w katalogu
+        <em>/tmp</em>, następnie nadamu mu dwie domyślnie listy dając dwóm
+        użytkownikom systemu pełen uprawnienia do niego.
+      </p>
+<pre class="code-block">
+[user@server1 tmp]$ mkdir projekt
+[user@server1 tmp]$ setfacl -dm u:user100:7,u:user200:7 projekt/
+[user@server1 tmp]$ getfacl -c projekt/
+user::rwx
+group::r-x
+other::r-x
+default:user::rwx
+default:user:user100:rwx
+default:user:user200:rwx
+default:group::r-x
+default:mask::rwx
+default:other::r-x
+</pre>
+      <p>
+        Następnie utworzę plik o nazwie <em>zalozenia_projektu.txt</em>,
+        poniżej znajdują sie jego szczegóły:
+      </p>
+<pre class="code-block">
+[user@server1 projekt]$ touch zalozenia_projektu.txt
+[user@server1 projekt]$ ls -l
+total 0
+-rw-rw-r--+ 1 user user 0 Jun 23 15:56 zalozenia_projektu.txt
+</pre>
+      <p>
+        Jak widzimy posiada on już, jakieś zdefiniowane listy. Są to listy
+        odziedziczone po katalogu nadrzędnym. Oto listy tego pliku:
+      </p>
+<pre class="code-block">
+[user@server1 projekt]$ getfacl -c zalozenia_projektu.txt 
+user::rw-
+user:user100:rwx		#effective:rw-
+user:user200:rwx		#effective:rw-
+group::r-x			#effective:r--
+mask::rw-
+other::r--
+</pre>
+      <p>
+        Zauważmy, że odziedziczona maska jest równa uprawnieniom właściela
+        pliku i do teg poziomu zostaną sprowadzone wszystkie upranienia,
+        nawet bit wykonania ustawiony w przypadku grupy, nie jest on ustawiony
+        na masce więc, jest przekroczenie maski i patrząc na uprawnienia
+        rzeczywiste grupa nie ma bitu wykonania. Teraz do zwykłych list
+        katalogu projekty dodam listy dwóch użytkowników dodanych, jako listy
+        domyślnie i utworze podkatalog.
+      </p>
+<pre class="code-block">
+[user@server1 tmp]$ setfacl -m u:user100:7,u:user200:7 projekt
+[user@server1 tmp]$ getfacl -c projekt/
+user::rwx
+user:user100:rwx
+user:user200:rwx
+group::r-x
+mask::rwx
+other::r-x
+default:user::rwx
+default:user:user100:rwx
+default:user:user200:rwx
+default:group::r-x
+default:mask::rwx
+default:other::r-x
+
+[user@server1 tmp]$ cd projekt/
+[user@server1 projekt]$ mkdir commonfiles
+[user@server1 projekt]$ getfacl -c commonfiles/
+user::rwx
+user:user100:rwx
+user:user200:rwx
+group::r-x
+mask::rwx
+other::r-x
+default:user::rwx
+default:user:user100:rwx
+default:user:user200:rwx
+default:group::r-x
+default:mask::rwx
+default:other::r-x
+</pre>
+      <p>
+        Jak możemy zauważyć, listy kontroli są identyczne. Teraz dwaj pozostali
+        użytkownicy posiadają możliwości zapisywania oraz odczytywania, w
+        przypadku katalogów i plików stworzynych przeze mnie. Jednak ja jako
+        <em>user</em> będę chciał zapisać coś w tych plikach innych 
+        użytkowników to mnie mam takich
+        uprawnień, ponieważ listy dotyczą tylko tych dwóch.
+        Teoretycznie mnie też, ale jako właściciela, a nie w postaci jawnej
+        listy, a te właściwości zależą od tego kto ten plik utworzył. Dlatego
+        jeśli będziemy z kmiś współdzielić katalog i wyznaczać uprawnienia
+        w postaci ACL, to warto umieścić w domyślnych uprawnieniach na początku
+        siebie.
+      </p>
+      <h3 id="4.4.2.aclbug">4.4.2. Dziwny problem z listami kontroli dostępu</h3>
+      <p class="exam_tip">
+        Poznając zwykłe listy dostępu, po zdefiniowaniu list o uprawnieniach
+        dających pełne prawa dostępu, jednemu z użytkowników nie mogłem
+        (jako on) zapisać nic do pliku za pomocą jakiego kolwiek edytora. Dane 
+        mogłem zapisać natomiast przekierowując strumień na przykład z 
+        polecenia echo. Ten problem zauważyłem RHEL 9, wersji 8.6 nie 
+        występował. Problem nie występuje na RHEL 9, gdy plik odziedziczy listy
+        od katalogu, a uprawnienia zostaną zmienieszone przez maskę, wówczas
+        użytkownicy z mogą zapisywać zmiany za pomocą edytorów.  
+      </p>
+      <h3 id="exec4.1">Ćwiczenie 1: Manipulowanie uprawnieniami pliku</h3>
+      <p>
+        Jak zwykły użytkownik na maszynie server1, stwórzmy dwa pliki 
+        <em>file11</em> oraz <em>dir11</em>. Uruchommy polecenie 
+        <em>umask</em> aby określić obecną maskę użytkownika. Używając 
+        zapisu symbolicznego ustaw maskę użytkownika na wartość 0035. Utwórz
+        plik o nazwie <em>file22</em> oraz katalog o nazwie <em>dir22</em> 
+        w katalogu domowym. Sprawdź i porównaj uprawnienia plików i katalogów
+        utworzonych na potrzeby tego ćwiczenia. Używając polecenia
+        <em>chmod</em> zmień uprawnienia pliku <em>file11</em> aby były takie
+        jak uprawnienia pliku <em>file22</em> oraz zmień uprawnienia katalogu
+        <em>dir22</em> tak aby identyczne jak uprawnienia folderu 
+        <em>dir11</em>. Nie usuwaj jeszcze tych plików.
       </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">

@@ -129,7 +129,41 @@
             <li><a href="#exec3.1">Ćwiczenie 1: Archiwa</a></li>
             <li><a href="#exec3.2">Ćwiczenie 2: Praktyka z Vim-a</a></li>
             <li><a href="#exec3.3">Ćwiczenie 3: Manipulacja plikami</a></li>
-            <li><a href="ch3summary">Podsumowanie</a></li>
+            <li><a href="#ch3summary">Podsumowanie</a></li>
+          </ul>
+        </li>
+        <li><a href="#4.advancedfilemanagement">4. Zaawansowane zarządzania plikami</a>
+          <ul class="toc">
+            <li><a href="#4.1.basicspermission">4.1. Uprawnienia podstawowe</a>
+              <ul class="toc">
+                <li><a href="#4.1.1.defaultpermissions">4.1.1. Uprawnienia domyślne</a></li>
+                <li><a href="#4.1.2.changefileowner">4.1.2. Zmiana właściciela oraz grupy pliku</a></li>
+              </ul>
+            </li>
+            <li><a href="#4.2.specialpermissions">4.2. Uprawnienia specjalne</a>
+              <ul class="toc">
+                <li><a href="#4.2.1.setuid">4.2.1. Uprawnienia bitu setuid</a></li>
+                <li><a href="#4.2.2.setgid">4.2.2. Uprawnienia bitu setgid</a></li>
+                <li><a href="#4.2.3.stickybit">4.2.3. Uprawnienia bitu sticky</a></li>
+              </ul>
+            </li>
+            <li><a href="#4.3.find">4.3. Polecenie find</a>
+              <ul class="toc">
+                <li><a href="#4.3.1.actionoptions">4.3.1. Opcje akcji polecenia find</a></li>
+              </ul>
+            </li>
+            <li><a href="#4.4.acl">4.4. Lista kontroli dostępu</a>
+              <ul class="toc">
+                <li><a href="#4.4.1.defaultacl">4.4.1. Domyślne listy kontroli dostępu</a></li>
+                <li><a href="#4.4.2.aclbug">4.4.2. Dziwny problem z listami kontroli dostępu</a></li>
+              </ul>
+            </li>
+            <li><a href="#exec4.1">Ćwiczenie 1: Manipulowanie uprawnieniami pliku</a></li>
+            <li><a href="#exec4.2">Ćwiczenie 2: Konfiguracja katalogu do pracy grupowej</a></li>
+            <li><a href="#exec4.3">Ćwiczenie 3: Wyszukiwanie plików</a></li>
+            <li><a href="#exec4.4">Ćwiczenie 4: Zaawansowane wyszukiwanie plików</a></li>
+            <li><a href="#exec4.5">Ćwiczenie 5: Ustawianie list dostępu</a></li>
+            <li><a href="#ch4summary">Podsumowanie</a></li>
           </ul>
         </li>
       </ul>
@@ -2147,17 +2181,17 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
         uprawnieniach plików i katlogów, oraz przekonamy się jak potężnym
         narzędziem jest polecenie <em>find</em>.
       </p>
-      <h1 id="4.advancedfilemanagement">4. Zawansowane zarządzanie plikami</h1> 
+      <h1 id="4.advancedfilemanagement">4. Zaawansowane zarządzanie plikami</h1> 
       <p>                                                                       
-        W uniksach możemy zabezpieczyć, każdy plik oraz katalog przed           
-        ingerencją innych użytkowników służą temu przypisywane tym elementom    
+        W Uniksach możemy zabezpieczyć pliki i katalogi przed ingerencją 
+        innych użytkowników. Służą temu specjalny rodzaj zabezpieczeń jakim są   
         uprawnienia.                                                            
       </p>                                                                      
       <h2 id="4.1.basicspermission">4.1. Uprawnienia podstawowe</h2>            
       <p>                                                                       
         Uprawnienia przypisywane są w trzech klasach, klasie użytkownika        
         (<strong>u</strong>) nazwywanego również właścicielem elementu; grupie  
-        (<strong>g</strong>), do której ten plik należy oraz                    
+        (<strong>g</strong>), do której należy ten plik oraz                    
         oraz innym użytkownikom systemu (<strong>o</strong>), ta klasa          
         uprawnień jest również oznaczna jako uprawnienia publiczne.             
       </p>                                                                      
@@ -2167,7 +2201,7 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
         (<strong>w</strong>) oraz prawo do wykonania (<strong>x</strong>).
       </p>
       <p>
-        Za nim zaczniemy zmieniać uprawnienia nauczymy się je identyfikować.
+        Za nim zaczniemy zmieniać uprawnienia, nauczymy się je identyfikować.
         Uprawnienia do pliku możemy wyświetlić za pomocą polecenia <em>ls -l</em>
         lub polecenia <em>stat</em>.
       </p>
@@ -2178,9 +2212,9 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
       <p>
         Upraweniania znajdują się w pierwszej kolumnie:
         <code class="code-inline">-rw-r--r--.</code>, łącznie 11 znaków, ale
-        nas będą interesować tylko 9 w środku. Pierwszy znak oznacza typ plików
-        ty pliku, natomiast kropka związana jest z kontekstem <em>SELinux</em>,
-        nie będzie się teraz tym zajmować. Te dziewieć pól są to miejsca
+        nas będzie interesować tylko 9 w środku. Pierwszy znak oznacza typ 
+        pliku, natomiast kropka związana jest z kontekstem <em>SELinux</em>,
+        nie będziemt się teraz tym zajmować. Te dziewieć pól są to miejsca
         przeznaczone na uprawnienia poszczególnych klas. Pierwsze trzy pola 
         z lewej to uprawnienia użytkownika (właściciela), kolejne trzy pola
         to uprawnienia grupy do której należy ten plik natomiast pozostałe 
@@ -2190,14 +2224,14 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
         oznacza brak takiego prawa w danej klasie.
       </p>
       <p>
-        Każde określonych praw pozwala nam, na wykonanie innych czynności
+        Każde z określonych praw pozwala nam, na wykonanie innych czynności
         związanych z tym elementem. Prawo <em>read</em> pozwala na odczyt
-        zawartości pliku oraz możliwość jego skopiowania, w przypadku
+        zawartości pliku oraz jego skopiowanie, w przypadku
         katalogów pozwala na wyświetlenie jego zawartości. Prawo <em>write</em>
         pozwala na modyfikowanie elementu, wraz z jego usunięciem. Ostatnie
         prawo <em>execute</em> pozwala na uruchomienie pliku o ile jest to
         plik wykonywalny, w przypadku katalogów to prawo jest niezbędne aby
-        użytkownik przejść do niego (za pomocą polecenia <em>cd</em>).
+        użytkownik mógł przejść do niego (za pomocą polecenia <em>cd</em>).
       </p>
       <p>
         Zatem w przypadku tego pliku, właściciel może czytać i pisać, a grupa
@@ -2207,16 +2241,16 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
       <p>
         Prawdopodobnie kiedyś bedziemy chcieli ukryć jakieś pliki lub będziemy
         musieli dać uprawnienia jednemu z użytkowników do innych plików
-        w systemie. Wymagana wówczas będzie zmiana uprawnień.
+        w systemie, wówczas wymagana będzie zmiana uprawnień.
       </p>
       <p>
         Poszczególnym klasom (<strong>u</strong>, <strong>g</strong>, 
         <strong>o</strong>) możemy nadać (<strong>+</strong>), obebrać
         (<strong>-</strong>)
         lub przypisać (<strong>=</strong>) odpowiednie uprawnienia. Do
-        manipulacji uprawnieniami służy polecenie <strong>chmod</strong>,
-        przyjmuje jako pierwszy argument sekwencje zmiany uprawnień a jako
-        drugi plik lub katalog, którego mają się tyczyć uprawnienia.
+        manipulacji uprawnieniami służy polecenie <strong>chmod</strong>, jako
+        pierwszy argument przyjmuje on sekwencje zmiany uprawnień (uprawnienia)
+        a jako drugi plik lub katalog, którego mają się tyczyć uprawnienia.
       </p> 
       <p>
         Załóżmy, że plik z powyższego przykładu jest skryptem i musimy nadać
@@ -2229,7 +2263,7 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
 [user@server1 ~]$ chmod u+x,g+wx,o-r file1
 </pre>
       <p>
-        Po zmianie uprawnienia do tego pliku prezentują się w następujący
+        Po zmianie, uprawnienia do tego pliku prezentują się w następujący
         sposób:
       </p>
 <pre class="code-block">
@@ -2245,9 +2279,10 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
         Każde z omówionych wcześniej praw posiada swoją wagę, te wagi sumują
         się dając uprawnienia dla konkretnej klasy. A więc: prawo do odczytu
         (<strong>r</strong>) posiada wagę <strong>4</strong>, prawo do zapisu
-        posiada wagę <strong>2</strong> a prawo do wykonywania posiada wagę
-        <strong>1</strong>. Brak prawa ma wagę <strong>0</strong>. Tak złożone
-        razem sumy tych wag dają uprawnienia
+        (<strong>w</strong> posiada wagę <strong>2</strong> a prawo do 
+        wykonania (<strong>x</strong>) posiada wagę
+        <strong>1</strong>. Brak prawa (<strong>-</strong>) ma wagę 
+        <strong>0</strong>. Tak złożone razem sumy tych wag dają uprawnienia
         do pliku czy katalogu. Chcąc określić uprawnienia pliku z pierwszego
         przykładu jescze przed zmianą uprawnień, będą one wynosić:
         <strong>644</strong>.
@@ -2293,7 +2328,7 @@ mode of 'file1' changed from 0644 (rw-r--r--) to 0770 (rwxrwx---)
         znaczenia.
       </p>
       <p>
-        Zapis uprawnień bezwzględny w zapisie symbolicznym wyglądał by
+        Zapis uprawnień bezwzględnych w zapisie symbolicznym wyglądał by
         następująco:
       </p>
 <pre class="code-block">
@@ -2302,9 +2337,9 @@ mode of 'file1' changed from 0770 (rwxrwx---) to 0644 (rw-r--r--)
 </pre>
       <p>
         Definiując uprawnienia bezwzględne, posługujemy się cyframi od 0 do 7.
-        Są wszystkie cyfry systemu liczbowego o podstawie 8 (tzw. ósemkowy lub
-        oktalny) dlatego też często nazwa się takie ustalanie uprawnień trybem
-        oktalnym. 
+        Są to wszystkie cyfry systemu liczbowego o podstawie 8 (tzw. ósemkowy 
+        lub oktalny) dlatego też często nazwa się takie ustalanie uprawnień 
+        trybem oktalnym. 
       </p>
       <p>
         Podczas ustalania uprawnień dla plików lub katalogów, nie ma znaczenia
@@ -2312,7 +2347,7 @@ mode of 'file1' changed from 0770 (rwxrwx---) to 0644 (rw-r--r--)
         czytelniejszy oraz szybszy do zapisania.
       </p>
       <p>
-        Na koniec jako ciekawostke podam iż istnieje czwarta dodatkowa klasa
+        Na koniec jako ciekawostke podam iż istnieje czwarta dodatkowa klasa -
         wszystkie klasy (<strong>a</strong>), za jej pomocą można nadawać,
         odbierać i przypisywać takie same uprawnienia dla wszystkich klas.
       </p>
@@ -2322,14 +2357,15 @@ mode of 'file1' changed from 0644 (rw-r--r--) to 0777 (rwxrwxrwx)
 </pre>
       <h3 id="4.1.1.defaultpermissions">4.1.1. Uprawnienia domyślne</h3>
       <p>
-        Każdy nowoutworzony plik czy katalog Uniksie ma juz z góry przypisane 
+        Każdy nowoutworzony plik czy katalog Uniksie ma już z góry przypisane 
         uprawnienia i są nimi 666 dla plików oraz 777 dla katalogów. 
         Uprawnienia te są korygowane za pomocą wartości <strong>umask</strong>. 
       </p>
       <p>
         Wartość <em>umask</em> (ang. <em>user mask</em>) jest maską uprawnień
         stosowaną na tworzonych przez użytkowników nowych plikach i katalogach.
-        Każdy użytkownik ma swoją idywidualną maskę i może ją dowolnie zmieniać.
+        Każdy użytkownik ma swoją indywidualną maskę i może ją dowolnie 
+        zmieniać.
         Maska ma za zadanie usunięcie tych praw, których nie życzymy sobie
         widzieć w poszczególnych klasach. Aby wyświetlić maskę użytkownika
         należy wydać poniższe polecenie: 
@@ -2371,16 +2407,17 @@ mode of 'file1' changed from 0644 (rw-r--r--) to 0777 (rwxrwxrwx)
         pozostałych użytkowników dla każdego nowego pliku i katalogu. Maska
         o tej wartości była domyślną maską dla zwykłych użytkowników w RHEL 8.
         Wartość maski zdefiniowanej z poziomu wiersza poleceń, utrzyma się
-        tylko przez otwartej sesji terminala. Po jego zamknięciu lub
+        tylko przez czas trwania otwartej sesji terminala. Po jego zamknięciu 
+        lub
         wylogowaniu się maska wróci do poprzedniej wartości. Jeśli chcemy aby
-        wartości tej maski została zapisana na stałe należy umieść polecenie
-        <em>umask</em> w jedem z plików uruchomieniowych powłoki, będzie o tym
+        wartości tej maski została zapisana na stałe, należy umieść polecenie
+        <em>umask</em> w jednym z plików uruchomieniowych powłoki, będzie o tym
         w dalszej części tego materiału.
       </p>
       <h2 id="4.1.2.changefileowner">4.1.2. Zmiana właściciela oraz grupy pliku</h2>
       <p>
         Do zmiany właściciela pliku oraz grupy, do której on należy służy
-        polecenie <strong>chown</strong>, który przyjmuje jako pierwszy
+        polecenie <strong>chown</strong>, które przyjmuje jako pierwszy
         argument trzy możliwe wersje: parę <strong>właściciel:grupa</strong>;
         samego właściela lub nazwę grup poprzedzoną dwukropkiem
         (<strong>:</strong>) a następnie pliki. Poniższy przykład obrazuje
@@ -2400,24 +2437,24 @@ mode of 'file1' changed from 0644 (rw-r--r--) to 0777 (rwxrwxrwx)
 </pre>
       <h2 id="4.2.specialpermissions">4.2. Uprawnienia specjalne</h2>
       <p>
-        Poza podstawowym rodzajem uprawnien w Uniksach istnieją dodatkowe
+        Poza podstawowym rodzajem uprawnień w Uniksach istnieją dodatkowe
         uprawnienia, których zadaniem może być podniesienie uprawnień w
         systemie, zaoszczędzenie czasu lub ochrona przed skasowaniem pliku w
-        miejscach gdzie wszyscy mają uprawnienia zapisu. Teraz omówim sobie
+        miejscach gdzie wszyscy mają uprawnienia zapisu. Teraz omówimy sobie
         każdy z nich.
       </p>
       <h3 id="4.2.1.setuid">4.2.1. Uprawnienia bitu setuid</h3>
       <p>
         Każde z podstawowych praw, możemy określić mianej bitu, z uprawnieniami
         specjalnymi jest podobnie, każde z nich jest kolejnym bitem (prawem) o
-        szególnym znaczeniu. Tak jest i tym przypadku. Bit 
+        szczególnym znaczeniu. Tak jest i tym przypadku. Bit 
         <strong>setuid</strong> służy do podniesienia uprawnień. Jest on
         oznaczany małą lub wielką literą <em>s</em> w klasie
         użytkownika/właściciela. Ma on 
         zastosowanie głównie na plikach wykonywalnych. Kiedy uruchomimy program
         z ustawionym takim bitem, program ten będzie działać z uprawnieniami
-        właściciela tego pliku. Bit ten jest wykorzystywany jest najcześciej
-        do uruchomienia programu z uprawnieniami superużytkownika, przez 
+        właściciela tego pliku. Bit ten jest wykorzystywany najczęściej
+        do uruchomienia programu z uprawnieniami <em>root</em> przez
         zwykłego użytkownika. Takim przykładem może być program <strong>su</strong>,
         który służy przełączaniu się miedzy użytkownikami, bez tego bitu
         przelogowanie nie było by możliwe. Dla eksperymentu możemy usunać ten
@@ -2432,13 +2469,13 @@ Password:
 su: Authentication failure
 </pre>
       <p>
-        Jak widać przełączanie się na użytkownika user100 nie powiodło sie
+        Jak widać przełączanie na użytkownika user100 nie powiodło się
         mimo iż polecenie zapytało o hasło (polecenie <em>su</em> nie pyta o
         hasło tylko superużytkownika). Zwróćmy również uwagę na to jak wygląda
         bit <em>setuid</em> w oktalnym zapisie uprawnień. Do wskazywania 
         uprawnień specjalnych wykorzystywana jest nieużywana przy zwykłych
         uprawnieniach czwarta liczba całkiem z lewej strony. Teraz przywrócimy
-        ten bit temu programowi.
+        <em>setuid</em> temu programowi.
       </p>
 <pre class="code-block">
 [root@server1 ~]# chmod -v +4000 /usr/bin/su
@@ -2449,9 +2486,9 @@ Password:
 </pre>
       <p>
         Podczas przywracania uprawnień, nie naruszyłem tych podstawowych
-        uzywając wartości <code class="code-inline">+4000</code>, nie
+        używając wartości <code class="code-inline">+4000</code>, nie
         potrzeba wskazywać klasy, ponieważ program sam wie, że ten bit należy
-        nadać w klasie właściela. 
+        nadać w klasie właściciela. 
       </p>
       <p>
         Czasami bit <em>setuid</em> może występować w postaci wielkiej litery
@@ -2462,7 +2499,7 @@ Password:
       <p>
         Zastosowania bitu <strong>setgid</strong>, mogą być dwa jedno podobne
         do bitu <em>setuid</em>, ale tyczące się grupy, drugie zaś dotyczy się
-        katalogów, z ustawionym tym bitem. Bit <em>setgit</em> oznaczany jest
+        katalogów współdzielonych. Bit <em>setgit</em> oznaczany jest
         małą lub wielką literą <em>s</em> w klasie grupy. 
       </p>
       <p>
@@ -2494,7 +2531,7 @@ drwxrwsr-x. 2 user2000 sgrp2 6 Jun 21 17:30 user2000dir
         również bit <em>setgid</em>. Tego typu funkcjonalność możemy
         wykorzystać tworząc katalogi do pracy grupowej, aby zaoszczędzić
         użytkownikom grupy zmianę uprawnień przy każdym nowym pliku lub
-        podkatalogu w tym folderze.
+        podkatalogu w tego typu folderach.
       </p>
       <p>
         Innym przykładem jest wykorzystanie pliku wykonywalnego z ustawionym
@@ -2563,15 +2600,16 @@ mode of '/sdir' changed from 2770 (rwxrws---) to 3770 (rwxrws--T)
       <p>
         Tutaj zwróćmy uwagę na to iż bit <em>sticky</em> jest zapisany wielką
         literą, otóż działanie tego bitu się nie zmienia, jest jedynie 
-        informacja, że klasie publicznej brakuje prawa do wykonywania
+        informacja, że klasie publicznej brakuje prawa do wykonania
         (<em>x</em>). Wszystkie bity specjalne umieszczane w poszczególnych
         klasach, rezydują w miejscu prawa do wykonywania.
       </p>
       <h2 id="4.3.find">4.3. Polecenie find</h2>
       <p>
         Polecenie <strong>find</strong>, jak sama nazwa wskazuje służy do
-        wyszukiwania poleceń. Najczęściej jest ono wykorzystywane przez
-        użytkowników w podstawowym zakresie, zwracają gigantyczną ilość danych.
+        wyszukiwania plikówi i katalogów. Najczęściej jest ono wykorzystywane 
+        przez
+        użytkowników w podstawowym zakresie, zwracając gigantyczną ilość danych.
         Często korzystając z tego narzędzia nie wykorzystuje się w pełni jego
         potencjału, który ukrywa się w dużej ilości opcji zawężających wyniki
         poszukiwania oraz możliwości wykonania akcji w wyszukanych plikach.
@@ -2604,7 +2642,7 @@ mode of '/sdir' changed from 2770 (rwxrws---) to 3770 (rwxrws--T)
         szczegółowego wyszukiwania plików.
       </p>
       <ul>
-        <li><strong>-iname</strong> - wyszukuje plików o nazwie podanej jako
+        <li><strong>-iname</strong> - wyszukuje pliki o nazwie podanej jako
           argument tej opcji, ignorując przy tym wielkość znaków.
 <pre class="code-block">
 [root@server1 user]# find . -iname do*
@@ -2613,10 +2651,10 @@ mode of '/sdir' changed from 2770 (rwxrws---) to 3770 (rwxrws--T)
 ./.cache/mozilla/firefox/r7fvuapl.default-default/cache2/doomed
 </pre>
         </li>
-        <li><strong>-size</strong> - wyszukiwanie plików na podstawie rozmiaru
-          plików. Jeśli chcemy aby program znalazł pliki mniejsze niż podana
+        <li><strong>-size</strong> - wyszukiwanie plików na podstawie rozmiaru.
+          Jeśli chcemy aby program znalazł pliki mniejsze niż podana
           wartość stawiamy przed nią myślnik (<strong>-</strong>), a jeśli
-          większe to (<strong>+</strong>). Poniższy przykład zaprezentuje
+          większe to plus (<strong>+</strong>). Poniższy przykład zaprezentuje
           wyszukiwanie plików powyżej 1G w moim katalogu domowym:
 <pre class="code-block">
 [xf0r3m@latitude-e5270 ~]$ find ~ -size +1G -exec ls -ldh {} \;
@@ -2654,7 +2692,7 @@ mode of '/sdir' changed from 2770 (rwxrws---) to 3770 (rwxrws--T)
           <em>-not</em> lub wykrzyknikiem (<strong>!</strong>).
         </li>
         <li><strong>-maxdepth, -mindepth</strong> - te opcje wskazują poleceniu
-          <em>find</em>, jak głęboko strukturę katalogów ma sięgać polecenie
+          <em>find</em>, jak głęboko w strukturę katalogów ma sięgać polecenie
           podczas wyszukiwania (<em>-maxdepth</em>) lub od którego poziomu
           podkatalogów ma zacząć wyszukiwanie (<em>-mindepth</em>).
 <pre class="code-block">
@@ -2674,8 +2712,8 @@ mode of '/sdir' changed from 2770 (rwxrws---) to 3770 (rwxrws--T)
           bezpośredniego wpływu na wyszukiwanie, dlatego też należy je
           umieszczać przed opcjami mający zawęzić kryteria.
         </li>
-        <li><strong>-type</strong> - wyszukiwanie pliku na podstawie typu
-          plików. Poniższy przykład pokazauje również jak zapisać różne
+        <li><strong>-type</strong> - wyszukiwanie na podstawie typu
+          plików. Poniższy przykład pokazuje również jak zapisać różne
           wartości przy jednej opcji:
 <pre class="code-block">
 [root@server1 user]# find / -type p,s -exec ls -ld {} \;
@@ -2691,7 +2729,7 @@ prw-------. 1 root root 0 Jun 22  2022 /run/dmeventd-client
 prw-------. 1 root root 0 Jun 22  2022 /run/dmeventd-server
 </pre>
         Polecenie wyszukuje w systemie wszyskie gniazda i nazwane potoki
-        (typy plików, nieomawiane w tym materiale). Jak widać inna wartość dla
+        (typy plików, nieomawiane w tym materiale). Jak widać inną wartość dla
         tej opcji należy podać po przecinku.
       </li>
       <li><strong>-mtime, -mmin</strong> - wyszukiwanie pliku na podstawie
@@ -2724,12 +2762,13 @@ prw-------. 1 root root 0 Jun 22  2022 /run/dmeventd-server
 /home/xf0r3m/Dokumenty/docs/angielski
 </pre>
         Powyższe polecenia przedstawiają pliki, które były modyfikowane w
-        przeciągu 7 ostatnich dni, oraz 6 ostatnich godzin. Użyłem tutaj
+        przeciągu ostatnich 7 dni, oraz ostatnich 6 godzin. Użyłem tutaj
         również modyfikatorów głębokości.
       </li>
       <li><strong>-perm</strong> - wyszukiwanie plików na podstawie uprawnień.
-        Chcąc wyszukać pliki po konkretnych podajemy uprawnienia pliku w
-        wersji oktalnej po opcji. Możemy skorzystać z innych opcji wprowadzania
+        Chcąc wyszukać pliki po konkretnych uprawnieniach pliku, podajemy je w
+        wersji oktalnej po opcji. Możemy również skorzystać z innych opcji 
+        wprowadzania
         uprawnień: uprawnienień minimalnych podanych po myślniku
         (<strong>-</strong>), wówczas każdy z podanych tam praw będzie musiało
         wystąpić w danej klasie lub uprawnień dowolnych podanych po ukośniku
@@ -2793,15 +2832,15 @@ crw-r--r--. 1 root root 10, 235 Jun 22 17:30 /dev/autofs
 -rwsr-xr-x. 1 root root 16104 Feb 10 11:13 /usr/libexec/Xorg.wrap
 -rwsr-x---. 1 root cockpit-wsinstance 57600 Mar  3 13:28 /usr/libexec/cockpit-session
 </pre>
-        Powysze polecenie szuka wszystkich programów z ustawionym bitem
+        Powyższe polecenie szuka wszystkich programów z ustawionym bitem
         <em>setuid</em>.
       </li>
       </ul>
       <h3 id="4.3.1.actionoptions">4.3.1. Opcje akcji polecenia find</h3>
       <p>
         Na powyższych przykładach stosowałem wielkrotnie dodatkową opcję
-        <code class="code-inline">-exec</code>. Ta opcja jest opcją akcji
-        podejmowaną na pliku gdy tylko zostanie znaleziony. Składania opcji
+        <code class="code-inline">-exec</code>. Jest to opcja akcji
+        podejmowana na pliku gdy tylko zostanie znaleziony. Składania opcji
         <em>-exec</em> może wyglądać następująco:
       </p>
 <pre class="code-block">
@@ -2823,7 +2862,7 @@ $ find ... -exec ls -ld {} \;
         Poza poleceniem <em>-exec</em>, istnieją jeszcze dwa polecenia akcji
         <strong>-delete</strong>, które usuwa pliki oraz <strong>-ok</strong>,
         które różni się tym od <em>-exec</em>, że pyta sie użytkownika czy
-        wykonać podane polecnie na pliku.
+        wykonać podane polecenie na pliku.
       </p>
       <p class="exam_tip">
         Polecenie <em>find</em>, wydaje się bardzo pomocne, posiada masę opcji
@@ -2863,7 +2902,9 @@ other::r--
       <p>
         Kiedy plik niema zdefiniowanych żadnych dodatkowych użytkowników oraz
         grup, jego lista kontroli dostępu jest równoznaczna z klasycznymi 
-        uprawnieniami Uniksa. Listy kontroli dostępu możemy modyfikować 
+        uprawnieniami Uniksa i te listy oznaczają kolejno właściciela, grupę
+        do której należy ten plik oraz pozostałych użytkowników.
+        Listy kontroli dostępu możemy modyfikować 
         za pomocą polecenia <strong>setfacl</strong>. Zanim jednak poznamy
         jak należy modyfikować ACL, poniżej znajduje się lista najważniejszych
         opcji tego polecenia. Są one dość istotne, ponieważ pozwalają na 
@@ -2877,7 +2918,7 @@ other::r--
         <li><strong>-n</strong> - chroni przed automatycznym przeliczaniem
           maski,</li>
         <li><strong>-R</strong> - ustawia listy rekurencyjnie, listy katalogu
-          są stoswane na elementy w nim zawarte,</li>
+          są stosowane na elementy w nim zawarte,</li>
         <li><strong>-x</strong> - usuwa pojedyńczą listę.</li>
       </ul>
       <p>
@@ -2892,9 +2933,12 @@ other::r--
           <code class="code-inline">o[ther]:uprawnienia</code></li>
       </ul>
       <p>
-        To co zostało ujęte w nawiasach kwadratorych, jest zapisem opcjonalny.
+        To co zostało ujęte w nawiasach kwadratowych, jest zapisem opcjonalnym.
         Identyfikator podmiotu możemy zapisać albo za pomocą numerów <em>UID</em>
-        oraz <em>GID</em>, lub za pomocą nazw. Uprawnienia mogą być podane
+        oraz <em>GID</em>, lub za pomocą nazw. Jeśli nazwa lub 
+        <em>UID</em>/<em>GID</em> zostaną pominiete to listy <em>user</em>
+        oraz <em>group</em> będą tyczyć się właściciela oraz grupy, do której
+        należy dany element. Uprawnienia mogą być podane
         za pomocą symboli lub sumy wag dla pojedyńczej klasy. Ustawię teraz
         listę dla jednego z użytkowników w systemie.
       </p>
@@ -2922,7 +2966,7 @@ other::r--
       <p>
         W tym przykładzie użyłem opcji <em>-c</em>, która nie wyświetla
         wcześniej pokazywanego nagłówka. Nie jest on nam potrzebny. Nowy wpis
-        pojawiście pod wpisem właśiciela. Mówi on wprost, że użytkownik
+        pojawia się pod wpisem właśiciela. Mówi on wprost, że użytkownik
         <code class="code-inline">user100</code> posiada prawo do czytania oraz
         modyfikowania pliku <code class="code-inline">acluser</code>, mimo iż
         na podstawie klasycznych uprawnień oraz praw własności nie jest on 
@@ -2930,10 +2974,10 @@ other::r--
       </p>
       <p>
         Poza uprawnienia dla użytkownika pojawi się wpis oznaczony słowem
-        <code class="code-inline">mask</code>. Jest to maska list kontroli,
+        <code class="code-inline">mask</code>. Jest to maska list kontroli
         i wyznacza ona maksymalne uprawnienia jakie można dać danemu
         podmiotowi. Przy każdej zmianie list kontroli dostosowuje się ona do
-        najwyższych uprawnień na liście. Dodam teraz drugie użytkownika z
+        najwyższych uprawnień na liście. Dodam teraz drugiego użytkownika z
         wyższymi od <em>user100</em> uprawnieniami, bedziemy mogli wówczas
         zaobserowować jak zmienia się maska.
       </p>
@@ -2966,8 +3010,10 @@ other::r--
         Teraz przy zdefiniowanych przez nas listach użytkowników, pojawił się
         komentarz <code class="code-inline">#effective:r--</code>. Oznacza to,
         iż uprawnienia zostały zmniejszone ponieważ, przekraczają nałożoną na 
-        plik maskę list kontroli. Zrócmy uwagę również na to ograniczenie
-        uprawnień maską dotknęło grupę, do której należy plik. Usunę teraz
+        plik maskę list kontroli. Zrócmy uwagę, ze to ograniczenie
+        uprawnień maską dotknęło grupę, do której należy plik. Aby wyłączyć
+        automatyczne przeliczanie maski, należy użyć opcji <em>-n</em>. Usunę 
+        teraz
         jedną z list, aby zaprezentować jak można to zrobić kiedy listy dla
         poszczególnych użytkowników nie będą nam potrzebne:
       </p>
@@ -2989,7 +3035,7 @@ mask::rw-
 other::r--
 </pre>
       <p>
-        Teraz oczyszcze plik z list, ponieważ nie są nam już potrzebne.
+        Teraz oczyszcze plik z list, ponieważ nie są nam już one potrzebne.
       </p>
 <pre class="code-block">
 [user@server1 tmp]$ setfacl -b acluser
@@ -2999,16 +3045,16 @@ group::r--
 other::r--
 </pre>
       <p>
-        Po usunięciu list, z tak rygorystczną maską możemy zaobserwować, 
-        zostały zmodyfikowane uprawnienia grupy, dlatego też przed usunięciem
-        list, należy ustawić maskę aby odzworowywała wcześniejsze uprawnienia.
+        Po usunięciu list z tak rygorystczną maską możemy zaobserwować, że 
+        zostały zmodyfikowane uprawnienia grupy. Przed usunięciem
+        list należy ustawić maskę aby odzworowywała wcześniejsze uprawnienia.
       </p>
       <h3 id="4.4.1.defaultacl">4.4.1. Domyślne listy kontroli dostępu</h3>
       <p>
-        Domyślne listy kontroli wersji są stosowane w udostępnionych
+        Domyślne listy kontroli dostępu są stosowane w udostępnionych
         katalogach, aby zapewnić spójny zestaw uprawnień dla elementów w nim
         zawartych. Listy kontroli zdefiniowane dla takiego katalogu są
-        dzieczone przez elementy, które się w nim znajdują, dzięki czemu
+        dzieczone przez elementy, które się w nim znajdują. Dzięki czemu
         nie trzeba poprawiać uprawnień przy każdym nowym pliku lub katalogu.
         Dziedziczenie nieco różni się w przypadku plików i podkatalogów:  
       </p>
@@ -3022,9 +3068,10 @@ other::r--
       <p>
         Domyślnie listy definiuje się tak samo jak zwykłe, jednak robi się to
         tylko na katalogach wraz z dodatkową opcją polecenia <em>setfacl</em>
-        <em>-d</em>. Utworze teraz podkatalog o nazwie projekty w katalogu
+        <em>-d</em>. Utworze teraz podkatalog o nazwie <em>projekty</em> w 
+        katalogu
         <em>/tmp</em>, następnie nadamu mu dwie domyślnie listy dając dwóm
-        użytkownikom systemu pełen uprawnienia do niego.
+        użytkownikom systemu pełne uprawnienia do niego.
       </p>
 <pre class="code-block">
 [user@server1 tmp]$ mkdir projekt
@@ -3051,7 +3098,7 @@ total 0
 -rw-rw-r--+ 1 user user 0 Jun 23 15:56 zalozenia_projektu.txt
 </pre>
       <p>
-        Jak widzimy posiada on już, jakieś zdefiniowane listy. Są to listy
+        Jak widzimy posiada on już jakieś zdefiniowane listy. Są to listy
         odziedziczone po katalogu nadrzędnym. Oto listy tego pliku:
       </p>
 <pre class="code-block">
@@ -3065,12 +3112,12 @@ other::r--
 </pre>
       <p>
         Zauważmy, że odziedziczona maska jest równa uprawnieniom właściela
-        pliku i do teg poziomu zostaną sprowadzone wszystkie upranienia,
+        pliku i do tego poziomu zostaną sprowadzone wszystkie uprawnienia,
         nawet bit wykonania ustawiony w przypadku grupy, nie jest on ustawiony
-        na masce więc, jest przekroczenie maski i patrząc na uprawnienia
-        rzeczywiste grupa nie ma bitu wykonania. Teraz do zwykłych list
-        katalogu projekty dodam listy dwóch użytkowników dodanych, jako listy
-        domyślnie i utworze podkatalog.
+        na masce więc jest to przekroczenie maski i patrząc na uprawnienia
+        rzeczywiste, grupa nie ma bitu wykonania. Teraz do zwykłych list
+        katalogu <em>projekty</em> dodam listy dwóch użytkowników dodanych jako
+        listy domyślnie i utworze podkatalog.
       </p>
 <pre class="code-block">
 [user@server1 tmp]$ setfacl -m u:user100:7,u:user200:7 projekt
@@ -3108,30 +3155,27 @@ default:other::r-x
         Jak możemy zauważyć, listy kontroli są identyczne. Teraz dwaj pozostali
         użytkownicy posiadają możliwości zapisywania oraz odczytywania, w
         przypadku katalogów i plików stworzynych przeze mnie. Jednak ja jako
-        <em>user</em> będę chciał zapisać coś w tych plikach innych 
-        użytkowników to mnie mam takich
-        uprawnień, ponieważ listy dotyczą tylko tych dwóch.
-        Teoretycznie mnie też, ale jako właściciela, a nie w postaci jawnej
-        listy, a te właściwości zależą od tego kto ten plik utworzył. Dlatego
-        jeśli będziemy z kmiś współdzielić katalog i wyznaczać uprawnienia
-        w postaci ACL, to warto umieścić w domyślnych uprawnieniach na początku
-        siebie.
+        <em>user</em> będę chciał zapisać coś w plikach innych 
+        użytkowników to nie mam takich uprawnień, ponieważ listy dotyczą tylko 
+        tych dwóch widocznych na listach.
       </p>
       <h3 id="4.4.2.aclbug">4.4.2. Dziwny problem z listami kontroli dostępu</h3>
       <p class="exam_tip">
-        Poznając zwykłe listy dostępu, po zdefiniowaniu list o uprawnieniach
-        dających pełne prawa dostępu, jednemu z użytkowników nie mogłem
-        (jako on) zapisać nic do pliku za pomocą jakiego kolwiek edytora. Dane 
+        Zapoznając się ze zwykłymi listami dostępu po zdefiniowaniu list o 
+        uprawnieniach
+        dających pełne prawa jednemu z użytkowników nie mogłem
+        (jako on), zapisać nic do pliku za pomocą jakiego kolwiek edytora. Dane 
         mogłem zapisać natomiast przekierowując strumień na przykład z 
-        polecenia echo. Ten problem zauważyłem RHEL 9, wersji 8.6 nie 
-        występował. Problem nie występuje na RHEL 9, gdy plik odziedziczy listy
-        od katalogu, a uprawnienia zostaną zmienieszone przez maskę, wówczas
+        polecenia <em>echo</em>. Ten problem zauważyłem w RHEL 9, w wersji 8.6 
+        nie występował. Problem nie występuje na RHEL 9, gdy plik odziedziczy 
+        listy
+        od katalogu, a uprawnienia zostaną zmniejszone przez maskę, wówczas
         użytkownicy z mogą zapisywać zmiany za pomocą edytorów.  
       </p>
       <h3 id="exec4.1">Ćwiczenie 1: Manipulowanie uprawnieniami pliku</h3>
       <p>
-        Jak zwykły użytkownik na maszynie server1, stwórzmy dwa pliki 
-        <em>file11</em> oraz <em>dir11</em>. Uruchommy polecenie 
+        Jak zwykły użytkownik na maszynie server1, stwórz dwa pliki 
+        <em>file11</em> oraz <em>dir11</em>. Uruchom polecenie 
         <em>umask</em> aby określić obecną maskę użytkownika. Używając 
         zapisu symbolicznego ustaw maskę użytkownika na wartość 0035. Utwórz
         plik o nazwie <em>file22</em> oraz katalog o nazwie <em>dir22</em> 
@@ -3142,25 +3186,25 @@ default:other::r-x
         <em>dir22</em> tak aby identyczne jak uprawnienia folderu 
         <em>dir11</em>. Nie usuwaj jeszcze tych plików.
       </p>
-      <h3 id="exec4.2">Ćwiczenie 2: Skonfiguruj katalog do pracy grupowej</h3>
+      <h3 id="exec4.2">Ćwiczenie 2: Konfiguracja katalogu do pracy grupowej</h3>
       <p>
         Jako superużytkownik na maszynie <em>server1</em>, utwórz katalog
         <em>/sdir</em> następnie utwórz grupę (<em>groupadd</em>) <em>sgrp</em>
-        oraz dwóch użytkowników <em>user1000</em> raz <em>user2000</em> 
+        oraz dwóch użytkowników <em>user1000</em> oraz <em>user2000</em> 
         (<em>useradd</em>). Ustaw właściela katalogu na użytkownika
         <em>root</em> oraz <em>sgrp</em> jako grupę do której należy, następnie
-        ustaw odpowiednie uprawnienia: grupa=rwx; inni=--- poza tym ustaw bit
+        ustaw odpowiednie uprawnienia: grupa=rwx; inni=--- poza tym ustaw bity
         <em>setgid</em> oraz <em>sticky</em>. Zaloguj się jako <em>user1000</em>
         i utwórz w wyżej wspomnianym katalogu plik, następnie zaloguj się jako
         <em>user2000</em> dokonaj zmian w utworzonym przez <em>user1000</em>
         pliku. Na koniec spróbuj go usunąć. Zapisanie zmian powinno się
-        zakończyć się sukcem, ale próba usunięcia już nie.
+        zakończyć się sukcesem, ale próba usunięcia już nie.
       </p>
-      <h3 id="exec4.3">Ćwiczenie 3: Odszukaj pliki</h3>
+      <h3 id="exec4.3">Ćwiczenie 3: Wyszukiwanie plików</h3>
       <p>
         Jako superużytkownik na maszynie <em>server1</em>, wyszukaj wszystkie
         pliki w całej strukturze katalogu głównego, które zostały zmodyfikowane
-        w ostatnich 300 minutach i wyświetl ich typ. Wyszukaj w całej
+        w ciągu ostatnich 300 minut i wyświetl ich typ. Wyszukaj w całej
         strukturze katalogu głównego pliki nazwanych potoków oraz gniazd.
       </p>
       <h3 id="exec4.4">Ćwiczenie 4: Zaawansowane wyszukiwanie plików</h3>
@@ -3179,7 +3223,7 @@ default:other::r-x
         <em>user2000</em> uprawnienia równe 7, dla <em>user3000</em>
         uprawnienia równe 6, a dla użytkownika <em>user4000</em> uprawnienia
         równe 4. Usuń listę użytkownika user2000 i wyświetl pozostałe listy.
-        Następnie wyczyść plik z list dostępu oraz sprawdź czy nie pozostały
+        Następnie oczyść plik z list dostępu oraz sprawdź czy nie pozostały
         żadne listy.
       </p>
       <h2 id="ch4summary">Podsumowanie</h2>
@@ -3188,9 +3232,9 @@ default:other::r-x
         plików i katalogów, nauczyliśmy się je ustawiać w dwóch różnych
         formach zapisu. Poznaliśmy uprawnienia specjalne oraz jak je
         przypisywać. Dowiedzielśmy się jak ważnym narzędziem jest polecenie 
-        <em>find</em>. Na koniec pozaliśmy sposób na rozszerzenie uprawnień
-        poza standard <em>ugo/rwx</em>. W następnym rozdziale zajmiemy się
-        użytkownikami.
+        <em>find</em>. Na koniec poznaliśmy sposób na rozszerzenie uprawnień
+        poza standard <em>ugo/rwx</em> za pomocą list kontroli dostępu. W 
+        następnym rozdziale zajmiemy się użytkownikami.
       </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">

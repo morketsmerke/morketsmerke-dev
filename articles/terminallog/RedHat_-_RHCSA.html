@@ -2134,7 +2134,7 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
         <em>/tmp</em>. Utwórz duplikat pliku i zmień jego nazwę na jakąkolwiek 
         inną. Usuń wszystkie pliki utworzone na potrzeby tego ćwiczenia.
       </p>
-      <h3 id="ch3summary">Podsumowanie</h3>
+      <h2 id="ch3summary">Podsumowanie</h2>
       <p>
         W tym rozdziale zapoznaliśmy się, z typowymi zadaniami związanymi z
         administracją plikami w systemie. Poznaliśmy edytor Vim, którego
@@ -2968,7 +2968,28 @@ other::r--
         iż uprawnienia zostały zmniejszone ponieważ, przekraczają nałożoną na 
         plik maskę list kontroli. Zrócmy uwagę również na to ograniczenie
         uprawnień maską dotknęło grupę, do której należy plik. Usunę teraz
-        wszystkie listy, ponieważ nie są one już nam potrzebne.
+        jedną z list, aby zaprezentować jak można to zrobić kiedy listy dla
+        poszczególnych użytkowników nie będą nam potrzebne:
+      </p>
+<pre class="code-block">
+[user@server1 tmp]$ getfacl -c acluser 
+user::rw-
+user:user100:rw-
+user:user200:rwx
+group::r--
+mask::rwx
+other::r--
+
+[user@server1 tmp]$ setfacl -x u:user200 acluser 
+[user@server1 tmp]$ getfacl -c acluser 
+user::rw-
+user:user100:rw-
+group::r--
+mask::rw-
+other::r--
+</pre>
+      <p>
+        Teraz oczyszcze plik z list, ponieważ nie są nam już potrzebne.
       </p>
 <pre class="code-block">
 [user@server1 tmp]$ setfacl -b acluser
@@ -3120,6 +3141,56 @@ default:other::r-x
         jak uprawnienia pliku <em>file22</em> oraz zmień uprawnienia katalogu
         <em>dir22</em> tak aby identyczne jak uprawnienia folderu 
         <em>dir11</em>. Nie usuwaj jeszcze tych plików.
+      </p>
+      <h3 id="exec4.2">Ćwiczenie 2: Skonfiguruj katalog do pracy grupowej</h3>
+      <p>
+        Jako superużytkownik na maszynie <em>server1</em>, utwórz katalog
+        <em>/sdir</em> następnie utwórz grupę (<em>groupadd</em>) <em>sgrp</em>
+        oraz dwóch użytkowników <em>user1000</em> raz <em>user2000</em> 
+        (<em>useradd</em>). Ustaw właściela katalogu na użytkownika
+        <em>root</em> oraz <em>sgrp</em> jako grupę do której należy, następnie
+        ustaw odpowiednie uprawnienia: grupa=rwx; inni=--- poza tym ustaw bit
+        <em>setgid</em> oraz <em>sticky</em>. Zaloguj się jako <em>user1000</em>
+        i utwórz w wyżej wspomnianym katalogu plik, następnie zaloguj się jako
+        <em>user2000</em> dokonaj zmian w utworzonym przez <em>user1000</em>
+        pliku. Na koniec spróbuj go usunąć. Zapisanie zmian powinno się
+        zakończyć się sukcem, ale próba usunięcia już nie.
+      </p>
+      <h3 id="exec4.3">Ćwiczenie 3: Odszukaj pliki</h3>
+      <p>
+        Jako superużytkownik na maszynie <em>server1</em>, wyszukaj wszystkie
+        pliki w całej strukturze katalogu głównego, które zostały zmodyfikowane
+        w ostatnich 300 minutach i wyświetl ich typ. Wyszukaj w całej
+        strukturze katalogu głównego pliki nazwanych potoków oraz gniazd.
+      </p>
+      <h3 id="exec4.4">Ćwiczenie 4: Zaawansowane wyszukiwanie plików</h3>
+      <p>
+        Jak superużytkownik na maszynie <em>server1</em>, wyszukaj katalogu
+        <em>/usr</em> zwykłe pliki z czasem dostępu starszym niż 100 dni oraz
+        rozmiarem nie przekraczającym 5 MB, których właścicielem jest 
+        <em>root</em>.
+      </p>
+      <h3 id="exec4.5">Ćwiczenie 5: Ustawianie list dostępu</h3>
+      <p>
+        Jako superużytkownik na maszynie <em>server1</em>, utwórz plik
+        <em>testfile</em> w katalogu <em>/tmp</em>. Utwórz uzytkowników
+        <em>user3000</em> oraz <em>user4000</em>. Stwórz na wszcześniej
+        utworzonym pliku listy kontroli, ustawiając użytkownikowi 
+        <em>user2000</em> uprawnienia równe 7, dla <em>user3000</em>
+        uprawnienia równe 6, a dla użytkownika <em>user4000</em> uprawnienia
+        równe 4. Usuń listę użytkownika user2000 i wyświetl pozostałe listy.
+        Następnie wyczyść plik z list dostępu oraz sprawdź czy nie pozostały
+        żadne listy.
+      </p>
+      <h2 id="ch4summary">Podsumowanie</h2>
+      <p>
+        W tej części materiału zapoznaliśmy się z podstawowymi uprawnieniami
+        plików i katalogów, nauczyliśmy się je ustawiać w dwóch różnych
+        formach zapisu. Poznaliśmy uprawnienia specjalne oraz jak je
+        przypisywać. Dowiedzielśmy się jak ważnym narzędziem jest polecenie 
+        <em>find</em>. Na koniec pozaliśmy sposób na rozszerzenie uprawnień
+        poza standard <em>ugo/rwx</em>. W następnym rozdziale zajmiemy się
+        użytkownikami.
       </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">

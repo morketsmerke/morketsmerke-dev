@@ -3236,6 +3236,368 @@ default:other::r-x
         poza standard <em>ugo/rwx</em> za pomocą list kontroli dostępu. W 
         następnym rozdziale zajmiemy się użytkownikami.
       </p>
+      <h1 id="5.userbasics">5. Podstawy zarządzania użytkownikami</h1>
+      <p>
+        Użytkownik jest encją, czyli odwzrowaniem rzeczywistego elementu.
+        Obecjność użytkowników w systemie ma jeden cel - wyznaczać granice,
+        bowiem każdy z użytkowników posiada swój katalog domowy, w którym
+        przechowuje swoje pliki osobiste oraz programy. W tym rozdziale
+        nauczymy się tworzyć użytkowników oraz modyfikować ich podstawowe
+        informacje, jak np. położenie katalogu domowego czy zmianę numeru
+        <em>UID</em>. Na początku jednak zapoznamy się z metodami sprawdzenia
+        aktywności użytkowników w systemie. Przśledzimy ich próby uzyskania
+        dostępu do systemu.
+      </p>
+      <h2 id="5.1.whoandw">5.1. Kto jest zalogowany do systemu i co robi</h2>
+      <p>
+        Za pomocą polecenia <strong>who</strong>, możemy sprawdzić kto jest
+        zalogowany w systemie, na jakim terminalu pracuje, o której się
+        zalogował, jeśli jest po połączenie zdalne wówczas po czas zalogowania
+        zobaczymy adres IP w nawiasie. W moim systemie obecnie zalogowanych
+        jest dwoje użytkowników:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ who
+root     pts/0        2022-06-25 15:06 (192.168.8.192)
+user     pts/1        2022-06-25 15:06 (192.168.8.192)
+</pre>
+      <p>
+        Innym poleceniem zwracającym bierzącą aktywność użytkowników systemie
+        jest polecenie <strong>w</strong>. Poniżej znajduje się wynik 
+        uruchomienia polecenia na jednym z moich systemów.
+      </p>
+<pre class="code-block">
+user@server1 ~]$ w
+ 15:09:43 up 4 min,  2 users,  load average: 0.11, 0.23, 0.12
+USER     TTY        LOGIN@   IDLE   JCPU   PCPU WHAT
+root     pts/0     15:06    7.00s  0.10s  0.09s /usr/bin/python3 -s /usr/bin/ranger
+user     pts/1     15:06    1.00s  0.00s  0.00s w
+</pre>
+      <p>
+        Pierwszą linia informacji zwracanych przez to polecenie jest identyczna
+        z informacjami, które zwraca polecenie <em>uptime</em>. Następnie
+        zwraca ono tabele z nazwą użytkownika 
+        (<code class="code-inline">USER</code>), nazwą terminala
+        (<code class="code-inline">TTY</code>), czas zalogowania 
+        (<code class="code-inline">LOGIN@</code>), czasem bezczynności
+        (<code class="code-inline">IDLE</code>), czasem procesora zużytym na
+        wykonanie wszystkich zadań po podłączeniu się do terminala wraz z
+        zadaniami wykonywanymi w tle (<code class="code-inline">JCPU</code>),
+        czasem procesora zużytym na wykonanie bierzącego procesu
+        (<code class="code-inline">PCPU</code>) oraz nazwę procesu, która jest
+        wykonywana obecnie (<code class="code-inline">WHAT</code>).
+      </p>
+      <h3 id="5.1.1.loginattempts">5.1.1. Monitorowanie prób logowania się do
+        systemu</h3>
+      <p>
+        Monitorując aktywność systemu nie należy zapominać o sprawdzaniu
+        prób zalogowania się do niego. W dystrybucjach Linuksa istnieją trzy
+        polecenia przeznaczone do tego celu. Pierwszym z nich jest polecenie
+        <strong>last</strong>, które zwraca listę ostatnio zalogowanych
+        użytkowników.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# last
+user     pts/1        192.168.8.192    Sat Jun 25 15:06   still logged in
+root     pts/0        192.168.8.192    Sat Jun 25 15:06   still logged in
+reboot   system boot  5.14.0-70.13.1.e Sat Jun 25 17:05   still running
+user     pts/0        192.168.8.182    Fri Jun 24 14:20 - 17:14  (02:53)
+reboot   system boot  5.14.0-70.13.1.e Fri Jun 24 16:19 - 17:14  (00:54)
+root     pts/1        192.168.8.182    Thu Jun 23 15:54 - 17:27  (01:32)
+user     pts/0        192.168.8.182    Thu Jun 23 14:18 - 17:27  (03:08)
+user     pts/0        192.168.8.182    Thu Jun 23 11:04 - 14:17  (03:13)
+...
+</pre>
+      <p>
+        Polecenie po za tym kto się zalogował, do jakiego terminala, czy
+        zdalnie czy lokalnie, zwraca również informacje, o której system
+        został uruchomiony - wpisy rozpoczynające się od 
+        <code class="code-block">reboot</code>. Nieścisłości czasowe
+        wynikają z tego iż, zegar RTC na serwerze ustawiony jest z
+        uzględniem strefy czasowej oraz zmian czasu lokalnego (powinien
+        wskazywać na czas UTC), poźniej te dane są skorygowane po
+        skomunikowaniu się z serwerami czasu. Chcąc wyświetlić tylko listę,
+        kiedy dokonano startu systemu wydajemy polecenie to polecenie z
+        argumentem <em>reboot</em>, ten argument jest tak naprawdę nazwą
+        użytkownika.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# last reboot
+reboot   system boot  5.14.0-70.13.1.e Sat Jun 25 15:42   still running
+reboot   system boot  5.14.0-70.13.1.e Sat Jun 25 17:05 - 15:42  (-1:23)
+reboot   system boot  5.14.0-70.13.1.e Fri Jun 24 16:19 - 17:14  (00:54)
+reboot   system boot  5.14.0-70.13.1.e Thu Jun 23 11:23 - 17:27  (06:03)
+reboot   system boot  5.14.0-70.13.1.e Wed Jun 22 17:30 - 00:17  (06:47)
+reboot   system boot  5.14.0-70.13.1.e Tue Jun 21 15:13 - 18:14  (03:00)
+reboot   system boot  5.14.0-70.13.1.e Mon Jun 20 21:11 - 19:47  (-1:23)
+reboot   system boot  5.14.0-70.13.1.e Mon Jun 20 11:54 - 16:18  (04:24)
+...
+</pre>
+      <p>
+        Dane wyświetlane przez to polecenie przechowywane są w pliku
+        <em>/var/log/wtmp</em>.
+      </p>
+      <p>
+        Alternatywnie do listy ostatnio zalogowanych użytkowników, możemy
+        przejrzeć listę prób logowania się do systemu, które się nie powiodły.
+        Temu służy polecenie <strong>lastb</strong>.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# lastb
+user     ssh:notty    192.168.8.182    Thu Jun 23 14:18 - 14:18  (00:00)
+user     ssh:notty    192.168.8.182    Thu Jun 23 14:18 - 14:18  (00:00)
+user1000 pts/0                         Tue Jun 21 17:28 - 17:28  (00:00)
+user     ssh:notty    192.168.8.182    Mon Jun 20 19:27 - 19:27  (00:00)
+user100  pts/1                         Mon Jun 20 13:00 - 13:00  (00:00)
+user     ssh:notty    192.168.8.182    Mon Jun 20 10:44 - 10:44  (00:00)
+root     pts/0                         Fri Jun 10 17:59 - 17:59  (00:00)
+</pre>
+      <p>
+        W przypadku połączeń SSH oznaczenie 
+        <code class="code-inline">notty</code>, mówi nam że nie przydzielono
+        terminala z powodu niepodzenia logowania. Kiedy w drugiej kolumnie 
+        zobaczymy oznaczenie <em>pts/X</em> (X oznacza numer urządzania), to
+        możemy stwierdzić, że nie powiodło się przełączenie na wskazanego w
+        pierwszej kolumnie użytkownika. Na serwera, które mają otwarty port
+        22 oraz pozwalają na zalogowanie się za pomocą hasła polecenie będzie
+        zwraca zazwyczaj bardzo długą listę. Wiele automatów na całym świecie
+        próbuje zalogować się na serwer poprzez zagdywanie użytkownika i hasła.
+      </p>
+      <p>
+        Plikiem, który przechowuje informacje zwracane przez to urządzenie
+        jest <em>/var/log/btmp</em>.
+      </p>
+      <p>
+        Ostanim narzędziem pozwalającym na sprawdzenie kto logował się do
+        systemu jest polecenie <strong>lastlog</strong>, wyświetla ono 
+        ostatnie logowanie na podstawie listy użytkowników. 
+      </p>
+<pre class="code-block">
+[root@server1 ~]# lastlog
+...
+user             pts/1    192.168.8.192                             Sat Jun 25 15:06:16 +0200 2022
+vboxadd                                                             **Never logged in**
+user100          pts/1                                              Thu Jun 23 15:55:01 +0200 2022
+user200          pts/0                                              Fri Jun 24 16:55:08 +0200 2022
+user1000         pts/0                                              Tue Jun 21 17:28:44 +0200 2022
+user2000         pts/0                                              Tue Jun 21 17:28:50 +0200 2022
+user3000                                                            **Never logged in**
+user4000                                                            **Never logged in**
+user3            pts/0                                              Thu Jun 23 12:13:34 +0200 2022
+user4            pts/0                                              Thu Jun 23 12:33:09 +0200 2022
+user4100                                                            **Never logged in**
+user4200                                                            **Never logged in**
+user4300         pts/0                                              Thu Jun 23 13:01:04 +0200 2022
+</pre>
+      <p>
+        Napis <code class="code-inline">**Never logged in**</code> oznacza, że
+        użytkownik nie logował się do systemu. Informacje zwracane przez to
+        polecenie są przechowywane w pliku <em>/var/log/lastlog</em>.
+      </p>
+      <h3 id="5.1.3.idandgroup">5.1.3. Informacje o użytkowniku</h3>
+      <p>
+        Podczas pracy z użytkownikami, możemy potrzebować informacji na jego
+        temat. Równie dobrze moglibyśmy sprawdzić go w pliku 
+        <em>/etc/passwd</em>, ale jest lepszy sposób. Na Linuksach dostępne
+        jest polecenie <em>id</em>, które zwraca <em>UID</em>, <em>GID</em>
+        podstawowej grupy oraz grupy, do których należy użytkownik podany jak
+        argument tego polecenia:
+      </p>
+<pre class="code-block">
+[root@server1 ~]# id user100
+uid=1001(user100) gid=1001(user100) groups=1001(user100),9999(sgrp)
+</pre>
+      <p>
+        Wówczas jeśli jako my sami potrzebuje wyświetlić, grupy do których
+        należy możemy użyć polecenia <strong>groups</strong>.
+      </p>
+<pre class="code-block">
+[user100@server1 ~]$ groups
+user100 sgrp
+</pre>
+      <h2 id="5.2.userauthfiles">5.2. Pliki autentykacji użytkowników</h2>
+      <p>
+        Każdy użytkownik, chcący skorzystać z systemu musi się uwierzytelnić
+        za pomocą tylko jemu znanych poświadczeń, wówczas zostaje on
+        autoryzowany do wykonywania różnych czynności w systemie. Sam system
+        do uwierzytelniania użytkowników stosuje kilka plików. 
+      </p>
+      <h3 id="5.2.1.passwdfile">5.2.1. Pliki /etc/passwd</h3>
+      <p>
+        Ten plik jest swoistą bazą danych o użytkownikach w systemie. Każdy
+        jeden wpis to jeden użytkownik.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# tail -5 /etc/passwd
+user:x:1000:1000:user:/home/user:/bin/bash
+user100:x:1001:1001::/home/user100:/bin/bash
+user200:x:1002:1002::/home/user200:/bin/bash
+user1000:x:1003:1003::/home/user1000:/bin/bash
+user2000:x:1004:1004::/home/user2000:/bin/bash
+</pre>
+      <p>
+        Każdy z wpisów zawiera:
+      </p>
+      <ul>
+        <li><strong>Nazwę użytkownika</strong> - 
+          <code class="code-inline">user</code>. Nazwy użytkowników na
+          Linuksie nie powinny przekraczać 255 znaków oraz zawierać innych
+          znaków specjalnych niż podkreślnik (<strong>_</strong>) lub 
+          myślnik (<strong>-</strong>) i składać się z wielkich liter,</li>
+        <li><strong>Hasło</strong> - <code class="code-inline">x</code>,
+          w tym przypadku <em>x</em> oznacza hasło jest zaszyforwane w pliku
+          <em>/etc/shadow</em>, w tym polu może znajdować się również
+          gwiazdka (<strong>*</strong>), która oznacza że konto jest wyłączone.
+        </li>
+        <li><strong>UID</strong> - <code class="code-inline">1000</code>, jest
+          identyfikator użytkownika, jądro odwołując się do użytkowników
+          używa tych identyfikatorów. W systemie istnieją zakresy 
+          <em>UID</em>, które są przypisywane poszczególnym użytkownikom.
+          Identyfikator 0, jest zarezerwowany dla <em>root</em>, identyfikatory
+          do 1 do 999 są przeznaczone dla użytkowników systemowych (przeważnie
+          tworzonych na potrzeby usług systemowych, w RHEL istnieje podział, iż
+          <em>UID</em>-y od 1 do 200 są przeznaczone dla użytkowników
+          przypisanych do wewętrznych usług systemowych a <em>UID</em>-y od 201 
+          do 999 dla pozostałych).</li>
+        <li><strong>GID</strong> - <code class="code-inline">1000</code>, jest
+          identyfikator grupy podstawowej użytkownika (podczas tworzenia
+          użytkownika, tworzona jest także grupa o takiej samej nazwie jak
+          użytkownik i jest ona nazywana podstwową grupą użytkownika. Istnienie
+          takiej grupy zapewnia spójność uprawnień plików).</li>
+        <li><strong>Komentarz</strong> - <code class="code-inline">user</code>,
+          Komentarz, dawniej pole <em>GECOS</em>, jest miejscem na dodatkowe
+          informacje o użytkowniku, np. numer telefonu lub adres e-mail.</li>
+        <li><strong>Katalog domowy</strong> -
+          <code class="code-inline">/home/user</code>, to pole zawiera ścieżkę
+          do katalogu domowego.</li>
+        <li><strong>Powłoka</strong> -
+          <code class="code-inline">/bin/bash</code>, miejsce dla domyślnego
+          programu uruchamianego zaraz po zalogowaniu najczęsciej jest to
+          jedna z dostępnych w systemie powłok.</li>
+      </ul>
+      <h3 id="5.2.2.shadowfile">5.2.3. Plik /etc/shadow</h3>
+      <p>
+        Plik <em>/etc/shadow</em>, koreluje z plikem <em>/etc/passwd</em> ich
+        wspólnym kluczem jest nazwa użytkownika. Plik ten zamiast ogólnych
+        informacji o użytkowniku zawiera jego hasło oraz zasady związane z
+        hasłami. Tak jak w przypadku pliku <em>passwd</em> każdy wpis
+        odpowiada jedemu użytkownikowi.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# tail -5 /etc/shadow
+user:$6$bNlZFNZV/wWKGQU8$DgIHeUdALGWs7bZ7Foet2UeHFSANSvYcEtLmn6aLm5QxLcx10jZNkUg.dphdmizej/k5Xe.oEqSCeHAf5/7Gv0::0:99999:7:::
+user100:$6$N3norXlohg0yE1pi$FyeKcBNl4mj/nLbNRlx7KaAQnddG0y/kXpQ9pbgjTV9ti3dQ5q3pIpXm1poa85oxFHFVT9HPTyBmaRNkrSJPX.:19163:0:99999:7:::
+user200:!!:19163:0:99999:7:::
+user1000:!!:19163:0:99999:7:::
+user2000:!!:19163:0:99999:7:::
+</pre>
+      <p>
+        Każdy z tych wpisów zawiera kilka pól odzielonych od siebie
+        dwukropkiem (<strong>:</strong>). Natomiast same pola oznaczają
+        kolejno:
+      </p>
+      <ul>
+        <li><strong>Nazwę użytkownika</strong> -
+          <code class="code-inline">user</code>, odpowiadającą nazwie
+          użytkownika z pliku <em>/etc/passwd</em>.</li>
+        <li><strong>Zaszyfrowane hasło</strong> -
+          <code class="code-inline">$6$bNlZFNZV/wWKGQU8$DgIHeUdALGWs7bZ7Foet2UeHFSANSvYcEtLmn6aLm5QxLcx10jZNkUg.dphdmizej/k5Xe.oEqSCeHAf5/7Gv0</code>, utworzone na podstawie hasła wpisanego
+          przez użytkownika. RHEL w przypadku przesłonionych haseł używa
+          algorytmu SHA-512. Jeśli to pole zawiera wykrzyknik
+          (<strong>!</strong>), to wówczas użytkownik nie może zalogować się
+          do systemu za pomocą hasła. Puste pole oznacza, że uzytkownik może
+          zalogować się bez wprowadzania hasła.</li>
+        <li><strong>Ostatnia zmiana hasła</strong> - 
+          <code class="code-inline">19163</code>, to pole zawiera liczbę
+          dni, która upłyneła od północy 1 stycznia 1970 (początku czasu
+          Uniksowego) do momentu zmiany hasła. To pole można uznać za liczbową
+          datę.</li>
+        <li><strong>Minimalny wiek hasła</strong> -
+          <code class="code-inline">0</code>, wyznacza liczbę dni, która może
+          upłynąć przed następną zmianą hasła. Puste pole lub zero oznacza
+          iż, nie ustalono minimalnego wieku dla hasła tego użytkownika.</li>
+        <li><strong>Maksymalny wiek hasła</strong> -
+          <code class="code-inline">99999</code>, wyznacza liczbę dni, po
+          której należy zmienić hasło. Hasła, których ważność osiągnie tę 
+          wartość mogą być dalej ważne, jednak system przy następnym logowaniu
+          będzie wymagał jego zmiany.</li>
+        <li><strong>Okres ostrzegania</strong> - 
+          <code class="code-inline">7</code>, określa ilość dni, w których
+          użytkownik będzie informowany o tym, że mija termin ważności jego
+          hasła i musi je zmienić, aby dalej móc się logować do systemu.</li>
+        <li><strong>Okres nieaktywności hasła</strong> - określa ilość dni
+          przez, które hasło które wygasło będzie jescze akceptowane. Po
+          zalogwaniu system będzie żądać zmiany hasła. W przypadku naszego
+          przykładu, to pole jest puste, a więc nie ma zdefiniowanego tego
+          okresu.</li>
+        <li><strong>Data wygaśnięcia konta</strong> - określa ilość dni od
+          północy 1 stycznia 1970r., po których nie będzie można używać
+          konta do logowania do systemu. Zero bądź puste pole (tak jak na
+          przykładzie) oznacza iż konto nie wygasa nigdy.</li>
+        <li><strong>Pole zarezerowane</strong> - pole zarezerowowane do użycia
+          w przyszłości.</li> 
+      </ul>
+      <p>
+        W przypadku pól od zaszyfrowanego hasła do pola zarezerowanego. Puste
+        pole lub 0 wyłącza przeznaczone im właściwości. Te opcje są zazwyczaj
+        ustawiane w pliku <em>/etc/login.defs</em> i nazwane są 
+        <strong>polityką ważności haseł</strong> lub ang.
+        <em>pasword aging</em>. Na konie zwróćmy uwagę na szczegóły tego pliku:
+      </p>
+<pre class="code-block">
+[root@server1 ~]# ls -l /etc/shadow
+----------. 1 root root 2012 Jun 25 18:53 /etc/shadow
+</pre>
+      <p>
+        Nikt nie ma żadnych uprawnień do tego pliku. Możliwa jest jego
+        modyfikacja za pomocą specjalnego mechanizmu, który będzie omawiany
+        przy okazji <em>SELinux</em>.
+      </p>
+      <h3 id="5.2.3.group">5.2.3. Plik /etc/group</h3>
+      <p>
+        Plik <em>/etc/group</em> jest odpowiednikiem dla pliku 
+        <em>/etc/passwda</em> tylko, że dla group. Ten plik ma podobną budową
+        do plików <em>/etc/passwd</em> lub <em>/etc/shadow</em> posiada jednak
+        mniejszą ilość pól.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# tail -5 /etc/group
+user:x:1000:
+user100:x:1001:
+user200:x:1002:
+sgrp:x:9999:user100,user200
+sgrp2:x:8888:user1000,user2000
+</pre>
+      <p>
+        A każde z pół przechowuje kolejno:
+      </p>
+      <ul>
+        <li><strong>Nazwę grupy</strong> - 
+          <code class="code-inline">sgrp</code>.</li>
+        <li><strong>Hasło grupy</strong> -
+          <code class="code-inline">x</code>, oznacza że hasło jest
+          zaszyfrowane w pliku <em>/etc/gshadow</em>. Hasła grupy służą
+          zablokowaniu przełączania się między grupami za pomocą polecenia
+          <strong>newgrp</strong>, aby użytkownicy nie mogli uzyskać dostępu
+          plików innych grup.</li>
+        <li><strong>GID</strong> -
+          <code class="code-inline">9999</code>, identyfikator grupy.</li>
+        <li><strong>Lista członków grupy</strong> -
+          <code class="code-inline">user100,user200</code>, lista użytkowników
+          oddzielonych przecinkami przypisane do tej grupy. W przypadku
+          podstawowych grup użytkowników (nazwa grupy jest identyczna z nazwą
+          użytkownika), członek jest domyślny i nie widnieje na liście.</li>
+      </ul>
+      <h3 id="5.2.4.gshadowfile">5.2.4. Plik /etc/gshadow</h3>
+      <p>
+        Grupy jak i użytkownicy również mają swoje hasła. W opisie pola hasła
+        przy okazji pliku <em>/etc/group</em> wyjaśniłem dlaczego tak jest. Te
+        hasła muszą być gdzieś składowane i to w bezpieczny sposób. Hasłą grup
+        również są przesłonione jak hasła użytkowników. Miejscem składowania
+        haseł grup jest jest plik <em>/etc/gshadow</em>, zawiera on podbne
+        wpisy jak plik <em>/etc/group</em> i jest z nim powiązany wspólnym
+        kluczem jakim są nazwy grup.
+      </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

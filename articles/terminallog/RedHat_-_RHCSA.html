@@ -3598,6 +3598,116 @@ sgrp2:x:8888:user1000,user2000
         wpisy jak plik <em>/etc/group</em> i jest z nim powiązany wspólnym
         kluczem jakim są nazwy grup.
       </p>
+<pre class="code-block">
+user:!::
+user100:!::
+user200:!::
+dba:!::
+user1000:!::
+user2000:!::
+dbagrp:!::
+user90:!::
+g1:!::
+</pre>
+      <p>
+        Plik <em>/etc/gshadow</em> zawiera 4 pola tak jak plik 
+        <em>/etc/group</em>, każde z tych pól oznacza kolejno:
+      </p>
+      <ul>
+        <li><strong>Nazwa grupy</strong> -
+          <code class="code-inline">user</code>, identyczna z nazwą zawartą w
+          we wpisach w pliku <em>/etc/group</em>.</li>
+        <li><strong>Zaszyforwane hasło</strong>, jeśli tym polu pojawia się
+          inny znak taki jak <code class="code-inline">!</code> lub gwiazdka
+          (<strong>*</strong>) oznacza to, że użytkownicy nie mogą za pomocą
+          hasła uzyskać dostępu do grupy.</li>
+        <li><strong>Administratorz grupy</strong>, lista użytkowników mogących
+          zarządzać grupą, mogą oni dodawać i usuwać członków przy użyciu 
+          polecenia <strong>gpasswd</strong>.</li>
+        <li><strong>Członkowie grupy</strong>, oddzielona przecinkami lista
+          członków grupy.</li>
+      </ul>
+      <h2 id=5.3.basicsofusermanagement">5.3. Podstawy zarządzania użytkownikami</h2>
+      <p>
+        W tym podrozdziale poznamy podstawy zarządzania użytkownikami. Będziemy
+        tworzyć, zmieniać informacje o nich oraz usuwać. Tworząc nowego 
+        użytkownika wydajemy proste polecenie i podajemy jego nazwę. Taki 
+        użytkownik tworzony jest z domyślnymi wartościami. Zanim zaczniemy
+        tworzyć użytkowników poznamy dwa miejsca, skąd mogą brać się te
+        domyślne wartości.
+      </p>
+      <h3 id="5.3.1.usersdefaultinformations">5.3.1. Domyślnie informacje
+        użytkowników</h3>
+      <p>
+        Informacje o tym jaką przydzielić użytkownikowi powłokę, czy między
+        jakimi wartościami powinien znajdować się jego <em>UID</em> są w
+        systemie z góry określone. Takimi miejscami, w których możemy szukać
+        domyślnych wartości jest katalog plik <em>/etc/default/useradd</em>,
+        którego zawartość dostępna jest po wydaniu poniższego polecenia:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ useradd -D
+GROUP=100
+HOME=/home
+INACTIVE=-1
+EXPIRE=
+SHELL=/bin/bash
+SKEL=/etc/skel
+CREATE_MAIL_SPOOL=yes
+</pre>
+      <p>
+        Z tych informacji możemy wynioskować początkowy <em>GID</em>
+        (<code class="code-inline">GROUP</code>), jednak
+        ta opcja używana jest gdy opcja <em>USERGROUPS_ENAB</em>, w pliku
+        <em>/etc/login.defs</em> (drugim z plików) jest ustawiona na <em>NO</em>.
+        Poza tym znamy domyślną lokalizację tworzenia katalogów domych
+        (<code class="code-inline">HOME</code>), czas nieaktywność
+        (<code class="code-inline">INACTIVE</code>), który określa liczbę dni
+        pomiędzy wygaśnięciem hasłą za trwałym zablokowaniem konta, domyślną
+        datę wygaśnięcia konta (<code class="code-inline">EXPIRE</code>), 
+        domyślną powłokę (<code class="code-inline">SHELL</code>), lokalizację
+        katalogu szkieletowego (<code class="code-inline">SKEL</code>) - 
+        katalog ten przechowuje pliki kopiowane do każdego katalogu domowego
+        nowego użytkownika w momencie jego utworzenia oraz zmienną określającą
+        czy tworzyć pliki skrzynki mailowej każdemu użytkownikowi
+        (<code class="code-inline">CREATE_MAIL_SPOOL</code>). Nie które z tych
+        wartości możemy modyfikować używając tego samego polecenia, więcej
+        informacji na ten temat znajduje się na stronie podręcznia polecenia
+        <em>useradd</em>.
+      </p>
+      <p>
+        Innym źródłem wartości domyślnych wykorzystywanych podczas tworzenia
+        użytkowników jest plik <em>/etc/login.defs</em>. Zawartość tego pliku
+        najlepiej jest wyświetlić za pomocą poniższego polecenia, które
+        odfiltruje komentarz i puste linie:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ grep -v ^# /etc/login.defs | grep -v ^$
+MAIL_DIR	/var/spool/mail
+UMASK		022
+HOME_MODE	0700
+PASS_MAX_DAYS	99999
+PASS_MIN_DAYS	0
+PASS_WARN_AGE	7
+UID_MIN                  1000
+UID_MAX                 60000
+SYS_UID_MIN               201
+SYS_UID_MAX               999
+SUB_UID_MIN		   100000
+SUB_UID_MAX		600100000
+SUB_UID_COUNT		    65536
+GID_MIN                  1000
+GID_MAX                 60000
+SYS_GID_MIN               201
+SYS_GID_MAX               999
+SUB_GID_MIN		   100000
+SUB_GID_MAX		600100000
+SUB_GID_COUNT		    65536
+ENCRYPT_METHOD SHA512
+USERGROUPS_ENAB yes
+CREATE_HOME	yes
+HMAC_CRYPTO_ALGO SHA512
+</pre>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

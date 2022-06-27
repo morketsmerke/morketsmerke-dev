@@ -166,6 +166,38 @@
             <li><a href="#ch4summary">Podsumowanie</a></li>
           </ul>
         </li>
+        <li><a href="#5.userbasics">5. Podstawy zarządzania użytkownikami</a>
+          <ul class="toc">
+            <li><a href="#5.1.whoandw">5.1. Kto jest zalogowany do systemu i co robi</a>
+              <ul class="toc">
+                <li><a href="#5.1.1.loginattempts">5.1.1. Monitorowanie prób logowania się do systemu</a></li>
+                <li><a href="#5.1.2.idandgroup">5.1.2. Informacje o użytkowniku</a></li>
+              </ul>
+            </li>
+            <li><a href="#5.2.userauthfiles">5.2. Pliki autentykacji użytkowników</a>
+              <ul class="toc">
+                <li><a href="#5.2.1.passwdfile">5.2.1. Pliki /etc/passwd</a></li>
+                <li><a href="#5.2.2.shadowfile">5.2.2. Plik /etc/shadow</a></li>
+                <li><a href="#5.2.3.group">5.2.3. Plik /etc/group</a></li>
+                <li><a href="#5.2.4.gshadowfile">5.2.4. Plik /etc/gshadow</a></li>
+              </ul>
+            </li>
+            <li><a href="#5.3.basicsofusermanagement">5.3. Podstawy zarządzania użytkownikami</a>
+              <ul class="toc">
+                <li><a href="#5.3.1.usersdefaultinformations">5.3.1. Domyślnie informacje użytkownikówa</li>
+                <li><a href="#5.3.2.useradd">5.3.2. Tworzenie użytowników</a></li>
+                <li><a href="#5.3.3.usermod">5.3.3. Zmiana informacji użytkownika</a></li>
+                <li><a href="#5.3.4.userdel">5.3.4. Usuwanie użytkowników</a></li>
+                <li><a href="#5.3.5.nologinusers">5.3.5. Użytkownicy bez możliwości logowania</a></li>
+              </ul>
+            </li>
+            <li><a href="#exec5.1">Ćwiczenie 1</a></li>
+            <li><a href="#exec5.2">Ćwiczenie 2</a></li>
+            <li><a href="#exec5.3">Ćwiczenie 3</a></li>
+            <li><a href="#exec5.4">Ćwiczenie 4</a></li>
+            <li><a href="#ch5summary">Podsumowanie</a></li>
+          </ul>
+        </li>
       </ul>
       <h1 id="1.introduction">1. Wstęp</h1>
       <p>
@@ -3239,20 +3271,20 @@ default:other::r-x
       <h1 id="5.userbasics">5. Podstawy zarządzania użytkownikami</h1>
       <p>
         Użytkownik jest encją, czyli odwzrowaniem rzeczywistego elementu.
-        Obecjność użytkowników w systemie ma jeden cel - wyznaczać granice,
+        Obecność użytkowników w systemie ma jeden cel - wyznaczać granice,
         bowiem każdy z użytkowników posiada swój katalog domowy, w którym
         przechowuje swoje pliki osobiste oraz programy. W tym rozdziale
         nauczymy się tworzyć użytkowników oraz modyfikować ich podstawowe
         informacje, jak np. położenie katalogu domowego czy zmianę numeru
         <em>UID</em>. Na początku jednak zapoznamy się z metodami sprawdzenia
-        aktywności użytkowników w systemie. Przśledzimy ich próby uzyskania
+        aktywności użytkowników w systemie, prześledzimy ich próby uzyskania
         dostępu do systemu.
       </p>
       <h2 id="5.1.whoandw">5.1. Kto jest zalogowany do systemu i co robi</h2>
       <p>
         Za pomocą polecenia <strong>who</strong>, możemy sprawdzić kto jest
         zalogowany w systemie, na jakim terminalu pracuje, o której się
-        zalogował, jeśli jest po połączenie zdalne wówczas po czas zalogowania
+        zalogował, jeśli jest połączenie zdalne wówczas po czasie zalogowania
         zobaczymy adres IP w nawiasie. W moim systemie obecnie zalogowanych
         jest dwoje użytkowników:
       </p>
@@ -3278,14 +3310,14 @@ user     pts/1     15:06    1.00s  0.00s  0.00s w
         z informacjami, które zwraca polecenie <em>uptime</em>. Następnie
         zwraca ono tabele z nazwą użytkownika 
         (<code class="code-inline">USER</code>), nazwą terminala
-        (<code class="code-inline">TTY</code>), czas zalogowania 
+        (<code class="code-inline">TTY</code>), czasem zalogowania się
         (<code class="code-inline">LOGIN@</code>), czasem bezczynności
         (<code class="code-inline">IDLE</code>), czasem procesora zużytym na
         wykonanie wszystkich zadań po podłączeniu się do terminala wraz z
         zadaniami wykonywanymi w tle (<code class="code-inline">JCPU</code>),
         czasem procesora zużytym na wykonanie bierzącego procesu
         (<code class="code-inline">PCPU</code>) oraz nazwę procesu, która jest
-        wykonywana obecnie (<code class="code-inline">WHAT</code>).
+        obecnie wykonywana (<code class="code-inline">WHAT</code>).
       </p>
       <h3 id="5.1.1.loginattempts">5.1.1. Monitorowanie prób logowania się do
         systemu</h3>
@@ -3309,7 +3341,7 @@ user     pts/0        192.168.8.182    Thu Jun 23 11:04 - 14:17  (03:13)
 ...
 </pre>
       <p>
-        Polecenie po za tym kto się zalogował, do jakiego terminala, czy
+        Polecenie poza tym kto się zalogował, do jakiego terminala, czy
         zdalnie czy lokalnie, zwraca również informacje, o której system
         został uruchomiony - wpisy rozpoczynające się od 
         <code class="code-block">reboot</code>. Nieścisłości czasowe
@@ -3317,7 +3349,7 @@ user     pts/0        192.168.8.182    Thu Jun 23 11:04 - 14:17  (03:13)
         uzględniem strefy czasowej oraz zmian czasu lokalnego (powinien
         wskazywać na czas UTC), poźniej te dane są skorygowane po
         skomunikowaniu się z serwerami czasu. Chcąc wyświetlić tylko listę,
-        kiedy dokonano startu systemu wydajemy polecenie to polecenie z
+        kiedy dokonano startu systemu wydajemy to polecenie z
         argumentem <em>reboot</em>, ten argument jest tak naprawdę nazwą
         użytkownika.
       </p>
@@ -3355,16 +3387,16 @@ root     pts/0                         Fri Jun 10 17:59 - 17:59  (00:00)
       <p>
         W przypadku połączeń SSH oznaczenie 
         <code class="code-inline">notty</code>, mówi nam że nie przydzielono
-        terminala z powodu niepodzenia logowania. Kiedy w drugiej kolumnie 
-        zobaczymy oznaczenie <em>pts/X</em> (X oznacza numer urządzania), to
+        terminala z powodu niepowodzenia logowania. Kiedy w drugiej kolumnie 
+        zobaczymy oznaczenie <em>pts/X</em> (X oznacza numer urządzenia), to
         możemy stwierdzić, że nie powiodło się przełączenie na wskazanego w
-        pierwszej kolumnie użytkownika. Na serwera, które mają otwarty port
+        pierwszej kolumnie użytkownika. Na serwerach, które mają otwarty port
         22 oraz pozwalają na zalogowanie się za pomocą hasła polecenie będzie
-        zwraca zazwyczaj bardzo długą listę. Wiele automatów na całym świecie
+        zwracać zazwyczaj bardzo długą listę. Wiele automatów na całym świecie
         próbuje zalogować się na serwer poprzez zagdywanie użytkownika i hasła.
       </p>
       <p>
-        Plikiem, który przechowuje informacje zwracane przez to urządzenie
+        Plikiem, który przechowuje informacje zwracane przez to polecenie
         jest <em>/var/log/btmp</em>.
       </p>
       <p>
@@ -3394,7 +3426,7 @@ user4300         pts/0                                              Thu Jun 23 1
         użytkownik nie logował się do systemu. Informacje zwracane przez to
         polecenie są przechowywane w pliku <em>/var/log/lastlog</em>.
       </p>
-      <h3 id="5.1.3.idandgroup">5.1.3. Informacje o użytkowniku</h3>
+      <h3 id="5.1.2.idandgroup">5.1.2. Informacje o użytkowniku</h3>
       <p>
         Podczas pracy z użytkownikami, możemy potrzebować informacji na jego
         temat. Równie dobrze moglibyśmy sprawdzić go w pliku 
@@ -3409,7 +3441,7 @@ uid=1001(user100) gid=1001(user100) groups=1001(user100),9999(sgrp)
 </pre>
       <p>
         Wówczas jeśli jako my sami potrzebuje wyświetlić, grupy do których
-        należy możemy użyć polecenia <strong>groups</strong>.
+        należymy możemy użyć polecenia <strong>groups</strong>.
       </p>
 <pre class="code-block">
 [user100@server1 ~]$ groups
@@ -3436,17 +3468,20 @@ user1000:x:1003:1003::/home/user1000:/bin/bash
 user2000:x:1004:1004::/home/user2000:/bin/bash
 </pre>
       <p>
-        Każdy z wpisów zawiera:
+        Każdy z tych wpisów zawiera kilka pól oddzielonych od siebie
+        dwukropkiem (<strong>:</strong>). Natomiast same pola oznaczają
+        kolejno:
       </p>
       <ul>
         <li><strong>Nazwę użytkownika</strong> - 
           <code class="code-inline">user</code>. Nazwy użytkowników na
           Linuksie nie powinny przekraczać 255 znaków oraz zawierać innych
           znaków specjalnych niż podkreślnik (<strong>_</strong>) lub 
-          myślnik (<strong>-</strong>) i składać się z wielkich liter,</li>
+          myślnik (<strong>-</strong>) i niepowinny zawierać z wielkich liter,
+        </li>
         <li><strong>Hasło</strong> - <code class="code-inline">x</code>,
-          w tym przypadku <em>x</em> oznacza hasło jest zaszyforwane w pliku
-          <em>/etc/shadow</em>, w tym polu może znajdować się również
+          w tym przypadku <em>x</em> oznacza, że hasło jest zaszyforwane w 
+          pliku <em>/etc/shadow</em>, w tym polu może znajdować się również
           gwiazdka (<strong>*</strong>), która oznacza że konto jest wyłączone.
         </li>
         <li><strong>UID</strong> - <code class="code-inline">1000</code>, jest
@@ -3455,12 +3490,12 @@ user2000:x:1004:1004::/home/user2000:/bin/bash
           <em>UID</em>, które są przypisywane poszczególnym użytkownikom.
           Identyfikator 0, jest zarezerwowany dla <em>root</em>, identyfikatory
           do 1 do 999 są przeznaczone dla użytkowników systemowych (przeważnie
-          tworzonych na potrzeby usług systemowych, w RHEL istnieje podział, iż
+          tworzonych na potrzeby usług, w RHEL istnieje podział, iż
           <em>UID</em>-y od 1 do 200 są przeznaczone dla użytkowników
           przypisanych do wewętrznych usług systemowych a <em>UID</em>-y od 201 
           do 999 dla pozostałych).</li>
         <li><strong>GID</strong> - <code class="code-inline">1000</code>, jest
-          identyfikator grupy podstawowej użytkownika (podczas tworzenia
+          to identyfikator grupy podstawowej użytkownika (podczas tworzenia
           użytkownika, tworzona jest także grupa o takiej samej nazwie jak
           użytkownik i jest ona nazywana podstwową grupą użytkownika. Istnienie
           takiej grupy zapewnia spójność uprawnień plików).</li>
@@ -3475,7 +3510,7 @@ user2000:x:1004:1004::/home/user2000:/bin/bash
           programu uruchamianego zaraz po zalogowaniu najczęsciej jest to
           jedna z dostępnych w systemie powłok.</li>
       </ul>
-      <h3 id="5.2.2.shadowfile">5.2.3. Plik /etc/shadow</h3>
+      <h3 id="5.2.2.shadowfile">5.2.2. Plik /etc/shadow</h3>
       <p>
         Plik <em>/etc/shadow</em>, koreluje z plikem <em>/etc/passwd</em> ich
         wspólnym kluczem jest nazwa użytkownika. Plik ten zamiast ogólnych
@@ -3492,7 +3527,7 @@ user1000:!!:19163:0:99999:7:::
 user2000:!!:19163:0:99999:7:::
 </pre>
       <p>
-        Każdy z tych wpisów zawiera kilka pól odzielonych od siebie
+        Każdy z tych wpisów zawiera kilka pól oddzielonych od siebie
         dwukropkiem (<strong>:</strong>). Natomiast same pola oznaczają
         kolejno:
       </p>
@@ -3509,8 +3544,8 @@ user2000:!!:19163:0:99999:7:::
           zalogować się bez wprowadzania hasła.</li>
         <li><strong>Ostatnia zmiana hasła</strong> - 
           <code class="code-inline">19163</code>, to pole zawiera liczbę
-          dni, która upłyneła od północy 1 stycznia 1970 (początku czasu
-          Uniksowego) do momentu zmiany hasła. To pole można uznać za liczbową
+          dni, która upłyneła od północy 1 stycznia 1970r. (początku czasu
+          Uniks) do momentu zmiany hasła. To pole można uznać za liczbową
           datę.</li>
         <li><strong>Minimalny wiek hasła</strong> -
           <code class="code-inline">0</code>, wyznacza liczbę dni, która może
@@ -3525,24 +3560,24 @@ user2000:!!:19163:0:99999:7:::
           <code class="code-inline">7</code>, określa ilość dni, w których
           użytkownik będzie informowany o tym, że mija termin ważności jego
           hasła i musi je zmienić, aby dalej móc się logować do systemu.</li>
-        <li><strong>Okres nieaktywności hasła</strong> - określa ilość dni
-          przez, które hasło które wygasło będzie jescze akceptowane. Po
+        <li><strong>Okres nieaktywności hasła</strong> - określa ilość dni,
+          przez które przeterminowane hasło będzie jescze akceptowane. Po
           zalogwaniu system będzie żądać zmiany hasła. W przypadku naszego
           przykładu, to pole jest puste, a więc nie ma zdefiniowanego tego
           okresu.</li>
         <li><strong>Data wygaśnięcia konta</strong> - określa ilość dni od
           północy 1 stycznia 1970r., po których nie będzie można używać
-          konta do logowania do systemu. Zero bądź puste pole (tak jak na
-          przykładzie) oznacza iż konto nie wygasa nigdy.</li>
+          konta do logowania się. Zero bądź puste pole (tak jak na
+          przykładzie) oznacza iż konto nigdy nie wygaśnie.</li>
         <li><strong>Pole zarezerowane</strong> - pole zarezerowowane do użycia
           w przyszłości.</li> 
       </ul>
       <p>
         W przypadku pól od zaszyfrowanego hasła do pola zarezerowanego. Puste
-        pole lub 0 wyłącza przeznaczone im właściwości. Te opcje są zazwyczaj
-        ustawiane w pliku <em>/etc/login.defs</em> i nazwane są 
-        <strong>polityką ważności haseł</strong> lub ang.
-        <em>pasword aging</em>. Na konie zwróćmy uwagę na szczegóły tego pliku:
+        pole lub 0 wyłącza przeznaczone im właściwości. Część z tych opcji 
+        ustawiana jest w pliku <em>/etc/login.defs</em> i nazwane są 
+        <strong>zasadami ważności haseł</strong> lub ang.
+        <em>pasword aging</em>. Na koniec zwróćmy uwagę na szczegóły tego pliku:
       </p>
 <pre class="code-block">
 [root@server1 ~]# ls -l /etc/shadow
@@ -3556,7 +3591,7 @@ user2000:!!:19163:0:99999:7:::
       <h3 id="5.2.3.group">5.2.3. Plik /etc/group</h3>
       <p>
         Plik <em>/etc/group</em> jest odpowiednikiem dla pliku 
-        <em>/etc/passwda</em> tylko, że dla group. Ten plik ma podobną budową
+        <em>/etc/passwd</em> tylko, że dla group. Ten plik ma podobną budową
         do plików <em>/etc/passwd</em> lub <em>/etc/shadow</em> posiada jednak
         mniejszą ilość pól.
       </p>
@@ -3584,19 +3619,19 @@ sgrp2:x:8888:user1000,user2000
           <code class="code-inline">9999</code>, identyfikator grupy.</li>
         <li><strong>Lista członków grupy</strong> -
           <code class="code-inline">user100,user200</code>, lista użytkowników
-          oddzielonych przecinkami przypisane do tej grupy. W przypadku
+          oddzielonych przecinkami przypisanych do tej grupy. W przypadku
           podstawowych grup użytkowników (nazwa grupy jest identyczna z nazwą
-          użytkownika), członek jest domyślny i nie widnieje na liście.</li>
+          użytkownika), a członek jest domyślny i nie widnieje na liście.</li>
       </ul>
       <h3 id="5.2.4.gshadowfile">5.2.4. Plik /etc/gshadow</h3>
       <p>
         Grupy jak i użytkownicy również mają swoje hasła. W opisie pola hasła
         przy okazji pliku <em>/etc/group</em> wyjaśniłem dlaczego tak jest. Te
-        hasła muszą być gdzieś składowane i to w bezpieczny sposób. Hasłą grup
+        hasła muszą być gdzieś składowane i to w bezpieczny sposób. Hasła grup
         również są przesłonione jak hasła użytkowników. Miejscem składowania
-        haseł grup jest jest plik <em>/etc/gshadow</em>, zawiera on podbne
+        haseł grup jest jest plik <em>/etc/gshadow</em>, zawiera on podobne
         wpisy jak plik <em>/etc/group</em> i jest z nim powiązany wspólnym
-        kluczem jakim są nazwy grup.
+        kluczem jakim jest nazwa grupy.
       </p>
 <pre class="code-block">
 [root@server1 user]# tail /etc/gshadow
@@ -3626,12 +3661,13 @@ g1:!::
           zarządzać grupą, mogą oni dodawać i usuwać członków przy użyciu 
           polecenia <strong>gpasswd</strong>.</li>
         <li><strong>Członkowie grupy</strong>, oddzielona przecinkami lista
-          członków grupy.</li>
+          użytkowników należąca do tej grupy.</li>
       </ul>
-      <h2 id=5.3.basicsofusermanagement">5.3. Podstawy zarządzania użytkownikami</h2>
+      <h2 id="5.3.basicsofusermanagement">5.3. Podstawy zarządzania użytkownikami</h2>
       <p>
         W tym podrozdziale poznamy podstawy zarządzania użytkownikami. Będziemy
-        tworzyć, zmieniać informacje o nich oraz usuwać. Tworząc nowego 
+        tworzyć użytkowników, zmieniać informacje o nich oraz ich usuwać. 
+        Tworząc nowego 
         użytkownika wydajemy proste polecenie i podajemy jego nazwę. Taki 
         użytkownik tworzony jest z domyślnymi wartościami. Zanim zaczniemy
         tworzyć użytkowników poznamy dwa miejsca, skąd mogą brać się te
@@ -3643,7 +3679,7 @@ g1:!::
         Informacje o tym jaką przydzielić użytkownikowi powłokę, czy między
         jakimi wartościami powinien znajdować się jego <em>UID</em> są w
         systemie z góry określone. Takimi miejscami, w których możemy szukać
-        domyślnych wartości jest katalog plik <em>/etc/default/useradd</em>,
+        domyślnych wartości jest plik <em>/etc/default/useradd</em>,
         którego zawartość dostępna jest po wydaniu poniższego polecenia:
       </p>
 <pre class="code-block">
@@ -3661,16 +3697,17 @@ CREATE_MAIL_SPOOL=yes
         (<code class="code-inline">GROUP</code>), jednak
         ta opcja używana jest gdy opcja <em>USERGROUPS_ENAB</em>, w pliku
         <em>/etc/login.defs</em> (drugim z plików) jest ustawiona na <em>NO</em>.
-        Poza tym znamy domyślną lokalizację tworzenia katalogów domych
+        Poza tym znamy domyślną lokalizację tworzenia katalogów domowych
         (<code class="code-inline">HOME</code>), czas nieaktywność
         (<code class="code-inline">INACTIVE</code>), który określa liczbę dni
-        pomiędzy wygaśnięciem hasłą za trwałym zablokowaniem konta, domyślną
+        pomiędzy wygaśnięciem hasła a trwałym zablokowaniem konta, domyślną
         datę wygaśnięcia konta (<code class="code-inline">EXPIRE</code>), 
         domyślną powłokę (<code class="code-inline">SHELL</code>), lokalizację
         katalogu szkieletowego (<code class="code-inline">SKEL</code>) - 
         katalog ten przechowuje pliki kopiowane do każdego katalogu domowego
-        nowego użytkownika w momencie jego utworzenia oraz zmienną określającą
-        czy tworzyć pliki skrzynki mailowej każdemu użytkownikowi
+        nowego użytkownika w momencie jego utworzenia. Ostatnią wartością jest
+        zmienną określająca czy tworzyć pliki skrzynki mailowej każdemu 
+        użytkownikowi
         (<code class="code-inline">CREATE_MAIL_SPOOL</code>). Nie które z tych
         wartości możemy modyfikować używając tego samego polecenia, więcej
         informacji na ten temat znajduje się na stronie podręcznia polecenia
@@ -3711,18 +3748,20 @@ HMAC_CRYPTO_ALGO SHA512
 </pre>
       <p>
         Wewnątrz tego pliku znajdują się definicje takich wartości jak
-        mask użytkownika (<code class="code-inline">umask</code>), elementy
+        maska użytkownika (<code class="code-inline">umask</code>), elementy
         polityki haseł (<code class="code-inline">PASS_...</code>) czy zakresy
         wartości <em>UID</em> oraz <em>GID</em>. W tym pliku również znajduje
         się nazwa algorytmu używanego do przesłaniania haseł. Opisy
         poszczególnych wartości zawartych w tym pliku znajdują się na
         stronie podręcznika.
       </p>
-      <h3 id="5.3.1.createuser">5.3.1. Tworzenie użytowników</h3>
+      <h3 id="5.3.2.useradd">5.3.2. Tworzenie użytowników</h3>
       <p>
-        Tworzeniu użytkowników systemie służy polecenie <strong>useradd</strong>,
+        Do tworzenia użytkowników systemie służy polecenie 
+        <strong>useradd</strong>,
         domyślnie wymaga on wyłącznie podania nazwy użytkownika. Podczas tej
-        czynności zostanie dodane wpisy do plików autentykacja, które owialiśmy
+        czynności zostaną dodane wpisy do plików autentykacyjnych, które 
+        omwialiśmy
         wcześniej, zostanie utworzony katalog domowy i przekopiowane zostaną
         do niego pliki z katalogu szkieletowego (<em>/etc/skel</em>). Utworzymy
         sobie teraz testowego użytkownika.
@@ -3731,9 +3770,10 @@ HMAC_CRYPTO_ALGO SHA512
 [root@server1 user]# useradd user1
 </pre>
       <p>
-        To polecenie utworzy użytkownika z domyślnymi wartościamy identyfkatora
-        powłoki oraz innymi. Polecenie to daje możliwość zmiany tych wartości.
-        poniżej znajduje się lista, na której zawarto najważniejsze z nich:
+        To polecenie utworzy użytkownika z domyślnymi wartościamy identyfkatora,
+        powłoki oraz innymi. Polecenie to daje możliwość zmiany tych wartości
+        podczas tworzenie nowego użytkownika. Poniżej znajduje się lista, na 
+        której zawarto najważniejsze z nich:
       </p>
       <ul>
         <li><strong>-d</strong>, pozwala na podanie ścieżki do katalogu
@@ -3747,7 +3787,187 @@ HMAC_CRYPTO_ALGO SHA512
           grupy musi być unikatowy. Ta opcja pozwala na współdzielenie
           (w tym przypadku) <em>UID</em>-u, choć konieczność użycia tej opcji
           zachodzi tylko w specyficznych przypadkach.</li>
+        <li><strong>-s</strong>, pozwala na ustalenia domyślnego programu,
+          który uruchamiany jest zaraz po zalogowaniu się użytkownika. Tym
+          programem najczęściej jest powłoka.</li>
+        <li><strong>-u</strong>, pozwala na podanie identyfikatora użytkownika
+          <em>UID</em>, identyfikator powinien być unikatory w cały systemie,
+          chyba że podano opcję <em>-o</em>.</li>
       </ul>
+      <p>
+        Chcąc użyć tych opcji podaje się je po nazwie polecenia przed nazwą
+        użytkownika. W ramach ćwiczeń możemy utworzyć kilku użytkowników z
+        losowymi wartościami opcji podanych powyżej. W tym rozdziale poznamy
+        narzędzie, które służy usuwania użytkowników, ale za nim to zrobimy
+        poznamy polecenie, dzięki któremu będziemy mogli zmienić opcje już
+        utworzonych użytkowników.  
+      </p>
+      <p>
+        Tak utworzonym użytkowników pozostało tylko nadać hasło, przy użyciu
+        polecenie <strong>passwd</strong>.
+      </p>
+      <p>
+        Tutaj podano tylko część opcji tego polecenia, więcej znajduje się
+        na stronie podręcznika. Nie uczmy się także opcji na pamięć, raczej
+        zawsze będziemy mieć dostęp do stron podręcznika.
+      </p>
+      <h3 id="5.3.3.usermod">5.3.3. Zmiana informacji użytkownika</h3>
+      <p>
+        Zmianie informacji użytkownika służy polecenie <strong>usermod</strong>,
+        ma ono prawie identyczne opcje jak polecenie <em>useradd</em>. Poza
+        kilkoma wyjątkami.
+      </p>
+      <ul>
+        <li><strong>-l</strong> - opcja pozwala na podanie nowej nazwy
+          użytkownika.</li>
+        <li><strong>-d</strong> - opcja pozwala na zmianę katalogu domowego.
+          Nie było by tej opcji na tej liście gdyby nie fakt, iż aby katalog
+          został utworzony na podanej ścieżce, ta opcją musi zostać użyta w
+          raz z opcją <em>-m</em>, której zadaniem jest przeniesienie danych
+          z poprzedniego katalogu.</li>
+      </ul>
+      <p>
+        Na poniższym przykładzie pokazano zmianę katalogu domowego użytkownika
+        <em>user90</em>:
+      </p>
+<pre class="code-block">
+[root@server1 ~]# tail /etc/passwd
+...
+user90:x:5003:5003::/home/user90:/bin/bash
+
+[root@server1 ~]# usermod -d /usr/home90 -m user90
+[root@server1 ~]# tail /etc/passwd
+...
+user90:x:5003:5003::/usr/home90:/bin/bash
+
+[root@server1 ~]# ls -al /usr/home90
+total 12
+drwx------.  3 user90 user90  78 Jun 26 16:06 .
+drwxr-xr-x. 13 root   root   158 Jun 27 14:31 ..
+-rw-r--r--.  1 user90 user90  18 Nov  5  2021 .bash_logout
+-rw-r--r--.  1 user90 user90 141 Nov  5  2021 .bash_profile
+-rw-r--r--.  1 user90 user90 492 Nov  5  2021 .bashrc
+drwxr-xr-x.  4 user90 user90  39 Jun 26 13:48 .mozilla
+</pre>
+      <p>
+        Pozostałe opcje, które znajdują się na stronie podręcznika tego
+        polecenia możemy używać w ten sam sposób jak w przypadku
+        <em>useradd</em>.
+      </p>
+      <h3 id="5.3.4.userdel">5.3.4. Usuwanie użytkowników</h3>
+      <p>
+        Kiedy użytkownicy przestają być potrzebni, ze względów bezpieczeństwa
+        można, albo ich zablokować albo usunąć. W tym rodziale zajmiemy się
+        wyłącznie usuwaniem. Polecenie do usuwania użytkowników to
+        <strong>userdel</strong>. Jest ono prostolinijne i niewymaga 
+        dodatkowych przełączników, wystarczy podać nazwę użytkownika jako
+        argument polecenia i użytkownik zostanie usunięty, jednak jego dane
+        pozostaną w systemie. Użytkownika wraz z danymi możemy usunąć za
+        przy użyciu opcji <em>-r</em>.
+      </p> 
+<pre class="code-block">
+[root@server1 ~]# userdel -r user90
+[root@server1 ~]# tail /etc/passwd
+chrony:x:986:981::/var/lib/chrony:/sbin/nologin
+dnsmasq:x:985:980:Dnsmasq DHCP and DNS server:/var/lib/dnsmasq:/sbin/nologin
+tcpdump:x:72:72::/:/sbin/nologin
+systemd-oom:x:978:978:systemd Userspace OOM Killer:/:/usr/sbin/nologin
+user:x:1000:1000:user:/home/user:/bin/bash
+user100:x:1001:1001::/home/user100:/bin/bash
+user200:x:1002:1002::/home/user200:/bin/bash
+user5000:x:5000:7000::/home/user5000:/bin/bash
+user1000:x:5001:5001::/home/user1000:/bin/bash
+user2000:x:5002:5002::/home/user2000:/bin/bash
+[root@server1 ~]# ls -al /usr/home90
+ls: cannot access '/usr/home90': No such file or directory
+</pre>
+      <h3 id="5.3.5.nologinusers">5.3.5. Użytkownicy bez możliwości logowania</h3>
+      <p>
+        Tak jak na początku powiedzieliśmy sobie, że użytkownicy w systemie
+        istnieją, po to aby wyznaczać granice. Takim użytkownikami
+        są najczęściej są użytkownicy systemowi, którzy są związani z róznego
+        rodzaju usługami. Cechą która ich wyróżnia jest fakt, iż nie mają
+        oni możliwości logowania do systemu, inaczej mówiac są 
+        <strong>użytkownikami nieinteraktywnymi</strong>. Użytkownicy tego 
+        typu w miejscu powłoki mają
+        wskazany program <strong>/sbin/nologin</strong>. Ten mały program przy
+        próbie zalogowania zwróci informacje o tym, że to konto jest obecnie
+        niedostępne. Treść tego komunikatu możemy zmieniać, wpisująć nasz
+        komunikat do pliku <em>/etc/nologin.txt</em>. Użytkownikiem bez
+        możliwości logowania może być każdy, kto ma zamiast powłoki ustawiony
+        właśnie ten program. Poniżej znajduje się polecenie, które zmieni
+        użytkownika <em>user2000</em> w użytkownika nieinteraktywnego.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# usermod -s /sbin/nologin user2000
+[root@server1 ~]# tail /etc/passwd
+chrony:x:986:981::/var/lib/chrony:/sbin/nologin
+dnsmasq:x:985:980:Dnsmasq DHCP and DNS server:/var/lib/dnsmasq:/sbin/nologin
+tcpdump:x:72:72::/:/sbin/nologin
+systemd-oom:x:978:978:systemd Userspace OOM Killer:/:/usr/sbin/nologin
+user:x:1000:1000:user:/home/user:/bin/bash
+user100:x:1001:1001::/home/user100:/bin/bash
+user200:x:1002:1002::/home/user200:/bin/bash
+user5000:x:5000:7000::/home/user5000:/bin/bash
+user1000:x:5001:5001::/home/user1000:/bin/bash
+user2000:x:5002:5002::/home/user2000:/sbin/nologin
+</pre>
+      <p>
+        Kiedy spróbuje się na niego zalogować otrzymam wspomniany komunikat.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# su - user2000
+This account is currently not available.
+</pre>
+      <p class="exam_tip">
+        Jeśli w systemie użytkownik, który teoretycznie nie powinien mieć
+        możliwości logowania zaloguje się do systemu to znaczy, że mamy
+        poważny problem z bezpieczeństwem. Wówczas należy sprawdzić 
+        w pliku <em>/etc/passwd</em> czy wszyscy użytkownicy nieinteraktywni 
+        mają ustawiony domyślny program na <em>/sbin/nologin</em>.
+      </p>
+      <h3 id="exec5.1">Ćwiczenie 1: Sprawdzenie prób logowania użytkowników</h3>
+      <p>
+        Jako superużytkownik na maszynie <em>server1</em>. Zapisz przy użyciu
+        polecenia <em>Vim</em> ostaniego użytkownika, któremu udało się
+        zalogować oraz ostatniego którego logowanie nie powiodło się. Zapisz 
+        ostatnie
+        uruchomienie systemu, poza obecnym włączniem oraz listę użytkowników, 
+        którzy nigdy się nie logowali do systemu.
+      </p>
+      <h3 id="exec5.2">Ćwiczenie 2: Weryfikacja użytkownika oraz grupy</h3>
+      <p>
+        Jako superużytkownik na maszynie <em>server1</em>, uruchom polecenie
+        <em>who</em> oraz <em>w</em> porównaj wyniki ich działania. Uruchom
+        polecnia <em>id</em> oraz <em>groups</em> następnie omów informacje
+        zwracane przez nie.
+      </p>
+      <h3 id="exec5.3">Ćwiczenie 3: Tworzenie użytkowników</h3>
+      <p>
+        Jak superużytkownik na maszynie <em>server1</em>, utwórz użytkownika o
+        nazwie <em>user4100</em>, o identyfikatorze <em>4100</em>, katalogu
+        domowym znajdującym się katalogu <em>/usr</em>. Następnie utworz
+        użytkownika <em>user4200</em> z domyślnymi ustawieniami. Przypisz obu
+        hasło. Następnie wyświetl dotyczące ich wpisy w plikach autentykacji
+        (<em>/etc/{passwd,shaddow,group,gshadow}</em>).
+      </p>
+      <h3 id="exec5.4">Ćwiczenie 4: Tworzenie użytkowników nieinteraktywnych</h3>
+      <p>
+        Jako superużytkownik na maszynie <em>server1</em>, utwórz użytkownika
+        <em>user4300</em>, następnie zmień informacje o nim tak, aby stał sie
+        użytkownikiem nieinterkatywnym. Ustaw mu hasło i spróbuj się zalogować
+        na niego. Jaki komunikat został wyświetlony? Wyświetl wpis użytkownika
+        w pliku <em>/etc/passwd</em>. Co spowodowało, że użytkownik nie może
+        się zalgować?
+      </p>
+      <h2 id="ch5summary">Podsumowanie</h2>
+      <p>
+        W tym rozdziale dowiedzieliśmy się w jaki sposób możemy sprawdzić
+        próby logowania się do systemu, kto jest zalgowany i co robi. 
+        Poznaliśmy zestaw plików odpowidzialnych za autentykacje, a także
+        nauczyliśmy w podstawowym stopniu zarządzać użytkownikami. W następnym
+        rozdziale skupimy się na zasadach haseł i przełączaniu użytkowników.
+      </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

@@ -3599,6 +3599,7 @@ sgrp2:x:8888:user1000,user2000
         kluczem jakim są nazwy grup.
       </p>
 <pre class="code-block">
+[root@server1 user]# tail /etc/gshadow
 user:!::
 user100:!::
 user200:!::
@@ -3717,6 +3718,36 @@ HMAC_CRYPTO_ALGO SHA512
         poszczególnych wartości zawartych w tym pliku znajdują się na
         stronie podręcznika.
       </p>
+      <h3 id="5.3.1.createuser">5.3.1. Tworzenie użytowników</h3>
+      <p>
+        Tworzeniu użytkowników systemie służy polecenie <strong>useradd</strong>,
+        domyślnie wymaga on wyłącznie podania nazwy użytkownika. Podczas tej
+        czynności zostanie dodane wpisy do plików autentykacja, które owialiśmy
+        wcześniej, zostanie utworzony katalog domowy i przekopiowane zostaną
+        do niego pliki z katalogu szkieletowego (<em>/etc/skel</em>). Utworzymy
+        sobie teraz testowego użytkownika.
+      </p>
+<pre class="code-block">
+[root@server1 user]# useradd user1
+</pre>
+      <p>
+        To polecenie utworzy użytkownika z domyślnymi wartościamy identyfkatora
+        powłoki oraz innymi. Polecenie to daje możliwość zmiany tych wartości.
+        poniżej znajduje się lista, na której zawarto najważniejsze z nich:
+      </p>
+      <ul>
+        <li><strong>-d</strong>, pozwala na podanie ścieżki do katalogu
+          domowego użytkownika.</li>
+        <li><strong>-g</strong>, pozwala na podanie <em>GID</em>-u lub nazwy
+          podstawowej grupy użytkownika.</li>
+        <li><strong>-G</strong>, pozwala na wprowadzenie grup, do których ma
+          należeć użytkownik, nazwy podajemy po przecinku (o ile więcej niż
+          jedna)</li>
+        <li><strong>-o</strong>, każdy identyfikator czy to użytkownika czy
+          grupy musi być unikatowy. Ta opcja pozwala na współdzielenie
+          (w tym przypadku) <em>UID</em>-u, choć konieczność użycia tej opcji
+          zachodzi tylko w specyficznych przypadkach.</li>
+      </ul>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

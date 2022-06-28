@@ -3968,6 +3968,251 @@ This account is currently not available.
         nauczyliśmy w podstawowym stopniu zarządzać użytkownikami. W następnym
         rozdziale skupimy się na zasadach haseł i przełączaniu użytkowników.
       </p>
+      <h1 id="6.advancedusermanagement">6. Zaawansowane zarządzanie użytkownikami</h1>
+      <p>
+        W poprzednim rozdziele nauczyliśmy się tworzy, usuwać użytkowników oraz
+        edytować informacje o nich. Poznaliśmy plik uwierzytelniania, którym
+        między innymi jest plik <em>/etc/shadow</em>, w nim przechowywane są
+        przesłonione hasła oraz zasady ważności haseł oraz kont i tym
+        zajmiemy sie na początku.
+      </p>
+      <h2 id="6.1.passwordaging">6.1. Zasady ważności hasła</h2>
+      <p>
+        Każdy system, który wykorzystuje intensywnie użytkowników, powinien
+        wdrożyć zasady bezpieczeństwa z nimi związane. Może wymusić na osobach 
+        z niego korzystających zabezpieczenie swoich kont
+        po przez regularną zmianę hasła, blokadę nieaktywnych czy utworzenie
+        kont dla użytkowników tymczasowych tylko na jakiś określony czas, po
+        jego upływie konto zostanie zablokowane. Te zasady mieszczą w się 
+        w dziedzinie ustawień ważności hasła i są realizowane w dystrybucjach
+        Linuksa za pomocą dwóch poleceń: <strong>chage</strong> oraz
+        <strong>passwd</strong>. Poniżej w tabeli skumulowałem opcje 
+        tych dwóch poleceń odpowiadające za konkrentą czynność.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>chage</th>
+            <th>passwd</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Data ostatniej modyfikacji hasła</th>
+            <td><em>-d</em></td>
+            <td><em>X</em></td>
+          </tr>
+          <tr>
+            <th>Data wygaśnięcia konta</th>
+            <td><em>-E</em></td>
+            <td><em>X</em>
+          </tr>
+          <tr>
+            <th>Czas nieaktywności hasła</th>
+            <td><em>-I</em></td>
+            <td><em>-i</em></td>
+          </tr>
+          <tr>
+            <th>Informacje o zasadach użytkownika</th>
+            <td><em>-l</em></td>
+            <td><em>-S</em></td>
+          </tr>
+          <tr>
+            <th>Minimalna ważność hasła</th>
+            <td><em>-m</em></td>
+            <td><em>-n</em></td>
+          </tr>
+          <tr>
+            <th>Maksymalna ważność hasła</th>
+            <td><em>-M</em></td>
+            <td><em>-x</em></td>
+          </tr>
+          <tr>
+            <th>Okres ostrzegania</th>
+            <td><em>-W</em></td>
+            <td><em>-w</em></td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Po za tymi wspólnymi cechami, polecenie <em>passwd</em>, jest wstanie:
+      </p>
+      <ul>
+        <li><strong>usunąć hasło</strong> - <em>-d</em>, takie konto, wówczas
+          staje się kontem bez hasła.</li>
+        <li><strong>wymusić utratę ważności hasła</strong> - <em>-e</em>, po
+          zalogowaniu na takie konto, wymagana będzie zmiana hasła. Ustawienie
+          opcji <em>-d</em> polecenia <em>chage</em>, daje ten sam efekt.</li>
+        <li><strong>zablokować konto</strong> - <em>-l</em>, użytkownik nie
+          będzie mieć możliwości logowania się w systemie.</li>
+        <li><strong>odblokować konto</strong> - <em>-u</em>, przywraca
+          możliwość logowania się zablokowanemu kontu.</li>
+      </ul>
+      <p>
+        Stosując <em>chage</em> lub <em>passwd</em> nazwę użytkownika podajemy
+        po opcjach i ich wartościach. Na poniższym przykładzie za preznetowałem
+        w jaki sposób możemy ustawić wszystkie pozostałe pola we wpis w pliku
+        <em>/etc/shadow</em> za pomocą powyższych poleceń.
+      </p>
+<pre class="code-block">
+#chage:
+[root@server1 ~]# chage -m 7 -M 28 -W 5 -I 7 -E 2022-12-31 user3000
+[root@server1 ~]# chage -l user3000
+Last password change					: Jun 28, 2022
+Password expires					: Jul 26, 2022
+Password inactive					: Aug 02, 2022
+Account expires						: Dec 31, 2022
+Minimum number of days between password change		: 7
+Maximum number of days between password change		: 28
+Number of days of warning before password expires	: 5
+[root@server1 ~]# grep 'user3000' /etc/shadow
+user3000:$6$AjNe9ajpYrZ1Sjld$NN36zAMKPlnJElCvuUX1UM0fc6Ymc5pLY4medoHRMCWJhnsoiuKSpjbo7uwTZVkVlv.swqQJ5Dxoa2QZyjsXO.:19171:7:28:5:7:19357:
+
+#passwd:
+[root@server1 ~]# passwd -n 5 -x 28 -w 5 -i 7 user4000
+Adjusting aging data for user user4000.
+passwd: Success
+[root@server1 ~]# passwd -S user4000 
+user4000 PS 2022-06-28 5 28 5 7 (Password set, SHA512 crypt.)
+[root@server1 ~]# grep 'user4000' /etc/shadow
+user4000:$6$29yZ7yqj2lWdSoQE$AMp2ZXAqxa.wWMA88dINDdogjych/Yshnip1whwaqymLTS4ALW9UGx9406tZmsghOTXptBIFrq4UvDF/.sl2f0:19171:5:28:5:7::
+</pre>
+      <p>
+        Za pomocą polecenia <em>passwd</em>, nie możemy dodać daty wygaśnięcie
+        hasła. Jednak to polecenie wraz z poleceniem, które znamy z
+        poprzednie rozdziału <em>usermod</em>, może blokować i odblokowywać
+        konta. Zablokujemy i odblokumjemy oba wcześniej wykorzystwane konta.
+      </p>
+      <p>
+        Blokowanie kont za pomocą polecenia <em>passwd</em>
+      </p>
+<pre class="code-block">
+[root@server1 ~]# passwd -l user3000
+Locking password for user user3000.
+passwd: Success
+[root@server1 ~]# grep 'user3000' /etc/shadow
+user3000:!!$6$AjNe9ajpYrZ1Sjld$NN36zAMKPlnJElCvuUX1UM0fc6Ymc5pLY4medoHRMCWJhnsoiuKSpjbo7uwTZVkVlv.swqQJ5Dxoa2QZyjsXO.:19171:7:28:5:7:19357:
+[root@server1 ~]# passwd -u user3000
+Unlocking password for user user3000.
+passwd: Success
+[root@server1 ~]# grep 'user3000' /etc/shadow
+user3000:$6$AjNe9ajpYrZ1Sjld$NN36zAMKPlnJElCvuUX1UM0fc6Ymc5pLY4medoHRMCWJhnsoiuKSpjbo7uwTZVkVlv.swqQJ5Dxoa2QZyjsXO.:19171:7:28:5:7:19357:
+</pre>
+      <p>
+        Jak możemy zauważyć po zablokowaniu konta przed przesłonionym hasłem
+        zostały umieszczone dwa wykrzykniki, które po odblokowaniu konta
+        zostały usunięte. Poniżej znajduje się te same czynności wykonne
+        przy użyciu polecenia <em>usermod</em>.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# usermod -L user4000
+[root@server1 ~]# grep 'user4000' /etc/shadow
+user4000:!$6$29yZ7yqj2lWdSoQE$AMp2ZXAqxa.wWMA88dINDdogjych/Yshnip1whwaqymLTS4ALW9UGx9406tZmsghOTXptBIFrq4UvDF/.sl2f0:19171:5:28:5:7::
+[root@server1 ~]# usermod -U user4000
+[root@server1 ~]# grep 'user4000' /etc/shadow
+user4000:$6$29yZ7yqj2lWdSoQE$AMp2ZXAqxa.wWMA88dINDdogjych/Yshnip1whwaqymLTS4ALW9UGx9406tZmsghOTXptBIFrq4UvDF/.sl2f0:19171:5:28:5:7::
+</pre>
+      <p>
+        W przypadku polecenia <em>usermod</em>, umiesczony został tylko jeden
+        wykrzyknik przed hasłem, jednak nie ważne czy został umieszczony jeden
+        czy dwa, wykrzyknik przed przesłonionym hasłem oznacza, że konto jest
+        zablokowane.
+      </p>
+      <h2 id=6.2.groupmanaging">6.2. Zarządzanie grupami</h2>
+      <p>
+        Podobnie tak jak w przypadku użytkowników, w poprzednim rozdziale 
+        tak i grupami możemy zarządać w podobny sposób, możemy je dodwać z
+        dostoswanymi do potrzeb informacjami, zmieniać ich informacje oraz
+        usuwać. 
+      </p>
+      <h3 id="6.2.1.groupadd">6.2.1. Tworzenie nowych grup</h3>
+      <p>
+        Do tworzenia nowych grup służy polecenie <strong>groupadd</strong>,
+        które do utworzenia grupy z domyślnymi wartościami wymaga jednynie jej
+        nazwy. Poniżej znajdują się najważniejsze opcje tego polecenia:
+      </p>
+      <ul>
+        <li><strong>-g</strong>, pozwala na podanie własnego identyfikatora
+          grupy <em>GID</em>, identyfikator powinien być unikatowy, chyba że
+          podano opcję <em>-o</em>.</li>
+        <li><strong>-o</strong>, pozwala na współdzielenie identyfikatora z
+          inną groupą.</li>
+        <li><strong>-r</strong>, tworzy grupę systemową z identyfikatorem w
+          zakresie podanym w pliku <em>/etc/login.defs</em>, przeważnie 
+          między 201 a 999.</li>
+        <li><strong>-U</strong>, pozwala podać listę użytkowników, który będą
+          należeć do grupy, nazwy użytkowników są oddzielone od siebie
+          przecinkiem.</li>
+      </ul>
+<pre class="code-block">
+[root@server1 ~]# groupadd -g 9999 sgrp
+[root@server1 ~]# grep 'sgrp' /etc/group
+sgrp:x:9999:
+</pre>
+      <p>
+        Na powyższym przykładzie utworzyłem grupę z niestandardowym 
+        identyfikatorem, następnie wyświetliłem jego wpis w pliku 
+        <em>/etc/group</em>.
+      </p>
+      <h3 id="6.2.2.groupmod">6.2.2. Zmiana informacji grupy</h3>
+      <p>
+        Polecenie <strong>groupmod</strong>, posiada takie samo zastosowanie
+        dla grup, jak polecenie <em>usermod</em> dla użytkowników. Część opcji
+        <em>groupmod</em> odpowiada opcją z polecenia <em>groupadd</em>.
+        Na wyszczególnienie zasługuje opcja <strong>-n</strong>, która pozwala
+        na zmianę nazwy grupy.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# groupmod -g 8888 -n sysadm sgrp
+[root@server1 ~]# grep 'sgrp' /etc/group
+[root@server1 ~]# grep 'sysadm' /etc/group
+sysadm:x:8888:
+</pre>
+      <p>
+        Jak możemy zobaczyć na przykładzie grupie 
+        <code class="code-inline">sgrp</code> zmieniony został identyfikator
+        oraz nazwa. Teraz ta grupa widnieje pod <em>GID</em>-em
+        <code class="code-inline">8888</code> oraz nazwą
+        <code class="code-inline">sysadm</code>.
+      </p>
+      <h3 id="6.2.3.groupdel">6.2.3. Usuwanie grup</h3>
+      <p>
+        Jeśli grupa nie jest już potrzebna w systemie możemy ją usunąć. Do
+        usuwania grup służy polecenie <strong>groupdel</strong>. Polecenie jest
+        bardzo proste w użyciu, jedyny wymagany argument to nazwa grupy.
+      </p>
+<pre class="code-block">
+[root@server1 ~]# groupdel sysadm
+[root@server1 ~]# grep 'sysadm' /etc/group
+</pre>
+      <p>
+        Grupa została usunięta. Polecenie <code class="code-inline">grep</code>
+        nie mogło odnaleźć wzorca <code class="code-inline">sysadm</code> w
+        pliku <em>/etc/group</em>.
+      </p>
+      <h2 id="6.3.suandsudo">6.3. Przełączanie użytkowników oraz uruchamianie
+        poleceń jako superużytkownik</h2>
+      <p>
+        Wykonywanie zadań administracyjnych najczęściej będzie wymagać
+        podniesienie uprawnień do poziomu superużytkownika - <em>root</em>.
+        Do tej pory wszystkie polecenia w tym materiale wykonywałem z poziomu
+        konta <em>root</em> (wyjątkowowo kilka poleceń zostało wykonych jako
+        zwykły użytkownik), więc aby wykonywać uprawnienia administracyjne
+        należy się zalogować jak superużytkownik. Logowanie bezpośrednie na to
+        konto nie jest złą praktyką. A do dyspozycji mamy dwa rozwiązania.
+        Pierwszym z nich jest przełączenie użytkownika. 
+      </p>
+      <h3 id="6.3.1.su">6.3.1. Przełącznie użytkownika</h3>
+      <p>
+        Pierwszą z metod jest zalogwanie się na nasze konto (konto dostępnowe,
+        zwykły użytkownik), a następnie przełącznie się na konto <em>root</em>
+        za pomocą polecenia <strong>su</strong>. To polecenie pozwala na
+        przełączenie się na dowolne konto, jeśli jak pierwszy argument podamy
+        myślnik (<strong>-</strong>) przed nazwą użytkownika podczas
+        przełączania zostaną uruchomione skrypty startowe, które stworzą nam
+        środowisko najbardziej zbliżone do bezpośredniego logowania.
+      </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

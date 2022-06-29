@@ -4205,13 +4205,256 @@ sysadm:x:8888:
       </p>
       <h3 id="6.3.1.su">6.3.1. Przełącznie użytkownika</h3>
       <p>
-        Pierwszą z metod jest zalogwanie się na nasze konto (konto dostępnowe,
+        Pierwszą z metod jest zalogwanie się na nasze konto (konto dostępowe,
         zwykły użytkownik), a następnie przełącznie się na konto <em>root</em>
         za pomocą polecenia <strong>su</strong>. To polecenie pozwala na
         przełączenie się na dowolne konto, jeśli jak pierwszy argument podamy
         myślnik (<strong>-</strong>) przed nazwą użytkownika podczas
         przełączania zostaną uruchomione skrypty startowe, które stworzą nam
         środowisko najbardziej zbliżone do bezpośredniego logowania.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ su - root
+Password: 
+[root@server1 ~]# 
+</pre>
+      <p>
+        Za pomocą tego polecenia możemy przełączyć się na dowolne konto, jeśli
+        zwykli użytkownicy przełączają się między kontami wymagane będzie
+        podanie hasła dla docelowego konta, wyjątkiem tutaj jest
+        superużytkownik, który nie musi podawać żadnych haseł.
+      </p>
+      <p>
+        Aby korzystać z tej metody nie trzeba nawet otwierać sesji powłoki jako
+        przełączony użytkownik, możem poprostu wykonać polecenie jako on za
+        pomocą opcji <em>-c</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ su root -c 'vgs'
+Password: 
+  VG   #PV #LV #SN Attr   VSize   VFree
+  rhel   1   2   0 wz--n- &lt;19.00g    0 
+</pre>
+      <p>
+        Korzystanie z polecenia <em>su</em>, nie jest zbyt elastycznym
+        rozwiązaniem oraz wymaga aby konto <em>root</em> było cały czas
+        dostępne. Ten rodzaj podniesienia uprawnień w systemie używany jest
+        kilka dystrybucji w jednym celu aby pobrać i skonfigurować drugie
+        rozwiązanie, które służy do podniesienia uprawnień. 
+      </p>
+      <h3 id="6.3.2.sudo">6.3.2. Polecenie sudo</h3>
+      <p>
+        Użycie polecenia <strong>sudo</strong> jest znacznie lepszym
+        rozwiązaniem. Głównym argumentem jest fakt, iż możemy skonfigurować
+        to polecenie w taki sposób, aby dać użytkownikom dostęp tylko do
+        tych poleceń których potrzebują. Jednak na początku zajmiemy się
+        najprostszą konfiguracją, czyli stworzeniem lokalnego administratora,
+        które konta dalej będzie kontem zwykłego użytkownika. 
+      </p>
+      <p>
+        Do konfiguracji tego narzędzia służy plik <em>/etc/sudoers</em> oraz
+        katalog <em>/etc/sudoers.d</em>, w którym wystartczy umieścić plik
+        konfiguracją. Plik <em>/etc/sudoers</em>, możemy edytować dowolnym
+        edytorem, jednak pakiet <em>sudo</em> posiada specjalne polecenie
+        <strong>visudo</strong>, które stworzy kopie tymczasową pliku, której
+        będziemy dokonywać zmian, następnie polecenie nadpisze oryginalny plik,
+        plikiem tymczasowym i go usunie. Najprostszą konfiguracją jaką możemy
+        wykonać jest nadanie zwykłemu użytkownikowi uprawnień do wyszystkich
+        funkcji administracyjnych. Zmian możemy dokonać w dowolnym miejscu 
+        pliku, jednak nalepiej
+        znaleźć miejsce do tego przeznaczone, możemy je namierzyć wyszukując
+        linię <code class="code-inline">root ALL=(ALL)  ALL</code>, skopiować 
+        ją i wkleić pod nią, zmienimy tylko użytkownika na początku linii:
+      </p>
+<pre class="code-block">
+user ALL=(ALL)  ALL
+</pre>
+      <p>
+        Ten wpis zapewni użytkownikowi <code class="code-inline">user</code>
+        dostęp do wszystkich funkcji administracyjnych w systemie. Prócz
+        użytkownikom, dostęp do wszystkich lub określonych funkcji możemy nadać
+        grupie. Kiedy zajdzie taka potrzeba wystarczy dopisać użytkownika do
+        grupy, nie trzeba już edytować pliku. Konfiguracja grupy różni się od
+        konfiguracji użytkownika tym, że nazwę grupy poprzedza się znakiem
+        procentu (<strong>%</strong>)
+      </p>
+<pre class="code-block">
+%sysadms ALL=(ALL)  ALL
+</pre>
+      <p>
+        We wpisach konfiguracyjnych znajdują się aż trzy słowa 
+        <code class="code-block">ALL</code>, każde z nich ma oddzielne
+        znacznie. Pierwsze słowo <em>ALL</em> po nazwie użytkownika oznacza
+        nazwę komputera (lub adres IP), ponieważ plik <em>/etc/sudoers</em> 
+        może być współdzielony między innymi komputerami, jednak ten plik 
+        będzię dotyczyć tylko tego systemu dlatego też może pozostać 
+        <em>ALL</em>. Drugie słowo <em>ALL</em> w nawiasie oznacza jako kto
+        będzie będziemy wykonywać te polecenie, ta lista pozwala wybrać
+        użytkownika (po zastosowaniu opcji <em>-u</em>) do wykonania polecenia.
+        W nie których systemach możemy spotkać się z zapisem 
+        <em>(ALL:ALL)</em>, zapis <em>ALL</em> po dwukropku oznacza listę grup.
+        Grupę możemy wybrać z pomocą opcji <em>-g</em>. Ostanie <em>ALL</em>
+        jest listą poleceń do których użytkownik wydający polecenie
+        <em>sudo</em> będzie mieć dostęp. Poniżej przykładowe użycie polecenia
+        <em>sudo</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo vgs
+[sudo] password for user: 
+  VG   #PV #LV #SN Attr   VSize   VFree
+  rhel   1   2   0 wz--n- &lt;19.00g    0
+</pre>
+      <p>
+        Narzędzie <em>sudo</em> możemy skonfigurować w taki sposób aby nie
+        wymagało hasła podczas wydawania polecenia. We wcześniejszej dyrektywie,
+        konfigurującej użytkownika przed ostatnim słowem <em>ALL</em>
+        dopisujemy <em>NOPASSWD:</em>.
+      </p>
+<pre class="code-block">
+user ALL=(ALL)  NOPASSWD:ALL
+</pre>
+      <p>
+        Najczęściej naszym zadaniem związanym z poleceniem <em>sudo</em> będzie
+        przypisanie konkretnym użytkownikom dostępu do określonych poleceń.
+        Jeśli do skonfigrowania mamy wiele takich elementów za równo poleceń
+        jak i użytkowników, to aby zrobić to jak najefektywniej należy użyć
+        aliasów. <em>Sudo</em> swojej konfiguracji wyróżnia aliasy przeznaczone
+        dla użytkowników jak i dla poleceń. Alias z listą użytkowników tworzymy
+        tak jak na przykładzie:
+      </p>
+<pre class="code-block">
+User_Alias  PKGADM = user1, user100, user200
+</pre>
+      <p>
+        Po słowie <code class="code-inline">User_Alias</code> zapisujemy nazwę
+        aliasu, w tym przypadku jest <code class="code-inline">PKG_ADM</code>
+        po znaku równości (<strong>=</strong>) podajemy listę użytkowników
+        tak jak na przykładzie powyżej. Ze zbiorem poleceń jest podobnie ale
+        zmienia się dyrektywa inicjująca alias.
+      </p>
+<pre class="code-block">
+Cmnd_Alias PKGCMD = /usr/bin/yum, /usr/bin/rpm
+</pre>
+      <p>
+        Po zdefiniowaniu obu aliasów, możemy przejść do przypisnia aliasowi
+        <code class="code-inline">PKGADM</code> (określonym użytkownikom) 
+        dostępu do poleceń zapisanych w 
+        <code class="code-inline">PKGCMD</code>.
+      </p>
+<pre class="code-block">
+PKGADM ALL = PKGCMD
+</pre>
+      <p>
+        Teraz użytkownicy zdefioniowani w aliasie 
+        <code class="code-inline">PKGADM</code> będą mogli użyć tylko i 
+        wyłącznie poleceń zdefiniowanych w <code class="code-inline">PKGCMD</code>
+      </p>
+      <p>
+        Podczas pracy będziemy zazwyczaj definiować aliasy użytkowników,
+        ponieważ jeśli rozejrzymy się po pliku <em>/etc/passwd</em>, definicje
+        aliasów z pogrupowanymi poleceniami są już zapisane w komentarzach
+        wystarczy usunąć znak komentarza oraz przypisać ten alias określonej
+        grupie użytkowników.
+      </p>
+      <p>
+        Użycie polecenia <em>sudo</em> jest rejestrowane. Wpisy zapisywane są
+        do pliku <em>/var/log/secure</em> ich odczyt wymaga uprawnień
+        superużytkownika. We wpisach znajduje się nazwa użytkownika, który
+        wywołał to polecenie jak i samo polecenie.
+      </p>
+      <p>
+        Więcej informacji na temat tego narzędzie znajduje się na stronie
+        podręcznika samego polecenia jak i pliku <em>/etc/sudoers</em>. Jak
+        ćwiczenie, nadajmy uprawnienia do pełnych funkcji administracyjnych
+        zwykłemu użytkownikowi, którego tworzyliśmy podczas instalacji
+        systemu na serwerze. Od tego momentu na wszystkich przykładach będę
+        używać tego konta, a uprawnienia administracyjne będę wymuszać za 
+        pomocą polecenia <em>sudo</em>.
+      </p>
+      <h2 id="6.4.chownchgrp">6.4. Zmiana praw własności plików i katalogów</h2>
+      <p>
+        Polecenie <strong>chown</strong>, omówiliśmy sobie podczas omawiania
+        uprawnień plików. Polecenie to służy do zmiany właściciela oraz
+        ewentualnie grupy. 
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l file1 
+-rw-r--r--. 1 user user 0 Jun 26 15:30 file1
+[user@server1 ~]$ sudo chown user100 file1
+[sudo] password for user: 
+[user@server1 ~]$ ls -l file1
+-rw-r--r--. 1 user100 user 0 Jun 26 15:30 file1
+</pre>
+      <p>
+        Jednak w systemie istnieje inne polecenie, dzięki któremu możemy
+        zmienić grupę. Jest nim polecenie <strong>chgrp</strong>. Składania 
+        polecenia identyczna do składni <em>chown</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo chgrp user100 file1
+[sudo] password for user: 
+[user@server1 ~]$ ls -l file1 
+-rw-r--r--. 1 user100 user100 0 Jun 26 15:30 file1
+[user@server1 ~]$ 
+</pre>
+      <p>
+        Polecenia <em>chown</em> możemy również używać rekurencyjnie, aby
+        zmieniać prawa własności całych struktur katalogowych wraz z pod
+        katalogami. Tej czynności służy opcja <em>-R</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo chown -R root:root /tmp/etc
+</pre>
+      <p>
+        Na powyższym przykładzie zmieniłem właściciela oraz grupę do której
+        należą pliki wszystkim elementom w katalogu 
+        <code class="code-inline">/tmp/etc</code>.
+      </p>
+      <h3 id="exec6.1">Ćwiczenie 1: Utwórz użytkowników oraz skonfiguruj
+        zasady haseł</h3>
+      <p>
+        Na maszynie <em>server1</em> utwórz grupę <em>lnxgrp</em> o numerze
+        <em>GID</em> 6000. Utwórz użytkownika <em>user5000</em> o numerze
+        <em>UID</em> 5000 oraz numerze <em>GID</em> 6000. Przypisz mu hasło, a
+        następnie ustaw minimum 4 dni do następnej zmiany hasła, ważność hasła
+        na 30 dni oraz okres ostrzegania na 10 dni. Konto tego użytkownika
+        powinno wygasnąć 20 grudnia 2022.
+      </p>
+      <h3 id="exec6.2">Ćwiczenie 2: Zablokuj i odblokuj użytkownika</h3>
+      <p>
+        Na maszynie <em>server1</em> zablokuj użytkownika <em>user5000</em> za
+        pomocą polecenia <em>passwd</em>. Sprawdź jak zmienił się jego w pliku
+        <em>/etc/shadow</em>. Spróbuj się zalogować na użytkownika.
+        Odblokuj wcześniej zablokwanego użytkownika za pomocą polecenia
+        <em>usermod</em> zweryfikuj jego odblokowanie na podstawie wpisu z 
+        pliku powyżej.
+      </p>
+      <h3 id="exec6.3">Ćwiczenie 3: Zmień dane grupy</h3>
+      <p>
+        Na maszynie <em>server1</em> zmień <em>GID</em> grupy <em>lnxgrp</em> 
+        z 6000 na 7000, dodaj do niej użytkowników user1000 oraz user2000
+        (jeśli nie istnieją utwórz ich), na koniec zmień nazwę grupy na 
+        <em>dbagrp</em> i zweryfikuj zmiany.
+      </p>
+      <h3 id="exec6.4">Ćwiczenie 4: Konfiguracja dostępu do sudo</h3>
+      <p>
+        Na maszynie <em>server1</em>, skonfiguruj polecenie <em>sudo</em> dla
+        użytkownika <em>user5000</em>, tak aby miał dostęp do wszystkich
+        funkcji administracyjnych bez podawania hasła. W celu sprawdzenia
+        wydaj polecenie <em>sudo vgs</em>.
+      </p>
+      <h3 id="exec6.4">Ćwiczenie 5: Zmiana praw własności do plików i katalogów</h3>
+      <p>
+        Na maszynie <em>server1</em>, utwórz w katalogu <em>/tmp</em> plik
+        <em>f6</em> oraz katalog <em>d6</em>. Utwórz użytkownika <em>user90</em>.
+        Za pomocą polecenia <em>chown</em> ustaw właściciela pliku <em>f6</em>
+        na <em>user90</em>. Za pomocą polecenia <em>chgrp</em> ustaw grupę, do
+        której należy ten plik na <em>dbagrp</em>. Utwórz grupę <em>g1</em>,
+        następnie ustaw rekrencyjnie prawa własności dla katalogu <em>d6</em>,
+        na <em>user90</em>:<em>g1</em>.
+      </p>
+      <h2 id="ch5summary">Podsumowanie</h2>
+      <p>
       </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">

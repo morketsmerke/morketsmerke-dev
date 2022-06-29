@@ -198,6 +198,25 @@
             <li><a href="#ch5summary">Podsumowanie</a></li>
           </ul>
         </li>
+        <li><a href="#6.advancedusermanagement">6. Zaawansowane zarządzanie użytkownikami</a>
+          <ul class="toc">
+            <li><a href="#6.1.passwordaging">6.1. Zasady ważności hasła</a></li>
+            <li><a href="#6.2.groupmanaging">6.2. Zarządzanie grupami</a>
+              <ul class="toc">
+                <li><a href="#6.2.1.groupadd">6.2.1. Tworzenie nowych grup</a></li>
+                <li><a href="#6.2.2.groupmod">6.2.2. Zmiana informacji grupy</a></li>
+                <li><a href="#6.2.3.groupdel">6.2.3. Usuwanie grup</a></li>
+              </ul>
+            </li>
+            <li><a href="#6.3.suandsudo">Przełączanie użytkowników oraz uruchamianie poleceń jako superużytkownik</a>
+              <ul class="toc">
+                <li><a href="#6.3.1.su">6.3.1. Przełącznie użytkownika</a></li>
+                <li><a href="#6.3.2.sudo">6.3.2. Polecenie sudo</a></li>
+              </ul>
+            </li>
+            <li><a href="#6.4.chownchgrp">6.4. Zmiana praw własności plików i katalogów</a></li>
+          </ul>
+        </li>
       </ul>
       <h1 id="1.introduction">1. Wstęp</h1>
       <p>
@@ -3970,7 +3989,7 @@ This account is currently not available.
       </p>
       <h1 id="6.advancedusermanagement">6. Zaawansowane zarządzanie użytkownikami</h1>
       <p>
-        W poprzednim rozdziele nauczyliśmy się tworzy, usuwać użytkowników oraz
+        W poprzednim rozdziele nauczyliśmy się tworzyć, usuwać użytkowników oraz
         edytować informacje o nich. Poznaliśmy plik uwierzytelniania, którym
         między innymi jest plik <em>/etc/shadow</em>, w nim przechowywane są
         przesłonione hasła oraz zasady ważności haseł oraz kont i tym
@@ -3978,12 +3997,13 @@ This account is currently not available.
       </p>
       <h2 id="6.1.passwordaging">6.1. Zasady ważności hasła</h2>
       <p>
-        Każdy system, który wykorzystuje intensywnie użytkowników, powinien
+        Każdy administrator systemu, który wykorzystuje intensywnie użytkowników, 
+        powinien
         wdrożyć zasady bezpieczeństwa z nimi związane. Może wymusić na osobach 
-        z niego korzystających zabezpieczenie swoich kont
-        po przez regularną zmianę hasła, blokadę nieaktywnych czy utworzenie
-        kont dla użytkowników tymczasowych tylko na jakiś określony czas, po
-        jego upływie konto zostanie zablokowane. Te zasady mieszczą w się 
+        korzystających z kont ich zabezpieczenie po przez regularną zmianę hasła, 
+        zablokować nieużywane konta czy utworzyć dla użytkowników tylko konta
+        tymczasowe, które po upływie określonego czasu zostaną automatycznie
+        zablokowane. Te zasady mieszczą w się 
         w dziedzinie ustawień ważności hasła i są realizowane w dystrybucjach
         Linuksa za pomocą dwóch poleceń: <strong>chage</strong> oraz
         <strong>passwd</strong>. Poniżej w tabeli skumulowałem opcje 
@@ -3999,39 +4019,39 @@ This account is currently not available.
         </thead>
         <tbody>
           <tr>
-            <th>Data ostatniej modyfikacji hasła</th>
-            <td><em>-d</em></td>
-            <td><em>X</em></td>
+            <td><strong>Data ostatniej modyfikacji hasła</strong></td>
+            <td style="text-align: center"><em>-d</em></td>
+            <td style="text-align: center"><em>X</em></td>
           </tr>
           <tr>
-            <th>Data wygaśnięcia konta</th>
-            <td><em>-E</em></td>
-            <td><em>X</em>
+            <td><strong>Data wygaśnięcia konta</strong></td>
+            <td style="text-align: center"><em>-E</em></td>
+            <td style="text-align: center"><em>X</em>
           </tr>
           <tr>
-            <th>Czas nieaktywności hasła</th>
-            <td><em>-I</em></td>
-            <td><em>-i</em></td>
+            <td><strong>Czas nieaktywności hasła</strong></td>
+            <td style="text-align: center"><em>-I</em></td>
+            <td style="text-align: center"><em>-i</em></td>
           </tr>
           <tr>
-            <th>Informacje o zasadach użytkownika</th>
-            <td><em>-l</em></td>
-            <td><em>-S</em></td>
+            <td><strong>Informacje o zasadach użytkownika</strong></th>
+            <td style="text-align: center"><em>-l</em></td>
+            <td style="text-align: center"><em>-S</em></td>
           </tr>
           <tr>
-            <th>Minimalna ważność hasła</th>
-            <td><em>-m</em></td>
-            <td><em>-n</em></td>
+            <td><strong>Minimalna ważność hasła</strong></td>
+            <td style="text-align: center"><em>-m</em></td>
+            <td style="text-align: center"><em>-n</em></td>
           </tr>
           <tr>
-            <th>Maksymalna ważność hasła</th>
-            <td><em>-M</em></td>
-            <td><em>-x</em></td>
+            <td><strong>Maksymalna ważność hasła</strong></th>
+            <td style="text-align: center"><em>-M</em></td>
+            <td style="text-align: center"><em>-x</em></td>
           </tr>
           <tr>
-            <th>Okres ostrzegania</th>
-            <td><em>-W</em></td>
-            <td><em>-w</em></td>
+            <td><strong>Okres ostrzegania</strong></th>
+            <td style="text-align: center"><em>-W</em></td>
+            <td style="text-align: center"><em>-w</em></td>
           </tr>
         </tbody>
       </table>
@@ -4045,14 +4065,14 @@ This account is currently not available.
           zalogowaniu na takie konto, wymagana będzie zmiana hasła. Ustawienie
           opcji <em>-d</em> polecenia <em>chage</em>, daje ten sam efekt.</li>
         <li><strong>zablokować konto</strong> - <em>-l</em>, użytkownik nie
-          będzie mieć możliwości logowania się w systemie.</li>
+          będzie mieć możliwości zalogowania się do systemu.</li>
         <li><strong>odblokować konto</strong> - <em>-u</em>, przywraca
           możliwość logowania się zablokowanemu kontu.</li>
       </ul>
       <p>
         Stosując <em>chage</em> lub <em>passwd</em> nazwę użytkownika podajemy
         po opcjach i ich wartościach. Na poniższym przykładzie za preznetowałem
-        w jaki sposób możemy ustawić wszystkie pozostałe pola we wpis w pliku
+        w jaki sposób możemy ustawić wszystkie pozostałe pola we wpisie w pliku
         <em>/etc/shadow</em> za pomocą powyższych poleceń.
       </p>
 <pre class="code-block">
@@ -4079,13 +4099,13 @@ user4000 PS 2022-06-28 5 28 5 7 (Password set, SHA512 crypt.)
 user4000:$6$29yZ7yqj2lWdSoQE$AMp2ZXAqxa.wWMA88dINDdogjych/Yshnip1whwaqymLTS4ALW9UGx9406tZmsghOTXptBIFrq4UvDF/.sl2f0:19171:5:28:5:7::
 </pre>
       <p>
-        Za pomocą polecenia <em>passwd</em>, nie możemy dodać daty wygaśnięcie
-        hasła. Jednak to polecenie wraz z poleceniem, które znamy z
+        Za pomocą polecenia <em>passwd</em>, nie możemy dodać daty wygaśnięcia
+        konta. Jednak to polecenie wraz z poleceniem, które znamy z
         poprzednie rozdziału <em>usermod</em>, może blokować i odblokowywać
         konta. Zablokujemy i odblokumjemy oba wcześniej wykorzystwane konta.
       </p>
       <p>
-        Blokowanie kont za pomocą polecenia <em>passwd</em>
+        Blokowanie kont za pomocą polecenia <em>passwd</em>:
       </p>
 <pre class="code-block">
 [root@server1 ~]# passwd -l user3000
@@ -4102,7 +4122,7 @@ user3000:$6$AjNe9ajpYrZ1Sjld$NN36zAMKPlnJElCvuUX1UM0fc6Ymc5pLY4medoHRMCWJhnsoiuK
       <p>
         Jak możemy zauważyć po zablokowaniu konta przed przesłonionym hasłem
         zostały umieszczone dwa wykrzykniki, które po odblokowaniu konta
-        zostały usunięte. Poniżej znajduje się te same czynności wykonne
+        zostały usunięte. Poniżej znajdują się te same czynności wykonane
         przy użyciu polecenia <em>usermod</em>.
       </p>
 <pre class="code-block">
@@ -4114,22 +4134,22 @@ user4000:!$6$29yZ7yqj2lWdSoQE$AMp2ZXAqxa.wWMA88dINDdogjych/Yshnip1whwaqymLTS4ALW
 user4000:$6$29yZ7yqj2lWdSoQE$AMp2ZXAqxa.wWMA88dINDdogjych/Yshnip1whwaqymLTS4ALW9UGx9406tZmsghOTXptBIFrq4UvDF/.sl2f0:19171:5:28:5:7::
 </pre>
       <p>
-        W przypadku polecenia <em>usermod</em>, umiesczony został tylko jeden
+        W przypadku polecenia <em>usermod</em>, umieszczony został tylko jeden
         wykrzyknik przed hasłem, jednak nie ważne czy został umieszczony jeden
         czy dwa, wykrzyknik przed przesłonionym hasłem oznacza, że konto jest
         zablokowane.
       </p>
-      <h2 id=6.2.groupmanaging">6.2. Zarządzanie grupami</h2>
+      <h2 id="6.2.groupmanaging">6.2. Zarządzanie grupami</h2>
       <p>
         Podobnie tak jak w przypadku użytkowników, w poprzednim rozdziale 
-        tak i grupami możemy zarządać w podobny sposób, możemy je dodwać z
+        tak i grupami możemy zarządać w podobny sposób. Możemy je dodwać z
         dostoswanymi do potrzeb informacjami, zmieniać ich informacje oraz
         usuwać. 
       </p>
       <h3 id="6.2.1.groupadd">6.2.1. Tworzenie nowych grup</h3>
       <p>
         Do tworzenia nowych grup służy polecenie <strong>groupadd</strong>,
-        które do utworzenia grupy z domyślnymi wartościami wymaga jednynie jej
+        które do utworzenia grupy z domyślnymi wartościami wymaga jedynie jej
         nazwy. Poniżej znajdują się najważniejsze opcje tego polecenia:
       </p>
       <ul>
@@ -4141,7 +4161,7 @@ user4000:$6$29yZ7yqj2lWdSoQE$AMp2ZXAqxa.wWMA88dINDdogjych/Yshnip1whwaqymLTS4ALW9
         <li><strong>-r</strong>, tworzy grupę systemową z identyfikatorem w
           zakresie podanym w pliku <em>/etc/login.defs</em>, przeważnie 
           między 201 a 999.</li>
-        <li><strong>-U</strong>, pozwala podać listę użytkowników, który będą
+        <li><strong>-U</strong>, pozwala podać listę użytkowników, którzy będą
           należeć do grupy, nazwy użytkowników są oddzielone od siebie
           przecinkiem.</li>
       </ul>
@@ -4152,14 +4172,14 @@ sgrp:x:9999:
 </pre>
       <p>
         Na powyższym przykładzie utworzyłem grupę z niestandardowym 
-        identyfikatorem, następnie wyświetliłem jego wpis w pliku 
+        identyfikatorem, następnie wyświetliłem jej wpis w pliku 
         <em>/etc/group</em>.
       </p>
       <h3 id="6.2.2.groupmod">6.2.2. Zmiana informacji grupy</h3>
       <p>
         Polecenie <strong>groupmod</strong>, posiada takie samo zastosowanie
         dla grup, jak polecenie <em>usermod</em> dla użytkowników. Część opcji
-        <em>groupmod</em> odpowiada opcją z polecenia <em>groupadd</em>.
+        <em>groupmod</em> odpowiada opcjom z polecenia <em>groupadd</em>.
         Na wyszczególnienie zasługuje opcja <strong>-n</strong>, która pozwala
         na zmianę nazwy grupy.
       </p>
@@ -4171,9 +4191,9 @@ sysadm:x:8888:
 </pre>
       <p>
         Jak możemy zobaczyć na przykładzie grupie 
-        <code class="code-inline">sgrp</code> zmieniony został identyfikator
+        <code class="code-inline">sgrp</code> został zmieniony identyfikator
         oraz nazwa. Teraz ta grupa widnieje pod <em>GID</em>-em
-        <code class="code-inline">8888</code> oraz nazwą
+        <code class="code-inline">8888</code> oraz pod nazwą
         <code class="code-inline">sysadm</code>.
       </p>
       <h3 id="6.2.3.groupdel">6.2.3. Usuwanie grup</h3>
@@ -4195,12 +4215,12 @@ sysadm:x:8888:
         poleceń jako superużytkownik</h2>
       <p>
         Wykonywanie zadań administracyjnych najczęściej będzie wymagać
-        podniesienie uprawnień do poziomu superużytkownika - <em>root</em>.
+        podniesienia uprawnień do poziomu superużytkownika - <em>root</em>.
         Do tej pory wszystkie polecenia w tym materiale wykonywałem z poziomu
-        konta <em>root</em> (wyjątkowowo kilka poleceń zostało wykonych jako
-        zwykły użytkownik), więc aby wykonywać uprawnienia administracyjne
+        konta <em>root</em> (wyjątkowowo kilka poleceń zostało wykonanych jako
+        zwykły użytkownik), więc aby wykonywać zadania administracyjne
         należy się zalogować jak superużytkownik. Logowanie bezpośrednie na to
-        konto nie jest złą praktyką. A do dyspozycji mamy dwa rozwiązania.
+        konto nie jest dobrą praktyką. A do dyspozycji mamy dwa rozwiązania.
         Pierwszym z nich jest przełączenie użytkownika. 
       </p>
       <h3 id="6.3.1.su">6.3.1. Przełącznie użytkownika</h3>
@@ -4211,7 +4231,7 @@ sysadm:x:8888:
         przełączenie się na dowolne konto, jeśli jak pierwszy argument podamy
         myślnik (<strong>-</strong>) przed nazwą użytkownika podczas
         przełączania zostaną uruchomione skrypty startowe, które stworzą nam
-        środowisko najbardziej zbliżone do bezpośredniego logowania.
+        środowisko jak najbardziej zbliżone do bezpośredniego logowania.
       </p>
 <pre class="code-block">
 [user@server1 ~]$ su - root
@@ -4226,7 +4246,7 @@ Password:
       </p>
       <p>
         Aby korzystać z tej metody nie trzeba nawet otwierać sesji powłoki jako
-        przełączony użytkownik, możem poprostu wykonać polecenie jako on za
+        przełączony użytkownik, możemy po prostu wykonać polecenie jako on za
         pomocą opcji <em>-c</em>.
       </p>
 <pre class="code-block">
@@ -4237,44 +4257,45 @@ Password:
 </pre>
       <p>
         Korzystanie z polecenia <em>su</em>, nie jest zbyt elastycznym
-        rozwiązaniem oraz wymaga aby konto <em>root</em> było cały czas
-        dostępne. Ten rodzaj podniesienia uprawnień w systemie używany jest
-        kilka dystrybucji w jednym celu aby pobrać i skonfigurować drugie
-        rozwiązanie, które służy do podniesienia uprawnień. 
+        rozwiązaniem, daje pełen dostęp do superużytkownika gdzie nie jest to
+        konieczne. Ten rodzaj podniesienia uprawnień w systemie używany jest
+        przez kilka dystrybucji w jednym celu aby pobrać i skonfigurować 
+        to drugie rozwiązanie.
       </p>
       <h3 id="6.3.2.sudo">6.3.2. Polecenie sudo</h3>
       <p>
         Użycie polecenia <strong>sudo</strong> jest znacznie lepszym
         rozwiązaniem. Głównym argumentem jest fakt, iż możemy skonfigurować
         to polecenie w taki sposób, aby dać użytkownikom dostęp tylko do
-        tych poleceń których potrzebują. Jednak na początku zajmiemy się
-        najprostszą konfiguracją, czyli stworzeniem lokalnego administratora,
-        które konta dalej będzie kontem zwykłego użytkownika. 
+        tych poleceń których naprawdę potrzebują. Jednak na początku zajmiemy 
+        się prostszą konfiguracją, czyli stworzeniem lokalnego administratora,
+        którego konto dalej będzie zwykłym użytkownikiem. 
       </p>
       <p>
         Do konfiguracji tego narzędzia służy plik <em>/etc/sudoers</em> oraz
-        katalog <em>/etc/sudoers.d</em>, w którym wystartczy umieścić plik
+        katalog <em>/etc/sudoers.d</em>, w którym wystarczy umieścić plik z
         konfiguracją. Plik <em>/etc/sudoers</em>, możemy edytować dowolnym
         edytorem, jednak pakiet <em>sudo</em> posiada specjalne polecenie
         <strong>visudo</strong>, które stworzy kopie tymczasową pliku, której
-        będziemy dokonywać zmian, następnie polecenie nadpisze oryginalny plik,
-        plikiem tymczasowym i go usunie. Najprostszą konfiguracją jaką możemy
-        wykonać jest nadanie zwykłemu użytkownikowi uprawnień do wyszystkich
-        funkcji administracyjnych. Zmian możemy dokonać w dowolnym miejscu 
+        będziemy dokonywać zmian (polecenie samoczynnie uruchomi edytor), 
+        następnie polecenie nadpisze oryginalny plik i usunie plik tymczasowy. 
+        Najprostszą konfiguracją jaką możemy
+        wykonać jest nadanie zwykłemu użytkownikowi uprawnień do wszystkich
+        funkcji administracyjnych. Zmian możemy dokonać w dowolnym miejscu w 
         pliku, jednak nalepiej
-        znaleźć miejsce do tego przeznaczone, możemy je namierzyć wyszukując
+        znaleźć odpowiednie do tego miejsce. Możemy je namierzyć wyszukując
         linię <code class="code-inline">root ALL=(ALL)  ALL</code>, skopiować 
-        ją i wkleić pod nią, zmienimy tylko użytkownika na początku linii:
+        ją, wkleić pod nią i zmienić tylko nazwę użytkownika na początku linii:
       </p>
 <pre class="code-block">
 user ALL=(ALL)  ALL
 </pre>
       <p>
         Ten wpis zapewni użytkownikowi <code class="code-inline">user</code>
-        dostęp do wszystkich funkcji administracyjnych w systemie. Prócz
+        dostęp do wszystkich funkcji administracyjnych w systemie. Oprócz
         użytkownikom, dostęp do wszystkich lub określonych funkcji możemy nadać
         grupie. Kiedy zajdzie taka potrzeba wystarczy dopisać użytkownika do
-        grupy, nie trzeba już edytować pliku. Konfiguracja grupy różni się od
+        grupy i nie trzeba już edytować pliku. Konfiguracja grupy różni się od
         konfiguracji użytkownika tym, że nazwę grupy poprzedza się znakiem
         procentu (<strong>%</strong>)
       </p>
@@ -4289,14 +4310,14 @@ user ALL=(ALL)  ALL
         może być współdzielony między innymi komputerami, jednak ten plik 
         będzię dotyczyć tylko tego systemu dlatego też może pozostać 
         <em>ALL</em>. Drugie słowo <em>ALL</em> w nawiasie oznacza jako kto
-        będzie będziemy wykonywać te polecenie, ta lista pozwala wybrać
+        będzie wykonywać te polecenie, ta lista pozwala wybrać
         użytkownika (po zastosowaniu opcji <em>-u</em>) do wykonania polecenia.
         W nie których systemach możemy spotkać się z zapisem 
         <em>(ALL:ALL)</em>, zapis <em>ALL</em> po dwukropku oznacza listę grup.
         Grupę możemy wybrać z pomocą opcji <em>-g</em>. Ostanie <em>ALL</em>
-        jest listą poleceń do których użytkownik wydający polecenie
-        <em>sudo</em> będzie mieć dostęp. Poniżej przykładowe użycie polecenia
-        <em>sudo</em>.
+        jest listą programów do których użytkownik poprzedzający polecenie
+        narzędziem <em>sudo</em> będzie mieć dostęp. Poniżej przykładowe użycie
+        polecenia <em>sudo</em>.
       </p>
 <pre class="code-block">
 [user@server1 ~]$ sudo vgs
@@ -4305,9 +4326,12 @@ user ALL=(ALL)  ALL
   rhel   1   2   0 wz--n- &lt;19.00g    0
 </pre>
       <p>
+        Podczas uruchamia programu <code class="code-inline">vgs</code>, 
+        <em>sudo</em>, po prosiło o hasło - hasło użytkownika, który wydaje 
+        to polecenie.
         Narzędzie <em>sudo</em> możemy skonfigurować w taki sposób aby nie
-        wymagało hasła podczas wydawania polecenia. We wcześniejszej dyrektywie,
-        konfigurującej użytkownika przed ostatnim słowem <em>ALL</em>
+        wymagało hasła podczas uruchamiania programu. We wcześniejszej 
+        dyrektywie, konfigurującej użytkownika przed ostatnim słowem <em>ALL</em>
         dopisujemy <em>NOPASSWD:</em>.
       </p>
 <pre class="code-block">
@@ -4345,13 +4369,13 @@ Cmnd_Alias PKGCMD = /usr/bin/yum, /usr/bin/rpm
 PKGADM ALL = PKGCMD
 </pre>
       <p>
-        Teraz użytkownicy zdefioniowani w aliasie 
+        Teraz użytkownicy zdefiniowani w aliasie 
         <code class="code-inline">PKGADM</code> będą mogli użyć tylko i 
         wyłącznie poleceń zdefiniowanych w <code class="code-inline">PKGCMD</code>
       </p>
       <p>
         Podczas pracy będziemy zazwyczaj definiować aliasy użytkowników,
-        ponieważ jeśli rozejrzymy się po pliku <em>/etc/passwd</em>, definicje
+        ponieważ jeśli rozejrzymy się po pliku <em>/etc/sudoers</em>, definicje
         aliasów z pogrupowanymi poleceniami są już zapisane w komentarzach
         wystarczy usunąć znak komentarza oraz przypisać ten alias określonej
         grupie użytkowników.
@@ -4363,11 +4387,11 @@ PKGADM ALL = PKGCMD
         wywołał to polecenie jak i samo polecenie.
       </p>
       <p>
-        Więcej informacji na temat tego narzędzie znajduje się na stronie
+        Więcej informacji na temat tego narzędzia znajduje się na stronie
         podręcznika samego polecenia jak i pliku <em>/etc/sudoers</em>. Jak
         ćwiczenie, nadajmy uprawnienia do pełnych funkcji administracyjnych
         zwykłemu użytkownikowi, którego tworzyliśmy podczas instalacji
-        systemu na serwerze. Od tego momentu na wszystkich przykładach będę
+        systemu na maszynie. Od tego momentu na wszystkich przykładach będę
         używać tego konta, a uprawnienia administracyjne będę wymuszać za 
         pomocą polecenia <em>sudo</em>.
       </p>
@@ -4375,7 +4399,7 @@ PKGADM ALL = PKGCMD
       <p>
         Polecenie <strong>chown</strong>, omówiliśmy sobie podczas omawiania
         uprawnień plików. Polecenie to służy do zmiany właściciela oraz
-        ewentualnie grupy. 
+        ewentualnie grupy, do której należy element. 
       </p>
 <pre class="code-block">
 [user@server1 ~]$ ls -l file1 
@@ -4387,7 +4411,7 @@ PKGADM ALL = PKGCMD
 </pre>
       <p>
         Jednak w systemie istnieje inne polecenie, dzięki któremu możemy
-        zmienić grupę. Jest nim polecenie <strong>chgrp</strong>. Składania 
+        zmienić grupę. Jest nim <strong>chgrp</strong>. Składania 
         polecenia identyczna do składni <em>chown</em>.
       </p>
 <pre class="code-block">
@@ -4398,17 +4422,20 @@ PKGADM ALL = PKGCMD
 [user@server1 ~]$ 
 </pre>
       <p>
+        Jak możemy zauważyć grupa, do której należy plik została zmieniona
+        w porównaniu do szczegółów z porzedniego przykładu.
+      </p>
+      <p>
         Polecenia <em>chown</em> możemy również używać rekurencyjnie, aby
-        zmieniać prawa własności całych struktur katalogowych wraz z pod
-        katalogami. Tej czynności służy opcja <em>-R</em>.
+        zmieniać prawa własności całych struktur katalogowych wraz z plikami.
+        Tej czynności służy opcja <em>-R</em>.
       </p>
 <pre class="code-block">
 [user@server1 ~]$ sudo chown -R root:root /tmp/etc
 </pre>
       <p>
-        Na powyższym przykładzie zmieniłem właściciela oraz grupę do której
-        należą pliki wszystkim elementom w katalogu 
-        <code class="code-inline">/tmp/etc</code>.
+        Na powyższym przykładzie zmieniłem właściciela oraz grupę do wszystkim 
+        elementom w katalogu <code class="code-inline">/tmp/etc</code>.
       </p>
       <h3 id="exec6.1">Ćwiczenie 1: Utwórz użytkowników oraz skonfiguruj
         zasady haseł</h3>
@@ -4418,14 +4445,14 @@ PKGADM ALL = PKGCMD
         <em>UID</em> 5000 oraz numerze <em>GID</em> 6000. Przypisz mu hasło, a
         następnie ustaw minimum 4 dni do następnej zmiany hasła, ważność hasła
         na 30 dni oraz okres ostrzegania na 10 dni. Konto tego użytkownika
-        powinno wygasnąć 20 grudnia 2022.
+        powinno wygasnąć 20 grudnia 2022 roku.
       </p>
       <h3 id="exec6.2">Ćwiczenie 2: Zablokuj i odblokuj użytkownika</h3>
       <p>
         Na maszynie <em>server1</em> zablokuj użytkownika <em>user5000</em> za
-        pomocą polecenia <em>passwd</em>. Sprawdź jak zmienił się jego w pliku
-        <em>/etc/shadow</em>. Spróbuj się zalogować na użytkownika.
-        Odblokuj wcześniej zablokwanego użytkownika za pomocą polecenia
+        pomocą polecenia <em>passwd</em>. Sprawdź jak zmienił się jego wpis w 
+        pliku <em>/etc/shadow</em>. Spróbuj się zalogować na użytkownika.
+        Odblokuj go za pomocą polecenia
         <em>usermod</em> zweryfikuj jego odblokowanie na podstawie wpisu z 
         pliku powyżej.
       </p>
@@ -4448,13 +4475,19 @@ PKGADM ALL = PKGCMD
         Na maszynie <em>server1</em>, utwórz w katalogu <em>/tmp</em> plik
         <em>f6</em> oraz katalog <em>d6</em>. Utwórz użytkownika <em>user90</em>.
         Za pomocą polecenia <em>chown</em> ustaw właściciela pliku <em>f6</em>
-        na <em>user90</em>. Za pomocą polecenia <em>chgrp</em> ustaw grupę, do
-        której należy ten plik na <em>dbagrp</em>. Utwórz grupę <em>g1</em>,
+        na <em>user90</em>. Za pomocą polecenia <em>chgrp</em> ustaw grupę na 
+        <em>dbagrp</em>. Utwórz grupę <em>g1</em>,
         następnie ustaw rekrencyjnie prawa własności dla katalogu <em>d6</em>,
         na <em>user90</em>:<em>g1</em>.
       </p>
       <h2 id="ch5summary">Podsumowanie</h2>
       <p>
+        Tym rodziałem zakończyliśmy zarządzanie użytkownikami. Zapoznaliśmy
+        się z narzędziami do ustalania zasad haseł w praktyce, poznaliśmy
+        narzędzia do zarządzania grupami oraz efektywne sposoby na bezpieczne
+        podnoszenie uprawnień za pomocą polecenia <em>sudo</em>. Na koniec 
+        odświerzyliśmy informacje na temat praw własności plików i katalogów.
+        W następnym rodziale poznamy podstawy powłoki BASH.
       </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">

@@ -4489,6 +4489,398 @@ PKGADM ALL = PKGCMD
         odświerzyliśmy informacje na temat praw własności plików i katalogów.
         W następnym rodziale poznamy podstawy powłoki BASH.
       </p>
+      <h1 id="7.bashshell">7. Powłoka BASH</h1>
+      <p>
+        Powłoka jest program odpowiedzialny za możliwość wprowadzania poleceń
+        do systemu i ich interpretowanie. Powłoka jest domyślnym interfejsem
+        użytkownika w wariantach systemów uniksopodobnych. To właśnie proces
+        połoki jest uruchamiany po uruchomieniu okna terminala. 
+      </p>
+      <p>
+        Na przestrzeni lat wraz z kolenymi odłamami oryginalnego Uniksa
+        powstawało wiele powłok, każda z nich miała swoje wady i zalety.
+        Obecnie najpowszechniejszą wersją z nich jest <strong>BASH</strong>,
+        jej główną zaletą jest zebranie większości funkcjonalność różnych
+        powłok, poprawienie ich działa oraz dostosowanie do obecnych czasów.
+        Ten rodzaj powłoki również domyślnie jest instalowany w wielu
+        dystrybucjach Linuksa i Red Hat nie jest w tym temacie wyjątkiem.
+        W tym rodziale chciałbym omówić najważnejsze funckje tej powłoki oraz
+        jej skrypty startowe, dzięki którym będziemy mogli dostować ją do
+        swoich potrzeb.
+      </p>
+      <h2 id="7.1.bashfeatures">7.1. Funkcje powłoki BASH</h2>
+      <p>
+        <em>BASH</em> w swojej kolekcji posiada masę funkcjonalności, których
+        próżno szukać w innych powłokach. Dla przykładu w nowszych
+        dystrybucjach, skrypt powłoki zastępują podstawe narzędzia systemowe,
+        będące kiedyś pełnoprawnymi programi.
+      </p>
+      <h3 id="7.1.1.variables">7.1.1. Zmienne</h3>
+      <p>
+        Korzystając powłoki możemy używać zmiennych, czyli opisanych miesc
+        alokowanych w pamięci do przechowywania dowolnych wartości. Do
+        dyspozycji mamy dwa rodzaje zmiennych - zmienne <strong>lokalne</strong>
+        oraz zmienne <strong>środowiskowe</strong>.
+      </p>
+      <p>
+        Zmienne lokalne są do naszej dyspozycji podczas korzystania w obecnej
+        sesji powłoki, tylko i wyłącznie, gdyż nie są one dostępne dla
+        uruchomionych w tej sesji skryptów czy programów. Zmienne te są
+        przechowywane tylko i wyłącznie w obszarze pamięci należącym do tego
+        procesu powłoki. Tak zmienną możemy zdefiniować podając w wierszu
+        polecenia nazwę następnie znak równości oraz wartość. Warto dodać
+        aby nie było między tymi elementami żadnej spacji. Poniższy przykład 
+        na pewno to rozświetli.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ zmienna=2137
+</pre>
+      <p>
+        Po wykonaniu takiego polecenia, powłoka utworzy zmienną i nada je
+        podaną wartość, po czym zwróci znak zachęty.
+      </p>
+      <p>
+        Do takiej zmiennej możemy odwołać się podczas pisania polecenia
+        wystarczy poprzedzić nazwę znakiem dolara (<strong>$</strong>).
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ echo $zmienna
+2137
+</pre>
+      <p>
+        Polecenie <code class="code-inline">echo</code> wypisuje wszystko co
+        do zostanie mu podane jako argument na standardowej wyjście (o tym
+        będzie w dalszej częsci programu). Jak widzimy polecenie wypisało
+        również zawartość zmiennej.
+      </p>
+      <p>
+        Innego rodzaju zmiennymi są zmienne środowiskowe porzechowują one
+        różnego rodzaju wartość, które mogą wpływać na działanie programów.
+        Każdy program uruchomiony na Linuksie dostaje obszar
+        pamięci zmiennych środowiskowych i może z nich korzystać. Definicja
+        takich zmiennych, różni się tym iż wykorzystuje się do tego celu
+        polecenie <strong>export</strong>, które zadaniem jest przeniesienie
+        zmiennej lokalnej do pamięci zmiennych środowiskowych. Jako argument
+        polecenia podajemy definicję zmiennej lokalnej.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ export ZMIENNA=2137
+</pre>
+      <p>
+        Nazwy zmiennych środowiskowych zapisujemy za pomocą wielkich liter aby
+        odróżnić je od zmiennych lokalnych. Działanie takiej zmiennej
+        zobaczymy, kiedy uruchomimy jakiś program w tej powłoce, aby otrzymał
+        on od połoki (procesu nadrzędnego) obszar zmiennych środowiskowych.
+        Najlepiej by było aby takim programem byłą kolejna połowka (podpowłoka).
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ bash
+[user@server1 ~]$ echo $ZMIENNA
+2137
+</pre>
+      <p>
+        Po uruchomieniu pod powłoki wydałem polecenie, które wyświetliło mi
+        zawartość zmiennej, którą zdefiniowałem jako zmienną środowiskową w
+        poprzednim przykładzie.
+      </p>
+      <p>
+        Wszystkie zmienne środowiskowe systemie możemy wypisać za pomocą
+        polecenia <strong>env</strong> lub polecenia <strong>printenv</strong>.
+        Oto fragment listingu zmiennych środowiskowych z mojego systemu:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ env
+...
+TERM=xterm-256color
+LESSOPEN=||/usr/bin/lesspipe.sh %s
+USER=user
+SELINUX_USE_CURRENT_RANGE=
+ZMIENNA=2137
+SHLVL=2
+XDG_SESSION_ID=7
+XDG_RUNTIME_DIR=/run/user/1000
+SSH_CLIENT=192.168.122.1 34956 22
+which_declare=declare -f
+...
+</pre>
+      <p>
+        Natomiast za pomocą polecenia <strong>set</strong> możemy wypisać
+        wszystkie zmienne dostępne w systemie, łącznie z lokalnymi zmiennymi
+        powłoki.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ set
+...
+SHLVL=1
+SSH_TTY=/dev/pts/0
+TERM=xterm-256color
+UID=1000
+USER=user
+XDG_DATA_DIRS=/home/user/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share
+XDG_RUNTIME_DIR=/run/user/1000
+XDG_SESSION_CLASS=user
+XDG_SESSION_ID=7
+XDG_SESSION_TYPE=tty
+ZMIENNA=2137
+_=set
+_backup_glob='@(#*#|*@(~|.@(bak|orig|rej|swp|dpkg*|rpm@(orig|new|save))))'
+colors=/home/user/.dircolors
+new_dirs=/home/user/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share
+which_opt=-f
+which_shell=bash
+zmienna=2137
+zmienna1=2137
+...
+</pre>
+      <p>
+        Zmienne, które nie są już potrzebne możemy odwołać za pomocą polecenia
+        <strong>unset</strong>. 
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ set | grep 'zmienna1'
+zmienna1=2137
+[user@server1 ~]$ unset zmienna1
+[user@server1 ~]$ echo $zmienna1
+
+</pre>
+      <p>
+        Przy odwołaniu się do zmiennej polecenie <em>echo</em> zwróciło
+        pusty wiersz.
+      </p>
+      <p>
+        Manipując zmiennymi w powłoce może zmienić znak zachęty, ponieważ jego
+        definicja jest przechowywana w zmiennej <strong>PS1</strong>:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ echo $PS1
+[\u@\h \W]\$
+</pre>
+      <p>
+        Te poprzedzone lewym ukośnikiem <strong>\</strong> litery są kolejnymi
+        elementami znaku zachęty. Opis tych elementów znajduje się na 
+        stronie podrecznika polecenia/powłoki <em>BASH</em> w rozdziale
+        <em>PROMPTING</em>.
+      </p>
+      <h3 id="7.1.2.commandsubstitution">7.1.2. Podstawienie polecenia</h3>
+      <p>
+        Często wykorzystywaną funkcją wraz z zmiennymi jest
+        <strong>podstawienie polecenia</strong>. Polega ono na uruchomieniu,
+        przez podpowłokę polecenia ujętego albo w okrągłu nawias poprzedziony
+        znakiem dolara (<strong>$()</strong>) albo w ukośny cudzysłów
+        (<strong>``</strong>). Informacja zwracana przez polecenie trafia albo
+        do zmiennej albo bezpośrednio jak argument polecenia.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ export KERNEL_VERSION=$(uname -r)
+[user@server1 ~]$ echo $KERNEL_VERSION 
+5.14.0-70.13.1.el9_0.x86_64
+</pre>
+      <p>
+        Poniżej znajduje się przykład użycia podstawienia polecenia w innym
+        poleceniu:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo find / -name *`uname -r` -print 2&gt; /dev/null
+/boot/vmlinuz-5.14.0-70.13.1.el9_0.x86_64
+/boot/System.map-5.14.0-70.13.1.el9_0.x86_64
+/boot/config-5.14.0-70.13.1.el9_0.x86_64
+/usr/lib/firmware/5.14.0-70.13.1.el9_0.x86_64
+/usr/lib/modules/5.14.0-70.13.1.el9_0.x86_64
+/usr/share/doc/kernel-keys/5.14.0-70.13.1.el9_0.x86_64
+</pre>
+      <p>
+        Gwiazdka w tym przypadku oraz <code class="code-inline">2&gt;</code>,
+        również są elementami połoki, które sobie omówimy.
+      </p>
+      <h3 id="7.1.3.streamredirections">7.1.3. Przekierowanie strumieni</h3>
+      <p>
+        Na Uniksach mamy doczynienia z trzema rodzajami strumieni danych,
+        owe strumienie łączą ze sobą np. urządzenia z programami, dlatego
+        pisząc na klawiaturze możemy wprowadzać tekst do programu, albo
+        mogą wypisać wynik swojego działnia do okna terminala. Pierszy strumień
+        to strumień wejścia źródłem jego danych jest najczęściej klawiatura.
+        Jego identyfikatorem jest <strong>0</strong> (programy korzystają z
+        identyfikatorów do korzystania ze stumieni, my też będziemy podłaczając
+        jeden strumień do drugiego). Drugi strumień danych, to strumień
+        wyjścia źródłem jego danych jest najczęściej program (jądro podczas
+        uruchamiania programu przekazuje mu kopie strumienia), jego
+        identyfikatorem jest <strong>1</strong>, a podłączony jest on do
+        terminala. Ostatnim strumieniem jest strumień błędów jego źródłem 
+        danych są komunikaty diagnostycznych programów, jest on najczęciej
+        razem ze strumieniem wyjścia do terminala. Identyfikatorem strumienia
+        błędów jest <strong>2</strong>.
+      </p>
+      <p>
+        Przekierowania strumienia dokonujemy w wierszu polecenia poprzez 
+        podanie znaku większości (<strong>&gt;</strong>) a następnie podajemy
+        miejse docelowe na dane. Na przykład wynik listowania katalogu
+        <em>/etc</em> możemy umieścić w pliku.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l /etc &gt; ls.out
+[user@server1 ~]$ head -5 ls.out 
+total 1320
+drwxr-xr-x.  3 root root        28 Jun 26 13:50 accountsservice
+-rw-r--r--.  1 root root        16 Jun 26 14:01 adjtime
+-rw-r--r--.  1 root root      1529 Jun 23  2020 aliases
+drwxr-xr-x.  3 root root        65 Jun 26 13:54 alsa
+</pre>
+      <p>
+        Użycie pojedyńczego znaku większości przekieruje strumień w tym
+        przypadku do pliku oraz nadpisze informacje zawarte w nim. Jeśli plik
+        nie istnieje to zostanie on utworzony.
+      </p>
+      <p>
+        Nadpisywanie danych za pomocą przekierowania strumieni nazywane jest
+        <em>clobberingiem</em>. Możemy zablokować tę funkcję za pomocą
+        polecenia <code class="code-inline">set -o noclobber</code>, wówczas
+        gdy plik będzie istnieć pokaże nam się taki komunikat jak na poniższym
+        przykładzie.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l /etc &gt; ls.out
+-bash: ls.out: cannot overwrite existing file
+</pre>
+      <p>
+        Funkcję można włączyć z powrotem za pomocą polecenia
+        <code class="code-inline">set +o noclobber</code>.
+      </p>
+      <p>
+        Chcąc dopisać do zawartości pliku, zawartość strumienia możemy użyć
+        podwójnego znaku większości. Na przykład:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l /var &gt;&gt; ls.out
+[user@server1 ~]$ cat ls.out
+total 4
+drwxr-xr-x. 2 user4000 g1         6 Jun 26 16:06 d6
+srwxrwxrwx. 1 gdm      gdm        0 Jun 30 13:59 dbus-aIxoyUxXnM
+srwxrwxrwx. 1 gdm      gdm        0 Jun 30 09:38 dbus-JRmt27fCi0
+drwxr-xr-x. 2 user200  dba        6 Jun 26 15:33 dir10
+-rw-r--r--. 1 user4000 dba        0 Jun 26 16:06 f6
+-rw-r--r--. 1 user200  user100    0 Jun 26 15:33 file10
+-rw-r--r--. 1 user     user    2400 Jun 30 14:57 ioerror
+...
+total 16
+drwxr-xr-x.  2 root root   19 Jun 26 13:54 account
+drwxr-xr-x.  2 root root    6 Aug 10  2021 adm
+drwxr-xr-x. 18 root root 4096 Jun 26 14:12 cache
+drwxr-xr-x.  2 root root    6 Mar  7 04:37 crash
+drwxr-xr-x.  3 root root   18 Jun 26 13:50 db
+drwxr-xr-x.  2 root root    6 Aug 10  2021 empty
+...
+</pre>
+      <p>
+        Z racji tego iż znak większości służy do przekierowania jedynie wyjścia
+        to aby przekierować strumień błedów, należy podać przez znakiem jego
+        identyfikator. 
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l /dvd 2&gt; err.out
+[user@server1 ~]$ cat err.out 
+ls: cannot access '/dvd': No such file or directory
+</pre>
+      <p>
+        Czasmi może się zdarzyć, iż będzie potrzeba przekierowania obu tych
+        strumieni, wówczas trzeba skorzystać z podłączenie jednego strumienia
+        do drugiego.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l /tmp /sdir &gt; ls2.out 2&gt;&amp;1
+[user@server1 ~]$ cat ls2.out 
+ls: cannot access '/sdir': No such file or directory
+/tmp:
+total 4
+drwxr-xr-x. 2 user4000 g1         6 Jun 26 16:06 d6
+srwxrwxrwx. 1 gdm      gdm        0 Jun 30 13:59 dbus-aIxoyUxXnM
+srwxrwxrwx. 1 gdm      gdm        0 Jun 30 09:38 dbus-JRmt27fCi0
+drwxr-xr-x. 2 user200  dba        6 Jun 26 15:33 dir10
+-rw-r--r--. 1 user4000 dba        0 Jun 26 16:06 f6
+-rw-r--r--. 1 user200  user100    0 Jun 26 15:33 file10
+-rw-r--r--. 1 user     user    2400 Jun 30 14:57 ioerror
+...
+</pre>
+      <p>
+        To polecenie można zapisać również w inny sposób. Na przykład:
+        <code class="code-inline">ls -l /tmp /sdir &amp;&gt; ls2.out</code>.
+        Obie formy są poprawne i obie robią to samo, która będzie dla nas
+        lepsza musimy zdecydować sami.
+      </p>
+      <p>
+        Kolejnym rodzajem przekierowania jest przekierowanie wejścia, jednak 
+        jest ono dość rzadko stosowane. Do tego rodzaju przekierowania 
+        stosuje się znak mniejszości (<strong>&lt;</strong>). Jednym z
+        przykładów jest polecenie użycie polecenia <em>tar</em>, jednak nie ma
+        ono sensu, ponieważ istnieje opcja <em>-f</em>, która pozwala na
+        podanie ścieżki do pliku.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ tar -x -C /tmp &lt; etc.tar 
+[user@server1 ~]$ ls -l /tmp
+total 16
+drwxr-xr-x.   2 user4000 g1         6 Jun 26 16:06 d6
+srwxrwxrwx.   1 gdm      gdm        0 Jun 30 13:59 dbus-aIxoyUxXnM
+srwxrwxrwx.   1 gdm      gdm        0 Jun 30 09:38 dbus-JRmt27fCi0
+drwxr-xr-x.   2 user200  dba        6 Jun 26 15:33 dir10
+drwxr-xr-x. 132 user     user    8192 Jun 30 09:38 etc
+...
+</pre>
+      <p>
+        Ostatni rodzaj przekierowania, to <strong>potok</strong>, o potoku
+        jeszcze będzie w tym rozdziale.
+      </p>
+      <h3 id="7.1.4.history">7.1.4. Historia poleceń</h3>
+      <p>
+        Dość istotną funkcją powłoki <em>BASH</em> jest historia poleceń.
+        Pozwala ona zaoszczędzić pisania w szczególności długi poleceń czy
+        potoków poleceń (ang. <em>pipelines</em>). Posiada ona funkcję
+        wyszukiwania oraz swobodny dostęp do poleceń umieszczonych w historii.
+      </p>
+      <p>
+        Aby wyświetlić polecenia z historii, należy użyć polecenia
+        <strong>history</strong>, wyświetli ono listę poleceń z numer na
+        początku, każde polecenie to jednak linia. Numer porządkowy pomoże nam
+        się odwołać do polecenia podczas jego wywoływania, ponieważ nie
+        potrzeba szukać polecenia czy przebierać ich wszystkich za pomocą
+        niżej opisanych klawiszy. Wystarczy znać jego numer. Poniżej znajduje
+        się fragment listy historii poleceń z mojego systemu:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ history
+    1  id
+    2  groups 
+    3  su
+    4  su -
+    5  cat /etc/sudoers
+    6  su - root
+    7  sudo cat /etc/sudoers
+    8  su - root
+    9  sudo cat /etc/sudoers
+   10  su - root
+   11  sudo yum update
+   12  su - root
+   13  touch file1
+...
+</pre>
+      <p>
+        Wśród poleceń w historii możemy poruszać się za pomocą strzełek w górę 
+        oraz w dół lub kombinacji klawiszy (co jest bardziej zalecene)
+        <em>Ctrl+p</em> oraz <em>Ctrl+n</em>. Możemy je również wszukiwać za
+        przez wciśnięcie kombinacji klawiszy <em>Ctrl+r</em> i podanie 
+        fragmentu polecenia. Czasmi wyszukiwanie może nie przynieść skutku,
+        wówczas należy nacisnać <em>Ctrl+c</em> i spróbować ponownie.
+      </p>
+      <p>
+        Do poleceń w historii odnosimy się wprowadzając w wierszu polecenia
+        wykrzyknik (<strong>!</strong>) następnie należy podać numer z listy.
+        Dla przykładu użyje polecenia numer <code class="code-inline">13</code>
+        z fragmentu listy powyżej.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ !13
+touch file1
+touch: cannot touch 'file1': Permission denied
+</pre>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

@@ -5280,9 +5280,167 @@ PASS_WARN_AGE	7
 ...
 </pre>
       <p>
+        Na powyższym przykładzie widzimy składnie polecenia, źródłem danych
+        nie musi być wyłącznie plik, równie dobrze mogą one pochodzić z
+        przekierowania. Na przykład z potoku.
         Jednak najpierw zajmiemy się czymś prostszym, a do tego poziomu 
         dojdziemy pod koniec. Najprostszym wyrażeniem może być zwykły
         ciąg znaków.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ grep 'pass' /etc/login.defs
+# passwd command) should therefore be configured elsewhere. Refer to
+#	PASS_MAX_DAYS	Maximum number of days a password may be used.
+#	PASS_MIN_DAYS	Minimum number of days allowed between password changes.
+#	PASS_MIN_LEN	Minimum acceptable password length.
+#	PASS_WARN_AGE	Number of days warning given before a password expires.
+</pre>
+      <p>
+        Jak możemy zauważyć polecenie zwróciło wszystkie linie zawierające
+        wyrażenie jakie podaliśmy przed ścieżką do pliku. Podane wyrażenie
+        zapisaliśmy za pomocą małych liter i takie też zostało przypasowane
+        jeśli chcemy, aby nie była rozrózniana wielkość liter należy użyć
+        opcji <em>-i</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ grep -i 'pass' /etc/login.defs
+# passwd command) should therefore be configured elsewhere. Refer to
+# Password aging controls:
+#	PASS_MAX_DAYS	Maximum number of days a password may be used.
+#	PASS_MIN_DAYS	Minimum number of days allowed between password changes.
+#	PASS_MIN_LEN	Minimum acceptable password length.
+#	PASS_WARN_AGE	Number of days warning given before a password expires.
+PASS_MAX_DAYS	99999
+PASS_MIN_DAYS	0
+PASS_WARN_AGE	7
+</pre>
+      <p>
+        Poniżej umieściłem listę znaków wykorzystywanych do tworzenie wyrażeń
+        regularnych wraz z opisem. 
+      </p>
+      <ul>
+        <li><strong>.</strong> - pojedyńczy dowolny znak,</li>
+        <li><strong>*</strong> - przypasowanie wzorca min. 0 razy lub więcej 
+          razy.</li>
+        <li><strong>+</strong> - przypasowanie wzorca min. 1 raz lub więcej 
+          razy.</li>
+        <li><strong>^</strong> - metaznak oznaczający początek wiersza. 
+          Wzorzec rozpoczynający się od tego znaku znajduje się na początku 
+          wiersza.</li>
+        <li><strong>$</strong> - metaznak oznaczający koniec wiersza. Wzorzec
+          rozpoczynający się od tego znaku znajduje się na końcu wiersza.</li>
+        <li><strong>[]</strong> - metaznak ozanaczający zbiory oraz zakresu. 
+          Zakresy mogą
+          być różne: litery <em>[a-z]</em>, wielkie litery <em>[A-Z]</em> czy
+          cyfry <em>[0-9]</em>. Zakresy nie muszą być pełne, mogą być np. od
+          a do o - <em>[a-o]</em>.
+        <li><strong>[^...]</strong> - negacja zbioru, zamiast trzech kropek
+          wstawiamy znaki. Przypasowanie następuje wówczas, kiedy we wzorcu
+          nie znajdują się podane znaki.</li>
+      </ul>
+      <p>
+        Wiecęj znaków oraz informacji znajduje się na stronie podręcznika
+        polecenia grep <code class="code-inline">man grep</code> oraz
+        na stronie podręcznika poświęconej wyrażeniom regularnym: 
+        <code class="code-inline">man 7 regex</code>. Teraz przedstawie kilka
+        dodatkowych opcji polecenia <em>grep</em>.
+      </p>
+      <ul>
+        <li><strong>-E</strong> - opcja umożliwia użycie rozszerzonych
+          wyrażeń regularnych, jedną z ciekwych opcji tego trybu jest użycie
+          <strong>alternatyw</strong>, czyli dodatkowych wzorców. Kiedy
+          nie będzie przypasowań do pierwszego wzorca <em>grep</em> sprawdzi
+          pozostałe. Alternatywy zapisuje się po <em>znaku potoku</em>, po
+          kresce pionowej <strong>|</strong>.
+<pre class="code-block">
+[user@server1 ~]$ cat colors 
+blue
+yellow
+green
+orange
+white
+black
+[user@server1 ~]$ grep -E 'red|white' colors 
+white
+</pre>
+        </li>
+        <li><strong>-v</strong> - odwraca przypasowanie wzorca, polecenie
+          wówczas wypisze wszystkie linie nie pasujące do wzorca.</li>
+        <li><strong>-o</strong> - zamiast całych wierszy, polecenie zwróci
+          tylko pasujący do wzorca fragment danych.</li>
+      </ul>
+      <p>
+        Wiecej opcji znajduje się na stronie podręcznika polecenia 
+        <em>grep</em>. Myślę
+        że teraz bez problemu jesteśmy w stanie z rozumieć przykład z
+        początku tego pod rozdziału.
+      </p>
+      <h3 id="7.1.13.jobmanaging">7.1.13. Zarządzanie zadaniami</h3>
+      <p>
+        Uruchmiając jakiś program w terminalu, możemy go odłączyć od niego i
+        przekazać jego wykonanie do tła. Wówczas taki program staje się
+        <strong>zadaniem</strong>. Program kontynuje swoje wykonanie w tle, 
+        ale jest kontrolowany przez terminal, w którym został uruchomiony.
+        W pod powłoce uruchomiłem plik test, który jest mały skryptem, który
+        tak naprawdę nic nie robi.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ bash test
+
+</pre>
+      <p>
+        Użyłem kombinacji klawiszy <strong>Ctrl+z</strong>, aby zatrzymać 
+        wykonanie.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ bash test
+^Z
+[1]+  Stopped                 bash test
+</pre>
+      <p>
+        W ostatniej linii, na początku w nawiasie kwadratowym znajduje się
+        numer zadania. Za pomocą tego numeru możemy odwoływać się do zadania
+        Teraz uruchomimy je w tle.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ bg %1
+[1]+ bash test &amp;
+</pre>
+      <p>
+        Do uruchomienia zadania w tle służy polecenie <strong>bg</strong>, do
+        zadania odwołujemy się po przez podanie numery zadania poprzedzonego
+        znakiem procentu (<strong>%</strong>). Możemy przywrócić działanie 
+        zadania na pierwszy plan przywołując je za pomocą polecania
+        <strong>fg</strong>, metoda odwołania się do zadania jest taka sama 
+        jak w przypadku polecenia <em>bg</em>. Zanim przełaczym zadanie na
+        pierwszy plan, sprawdźmy jego status za pomocą polecenia
+        <strong>jobs</strong>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ jobs
+[1]+  Running                 bash test &amp;
+</pre>
+      <p>
+        Teraz możemy przełączyć polecenie, aby finalnie je zamknąć za pomocą
+        klawiszy <strong>Ctrl + c</strong>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ fg %1
+bash test
+^C
+</pre>
+      <p>
+        W ten sposób zarządza się zadaniami za pomocą mechanizmów powłoki,
+        Zadań przekazanych do tła systemu, może być wiele. Zadania nie zostaną
+        zakończone w momencie wylogowania się z systemu. Dlatego jeśli
+        wykonanie jakiego zadania, będzie wymagać czasu mozemy przenieść je
+        do tła. Przy planach użycia tła systemu warto wziąć po uwagę to, aby
+        przekierować wyjście programów/poleceń do jakiegoś pliku lub 
+        do urządzenia <em>/dev/null</em>, które ma jedno zadanie. Ignorować
+        wszelkie napływające do niego dane.
+      </p>
+      <h2 id="7.2.startupscripts">7.2. Pliki startowe powłoki</h2>
+      <p>
       </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">

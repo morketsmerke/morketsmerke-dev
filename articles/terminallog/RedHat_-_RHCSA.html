@@ -4863,6 +4863,59 @@ drwxr-xr-x. 132 user     user    8192 Jun 30 09:38 etc
 ...
 </pre>
       <p>
+        Wyświetlenie listy poleceń w historii możemy ograniczyć podajac w
+        jako argument ilość wyświetlanych linii. Polecenie wyświetli wówczas
+        polecenia od końca listy (ostatnio dodane).
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ history 10
+  266  rm etc.tar 
+  267  sudo tar -cvf etc.tar /etc
+  268  tar -x -C /tmp &lt; etc.tar 
+  269  ls -al /tmp
+  270  ls -l /tmp
+  271  history
+  272  touch file1
+  273  sudo poweroff
+  274  touch file1
+  275  history 10
+</pre>
+      <p>
+        Za pomocą opcji <em>-d</em> możemy usunać wybrane polecenie z historii.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ history 10
+  266  rm etc.tar 
+  267  sudo tar -cvf etc.tar /etc
+  268  tar -x -C /tmp &lt; etc.tar 
+  269  ls -al /tmp
+  270  ls -l /tmp
+  271  history
+  272  touch file1
+  273  sudo poweroff
+  274  touch file1
+  275  history 10
+[user@server1 ~]$ history -d 271
+[user@server1 ~]$ history 10
+  267  sudo tar -cvf etc.tar /etc
+  268  tar -x -C /tmp &lt; etc.tar 
+  269  ls -al /tmp
+  270  ls -l /tmp
+  271  touch file1
+  272  sudo poweroff
+  273  touch file1
+  274  history 10
+  275  history -d 271
+  276  history 10
+</pre>
+      <p>
+        Na informacji zwracanej przez wcześniejsze wywołanie polecenia
+        <code class="code-inline">history 10</code> w linii 
+        <code class="code-inline">271</code> widnieje polecenie
+        <code class="code-inline">history</code>, natomiast na drugim wywołaniu
+        po usunięciu tego polecenia pod tym numerem widnieje już inne.
+      </p>
+      <p>
         Wśród poleceń w historii możemy poruszać się za pomocą strzełek w górę 
         oraz w dół lub kombinacji klawiszy (co jest bardziej zalecene)
         <em>Ctrl+p</em> oraz <em>Ctrl+n</em>. Możemy je również wszukiwać za
@@ -4872,7 +4925,7 @@ drwxr-xr-x. 132 user     user    8192 Jun 30 09:38 etc
       </p>
       <p>
         Do poleceń w historii odnosimy się wprowadzając w wierszu polecenia
-        wykrzyknik (<strong>!</strong>) następnie należy podać numer z listy.
+        wykrzyknik (<strong>!</strong>) następnie możemy podać numer z listy.
         Dla przykładu użyje polecenia numer <code class="code-inline">13</code>
         z fragmentu listy powyżej.
       </p>
@@ -4881,6 +4934,356 @@ drwxr-xr-x. 132 user     user    8192 Jun 30 09:38 etc
 touch file1
 touch: cannot touch 'file1': Permission denied
 </pre>
+      <p>
+        Możemy podać litery rozpoczynające polecenie na przykład:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ !tou
+touch file1
+touch: cannot touch 'file1': Permission denied
+</pre>
+      <p>
+       Ta instrukcja podstawi najczęstsze wystąpienie polecenia 
+       rozpoczynającego się o tych liter. Podobną metodą jest podanie fragmentu
+       polecenia zawierającego jakiś ciąg znaków, na przykład:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ !?file?
+touch file1
+touch: cannot touch 'file1': Permission denied
+</pre>
+      <p>
+        To polecenie podstawi najczęściej występujące polecenie z historii
+        zawierające ciąg znaków <code class="code-inline">file</code>.
+      </p>
+      <p>
+        Za pomocą polecenia wykrzyknika możemy odwołać się do ostatniego
+        polecenia podając drugi wykrzyknik. Tą metodę możemy zastosować
+        w przypadku gdy zapomnimy o <em>sudo</em> przy wydawaniu polecenia
+        administratora.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ cat /var/log/secure
+cat: /var/log/secure: Permission denied
+[user@server1 ~]$ sudo !!
+sudo cat /var/log/secure
+[sudo] password for user: 
+Jun 26 14:12:08 server1 polkitd[725]: Loading rules from directory /etc/polkit-1/rules.d
+Jun 26 14:12:08 server1 polkitd[725]: Loading rules from directory /usr/share/polkit-1/rules.d
+Jun 26 14:12:08 server1 polkitd[725]: Finished loading, compiling and executing 12 rules
+Jun 26 14:12:08 server1 polkitd[725]: Acquired the name org.freedesktop.PolicyKit1 on the system bus
+...
+</pre>
+      <p>
+        Historię możemy wyłączyć używając polecenia
+        <code class="code-inline">set -o history</code>. Włączenie historii
+        wymaga polecenia <code class="code-inline">set +o history</code>.
+      </p>
+      <h3 id="7.1.5.editingcli">7.1.5. Edycja wiersza polecenia</h3>
+      <p>
+        Za pomocą strzałek w lewo oraz w prawo, możemy przesuwać kursor w 
+        wierszu polecenia, jednak istnieją znacznie bardziej efektywne
+        sposoby na edycje wiersza polecenia.
+      </p> 
+      <ul>
+        <li><em>Ctrl+a</em> - przenosi kursor na początek wiersza.</li>
+        <li><em>Ctrl+e</em> - przenosi kursor na koniec wiersza.</li>
+        <li><em>Ctrl+f</em> - przenosi kursor o jeden znak w prawo.</li>
+        <li><em>Ctrl+b</em> - przenosi kursor o jeden znak w lewo.</li>
+        <li><em>Alt+f</em> - przenosi kursor o jedno słowo w prawo.</li>
+        <li><em>Alt+b</em> - przenosi kursor o jedno słowo w lewo.</li>
+        <li><em>Ctrl+u</em> - usuwa wszystko z linii polecenia.</li>
+      </ul>
+      <p>
+        Te skróty pozwalają na sprawniejsze poruszenie się w wierszu
+        polecenia.
+      </p>
+      <h3 id="7.1.6.commandcompletion">7.1.6. Uzupełnianie poleceń</h3>
+      <p>
+        Chcąc przyspieszyć pisanie poleceń możemy wykorzystać uzpełnianie
+        poleceń. Wierszu polecenia zapisujemy fragment polecenia lub ścieżki
+        następnie naciskamy klawisz <strong>Tab</strong>. Powłoka uzupełni
+        nasz zapis do wspólnej części z na przykład nazwami plików, katalogów
+        czy poleceń. Po następnym naciśnięciu tego klawisza, powłoka zwróci 
+        możliwe warianty pasujące do tego co zapisaliśmy.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ deb
+
+#Pierwsze naciśnięcie klawisza Tab
+[user@server1 ~]$ debug
+
+#Drugie naciśnięcie klawisza Tab
+[user@server1 ~]$ debug
+debugfs          debuginfod-find  
+[user@server1 ~]$ debug
+</pre>
+      <p>
+        Kiedy dopiszemy kilka liter z jednego z wariantów, polecenie dopełni
+        je pozostałymi lub zwróci zawężoną ilość możliwych do wyboru elementów.
+      </p>
+      <h3 id="7.1.7.tilde">7.1.7. Podstawienie tyldy</h3>
+      <p>
+        Tylda w powłoce oznacza jedno - katalog domowy użytkownika. Za jej
+        pomocą możemy w prosty sposób odwoływać się do elementów w katalogu
+        domowym użytkownika ale i nie tylko. Poniżej przedstawiłem trzy
+        zastosowania tego podstawienia.
+      </p>
+      <ul>
+        <li><strong>~/Dokumenty</strong> - odwołanie się do elementu 
+          znajdującego się w katalogu domowym użytkownika.</li>
+        <li><strong>~+</strong> - odwołanie się do obecnego katalogu roboczego
+          (wyświetla ścieżkę bezwzględną obecnego katalogu roboczego),
+          równoznaczne z podstawiem polecenia <em>pwd</em>.</li>
+        <li><strong>~-</strong> - odwołanie się do poprzedniego katalogu
+          roboczego, podstawie również zwraca ścieżkę bezwzględną do katalogu,
+          w którym się znajdowaliśmy przed przejściem do obecnego.</li>
+      </ul>
+      <p>
+        Podstawienie tyldy może zaoszczędzić nam czas oraz zmieniejszyć ilość
+        pisania. Poniżej znajduje się kilka przykładów prezentujących powyższe
+        podstawienia.
+      </p>
+<pre class="code-block">
+[user@server1 logs]$ echo ~+
+/home/user/logs
+[user@server1 logs]$ echo ~
+/home/user
+[user@server1 logs]$ cd /etc
+[user@server1 etc]$ echo ~-
+/home/user/logs
+</pre>
+      <h3 id="7.1.8.alias">7.1.8. Aliasy</h3>
+      <p>
+        Alias to nazwa zastępcza, dzięki której możemy zastąpić długie
+        polecenia za pomocą pojedyńczego wyrazu. Aliasy definiowane są
+        pomocą polecenia <strong>alias</strong>, jako argument przyjmuje on
+        definicję aliasów, czyli nazwę zastępnczą, znak równości oraz
+        polecenie w podwójnych cudzysłowach. Między tym elementami nie
+        powinno być spacji. Poniżej znajduje się definicja aliasów, który
+        szuka w katalogu domowym plików powyżej 1 GB a następnie zwraca ich
+        atrybutu. 
+      </p>
+<pre class="code-block">
+alias bigfiles="find ~ -size +1G -exec ls -lh {} \;"
+[user@server1 ~]$ bigfiles 
+-rw-r--r--. 1 user user 1.5G Jul  1 12:55 /home/user/test.img
+</pre>
+      <p>
+        Ważną rzeczą związna z aliasami jest fakt iż kiedy powłoka otrzymuje
+        polecenie do interpretacji to sprawdza na początku czy nie jest ono
+        aliasem i jeśli tak jest to wykonuje to co znajduje się pod nim. Aliasy
+        mogą mieć takie same nazwy jak programy czy inne polecenia w systemie
+        dlatego też mogą ją przesłaniać. Tak jest w przypadku superużytkownika
+        z poleceniami <em>cp</em>, <em>mv</em> czy <em>rm</em>. Poniższy
+        przykład dobrze to obrazuje.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ alias rm="rm -i"
+[user@server1 ~]$ rm test.img
+rm: remove regular file 'test.img'? n
+<pre>
+      <p>
+        Aby powłoka nie brała nazwy polecenia przy poszukiwaniu aliasów, należy
+        poprzedzić ją znakiem lewego ukośnika czy <em>backslashu</em>
+        (<strong>\</strong>).
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ rm logs
+rm: remove symbolic link 'logs'? n
+[user@server1 ~]$ \rm logs
+</pre>
+      <p>
+        Usuwaniu aliasów służy polecnie <strong>unalias</strong>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ unalias bigfiles
+[user@server1 ~]$ bigfiles
+bash: bigfiles: command not found...
+</pre>
+      <h3 id="7.1.9.metacharacters">7.1.9. Metaznaki oraz nazwy wieloznaczne</h3>
+      <p>
+        Chcąc odwołać się do wielu elementów posiadających wspólne fragmenty
+        nazw możemy użyć tzw. <strong>metaznaków</strong> lub
+        <em>nazw wieloznacznych</em>, służą one podstawianiu znaków pod używane
+        wraz z nim nazwy. Załóżmy że mamy dwa rodzaje archiw katalogu jedne
+        rozpoczynają się od nazwy <em>backup</em> a drugie od nazwy <em>d</em>
+        kazde archiwum zawiera w nazwie po podanej części myślnik oraz datę.
+        Chcemy wyświetlić atrybuty archiwów z nazwą zaczynającą się od <em>d</em>
+        w tym celu możemy użyć nazwy wieloznacznej. Podstawiając za nazwą
+        gwiazdkę.
+      </p>
+<pre class="code-block">
+[js@fujitsu windows]$ ls -l D*
+-rwxr--r-- 1 windows windows 11718211581 05-01 21:09 D-2022-05-01.7z
+-rwxr--r-- 1 windows windows 11718211581 05-02 21:08 D-2022-05-02.7z
+-rwxr--r-- 1 windows windows 11718211581 05-03 21:08 D-2022-05-03.7z
+-rwxr--r-- 1 windows windows 11718269229 05-04 21:15 D-2022-05-04.7z
+-rwxr--r-- 1 windows windows 11718658739 05-05 21:14 D-2022-05-05.7z
+-rwxr--r-- 1 windows windows 11718634289 05-06 21:14 D-2022-05-06.7z
+-rwxr--r-- 1 windows windows 11718634289 05-07 21:08 D-2022-05-07.7z
+-rwxr--r-- 1 windows windows 11718634289 05-08 21:08 D-2022-05-08.7z
+-rwxr--r-- 1 windows windows 11718633900 05-09 21:15 D-2022-05-09.7z
+...
+</pre>
+      <p>
+        Do stosowania nazw wieloznacznych, możemy stosować wiele znaków ich
+        opis znajduje się na liście poniżej.
+      </p>
+      <ul>
+        <li><strong>*</strong> - gwiazdka, ten symbol podstawia dowolną ilość
+          dowolnych znaków. Mogą one w ogóle nie występować.
+<pre class="code-block">
+[user@server1 ~]$ ls -l D*
+-rw-r--r--. 1 user user 0 Jul  1 13:39 D
+</pre>
+        </li>
+        <li><strong>?</strong> - znak zapytania, pojedyńczy do dowolny znak.
+<pre class="code-block">
+[user@server1 ~]$ ls -l ??.*
+-rw-r--r--. 1 user user 2732 Jun 30 19:14 ls.out
+</pre>
+        </li>
+        <li><strong>[]</strong> - nawias kwadratowy, zakresy lub lista znaków.
+          Lista znaków:
+<pre class="code-block">
+[user@server1 ~]$ ls -l /dev/*[ty]
+crw-------. 1 root root 10, 126 Jul  1 11:00 /dev/cpu_dma_latency
+crw-------. 1 root root 10, 228 Jul  1 11:00 /dev/hpet
+crw-r-----. 1 root kmem  1,   4 Jul  1 11:00 /dev/port
+crw-------. 1 root root 10, 231 Jul  1 11:00 /dev/snapshot
+lrwxrwxrwx. 1 root root      15 Jul  1 11:00 /dev/stdout -&gt; /proc/self/fd/1
+crw-rw-rw-. 1 root tty   5,   0 Jul  1 13:03 /dev/tty
+</pre>
+          Zakres:
+<pre class="code-block">
+[user@server1 ~]$ sudo ls -ld /etc/systemd/system/[m-o]*
+drwxr-xr-x. 2 root root 4096 Jun 26 13:54 /etc/systemd/system/multi-user.target.wants
+drwxr-xr-x. 2 root root   48 Jun 26 13:50 /etc/systemd/system/network-online.target.wants
+</pre>
+          Zakresy oraz listy znaków mogą zostać zanegowane za pomocą
+          wykrzyknika.
+<pre class="code-block">
+[user@server1 ~]$ sudo ls -ld /etc/systemd/system/[!m-o]*
+[sudo] password for user: 
+drwxr-xr-x. 2 root root   65 Jun 26 13:54  /etc/systemd/system/basic.target.wants
+drwxr-xr-x. 2 root root   31 Jun 26 13:50  /etc/systemd/system/bluetooth.target.wants
+...
+</pre>
+          Powyższe przypasowane elementy nie zawierają liter od m-o na początku
+          swoich nazw.
+        </li> 
+      </ul>
+      <p>
+        Stosując nazwy wieloznaczne możemy automatycznie wykonywać te same
+        polecenia na elementach posiadających wspólne nazwy.
+      </p>
+      <h3 id="7.1.10.pipes">7.1.10. Potoki i polecenia potokowe</h3>
+      <p>
+        Omawiając przkierowania strumieni wspomniałem o potokach. Potok to 
+        przekierowanie wyjścia jednego polecnia na wyjście drugiego za pomocą
+        znaku pionowej kreski (<strong>|</strong>).
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l /etc | head
+total 1320
+drwxr-xr-x.  3 root root        28 Jun 26 13:50 accountsservice
+-rw-r--r--.  1 root root        16 Jun 26 14:01 adjtime
+-rw-r--r--.  1 root root      1529 Jun 23  2020 aliases
+drwxr-xr-x.  3 root root        65 Jun 26 13:54 alsa
+drwxr-xr-x.  2 root root      4096 Jun 26 13:58 alternatives
+-rw-r--r--.  1 root root       541 Aug  9  2021 anacrontab
+-rw-r--r--.  1 root root       769 Aug 28  2021 appstream.conf
+-rw-r--r--.  1 root root        55 Feb 11 10:53 asound.conf
+-rw-r--r--.  1 root root         1 Aug  9  2021 at.deny
+</pre>
+      <p>
+        Za pomocą potoków możemy łączyć polecenia w długie łańcuchy
+        przekazując strumień wyjściowy wychodzący z innych poleceń na wejście
+        kolejnych. Polecenia tego typu nazwyane są 
+        <strong>poleceniami potokowymi</strong>. Poniżej znajduej się jedno
+        z nich.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l /etc | sed -n '15p' | awk '{printf $1}'
+</pre>
+      <p>
+        Powyższe polecenie wyświetli pierwszą kolumnę atrybutów pliku z
+        15 lini zawartości katalogu <em>/etc</em>. Polecenia 
+        <code class="code-inline">sed</code> oraz 
+        <code class="code-inline">awk</code> znajdują się poza zakresem
+        merytrorycznym tego materiału.
+      </p>
+      <h3 id="7.1.11.quoting">7.1.11. Cytowanie</h3>
+      <p>
+        Za tą enigmatyczną nazwą stoją mechanizmy, których możemy użyć, aby
+        znaki specjalne w powłoce, by traktowane jako zwykłe znaki bez
+        żadanego specjalnego znaczenia. Pierwszym z nich jest użycie 
+        lewego ukośnika (<strong>\</strong>). Jeśli na przykład stworzyślimy
+        plik on nazwie <em>*</em>. To jeśli spróbujemy go usunąć bez żadnego
+        cytowania usuniemy wszystko co znajduje się w katalogu.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ rm \*
+rm: remove regular empty file '*'? y
+[user@server1 ~]$ ls
+D  err.out  etc.tar  file1  ls2.out  ls.out  test.img
+</pre>
+      <p>
+        Jak widać na załączonym przykładzie moim plikom nic się nie stało.
+        Używanie lewego ukośnika może być uciążliwe jeśli do zacytowania mamy
+        więcej niż jeden znak. Wówczas możemy się posłużyć pojedyńczym
+        apostrofem (<strong>''</strong>). Wszystko co zostanie umieszczone
+        miedzy nimi, będzie traktowane dosłownie. Najprostszym przykładem
+        użycia jest odwołanie się do zmiennej.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ zmienna='abc'
+[user@server1 ~]$ echo $zmienna
+abc
+[user@server1 ~]$ echo '$zmienna'
+$zmienna
+</pre>
+      <p>
+        Gdy odwołaliśmy się do zmiennej w pojedyńczych cudzysłowach, znak
+        dolara został potraktowany domyślnie, więc polecenie
+        <code class="code-inline">echo</code> wypisało ciąg znaków
+        <code class="code-inline">$zmienna</code>. Ostatnim rodzajem cytowania
+        podobnym do pojedyńczego apostrofu jest podwójny apostrof. Zauważalną
+        różnicą jest to iż podwójny apostrof pozwala na użycie specjalnego
+        znaczenia takich znaków jak: lewy ukośnik (<strong>\</strong>),
+        znak dolara (<strong>$</strong>) oraz pojedyńczy apostrof
+        (<strong>''</strong>), dzięki czemu wenątrz literałów prezentowanych
+        za pomocą podwójnych apostrofów możemy uzyskać wartości zmiennych. 
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ echo "Pierwszym literami alfabetu są litery $zmienna"
+Pierwszym literami alfabetu są litery abc
+</pre>
+      <h3 id="7.1.12.regex">7.1.12. Wyrażenia regularne</h3>
+      <p>
+        Wyrażenia regularne służą wyszukiwaniu wzorców w tekście. Wzroce
+        składają się z ze znaków specjalnych oraz innych zwykłych znaków 
+        mających przybliżyć odnalezienie wzorca. Wyrażenia regularne w powłoce
+        możemy obsługiwać za pomocą polecenia <strong>grep</strong>. W tym
+        materiale również używaliśmy wyrażeń regularnych przy wyświetlaniu
+        zawartości pliku <em>/etc/login.defs</em>
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ grep -v -e '^#' -e '^$' /etc/login.defs 
+MAIL_DIR	/var/spool/mail
+UMASK		022
+HOME_MODE	0700
+PASS_MAX_DAYS	99999
+PASS_MIN_DAYS	0
+PASS_WARN_AGE	7
+...
+</pre>
+      <p>
+        Jednak najpierw zajmiemy się czymś prostszym, a do tego poziomu 
+        dojdziemy pod koniec. Najprostszym wyrażeniem może być zwykły
+        ciąg znaków.
+      </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

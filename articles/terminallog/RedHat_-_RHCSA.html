@@ -217,6 +217,36 @@
             <li><a href="#6.4.chownchgrp">6.4. Zmiana praw własności plików i katalogów</a></li>
           </ul>
         </li>
+        <li><a href="#7.bashshell">7. Powłoka BASH</a>
+          <ul class="toc">
+            <li><a href="#7.1.bashfeatures">7.1. Funkcje powłoki BASH</a>
+              <ul class="toc">
+                <li><a href="#7.1.1.variables">7.1.1. Zmienne</a></li>
+                <li><a href="#7.1.2.commandsubstitution">7.1.2. Podstawienie polecenia</a></li>
+                <li><a href="#7.1.3.streamredirections">7.1.3. Przekierowanie strumieni</a></li>
+                <li><a href="#7.1.4.history">7.1.4. Historia poleceń</a></li>
+                <li><a href="#7.1.5.editingcli">7.1.5. Edycja wiersza polecenia</a></li>
+                <li><a href="#7.1.6.commandcompletion">7.1.6. Uzupełnianie poleceń</a></li>
+                <li><a href="#7.1.7.tilde">7.1.7. Podstawienie tyldy</a></li>
+                <li><a href="#7.1.8.alias">7.1.8. Aliasy</a></li>
+                <li><a href="#7.1.9.metacharacters">7.1.9. Metaznaki oraz nazwy wieloznaczne</a></li>
+                <li><a href="#7.1.10.pipes">7.1.10. Potoki i polecenia potokowe</a></li>
+                <li><a href="#7.1.11.quoting">7.1.11. Cytowanie</a></li>
+                <li><a href="#7.1.12.regex">7.1.12. Wyrażenia regularne</a></li>
+                <li><a href="#7.1.13.jobmanaging">7.1.13. Zarządzanie zadaniami</a></li>
+              </ul>
+            </li>
+            <li><a href="#7.2.startupscripts">7.2. Pliki startowe powłoki</a>
+              <ul class="toc">
+                <li><a href="#7.2.1.systemwidefiles">7.2.1. Globalne pliki startowe powłoki</a></li>
+                <li><a href="#7.2.2.usersfiles">7.2.2. Pliki startowe powłoki użytkownika</a></li>
+              </ul>
+            </li>
+            <li><a href="#exec7.1">Ćwiczenie 1</a></li>
+            <li><a href="#exec7.2">Ćwiczenie 2</a></li>
+            <li><a href="#ch7summary">Podsumowanie</a></li>
+          </ul>
+        </li>
       </ul>
       <h1 id="1.introduction">1. Wstęp</h1>
       <p>
@@ -4491,10 +4521,11 @@ PKGADM ALL = PKGCMD
       </p>
       <h1 id="7.bashshell">7. Powłoka BASH</h1>
       <p>
-        Powłoka jest program odpowiedzialny za możliwość wprowadzania poleceń
+        Powłoka jest to program odpowiedzialny za możliwość wprowadzania 
+        poleceń
         do systemu i ich interpretowanie. Powłoka jest domyślnym interfejsem
-        użytkownika w wariantach systemów uniksopodobnych. To właśnie proces
-        połoki jest uruchamiany po uruchomieniu okna terminala. 
+        użytkownika w różnych wariantach systemów uniksopodobnych. To właśnie 
+        proces połoki jest uruchamiany po uruchomieniu okna terminala. 
       </p>
       <p>
         Na przestrzeni lat wraz z kolenymi odłamami oryginalnego Uniksa
@@ -4504,7 +4535,7 @@ PKGADM ALL = PKGCMD
         powłok, poprawienie ich działa oraz dostosowanie do obecnych czasów.
         Ten rodzaj powłoki również domyślnie jest instalowany w wielu
         dystrybucjach Linuksa i Red Hat nie jest w tym temacie wyjątkiem.
-        W tym rodziale chciałbym omówić najważnejsze funckje tej powłoki oraz
+        W tym rodziale chciałbym omówić najważnejsze funkcje tej powłoki oraz
         jej skrypty startowe, dzięki którym będziemy mogli dostować ją do
         swoich potrzeb.
       </p>
@@ -4512,23 +4543,23 @@ PKGADM ALL = PKGCMD
       <p>
         <em>BASH</em> w swojej kolekcji posiada masę funkcjonalności, których
         próżno szukać w innych powłokach. Dla przykładu w nowszych
-        dystrybucjach, skrypt powłoki zastępują podstawe narzędzia systemowe,
-        będące kiedyś pełnoprawnymi programi.
+        dystrybucjach, skrypt powłoki zastępują podstawowe narzędzia systemowe,
+        będące kiedyś pełnoprawnymi programami.
       </p>
       <h3 id="7.1.1.variables">7.1.1. Zmienne</h3>
       <p>
-        Korzystając powłoki możemy używać zmiennych, czyli opisanych miesc
+        Korzystając z powłoki możemy używać zmiennych, czyli opisanych miesc
         alokowanych w pamięci do przechowywania dowolnych wartości. Do
         dyspozycji mamy dwa rodzaje zmiennych - zmienne <strong>lokalne</strong>
         oraz zmienne <strong>środowiskowe</strong>.
       </p>
       <p>
-        Zmienne lokalne są do naszej dyspozycji podczas korzystania w obecnej
-        sesji powłoki, tylko i wyłącznie, gdyż nie są one dostępne dla
-        uruchomionych w tej sesji skryptów czy programów. Zmienne te są
+        Zmienne lokalne są do naszej dyspozycji w obecnej sesji powłoki.
+        Tego typu zmienne nie są dostępne dla
+        uruchomionych w tej sesji skryptów czy programów, gdyż są
         przechowywane tylko i wyłącznie w obszarze pamięci należącym do tego
-        procesu powłoki. Tak zmienną możemy zdefiniować podając w wierszu
-        polecenia nazwę następnie znak równości oraz wartość. Warto dodać
+        procesu powłoki. Taka zmienną możemy zdefiniować podając w wierszu
+        polecenia jej nazwę, następnie znak równości oraz wartość. Warto dodać
         aby nie było między tymi elementami żadnej spacji. Poniższy przykład 
         na pewno to rozświetli.
       </p>
@@ -4536,7 +4567,7 @@ PKGADM ALL = PKGCMD
 [user@server1 ~]$ zmienna=2137
 </pre>
       <p>
-        Po wykonaniu takiego polecenia, powłoka utworzy zmienną i nada je
+        Po wykonaniu takiego polecenia, powłoka utworzy zmienną i nada jej
         podaną wartość, po czym zwróci znak zachęty.
       </p>
       <p>
@@ -4549,19 +4580,19 @@ PKGADM ALL = PKGCMD
 </pre>
       <p>
         Polecenie <code class="code-inline">echo</code> wypisuje wszystko co
-        do zostanie mu podane jako argument na standardowej wyjście (o tym
-        będzie w dalszej częsci programu). Jak widzimy polecenie wypisało
+        do zostanie mu podane jako argument na standardowe wyjście (o tym
+        będzie w dalszej częsci materiału). Jak widzimy polecenie wypisało
         również zawartość zmiennej.
       </p>
       <p>
-        Innego rodzaju zmiennymi są zmienne środowiskowe porzechowują one
+        Innego rodzaju zmiennymi są zmienne środowiskowe przechowują one
         różnego rodzaju wartość, które mogą wpływać na działanie programów.
         Każdy program uruchomiony na Linuksie dostaje obszar
         pamięci zmiennych środowiskowych i może z nich korzystać. Definicja
         takich zmiennych, różni się tym iż wykorzystuje się do tego celu
         polecenie <strong>export</strong>, które zadaniem jest przeniesienie
         zmiennej lokalnej do pamięci zmiennych środowiskowych. Jako argument
-        polecenia podajemy definicję zmiennej lokalnej.
+        polecenia podajemy definicję zmiennej.
       </p>
 <pre class="code-block">
 [user@server1 ~]$ export ZMIENNA=2137
@@ -4570,8 +4601,9 @@ PKGADM ALL = PKGCMD
         Nazwy zmiennych środowiskowych zapisujemy za pomocą wielkich liter aby
         odróżnić je od zmiennych lokalnych. Działanie takiej zmiennej
         zobaczymy, kiedy uruchomimy jakiś program w tej powłoce, aby otrzymał
-        on od połoki (procesu nadrzędnego) obszar zmiennych środowiskowych.
-        Najlepiej by było aby takim programem byłą kolejna połowka (podpowłoka).
+        on od połoki, w której został uruchomiony (procesu nadrzędnego) obszar 
+        zmiennych środowiskowych. Najlepiej by było aby takim programem była 
+        kolejna połowka (podpowłoka).
       </p>
 <pre class="code-block">
 [user@server1 ~]$ bash
@@ -4579,7 +4611,7 @@ PKGADM ALL = PKGCMD
 2137
 </pre>
       <p>
-        Po uruchomieniu pod powłoki wydałem polecenie, które wyświetliło mi
+        Po uruchomieniu podpowłoki wydałem polecenie, które wyświetliło mi
         zawartość zmiennej, którą zdefiniowałem jako zmienną środowiskową w
         poprzednim przykładzie.
       </p>
@@ -4633,7 +4665,7 @@ zmienna1=2137
 ...
 </pre>
       <p>
-        Zmienne, które nie są już potrzebne możemy odwołać za pomocą polecenia
+        Zmienne, które nie są już potrzebne możemy usunąć za pomocą polecenia
         <strong>unset</strong>. 
       </p>
 <pre class="code-block">
@@ -4644,12 +4676,12 @@ zmienna1=2137
 
 </pre>
       <p>
-        Przy odwołaniu się do zmiennej polecenie <em>echo</em> zwróciło
+        Przy odwołaniu się do zmiennej, polecenie <em>echo</em> zwróciło
         pusty wiersz.
       </p>
       <p>
-        Manipując zmiennymi w powłoce może zmienić znak zachęty, ponieważ jego
-        definicja jest przechowywana w zmiennej <strong>PS1</strong>:
+        Manipulując zmiennymi w powłoce może zmienić znak zachęty, ponieważ 
+        jego definicja jest przechowywana w zmiennej <strong>PS1</strong>:
       </p>
 <pre class="code-block">
 [user@server1 ~]$ echo $PS1
@@ -4658,14 +4690,14 @@ zmienna1=2137
       <p>
         Te poprzedzone lewym ukośnikiem <strong>\</strong> litery są kolejnymi
         elementami znaku zachęty. Opis tych elementów znajduje się na 
-        stronie podrecznika polecenia/powłoki <em>BASH</em> w rozdziale
+        stronie podręcznika polecenia/powłoki <em>BASH</em> w rozdziale
         <em>PROMPTING</em>.
       </p>
       <h3 id="7.1.2.commandsubstitution">7.1.2. Podstawienie polecenia</h3>
       <p>
         Często wykorzystywaną funkcją wraz z zmiennymi jest
         <strong>podstawienie polecenia</strong>. Polega ono na uruchomieniu,
-        przez podpowłokę polecenia ujętego albo w okrągłu nawias poprzedziony
+        przez podpowłokę polecenia ujętego albo w okrągły nawias poprzedzony
         znakiem dolara (<strong>$()</strong>) albo w ukośny cudzysłów
         (<strong>``</strong>). Informacja zwracana przez polecenie trafia albo
         do zmiennej albo bezpośrednio jak argument polecenia.
@@ -4696,22 +4728,26 @@ zmienna1=2137
       <p>
         Na Uniksach mamy doczynienia z trzema rodzajami strumieni danych,
         owe strumienie łączą ze sobą np. urządzenia z programami, dlatego
-        pisząc na klawiaturze możemy wprowadzać tekst do programu, albo
+        pisząc na klawiaturze możemy wprowadzać tekst do programu, albo 
+        programy
         mogą wypisać wynik swojego działnia do okna terminala. Pierszy strumień
-        to strumień wejścia źródłem jego danych jest najczęściej klawiatura.
-        Jego identyfikatorem jest <strong>0</strong> (programy korzystają z
-        identyfikatorów do korzystania ze stumieni, my też będziemy podłaczając
+        to strumień standardowegp wejścia źródłem jego danych jest najczęściej 
+        klawiatura.
+        Jego identyfikatorem jest <strong>0</strong> (programy używają
+        identyfikatorów do korzystania ze strumieni, my też będziemy podłaczając
         jeden strumień do drugiego). Drugi strumień danych, to strumień
-        wyjścia źródłem jego danych jest najczęściej program (jądro podczas
-        uruchamiania programu przekazuje mu kopie strumienia), jego
+        standarowego wyjścia źródłem jego danych jest najczęściej program 
+        (jądro podczas
+        uruchamiania programu przekazuje mu kopie strumieni), jego
         identyfikatorem jest <strong>1</strong>, a podłączony jest on do
         terminala. Ostatnim strumieniem jest strumień błędów jego źródłem 
-        danych są komunikaty diagnostycznych programów, jest on najczęciej
-        razem ze strumieniem wyjścia do terminala. Identyfikatorem strumienia
-        błędów jest <strong>2</strong>.
+        danych są komunikaty diagnostyczne programów, jest on najczęciej
+        podłączony razem ze strumieniem wyjścia do terminala. Identyfikatorem 
+        strumienia błędów jest <strong>2</strong>.
       </p>
       <p>
-        Przekierowania strumienia dokonujemy w wierszu polecenia poprzez 
+        Przekierowania strumienia standardowego wyjścia dokonujemy w wierszu 
+        polecenia poprzez 
         podanie znaku większości (<strong>&gt;</strong>) a następnie podajemy
         miejse docelowe na dane. Na przykład wynik listowania katalogu
         <em>/etc</em> możemy umieścić w pliku.
@@ -4781,8 +4817,8 @@ drwxr-xr-x.  2 root root    6 Aug 10  2021 empty
 ls: cannot access '/dvd': No such file or directory
 </pre>
       <p>
-        Czasmi może się zdarzyć, iż będzie potrzeba przekierowania obu tych
-        strumieni, wówczas trzeba skorzystać z podłączenie jednego strumienia
+        Czasami może się zdarzyć, iż będzie potrzeba przekierowania obu tych
+        strumieni, wówczas trzeba skorzystać z podłączenia jednego strumienia
         do drugiego.
       </p>
 <pre class="code-block">
@@ -4805,6 +4841,10 @@ drwxr-xr-x. 2 user200  dba        6 Jun 26 15:33 dir10
         <code class="code-inline">ls -l /tmp /sdir &amp;&gt; ls2.out</code>.
         Obie formy są poprawne i obie robią to samo, która będzie dla nas
         lepsza musimy zdecydować sami.
+      </p>
+      <p class="exam_tip">
+        Jednym z zadań egzaminacyjnych może być wykonanie polecenia z 
+        przekierowaniem wyjścia lub/i strumienia błędów do pliku.
       </p>
       <p>
         Kolejnym rodzajem przekierowania jest przekierowanie wejścia, jednak 
@@ -4832,14 +4872,14 @@ drwxr-xr-x. 132 user     user    8192 Jun 30 09:38 etc
       <h3 id="7.1.4.history">7.1.4. Historia poleceń</h3>
       <p>
         Dość istotną funkcją powłoki <em>BASH</em> jest historia poleceń.
-        Pozwala ona zaoszczędzić pisania w szczególności długi poleceń czy
+        Pozwala ona zaoszczędzić pisania w szczególności długich poleceń czy
         potoków poleceń (ang. <em>pipelines</em>). Posiada ona funkcję
         wyszukiwania oraz swobodny dostęp do poleceń umieszczonych w historii.
       </p>
       <p>
         Aby wyświetlić polecenia z historii, należy użyć polecenia
-        <strong>history</strong>, wyświetli ono listę poleceń z numer na
-        początku, każde polecenie to jednak linia. Numer porządkowy pomoże nam
+        <strong>history</strong>, wyświetli ono listę poleceń z numerami na
+        początku, każde polecenie to jedna linia. Numer porządkowy pomoże nam
         się odwołać do polecenia podczas jego wywoływania, ponieważ nie
         potrzeba szukać polecenia czy przebierać ich wszystkich za pomocą
         niżej opisanych klawiszy. Wystarczy znać jego numer. Poniżej znajduje
@@ -4918,7 +4958,8 @@ drwxr-xr-x. 132 user     user    8192 Jun 30 09:38 etc
       <p>
         Wśród poleceń w historii możemy poruszać się za pomocą strzełek w górę 
         oraz w dół lub kombinacji klawiszy (co jest bardziej zalecene)
-        <em>Ctrl+p</em> oraz <em>Ctrl+n</em>. Możemy je również wszukiwać za
+        <em>Ctrl+p</em>(poprzednie polecenie) oraz <em>Ctrl+n</em> (następne
+         polecenie). Możemy je również wszukiwać za
         przez wciśnięcie kombinacji klawiszy <em>Ctrl+r</em> i podanie 
         fragmentu polecenia. Czasmi wyszukiwanie może nie przynieść skutku,
         wówczas należy nacisnać <em>Ctrl+c</em> i spróbować ponownie.
@@ -4927,7 +4968,7 @@ drwxr-xr-x. 132 user     user    8192 Jun 30 09:38 etc
         Do poleceń w historii odnosimy się wprowadzając w wierszu polecenia
         wykrzyknik (<strong>!</strong>) następnie możemy podać numer z listy.
         Dla przykładu użyje polecenia numer <code class="code-inline">13</code>
-        z fragmentu listy powyżej.
+        z fragmentu listy z pierwszego przykładu.
       </p>
 <pre class="code-block">
 [user@server1 ~]$ !13
@@ -4959,8 +5000,8 @@ touch: cannot touch 'file1': Permission denied
       <p>
         Za pomocą polecenia wykrzyknika możemy odwołać się do ostatniego
         polecenia podając drugi wykrzyknik. Tą metodę możemy zastosować
-        w przypadku gdy zapomnimy o <em>sudo</em> przy wydawaniu polecenia
-        administratora.
+        w przypadku gdy zapomnimy o <em>sudo</em> przy wydawaniu poleceń
+        administracyjnych.
       </p>
 <pre class="code-block">
 [user@server1 ~]$ cat /var/log/secure
@@ -4978,12 +5019,18 @@ Jun 26 14:12:08 server1 polkitd[725]: Acquired the name org.freedesktop.PolicyKi
         Historię możemy wyłączyć używając polecenia
         <code class="code-inline">set -o history</code>. Włączenie historii
         wymaga polecenia <code class="code-inline">set +o history</code>.
+        Historia kontrolowana jest za pomocą trzech zmiennych
+        <em>HISTSIZE</em>, której wartość jest równoznaczna z ze zmienną
+        <em>HISTFILESIZE</em> oraz <em>HISTCONTROL</em>.  Ich opisy znajdują
+        się na stronie podręcznika polecenia <em>bash</em>. Natomiast ścieżka
+        do pliku zawierającego historie z poprzednich sesji znajduje się w
+        zmiennej <em>HISTFILE</em>.
       </p>
       <h3 id="7.1.5.editingcli">7.1.5. Edycja wiersza polecenia</h3>
       <p>
         Za pomocą strzałek w lewo oraz w prawo, możemy przesuwać kursor w 
         wierszu polecenia, jednak istnieją znacznie bardziej efektywne
-        sposoby na edycje wiersza polecenia.
+        sposoby na edycje wpisanego polecenia.
       </p> 
       <ul>
         <li><em>Ctrl+a</em> - przenosi kursor na początek wiersza.</li>
@@ -5034,9 +5081,10 @@ debugfs          debuginfod-find
           znajdującego się w katalogu domowym użytkownika.</li>
         <li><strong>~+</strong> - odwołanie się do obecnego katalogu roboczego
           (wyświetla ścieżkę bezwzględną obecnego katalogu roboczego),
-          równoznaczne z podstawiem polecenia <em>pwd</em>.</li>
+          równoznaczne z podstawiemiem polecenia <em>pwd</em>.</li>
         <li><strong>~-</strong> - odwołanie się do poprzedniego katalogu
-          roboczego, podstawie również zwraca ścieżkę bezwzględną do katalogu,
+          roboczego, podstawienie również zwraca ścieżkę bezwzględną do 
+          katalogu,
           w którym się znajdowaliśmy przed przejściem do obecnego.</li>
       </ul>
       <p>
@@ -5059,7 +5107,7 @@ debugfs          debuginfod-find
         polecenia za pomocą pojedyńczego wyrazu. Aliasy definiowane są
         pomocą polecenia <strong>alias</strong>, jako argument przyjmuje on
         definicję aliasów, czyli nazwę zastępnczą, znak równości oraz
-        polecenie w podwójnych cudzysłowach. Między tym elementami nie
+        polecenie w podwójnych apostrofach. Między tym elementami nie
         powinno być spacji. Poniżej znajduje się definicja aliasów, który
         szuka w katalogu domowym plików powyżej 1 GB a następnie zwraca ich
         atrybutu. 
@@ -5073,8 +5121,8 @@ alias bigfiles="find ~ -size +1G -exec ls -lh {} \;"
         Ważną rzeczą związna z aliasami jest fakt iż kiedy powłoka otrzymuje
         polecenie do interpretacji to sprawdza na początku czy nie jest ono
         aliasem i jeśli tak jest to wykonuje to co znajduje się pod nim. Aliasy
-        mogą mieć takie same nazwy jak programy czy inne polecenia w systemie
-        dlatego też mogą ją przesłaniać. Tak jest w przypadku superużytkownika
+        mogą mieć takie same nazwy jak programy czy inne polecenia w systemie,
+        dlatego też mogą je przesłaniać. Tak jest w przypadku superużytkownika
         z poleceniami <em>cp</em>, <em>mv</em> czy <em>rm</em>. Poniższy
         przykład dobrze to obrazuje.
       </p>
@@ -5082,7 +5130,7 @@ alias bigfiles="find ~ -size +1G -exec ls -lh {} \;"
 [user@server1 ~]$ alias rm="rm -i"
 [user@server1 ~]$ rm test.img
 rm: remove regular file 'test.img'? n
-<pre>
+</pre>
       <p>
         Aby powłoka nie brała nazwy polecenia przy poszukiwaniu aliasów, należy
         poprzedzić ją znakiem lewego ukośnika czy <em>backslashu</em>
@@ -5094,7 +5142,7 @@ rm: remove symbolic link 'logs'? n
 [user@server1 ~]$ \rm logs
 </pre>
       <p>
-        Usuwaniu aliasów służy polecnie <strong>unalias</strong>.
+        Usuwaniu aliasów służy polecenie <strong>unalias</strong>.
       </p>
 <pre class="code-block">
 [user@server1 ~]$ unalias bigfiles
@@ -5106,7 +5154,7 @@ bash: bigfiles: command not found...
         Chcąc odwołać się do wielu elementów posiadających wspólne fragmenty
         nazw możemy użyć tzw. <strong>metaznaków</strong> lub
         <em>nazw wieloznacznych</em>, służą one podstawianiu znaków pod używane
-        wraz z nim nazwy. Załóżmy że mamy dwa rodzaje archiw katalogu jedne
+        wraz z nim nazwy. Załóżmy że mamy dwa rodzaje archiwów w katalogu jedne
         rozpoczynają się od nazwy <em>backup</em> a drugie od nazwy <em>d</em>
         kazde archiwum zawiera w nazwie po podanej części myślnik oraz datę.
         Chcemy wyświetlić atrybuty archiwów z nazwą zaczynającą się od <em>d</em>
@@ -5138,7 +5186,7 @@ bash: bigfiles: command not found...
 -rw-r--r--. 1 user user 0 Jul  1 13:39 D
 </pre>
         </li>
-        <li><strong>?</strong> - znak zapytania, pojedyńczy do dowolny znak.
+        <li><strong>?</strong> - znak zapytania, pojedyńczy dowolny znak.
 <pre class="code-block">
 [user@server1 ~]$ ls -l ??.*
 -rw-r--r--. 1 user user 2732 Jun 30 19:14 ls.out
@@ -5181,7 +5229,7 @@ drwxr-xr-x. 2 root root   31 Jun 26 13:50  /etc/systemd/system/bluetooth.target.
       <h3 id="7.1.10.pipes">7.1.10. Potoki i polecenia potokowe</h3>
       <p>
         Omawiając przkierowania strumieni wspomniałem o potokach. Potok to 
-        przekierowanie wyjścia jednego polecnia na wyjście drugiego za pomocą
+        przekierowanie wyjścia jednego polecenia na wyjście drugiego za pomocą
         znaku pionowej kreski (<strong>|</strong>).
       </p>
 <pre class="code-block">
@@ -5218,7 +5266,7 @@ drwxr-xr-x.  2 root root      4096 Jun 26 13:58 alternatives
       <p>
         Za tą enigmatyczną nazwą stoją mechanizmy, których możemy użyć, aby
         znaki specjalne w powłoce, by traktowane jako zwykłe znaki bez
-        żadanego specjalnego znaczenia. Pierwszym z nich jest użycie 
+        żadnego specjalnego znaczenia. Pierwszym z nich jest użycie 
         lewego ukośnika (<strong>\</strong>). Jeśli na przykład stworzyślimy
         plik on nazwie <em>*</em>. To jeśli spróbujemy go usunąć bez żadnego
         cytowania usuniemy wszystko co znajduje się w katalogu.
@@ -5250,10 +5298,10 @@ $zmienna
         <code class="code-inline">echo</code> wypisało ciąg znaków
         <code class="code-inline">$zmienna</code>. Ostatnim rodzajem cytowania
         podobnym do pojedyńczego apostrofu jest podwójny apostrof. Zauważalną
-        różnicą jest to iż podwójny apostrof pozwala na użycie specjalnego
+        różnicą jest to, iż podwójny apostrof pozwala na użycie specjalnego
         znaczenia takich znaków jak: lewy ukośnik (<strong>\</strong>),
         znak dolara (<strong>$</strong>) oraz pojedyńczy apostrof
-        (<strong>''</strong>), dzięki czemu wenątrz literałów prezentowanych
+        (<strong>''</strong>), dzięki czemu wewnątrz literałów prezentowanych
         za pomocą podwójnych apostrofów możemy uzyskać wartości zmiennych. 
       </p>
 <pre class="code-block">
@@ -5283,7 +5331,7 @@ PASS_WARN_AGE	7
         Na powyższym przykładzie widzimy składnie polecenia, źródłem danych
         nie musi być wyłącznie plik, równie dobrze mogą one pochodzić z
         przekierowania. Na przykład z potoku.
-        Jednak najpierw zajmiemy się czymś prostszym, a do tego poziomu 
+        Najpierw jednak zajmiemy się czymś prostszym, a do tego poziomu 
         dojdziemy pod koniec. Najprostszym wyrażeniem może być zwykły
         ciąg znaków.
       </p>
@@ -5328,26 +5376,25 @@ PASS_WARN_AGE	7
           Wzorzec rozpoczynający się od tego znaku znajduje się na początku 
           wiersza.</li>
         <li><strong>$</strong> - metaznak oznaczający koniec wiersza. Wzorzec
-          rozpoczynający się od tego znaku znajduje się na końcu wiersza.</li>
+          zakończony tym znakiem znajduje się na końcu wiersza.</li>
         <li><strong>[]</strong> - metaznak ozanaczający zbiory oraz zakresu. 
-          Zakresy mogą
-          być różne: litery <em>[a-z]</em>, wielkie litery <em>[A-Z]</em> czy
-          cyfry <em>[0-9]</em>. Zakresy nie muszą być pełne, mogą być np. od
-          a do o - <em>[a-o]</em>.
+          Zakresy mogą być różne: litery <em>[a-z]</em>, wielkie litery 
+          <em>[A-Z]</em> czy cyfry <em>[0-9]</em>. Zakresy nie muszą być pełne,
+          mogą być np. od a do o - <em>[a-o]</em>.
         <li><strong>[^...]</strong> - negacja zbioru, zamiast trzech kropek
           wstawiamy znaki. Przypasowanie następuje wówczas, kiedy we wzorcu
           nie znajdują się podane znaki.</li>
       </ul>
       <p>
         Wiecęj znaków oraz informacji znajduje się na stronie podręcznika
-        polecenia grep <code class="code-inline">man grep</code> oraz
+        polecenia <em>grep</em> <code class="code-inline">man grep</code> oraz
         na stronie podręcznika poświęconej wyrażeniom regularnym: 
         <code class="code-inline">man 7 regex</code>. Teraz przedstawie kilka
         dodatkowych opcji polecenia <em>grep</em>.
       </p>
       <ul>
         <li><strong>-E</strong> - opcja umożliwia użycie rozszerzonych
-          wyrażeń regularnych, jedną z ciekwych opcji tego trybu jest użycie
+          wyrażeń regularnych, jedną z ciekawych opcji tego trybu jest użycie
           <strong>alternatyw</strong>, czyli dodatkowych wzorców. Kiedy
           nie będzie przypasowań do pierwszego wzorca <em>grep</em> sprawdzi
           pozostałe. Alternatywy zapisuje się po <em>znaku potoku</em>, po
@@ -5371,9 +5418,14 @@ white
       </ul>
       <p>
         Wiecej opcji znajduje się na stronie podręcznika polecenia 
-        <em>grep</em>. Myślę
-        że teraz bez problemu jesteśmy w stanie z rozumieć przykład z
-        początku tego pod rozdziału.
+        <em>grep</em>. Myślę, że teraz bez problemu jesteśmy w stanie 
+        zrozumieć przykład z początku tego podrozdziału.
+      </p>
+      <p class="exam_tip">
+        Polecenie <em>grep</em> jest poręcznym narzędziem stosowany do 
+        wyłuskiwania informacji z pliku lub wyjścia polecenia. Wybrane
+        informacje mogą zostać przekierowane do pliku, pozostawiając dane
+        wejściowe nienaruszone.
       </p>
       <h3 id="7.1.13.jobmanaging">7.1.13. Zarządzanie zadaniami</h3>
       <p>
@@ -5399,7 +5451,7 @@ white
 </pre>
       <p>
         W ostatniej linii, na początku w nawiasie kwadratowym znajduje się
-        numer zadania. Za pomocą tego numeru możemy odwoływać się do zadania
+        numer zadania. Za pomocą tego numeru możemy odwoływać się do zadania.
         Teraz uruchomimy je w tle.
       </p>
 <pre class="code-block">
@@ -5407,10 +5459,10 @@ white
 [1]+ bash test &amp;
 </pre>
       <p>
-        Do uruchomienia zadania w tle służy polecenie <strong>bg</strong>, do
-        zadania odwołujemy się po przez podanie numery zadania poprzedzonego
+        Do uruchomienia zadania w tle służy polecenie <strong>bg</strong>,
+        Do odwołania się do niego służą numery zadań poprzedzone
         znakiem procentu (<strong>%</strong>). Możemy przywrócić działanie 
-        zadania na pierwszy plan przywołując je za pomocą polecania
+        zadania na pierwszy plan przywołując je za pomocą polecenia
         <strong>fg</strong>, metoda odwołania się do zadania jest taka sama 
         jak w przypadku polecenia <em>bg</em>. Zanim przełaczym zadanie na
         pierwszy plan, sprawdźmy jego status za pomocą polecenia
@@ -5439,8 +5491,124 @@ bash test
         do urządzenia <em>/dev/null</em>, które ma jedno zadanie. Ignorować
         wszelkie napływające do niego dane.
       </p>
+      <p>
+        Chcąc uruchomić jakieś zadanie w tle odrazu, możemy pominąć tą całą
+        zabawę w jego zatrzymywanie i przekazywanie do tła. Możemy uruchomić je
+        odrazu kończąc polecenie znakiem ampersendu (<strong>&amp;</strong>).
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ bash test &amp;
+[1] 14048
+[user@server1 ~]$ jobs
+[1]+  Running                 bash test &amp;
+</pre>
       <h2 id="7.2.startupscripts">7.2. Pliki startowe powłoki</h2>
       <p>
+        Plik startowe powłoki mają za zadanie wykonać kilka czynności 
+        konfiguracjynych,
+        aby użytkownik po jej uruchomieniu nie musiał tracić czasu
+        na ustawienie na przykład ścieżki wszukiwania poleceń, czyli zmiennej
+        <em>PATH</em>. Pliki te definiują również aliasy, które jak do tej
+        pory mogły się wydawać zwykłymi poleceniami. Pliki startowe powłoki
+        możemy podzielić na pliki globalne (mające zastosowanie dla całego
+        systemu) oraz pliki lokalne (mające zastosowanie tylko dla jednego
+        użytkownika).
+      </p>
+      <h3 id="7.2.1.systemwidefiles">7.2.1. Globalne pliki startowe powłoki</h3>
+      <p>
+        Do globalnych plików startowych możemy zaliczyć takie pliki jak
+        <em>/etc/bashrc</em>, <em>/etc/profile</em> oraz katalog
+        <em>/etc/profile.d</em>. Zmiany w tych plikach wpływają na konfigurację
+        powłoki wszystkich użytkowników w systemie. Poniżej znajduje się lista
+        ze skróconym opisem co dane pliki zawierają.
+      </p>
+      <ul>
+        <li><strong>/etc/bashrc</strong> - plik zawiera ustawienia właściwości
+          <em>PROMPT_COMMAND</em>, ustawienia historii, definicje znaku zachęty,
+          maski użytkownika oraz definicje zmiennej środowiskowej <em>SHELL</em>.
+        </li>
+        <li><strong>/etc/profile</strong> - plik zawiera definicje części
+          zmiennych środowiskowych, dopisuje pewne katalogi do zmiennej
+          <em>PATH</em></li>
+        <li><strong>/etc/profile.d</strong> - katalog zawiera skrypt
+          rozszerzające konfiguracje zawarte w powyższych plikach, te skrypt
+          są uruchamiane przez oba z nich.</li>
+      </ul>
+      <p>
+        Jeśli musimy umieścić dodatkowe konfiguracje w tych plikach najlepiej
+        umieścić je w skrypcie w katalogu <em>/etc/profile.d</em>.
+      </p>
+      <h3 id="7.2.2.usersfiles">7.2.2. Pliki startowe powłoki użytkownika</h3>
+      <p>
+        Każdy użytkownik posiada swoje pliki startowe powłoki
+        <strong>~/.bash_profile</strong> - odpowiadający globalnemu
+        <em>/etc/profile</em> oraz <strong>~/.bashrc</strong> - odpowiadający
+        globalnemu <em>/etc/bashrc</em>. Te pliki kopiowane są z katalogu 
+        szkieletowego - <em>/etc/skel</em> podczas tworzenia katalogu domowego
+        przy zakładaniu nowego użytkownika. Jeśli zajrzymy do zawartości tych
+        katalogów, to dowiemy się że:
+      </p>
+      <ul>
+        <li>W pliku <strong>~/.bash_profile</strong> umieszczamy dodatkowe
+          zmienne środowiskowe oraz dodatkowe programy lub skrypty startowe.
+        </li>
+        <li>W pliku <strong>~/.bashrc</strong> umieszczamy dodatkowe aliasy
+          oraz funkcje powłoki (funkcje powłoki wykraczają poza ten materiał).
+        </li>
+      </ul>
+      <p>
+        Pliki startowe powłoki są uruchamione określonej kolejności. W ramach
+        eksperymentu umieściłem, krótką informacje na końcu każdego z nich
+        a następnie wylogowałem się i zalogowałem ponownie. W poniższym bloku
+        kodu, znajduje się wynik tego eksperymentu:
+      </p>
+<pre class="code-block">
+xf0r3m@inspiron-3542:~$ ssh user@rhel9-vm1 
+user@rhel9-vm1's password: 
+Register this system with Red Hat Insights: insights-client --register
+Create an account or view all your systems at https://red.ht/insights-dashboard
+Last login: Sat Jul  2 15:29:33 2022 from 192.168.122.1
+Globalny /etc/bashrc
+Globalny /etc/profile
+Lokalny ~/.bashrc
+Lokalny ~/.bash_profile
+</pre>
+      <p>
+        Jak mogliśmy się domyślić na początku uruchiamiane są pliki globalne
+        a następnie lokalne.
+      </p>
+      <p>
+        Dodatkowym plikiem użytkownika o nieco innym znaczeniu jest
+        <em>~/.bash_logout</em>. Czynności zapisane w tym pliku są
+        wykonywane podczas wylogowywania użytkownika.
+      </p>
+      <p class="exam_tip">
+        Jeśli jedno z zadań będzie dotyczyć dodania aliasu lub zmiennej
+        środowiskowej, to należy wiedzieć w jakich plikach je umieścić.
+      </p>
+      <h3 id="exec7.1">Ćwiczenie 1: Zmiana symbolu zachęty</h3>
+      <p>
+        Jako zwykły użytkownik na maszynie <em>server1</em> dostosuj znak
+        zachęty aby wyglądał jak ten ujęty w podwójne apostrofy
+        "&lt;user@server1 in /etc &gt;:". <em>/etc</em> w tym przypadku jest
+        ścieżką do obecnego katalogu roboczego. Zapisz nową definicję znaku
+        zachęty do odpowiedniego pliku, wyloguje się i zaloguj ponownie 
+        następnie usuń tę definicję.
+      </p>
+      <h3 id="exec7.2">Ćwiczenie 2: Przkierowanie strumieni</h3>
+      <p>
+        Jako zwykły użytkownik na maszynie <em>server1</em> wyświetl zawartość
+        katalogów <em>/etc</em>, <em>/dvd</em> oraz <em>/var</em> przekieruj
+        standardowe wyjście oraz strumień błędów do pliku <em>/tmp/ioerror</em>
+        Sprawdź zawartość pliku.
+      </p>
+      <h2 id="ch2summary">Podsumowanie</h2>
+      <p>
+        W tym rodziale zapoznaliśmy się z powłoką BASH. Nauczyliśmy się
+        korzystać z jej mechanizów, poznaliśmy również podstawy wyrażeń
+        regularnych. Na koniec dowiedzieliśmy się jak używać plików startowych
+        powłoki, aby dostosować ją do własnych potrzeb. W następnym rodziale
+        zajmiemy się procesami.
       </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">

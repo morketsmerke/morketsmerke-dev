@@ -6860,6 +6860,183 @@ etc  run  usr
         i z pakietów. W następnym rodziale zajmiemy się bardziej zaawansowanym
         zarządzeniem pakietami przy użyciu polecenia <strong>dnf</strong>.
       </p>
+      <h1 id="10.advancedpackagemanagement">10. Zaawansowane zarządzanie pakietami.</h1>
+      <p>
+        W poprzednim rozdziale zapoznaliśmy się z podstawą zarządania pakietami
+        jak nie wątpliwie jest program <em>rpm</em>. Jego główną wadą jest to,
+        iż nie rozwiązuje on zależności instalowanych pakietów. Z tego powodu
+        potrzebne było lepsze narzędzie do obsługi oprogramowania w systemie,
+        dlatego też twórcy RHEL wdrożyli program <em>yum</em>, który przez
+        lata sprawdzał się postaci menedżera pakietów, a od wersji 8 Red Hat
+        Enterprise Linux został on zastąpiony programem <strong>dnf</strong>,
+        który ma nieco większe możliwości. Zanim przejdziemy do zarządzania
+        pakietami, trochę teorii.
+      </p>
+      <p>
+        <em>Dnf</em> wprowadza do zarządzania pakietami takie pojęcia jak
+        <strong>grupy pakietów</strong> - są tematyczne grupy aplikacji,
+        którymi możemy wzbogacić nasz system. Powiedzmy, że potrzebujemy w
+        systemie obsługi kart inteligentnych to zamiast szukać odpowiednich
+        pakietów, możemy zainstalować wszystkie niezbędnę programy podając
+        poleceniu <em>dnf</em> nazwę grupy.
+      </p>
+      <p>
+        Wraz z <em>dnf</em> pojawiają się takie pojęcia jak
+        <strong>moduł aplikacji</strong> oraz <strong>strumień aplikacji</strong>.
+        Moduł aplikacji, to podobnie do grupy jest zbiór pakietów, ale
+        opowiedzialnych za jedną aplikację. W module zawarte są wszystkie
+        pakiety odpowiedzialne za działanie aplikacji poza zależnościami mogą
+        znajdować się tam także biblioteki, generalnie całe środowisko. Moduły
+        posiadają swoje strumienie, czyli konkretne wersje pakietów, które
+        dostarczają moduły. W systemie może być zainstalowany tylko jeden
+        strumień danej aplikacji. Między strumieniami można się przełączać.
+        będziemy to omawiać pod koniec tego rozdziału. Modułu w konkretnych
+        strumieniach posiadają jeszcze <strong>profile</strong>. Profile są
+        to zbiory pakietów, programów określanych przez moduł zbudowane z 
+        myślą o przeznaczeniu aplikacji. Na przykład systemy bazodanowe mogą
+        posiadać pakiety przeznaczone dla serwera oraz dla klienta. Jeśli baza
+        danych znajduje się na innym serwerze niż aplikacja, z której ma
+        korzystać, to w systemie aplikacji nie ma sensu instalować wszystkich
+        pakietów związanych z cała bazą wystarczą pakiety, które będą
+        udostępniach tylko i wyłącznie możliwość połączenia się z bazą.
+      </p>
+      <p>
+        RHEL w wersji 8 dzieli również repozytorium (bazę pakietów) na dwie
+        części. Piewsza część <strong>BaseOS</strong>, zawiera jak sama nazwa
+        wskazuje pakiety bazowe, które zawierają większość pakietów 
+        niezbędnych do działania systemu operacyjnego. Druga część
+        <strong>AppStream</strong> zawiera wszystkie dodatkowe aplikacje. Tego
+        rodzaju podział został wprowadzony z względu na to, że w momencie 
+        przezprowadzania aktualizacji systemu, aktualizowane było również
+        zainstalowane na nim oprogramowanie co mogło nie być porządane i
+        wprowadzać nie potrzebne zamieszanie lub destabilizować cały systemu.
+      </p>
+      <p>
+        Kolejną rzeczą wartą wspomnienia są repozytoria. Nasze systemy, których
+        używamy do wypróbowywania przykładów oraz do rozwiązywania ćwiczeń, nie
+        są zarejestrowane na naszych kontach Red Hat. Podłączenie systemu daje
+        możliwość aktualizacji pakietów zawartych na płytach oraz instalowania
+        ich bezpośrednio z sieci. Oprócz repozytoriów firmy Red Hat mamy
+        rownież inne repozytoria dostępne w sieci. Takie jak na przykład
+        <em>RPM Fusion</em>. Bez tych repozytoriów korzystanie z RHEL 9 w
+        codziennym użyciu na desktopie nie miało by sensu. Przynajmniej w moim
+        wypadku ;). Konfigurację repozytriów przezprowadza się zapisując je
+        w pliku w katalogu <em>/etc/yum.repos.d</em>, w jednym pliku może
+        znajdować się kilka repozytoriów, sposób organizacji zależy od nas.
+      </p>
+      <p>
+        Na koniec, kilka spraw organizacyjnych. W RHEL 9 poki co brakuje
+        modułów. W tym odnośniku znajduje się dowód, że na moduły przyjdzie na
+        poczekać do wersji 9.1. <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/managing_software_with_the_dnf_tool/index#con_modules_assembly_distribution-of-content-in-rhel-9">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/managing_software_with_the_dnf_tool/index#con_modules_assembly_distribution-of-content-in-rhel-9</a>
+        Tak więc wszystkie przykłady jakie będę wykonywać w tym rodziale będą
+        realizowane za pomocą Red Hat Enterprise Linux w wersji 8.6. Po
+        zarejestrowaniu się możemy pobrać RHEL aż do wersji 8.0. Także możemy
+        stworzyć środowisko maszyny <em>server1</em> na podstawie RHEL 8.
+      </p>
+      <h2 id="10.1.repoconfig">10.1. Konfiguracja repozytorium dnf</h2>
+      <p>
+        Jak już wspomniałem repozytorium konfigurujemy za pomocą plików
+        złożonych w katalogu <em>/etc/yum.repos.d</em>. Na początku jednak
+        musimy dodać płytę do pliku <em>/etc/fstab</em>. Opisywałem ten proces
+        na początku 9 rozdziału o <a href="#9.1.1.gettinginfo">tutaj</a>.
+        Dlatego też w przykładach przyjmę iż płyta jest montowana w podkatalogu
+        <em>/mnt</em>. Jak pamiętamy z poprzedniego rozdziału na płycie
+        znajdują się dwa katalogu z pakietami: <em>BaseOS/Packages</em> oraz
+        <em>AppStream/Packages</em>. W konfiguracji podajemy tylko te pierwsze
+        człony tych ścieżek, ponieważ w niej konfigurujemy katalog bazowy.
+        Konfiguracja każde z repozytorium wymaga minimum 4 wierszy. Poniższy
+        przykład przedstawia zawartość pliku konfiguracjynego repozytorium z
+        płyty instalacjynej RHEL 8.
+      </p>
+<pre class="code-block">
+[BaseOS]
+name=BaseOS
+baseurl=file:///mnt/BaseOS
+gpgcheck=0
+
+[AppStream]
+name=AppStream
+baseurl=file:///mnt/AppStream
+gpgcheck=0
+</pre>
+      <p>
+        W nawiasach kwadratowych znajdują się unikatowe identyfikatory 
+        repozytoriów (<code class="code-inline">[BaseOS]</code>), następnie
+        dyrektywa <code class="code-inline">name</code> zawiera ich opisy
+        w przypadku środowisk testowych nie musimy się wysilać z opisami czy
+        sprawdzać autentyczności pakietów przy użyciu <em>GPG</em>
+        (<code class="code-inline">gpgcheck=0</code>). Wyłączenie sprawdzania
+        pakietów usprawni proces instalacji pakietów, w przeciwym razie za
+        każdą informacją otrzymywalibyśmy monit. Istotną funkcję pełni tym
+        przypadku dyrektywa <code class="code-inline">baseurl</code>, która
+        wskazuje na miejsce przechowywania pakietów, tym przypadku jest katalog
+        zatem protokołem poprzedzającym ścieżkę będzie
+        <code class="code-inline">file</code>, jak w każdym adresie <em>URL</em>
+        następuje <code class="code-inline">://</code>, a następnie
+        (w tym przypadku) bezwzględna ścieżka do katalogu.
+      </p>
+      <p class="exam_tip">
+        Umiejętnośc konfigurowania repozytoriów <em>yum</em>/<em>dnf</em> z
+        wykorzystaniem <em>URL</em> może być istotna do wykonania pewnych
+        zadań egzaminacyjnych. Konstruując <em>URL</em> możemy użyć takich
+        protokołów jak FTP, HTTP czy HTTPS (zapis w <em>URL</em> zawsze małymi 
+        literami) po czym następuje dwukropek z dwoma slashami <em>://</em>
+        a następnie adres repozytorium. 
+      </p>
+      <p>
+        Po zdefiniowaniu repozytoriów zapisujemy zmiany w pliku. Aby
+        zweryfikować poprawność konfiguracji wydajemy polecenie, które
+        odświerza pamięc podręczną pakietów.
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 ~]$ sudo dnf makecache
+[sudo] password for user: 
+Updating Subscription Management repositories.
+Unable to read consumer identity
+This system is not registered with an entitlement server. You can use 
+subscription-manager to register.
+BaseOS                                              1.6 MB/s | 2.7 kB     00:00    
+AppStream                                           2.3 MB/s | 2.8 kB     00:00 
+Metadata cache created.
+</pre>
+      <p>
+        Metadane zostały załadowane do pamięci podręcznej. Za pomocą poniższego
+        polecenia możemy wyświetlić informacje na temat zdefiniowanych w naszym
+        systemie repozytoriów.
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 mnt]$ sudo dnf repoinfo -v
+...
+DNF version: 4.7.0
+cachedir: /var/cache/dnf
+Ostatnio sprawdzono ważność metadanych: 0:00:20 temu w dniu nie, 10 lip 2022, 22:51:36.
+Identyfikator repozytorium        : AppStream
+Nazwa repozytorium                : AppStream
+Wersja repozytorium               : 1650471026
+Aktualizacje repozytorium         : śro, 20 kwi 2022, 18:10:27
+Pakiety repozytorium              : 6 609
+Dostępne pakiety repozytorium     : 5 345
+Rozmiar repozytorium              : 8.6 G
+Podstawowy adres URL repozytorium : file:///mnt/AppStream
+Wygaszenie repozytorium           : 172 800 s (ostatnio: nie, 10 lip 2022, 22:51:36)
+Nazwa pliku repozytorium          : /etc/yum.repos.d/local.repo
+
+Identyfikator repozytorium        : BaseOS
+Nazwa repozytorium                : BaseOS
+Wersja repozytorium               : 1650471057
+Aktualizacje repozytorium         : śro, 20 kwi 2022, 18:10:59
+Pakiety repozytorium              : 1 714
+Dostępne pakiety repozytorium     : 1 712
+Rozmiar repozytorium              : 1.3 G
+Podstawowy adres URL repozytorium : file:///mnt/BaseOS
+Wygaszenie repozytorium           : 172 800 s (ostatnio: nie, 10 lip 2022, 22:51:34)
+Nazwa pliku repozytorium          : /etc/yum.repos.d/local.repo
+Razem pakietów: 8 323
+</pre>
+      <p>
+        Tak zdefiniowanych repozytoriów będziemy używać w przykładach oraz
+        do rozwiązywania zadań w ćwiczeniach.
+      </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

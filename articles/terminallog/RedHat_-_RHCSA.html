@@ -287,6 +287,47 @@
             <li><a href="#ch9summary">Podsumowanie</a></li>
           </ul>
         </li>
+        <li><a href="#10.advancedpackagemanagement">10. Zaawansowane zarządzanie pakietami.</a>
+          <ul class="toc">
+            <li><a href="#10.1.repoconfig">10.1. Konfiguracja repozytorium dnf</a></li>
+            <li><a href="#10.2.individualpackagemgmnt">10.2. Zarządzanie pojedynczymi pakietami</a>
+              <ul class="toc">
+                <li><a href="#10.2.1.listofpackages">10.2.1. Listy pakietów</a></li>
+                <li><a href="#10.2.2.repoqueries">10.2.2. Zapytania do repozytorium</a></li>
+                <li><a href="#10.2.3.info">10.2.3. Pobieranie informacji o pakietach</a></li>
+                <li><a href="#10.2.4.installpackage">10.2.4. Instalacja pakietów</a></li>
+                <li><a href="#10.2.5.updatepackages">10.2.5. Aktualizacje pakietów</a></li>
+                <li><a href="#10.2.6.removepackages">10.2.6. Usuwanie pakietów</a></li>
+                <li><a href="#10.2.6.provides">10.2.6. Więcej informacji na temat pakietów</a></li>
+              </ul>
+            </li>
+            <li><a href="#10.3.packagegroup">10.3. Grupy pakietów</a>
+              <ul class="toc">
+                <li><a href="#10.3.1.listsofgroups">10.3.1. Listy grup</a></li>
+                <li><a href="#10.3.2.infoaboutgroup">10.3.2. Informacje o grupie</a></li>
+                <li><a href="#10.3.3.instalationofgroup">10.3.3. Instalacja grup</a></li>
+                <li><a href="#10.3.4.groupupdate">10.3.4. Aktualizacja grupy</a></li>
+                <li><a href="#10.3.5.removethegroup">10.3.5. Usuwanie grupy</a></li>
+              </ul>
+            </li>
+            <li><a href="#10.4.modulesmanaging">10.4. Zarządzanie modułami pakietów</a>
+              <ul class="toc">
+                <li><a href="#10.4.1.listingmodules">10.4.1. Wyświetlanie modułów</a></li>
+                <li><a href="#10.4.2.infoaboumodule">10.4.2. Informacje na temat modułu</a></li>
+                <li><a href="#10.4.3.moduleinstallation">10.4.3. Instalacja modułów</a></li>
+                <li><a href="#10.4.4.moduleupdates">10.4.4. Aktualizacja modułu</a></li>
+                <li><a href="#10.4.5.removethemodule">10.4.5. Usuwanie modułu</a></li>
+                <li><a href="#10.4.6.swichingstreams">10.4.6. Przełączanie się miedzy strumieniami</a></li>
+              </ul>
+            </li>
+            <li><a href="#exec10.1">Ćwiczenie 1: Konfiguracja dostępu do repozytorium</a></li>
+            <li><a href="#exec10.2">Ćwiczenie 2: Instalacja i zarządzanie pojedynczymi pakietami</a></li>
+            <li><a href="#exec10.3">Ćwiczenie 3: Instalacja i zarządzanie grupami pakietów</a></li>
+            <li><a href="#exec10.4">Ćwiczenie 4: Instalacja i zarządzanie modułami</a></li>
+            <li><a href="#exec10.5">Ćwiczenia 5: Przełączanie się miedzy strumieniami</a></li>
+            <li><a href="#ch10summary">Podsumowanie</a></li>
+          </ul>
+        </li>
       </ul>
       <h1 id="1.introduction">1. Wstęp</h1>
       <p>
@@ -6863,7 +6904,7 @@ etc  run  usr
       <h1 id="10.advancedpackagemanagement">10. Zaawansowane zarządzanie pakietami.</h1>
       <p>
         W poprzednim rozdziale zapoznaliśmy się z podstawą zarządania pakietami
-        jak nie wątpliwie jest program <em>rpm</em>. Jego główną wadą jest to,
+        jaka nie wątpliwie jest program <em>rpm</em>. Jego główną wadą jest to,
         iż nie rozwiązuje on zależności instalowanych pakietów. Z tego powodu
         potrzebne było lepsze narzędzie do obsługi oprogramowania w systemie,
         dlatego też twórcy RHEL wdrożyli program <em>yum</em>, który przez
@@ -6877,7 +6918,7 @@ etc  run  usr
         <strong>grupy pakietów</strong> - są tematyczne grupy aplikacji,
         którymi możemy wzbogacić nasz system. Powiedzmy, że potrzebujemy w
         systemie obsługi kart inteligentnych to zamiast szukać odpowiednich
-        pakietów, możemy zainstalować wszystkie niezbędnę programy podając
+        pakietów, możemy zainstalować wszystkie niezbędne programy podając
         poleceniu <em>dnf</em> nazwę grupy.
       </p>
       <p>
@@ -6887,18 +6928,18 @@ etc  run  usr
         opowiedzialnych za jedną aplikację. W module zawarte są wszystkie
         pakiety odpowiedzialne za działanie aplikacji poza zależnościami mogą
         znajdować się tam także biblioteki, generalnie całe środowisko. Moduły
-        posiadają swoje strumienie, czyli konkretne wersje pakietów, które
-        dostarczają moduły. W systemie może być zainstalowany tylko jeden
+        posiadają swoje strumienie, czyli konkretne wersje pakietów aplikacji, 
+        które dostarczają. W systemie może być zainstalowany tylko jeden
         strumień danej aplikacji. Między strumieniami można się przełączać.
-        będziemy to omawiać pod koniec tego rozdziału. Modułu w konkretnych
+        będziemy to omawiać pod koniec tego rozdziału. Moduły w
         strumieniach posiadają jeszcze <strong>profile</strong>. Profile są
         to zbiory pakietów, programów określanych przez moduł zbudowane z 
         myślą o przeznaczeniu aplikacji. Na przykład systemy bazodanowe mogą
         posiadać pakiety przeznaczone dla serwera oraz dla klienta. Jeśli baza
-        danych znajduje się na innym serwerze niż aplikacja, z której ma
-        korzystać, to w systemie aplikacji nie ma sensu instalować wszystkich
+        danych znajduje się na innym serwerze niż aplikacja, która z niej
+        korzysta, to w systemie aplikacji nie ma sensu instalować wszystkich
         pakietów związanych z cała bazą wystarczą pakiety, które będą
-        udostępniach tylko i wyłącznie możliwość połączenia się z bazą.
+        udostępniać tylko i wyłącznie możliwość połączenia się z bazą.
       </p>
       <p>
         RHEL w wersji 8 dzieli również repozytorium (bazę pakietów) na dwie
@@ -6914,7 +6955,7 @@ etc  run  usr
       <p>
         Kolejną rzeczą wartą wspomnienia są repozytoria. Nasze systemy, których
         używamy do wypróbowywania przykładów oraz do rozwiązywania ćwiczeń, nie
-        są zarejestrowane na naszych kontach Red Hat. Podłączenie systemu daje
+        są zarejestrowane na naszych kontach Red Hat. Rejestracja systemu daje
         możliwość aktualizacji pakietów zawartych na płytach oraz instalowania
         ich bezpośrednio z sieci. Oprócz repozytoriów firmy Red Hat mamy
         rownież inne repozytoria dostępne w sieci. Takie jak na przykład
@@ -6941,11 +6982,11 @@ etc  run  usr
         na początku 9 rozdziału o <a href="#9.1.1.gettinginfo">tutaj</a>.
         Dlatego też w przykładach przyjmę iż płyta jest montowana w podkatalogu
         <em>/mnt</em>. Jak pamiętamy z poprzedniego rozdziału na płycie
-        znajdują się dwa katalogu z pakietami: <em>BaseOS/Packages</em> oraz
+        znajdują się dwa katalogi z pakietami: <em>BaseOS/Packages</em> oraz
         <em>AppStream/Packages</em>. W konfiguracji podajemy tylko te pierwsze
         człony tych ścieżek, ponieważ w niej konfigurujemy katalog bazowy.
-        Konfiguracja każde z repozytorium wymaga minimum 4 wierszy. Poniższy
-        przykład przedstawia zawartość pliku konfiguracjynego repozytorium z
+        Konfiguracja każdego z repozytorium wymaga minimum 4 wierszy. Poniższy
+        przykład przedstawia zawartość pliku konfiguracjynego repozytoriów z
         płyty instalacjynej RHEL 8.
       </p>
 <pre class="code-block">
@@ -6966,8 +7007,9 @@ gpgcheck=0
         w przypadku środowisk testowych nie musimy się wysilać z opisami czy
         sprawdzać autentyczności pakietów przy użyciu <em>GPG</em>
         (<code class="code-inline">gpgcheck=0</code>). Wyłączenie sprawdzania
-        pakietów usprawni proces instalacji pakietów, w przeciwym razie za
-        każdą informacją otrzymywalibyśmy monit. Istotną funkcję pełni tym
+        pakietów usprawni proces ich instalacji, w przeciwym razie za
+        każdą czynnością opartą o repozytorium otrzymywalibyśmy monit. Istotną
+        funkcję pełni tym
         przypadku dyrektywa <code class="code-inline">baseurl</code>, która
         wskazuje na miejsce przechowywania pakietów, tym przypadku jest katalog
         zatem protokołem poprzedzającym ścieżkę będzie
@@ -7037,7 +7079,7 @@ Razem pakietów: 8 323
         Tak zdefiniowanych repozytoriów będziemy używać w przykładach oraz
         do rozwiązywania zadań w ćwiczeniach.
       </p>
-      <h2 id="10.2.individualpackagemgmnt">10.2. Zarządzanie pojedyńczymi pakietami</h2>
+      <h2 id="10.2.individualpackagemgmnt">10.2. Zarządzanie pojedynczymi pakietami</h2>
       <p>
         Program <em>dnf</em> jest stanie wykonywać identyczne czynności jak
         polecenie <em>rpm</em>. Z racji tego, iż skonfigurowaliśmy wcześniej
@@ -7048,7 +7090,7 @@ Razem pakietów: 8 323
       <p>
         Z pomocą
         poniższego polecenia możemy wyświetlić listę wszystkich pakietów.
-        Domyślnie lista pakietów jes podzielona na dwie części: zainstalowne
+        Domyślnie lista pakietów jes podzielona na dwie części: zainstalowane
         oraz dostępne pakiety.
       </p>
 <pre class="code-block">
@@ -7143,8 +7185,9 @@ ModemManager-glib.i686         1.18.2-1.el8                            BaseOS
         Listy są podzielone na trzy kolumny w pierwsze z nich znajduje się
         nazwa pakietu, w drugie wersja, a w trzeciej nazwa repozytorium, które
         zawiera ten pakiet lub z które został on zainstalowany. W przypadku
-        wartości <code class="code-inline">@anacoda</code>, są to pakiety
-        zainstalowane podczas instalacji, w przypadku pakietów instalowanych
+        wartości <code class="code-inline">@anaconda</code>, są to pakiety
+        zainstalowane podczas instalacji systemu, w przypadku pakietów 
+        instalowanych
         za pomocą polecenia <em>rpm</em> w trzeciej kolumnie będzie widnieć
         napis <em>@System</em>.
       </p> 
@@ -7157,8 +7200,8 @@ ModemManager-glib.i686         1.18.2-1.el8                            BaseOS
       </p>
       <h3 id="10.2.2.repoqueries">10.2.2. Zapytania do repozytorium</h3>
       <p>
-        <em>Dnf</em> w przeciwieństwie do <em>rpm</em> pozwala nam przszukiwać
-        repozytorium pod wzglem występowania na przykład pakietu lub możemy
+        <em>Dnf</em> w przeciwieństwie do <em>rpm</em> pozwala nam przeszukiwać
+        repozytorium pod względem występowania na przykład pakietu lub możemy
         podać ścieżkę do pliku znajdującego się w systemie a program zwrócić
         nam informacje z jakiego pakietu pochodzi. 
       </p>
@@ -7245,7 +7288,7 @@ Opis         : PHP is an HTML-embedded scripting language. PHP attempts to make
       </p>
       <h3 id="10.2.4.installpackage">10.2.4. Instalacja pakietów</h3>
       <p>
-        Instalacja pakietów jest banalnie prosta w przypadku narzędzia dnf
+        Instalacja pakietów jest banalnie prosta w przypadku narzędzia <em>dnf</em>
         wymaga ona użycia podpolecenia <strong>install</strong> a następnie
         podania nazwy pakietu. 
       </p>
@@ -7274,7 +7317,8 @@ W porządku? [t/N]:
 ...
 </pre> 
       <p>
-        Program wyświetli w tabeli wszyskie instalowane pakiety, wielkość 
+        Program wyświetli w tabeli wszyskie instalowane pakiety, 
+        następnie wielkość 
         pakietu oraz ilość miejsca na dysku zabranego na potrzeby instalacji.
         Po zapoznaniu
         się z tym możemy potwierdzić za pomocą <em>t</em> (w polskiej wersji
@@ -7356,12 +7400,13 @@ Ukończono.
       <h3 id="10.2.5.updatepackages">10.2.5. Aktualizacje pakietów</h3>
       <p>
         Aktualizacja pakietów za pomocą <em>dnf</em> wymaga użycia podpolecenia
-        <em>update</em>. Aktualizować możemy zarówno pojedyńcze pakiety podając
+        <em>update</em>. Aktualizacje pojedynczych pakietów przeprowadzamy 
+        podając
         ich nazwę po podpoleceniu. Ta funkcjonalność wymaga jednak aby pakiet
         był już zainstalowany w systemie. Jeśli wydamy to podpolecenie bez
         żadnego argumentu polecenie sprawdzi wszystkie zainstalowane pakiety
         w systemie, czy występują dla nich jakieś aktualizacje następnie
-        spyta czy je zainstalowac.
+        spyta czy je zainstalować.
       </p>
 <pre class="code-block">
 [user@rhel8-vm1 ~]$ sudo dnf update autofs
@@ -7432,10 +7477,10 @@ Ukończono.
 </pre>
       <p>
         W przypadku instalowania pakietu polecenie przekazywało nam informacje 
-        o użytym na potrzeby instalcji miejscu na dysku. Tak teraz informuje
+        o użytym na potrzeby instalacji miejscu na dysku. Tak teraz informuje
         o jego zwolnieniu.
       </p>
-      <h3 id="10.2.6.provides">10.2.6. Więcej informacji na temat pakietów.</h3>
+      <h3 id="10.2.6.provides">10.2.6. Więcej informacji na temat pakietów</h3>
       <p>
         Innym sposobem na uzyskanie informacji o tym jaki pakiet zawiera
         określony plik jest użycie podpolecenia <em>provides</em>. Sprawdza
@@ -7499,7 +7544,7 @@ rhsm-gtk.x86_64 : GTK+ widgets used by subscription-manager-gui and
         Jak możemy zauważyć polecenie wyświetla znalezione informacje w trzech
         grupach.
       </p>
-      <h2 id="10.3.packagegroup">10.3. Grupy pakietów.</h2>
+      <h2 id="10.3.packagegroup">10.3. Grupy pakietów</h2>
       <p>
         Pośród innych sposobów na zarządzanie pakietami możemy wymienić grupy
         pakietów. Są to zestawy pakietów odpowiedzialne za zapewnienie
@@ -7509,10 +7554,10 @@ rhsm-gtk.x86_64 : GTK+ widgets used by subscription-manager-gui and
         zaktualizować, wyświetlić informacje o nich oraz usunąć. Przjdziemy
         sobie przez te wszystkie zagadnienia.
       </p>
-      <h3 id="10.3.1.listsofgroups">10.3.1. Listy grup.</h3>
+      <h3 id="10.3.1.listsofgroups">10.3.1. Listy grup</h3>
       <p>
         Do obsługi grupy służy podpolecenie <em>group</em>, które posiada
-        kolejne znane nam już z obsługi pojedyńczych pakietów podpolecenia
+        kolejne znane nam już z obsługi pojedynczych pakietów podpolecenia
         takie jak np <em>list</em>, którego zadaniem jest wyświetlenie grup
         pakietów.
       </p>
@@ -7564,7 +7609,7 @@ Dostępne grupy:
         <em>--available</em>
       </p>
       <p>
-        Po za taką długą lisą wyświetlić podsumowanie, które wyświetli
+        Po za taką długą lisą możemy wyświetlić podsumowanie, które zwróci
         informacje o ilości dostępnych oraz zainstalowanych grup.
       </p>
 <pre class="code-block">
@@ -7578,7 +7623,7 @@ Ostatnio sprawdzono ważność metadanych: 3:08:10 temu w dniu pon, 11 lip 2022
 Zainstalowane grupy: 2
 Dostępne grupy: 10
 </pre>
-      <h3 id="10.3.2.infoaboutgroup">10.3.2. Informacje o grupie.</h3>
+      <h3 id="10.3.2.infoaboutgroup">10.3.2. Informacje o grupie</h3>
       <p>
         Za wyświetlenie informacji o grupie odpowiedzialne jest podpolecenie
         <em>info</em>, zwraca ono listę pakietów obowiązkowych, które muszą być
@@ -7615,7 +7660,7 @@ Grupa: Platforma wirtualizacji
         grupy odbywa się za pomocą podpolecenia <em>install</em> podpolecenia
         <em>group</em>. Jako argument podajemy nazwę grupy.
       </p>
-<pre classs="code-block">
+<pre class="code-block">
 [user@rhel8-vm1 ~]$ sudo dnf group install "Obsługa smart card"
 Updating Subscription Management repositories.
 Unable to read consumer identity
@@ -7709,7 +7754,7 @@ Ukończono.
 </pre>
       <h3 id="10.3.5.removethegroup">10.3.5. Usuwanie grupy</h3>
       <p>
-        Tak samo jak w przypadku pojedyńczych pakietów, możemy usunąć i grupy.
+        Tak samo jak w przypadku pojedynczych pakietów, możemy usunąć i grupy.
         Do usunięcia grupy potrzebne będzie podpolecenie <em>remove</em> oraz
         nazwa grupy. 
       </p>
@@ -7772,11 +7817,11 @@ Usunięto:
 Ukończono.
 </pre>
       <p>
-        Po wykonaniu tej czynności grupa zostanie usunięta z systemu.
+        Po wykonaniu tej czynności grupa została usunięta z systemu.
       </p>
-      <h2 id="10.4.modulesmanaging">10.4. Zarządzania modułami pakietów</h2>
+      <h2 id="10.4.modulesmanaging">10.4. Zarządzanie modułami pakietów</h2>
       <p>
-        Modułu to bardziej rozległe pakiety zawierające nie tylko samą
+        Moduły to bardziej rozległe pakiety zawierające nie tylko samą
         aplikacje ale także jej całe środowisko do działania. Moduły
         posiadają strumienie, które są odrębnym zestawem pakietów przygotowanym
         z myslą o konkretnej wersji dostarczanego przez moduł programu. Każdy
@@ -7789,7 +7834,7 @@ Ukończono.
       <h3 id="10.4.1.listingmodules">10.4.1. Wyświetlanie modułów</h3>
       <p>
         Do wyświetlania list modułów służy podpolecenie <em>list</em>. Na 
-        poniższym przykładzie znajduje się lista dostępnych w lokalnym 
+        poniższym przykładzie znajduje się fragment listy dostępnych w lokalnym 
         repozytorium modułów.
       </p>
 <pre class="code-block">
@@ -7815,7 +7860,8 @@ container-tools      rhel8 [d][e]    common [d] Most recent (rolling) versions o
         Modułów dostępnych w systemie jest kilkadziesiąt. Wyświetlenie listy
         nie posiada zbyt poręcznego formatu, aby zmieszczać pełny listing tego
         polecenia. Tak jak w przypadku pozostałych elementów, możemy podać
-        podpoleceniu <em>list</em> w postaci ogólnej nazwy np. <em>php</em>.
+        podpoleceniu <em>list</em> argument w postaci ogólnej nazwy np. 
+        <em>php</em>.
       </p>
 <pre class="code-block">
 [user@rhel8-vm1 ~]$ sudo dnf module list php
@@ -7842,14 +7888,14 @@ Wskazówka: [d]omyślne, [e]włączone, [x]wyłączone, [i]zainstalowane
         strumień oraz profil zostanie wybrany w momencie gdy nie sprecyzujemy
         tego podczas instalacji. W ostatniej linii znajduje się legenda, litery
         w nawiasach kwadartowych zdradzają stan modułu zainstalowanego w
-        systemie, za pomocą modyfikatora <em>--enabled</em> możemy wyświetlić 
+        systemie. Za pomocą modyfikatora <em>--enabled</em> możemy wyświetlić 
         wszystkie włączone strumienie modułów.
       </p>
       <h3 id="10.4.2.infoaboumodule">10.4.2. Informacje na temat modułu</h3>
       <p>
         Za pomocą podpolecenia <em>info</em> możemy wyświetlić na przykład
         jakie pakiety zawiera moduł. Podczas wyświetlania tego typu informacji
-        warto podać interesujący nas strumień, aby zmieniejszyć ilość
+        warto podać interesujący nas strumień, aby zmniejszyć ilość
         generowanych danych. Strumień podajemy wraz z nazwą modułu oddzielając
         go dwukropkiem.
       </p>
@@ -7934,9 +7980,10 @@ Wskazówka: [d]omyślne, [e]włączone, [x]wyłączone, [i]zainstalowane
         Strumień <code class="code-inline">5.26</code> został włączony a 
         profil <code class="code-inline">common</code> został zainstalowany. 
         Warto też dodać, że jeśli jakiś z komponentów był już zainstalowany to
-        instalacji modułu sprawdzi czy nie wymaga aktualizacji.
+        podczas instalacji modułu zostanie sprawdzony czy nie wymaga 
+        aktualizacji.
       </p>
-      <h3 id="10.4.4.moduleupdates">10.4.4. Aktualizacja modułu.</h3>
+      <h3 id="10.4.4.moduleupdates">10.4.4. Aktualizacja modułu</h3>
       <p>
         Aktualizacji modułu, dokonuje tak samo jak aktualizacji grupy czy 
         pojedynczego pakietu za pomocą podpolecenia <em>update</em>, tylko, że
@@ -8027,12 +8074,12 @@ Wskazówka: [d]omyślne, [e]włączone, [x]wyłączone, [i]zainstalowane
         Załóżmy taką sytuacje, że musimy zmień wersję <em>php</em> na serwerze
         z najnowszej (8.0) na niższą. Aby to zrobić musimy przełączyć się
         między strumieniami. Niestety nie ma lepszej metody niż ta opisana
-        tutaj więc trzeb czym prendzej barać się do roboty.
+        tutaj.
       </p>
       <p>
         Na początku musimy przeprowadzić klasyczne usunięcie modułu, tak jak
-        podrozdział wyżej, ale na początku wyświetlimy sobie listę modułów
-        <em>php</em>.
+        we wcześniejszym podrozdziale, ale na początku wyświetlimy sobie listę 
+        modułów <em>php</em>.
       </p>
 <pre class="code-block">
 [user@rhel8-vm1 ~]$ sudo dnf module list php
@@ -8085,8 +8132,8 @@ Wskazówka: [d]omyślne, [e]włączone, [x]wyłączone, [i]zainstalowane
       <h3 id="exec10.1">Ćwiczenie 1: Konfiguracja dostępu do repozytorium</h3>
       <p>
         Na maszynie <em>server1</em> z <strong>RHEL 9</strong> skonfiguruj
-        dostęp do lokalne repozytorium wykorzystując do tego płyte/obraz
-        płyty z RHEL9. Plik nazwij <em>local.repo</em>. Uwaga, repozytorium
+        dostęp do lokalnego repozytorium wykorzystując do tego płyte/obraz
+        płyty z RHEL 9. Plik nazwij <em>local.repo</em>. Uwaga, repozytorium
         musi być dostępne odrazu po ponownym uruchomioniu maszyny. 
       </p>
       <h3 id="exec10.2">Ćwiczenie 2: Instalacja i zarządzanie pojedynczymi pakietami</h3>
@@ -8105,7 +8152,7 @@ Wskazówka: [d]omyślne, [e]włączone, [x]wyłączone, [i]zainstalowane
         możliwością podniesienia uprawnień, użyj polecenia <em>dnf</em> do
         wyświetlenia zainstalowanych i możliwych do zainstalowania grup.
         Zainstaluj grupę "Security Tools" i "Scientific Support". Potwierdź to
-        w pliku dziennika narzędzia. Pokaż pakiety zawarte w grupie
+        wyświetlając plik dziennika narzędzia. Pokaż pakiety zawarte w grupie
         "Scientific Support", a następnie usuń tę grupę.
       </p>
       <h3 id="exec10.4">Ćwiczenie 4: Instalacja i zarządzanie modułami</h3>
@@ -8128,7 +8175,8 @@ Wskazówka: [d]omyślne, [e]włączone, [x]wyłączone, [i]zainstalowane
       <p>
         Tym rodziałem zakończyliśmy zarządzanie pakietami. Ten rodział
         pokazał nam jak zarządzać pakietami za pomocą bardziej zaawansowanego
-        narzędzia jak jest <em>dnf</em>. Nauczyliśmy się zarządać pojednyczymi
+        narzędzia jakim jest <em>dnf</em>. Nauczyliśmy się zarządać 
+        pojednyczymi
         pakietami, grupami oraz modułami. W następnym rodziale zajmiemy się
         uruchamianiem systemu operacyjnego.
       </p>

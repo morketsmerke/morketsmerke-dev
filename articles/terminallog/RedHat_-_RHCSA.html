@@ -8180,6 +8180,276 @@ Wskazówka: [d]omyślne, [e]włączone, [x]wyłączone, [i]zainstalowane
         pakietami, grupami oraz modułami. W następnym rodziale zajmiemy się
         uruchamianiem systemu operacyjnego.
       </p>
+      <h1 id="11.bootprocess">11. Proces ładowania systemu, GRUB oraz jądro</h1>
+      <p>
+        Proces ładowania systemu następuje w momencie gdy naciskamy przycisk
+        zasilania komputera. Pierwsza faza - faza oprogramowania układowego
+        jest niezależna od stosowanego systemu operyjnego. Jej zadaniem jest
+        przeprowadzenie tzw. POST-u, czyli sprawdzenia wszystkich komponentów
+        komponentów sprzętowych przed uruchomieniem komputera po to aby nadawł
+        się on do stablinej pracy. Faza pierwsza przeprowadzana jest 
+        oprogramowanie układowe, które może występować dwóch postaciach:
+        <em>BIOS</em> oraz <em>UEFI</em>. UEFI jest oprogramowaniem
+        występującym w wszystkich nowszych komputerach, posiada ono znacznie
+        większe możliwości niż tradycyjny BIOS. Po teście następuję następuje
+        poszukiwanie urządzenia pamięci masowej przechowywującego system
+        operacyjny. Następuje przjeście do drugiej fazy rozruchu - fazy
+        programu ładującego. Program ładujący rezyduje w pierwszym sektorze
+        dysku jest on odpowiedzialny za odnalezienie jądra na dysku,
+        rozpakowanie, załadowanie do pamięci i uruchomienie. Programy
+        rozruchowe (a przynajmniej tez wykorzystywane z dystrybucjami Linux)
+        pozwalają użytkownikowi komputera na wybór jądra oraz zmianę domyślnych
+        parametrów uruchomieniowych. Kiedy jądro jest uruchomiane wówczas
+        rozpoczyna się start systemu operacyjnego. Zadaniami jądra w
+        w odniesieniu do procesu ładowania jest zainicjowanie wszystkich
+        urządzeń oraz uruchomienie programu typu <em>init</em>, tym samym
+        przechodząc do czwartej ostatniej fazy - fazy inicjalizacji w niej
+        program typu <em>init</em> uruchamia wszystkie usługi, uruchamiajac
+        tym samym <em>przestrzeń użytkownika</em>, pod koniec tej fazy
+        użytkownik ma przedsobą gotowy do działania system. Stan systemu
+        operacyjny pozwalający na zalogowanie się użytkownika do niego kończy
+        cały proces uruchamiania.
+      </p>
+      <h2 id="11.1.grub">11.1. Program rozruchowy GRUB</h2>
+      <p>
+        Dla dystrybucji Linuksa istnieje kilka programów rozruchowych. Tutaj
+        jednak skupimy sie na jednym z nich, który jest stosowany w RHEL a jest
+        nim <strong>GRUB</strong>. Jest on najczęsciej stosowany wśród
+        wiodących dystrybucji. Styczność z nim mamy już na samym początku
+        uruchomienia naszego systemu, po jego uruchomieniu wyświetla on menu
+        zawierające wpisy uruchomieniowe naszego systemu. Poniżej znajduje się
+        obrazek przedstawiający to menu. 
+      </p>
+      <p>
+        <!--Obrazek z tabelą GRUB-->
+        <img src="https://i.ibb.co/t4w6rxr/tabela-grub-rhel8.png" alt="tabela-grub-rhel8" border="0">
+      </p>
+      <p>
+        Na obrazku możemy zobaczyć dwa wpisy, jeden jest zaznaczony na biało
+        jest domyślną opcja rozruchowa. Jeśli nie dokonamy żadnych zmian
+        po upływie czasu odmierzanego w ostatniej linii tekstu po menu,
+        zaznaczona opcja zostanie automatycznie zatwierdzona i rozpocznie
+        sie uruchamianie systemu. Po menu możemy poruszać się za pomocą
+        strzałek w górę oraz w dół.
+      </p>
+      <p>
+        Opcje uruchomieniowe kryjące się za wpisami w menu możemy edytować
+        zaznaczając wybrany wpis, a następnie naciskając klawisz <em>e</em>.
+        <em>GRUB</em> daje nam możliwość debugowania rozruchu za pomocą 
+        wbudowanej powłoki. Powłokę możemy uruchomić naciskając klawisz
+        <em>c</em> podczas wyświetlania menu. W powłoce kryje się około 100
+        poleceń do wykorzystania.
+      </p>
+      <p>
+        <!--Obrazek z powłoką GRUB-->
+        <img src="https://i.ibb.co/z2Szgw5/grub-shell-rhel8.png" alt="grub-shell-rhel8" border="0">
+      </p>
+      <h3 id="11.1.1.grubconfig">11.1.1. Konfiguracja programu GRUB</h3>
+      <p>
+        Za wyświetlanie tabeli odpowiedzialny jest plik konfiguracjyny
+        <em>grub.cfg</em> znajdujący się w katalogu <em>/boot/grub2</em>.
+        Jednak plik ten nie nadaje się do modyfikacji, gdyż aktualizacja jądra
+        nadpisze wszystkie dokonane w nim zmiany ponieważ jest generowany
+        automatycznie przez specjalnie przygotowane do tego narzędzie.
+      </p>
+      <p>
+        Zmian w <em>GRUB</em> możemy dokonać edytując inny pliki, taki jak
+        <em>/etc/default/grub</em>. Na poniższym przykładzie znajduje się jego
+        zawartość:
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 ~]$ nl /etc/default/grub 
+     1	GRUB_TIMEOUT=5
+     2	GRUB_DISTRIBUTOR="$(sed 's, release .*$,,g' /etc/system-release)"
+     3	GRUB_DEFAULT=saved
+     4	GRUB_DISABLE_SUBMENU=true
+     5	GRUB_TERMINAL_OUTPUT="console"
+     6	GRUB_CMDLINE_LINUX="crashkernel=auto resume=/dev/mapper/rhel-swap rd.lvm.lv=rhel/root rd.lvm.lv=rhel/swap rhgb quiet"
+     7	GRUB_DISABLE_RECOVERY="true"
+     8	GRUB_ENABLE_BLSCFG=true
+</pre>
+      <p>
+       Gdzie każda z tych linii oznacza:
+      </p>
+      <ul>
+        <li><code class="code-inline">GRUB_TIMEOUT=5</code>, określa czas
+          odliczany do uruchomienia domyślnego wpisu.</li>
+        <li><code class="code-inline">GRUB_DISTRIBUTOR</code>, określa nazwę
+          dystrybucji.</li>
+        <li><code class="code-inline">GRUB_DEFAULT</code>, przechowuje
+          identyfikator domyślnego wpisu. Jeśli posiada wartość 
+          <code class="code-inline">saved</code>, oznacza to, że identyfikator
+          wpisu zostanie pozyskany za pomocą opcji <em>GRUB_SAVEDEFAULT</em>
+          lub <em>grub-set-default</em>.</li>
+        <li><code class="code-inline">GRUB_DISABLE_SUBMENU=true</code>, wyłącza
+          stosowanie podmenu w menu główym.</li>
+        <li><code class="code-inline">GRUB_TERMINAL_OUTPUT="console"</code>,
+          ustawia wyście terminala programu, w tym przypadku jest to domyślna
+          konsola.</li>
+        <li><code class="code-inline">GRUB_CMDLINE_LINUX="crashkernel=auto
+          resume=/dev/mapper/rhel-swap rd.lvm.lv=rhel/root 
+          rd.lvm.lv=rhel/swap rhgb quiet"</code> - opcja przechowuje 
+          argumenty przekazywane jądru Linuksa.</li>
+        <li><code class="code-inline">GRUB_DISABLE_RECOVERY="true"</code>,
+          jeśli ta opcja ustawiona jest na <em>true</em>, podczas generowania
+          menu nie będą genrowane automatyczne wpisy <em>GRUB</em> z opcjami
+          pozwalającymi na uruchomienie systemu w trybie awaryjnym
+          (Mimo to w RHEL pojawia się taki wpis, więc musi być to
+          zrealizowane w inny sposób).</li>
+        <li><code class="code-inline">GRUB_ENABLE_BLSCFG=true</code>, opcja
+          pozwala na użycie plików <em>blscfg</em> zamiast klasycznych wpisów
+          w <em>/boot/grub/grub.cfg</em>.</li>
+      </ul>
+      <p>
+        W tym pliku możemy dokonywać zmian, jednak najpierw warto zaponać się
+        bliżej z <em>GRUB</em>, rozszerzając wiedzę z tego rodziału o np.
+        dokumentację Red Hat, ostatni wpis jest dość specyficzyny, i używany
+        w nowszych dystrybucjach klasy <em>enterprise</em>. Jeśli już dokonamy
+        w nim zmian, zmiany te trzeba zatwierdzić po przez wygenerowanie nowego
+        pliki <em>grub.cfg</em> a służy do tego polecenie
+        <strong>grub2-mkconfig</strong> po opcji <em>-o</em> należy podać
+        ścieżkę docelową, gdzie polecenie ma zapisać nową konfigurację w
+        przeciwynym wypadku zwróci ją na standardowe wyjście.
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 ~]$ sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+[sudo] hasło użytkownika user: 
+Generating grub configuration file ...
+done
+</pre>
+      <p>
+        Po plikiem <em>/etc/default/grub</em>, wyżej przedstawione polecenie
+        wykorzystuje również skrypty pomocnicze znajdujące się w katalogu
+        <em>/etc/grub.d</em>. Poniżej znajduje się listing zawartości tego
+        katalogu:
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 ~]$ sudo ls -l /etc/grub.d/
+[sudo] hasło użytkownika user: 
+razem 96
+-rwxr-xr-x. 1 root root  8958 03-28 16:12 00_header
+-rwxr-xr-x. 1 root root  1043 02-09 12:13 00_tuned
+-rwxr-xr-x. 1 root root   232 03-28 16:12 01_users
+-rwxr-xr-x. 1 root root   832 03-28 16:12 08_fallback_counting
+-rwxr-xr-x. 1 root root 14088 03-28 16:12 10_linux
+-rwxr-xr-x. 1 root root   830 03-28 16:12 10_reset_boot_success
+-rwxr-xr-x. 1 root root   889 03-28 16:12 12_menu_auto_hide
+-rwxr-xr-x. 1 root root 11696 03-28 16:12 20_linux_xen
+-rwxr-xr-x. 1 root root  2559 03-28 16:12 20_ppc_terminfo
+-rwxr-xr-x. 1 root root 10670 03-28 16:12 30_os-prober
+-rwxr-xr-x. 1 root root  1412 03-28 16:12 30_uefi-firmware
+-rwxr-xr-x. 1 root root   700 04-01 11:49 35_fwupd
+-rwxr-xr-x. 1 root root   214 03-28 16:12 40_custom
+-rwxr-xr-x. 1 root root   216 03-28 16:12 41_custom
+-rw-r--r--. 1 root root   483 03-28 16:12 README
+</pre>
+      <p>
+        Plików w tym katalogu jest całkiem sporo. Istotną rzeczą w tych plikach
+        są liczby na początku nazw. Te liczby znaczeniami opisanymi w powyższym
+        pliku <em>README</em> okreslają kolejność uruchamiania tych skryptów.
+        Każdy pliki wykonuje jakąś czynność podczas generowania pliki
+        konfiguracyjnego, np. <em>00_header</em> ładuje plik
+        <em>/etc/default/grub</em>; <em>10_linux</em> odpowiada za generowanie
+        wpisów uruchamiających dystrybucje, jednak jak wiemy w RHEL odpowiada 
+        za to inny mechanizm; <em>30_os-prober</em> odpowiada za poszukiwanie
+        zainstalowanych na dyskach komputera innych systemów operacyjnych, np.
+        MS Windows; <em>40_custom</em> oraz <em>41_custom</em> pozwalają na
+        zapisanie swojej konfiguracji.
+      </p>
+      <h3 id="11.1.2.rescuemode">11.1.2. Ładowanie systemu do określonego trybu</h3>
+      <p>
+        Edytując wpis ładujący system z poziomu menu <em>GRUB</em> możemy
+        uruchomić system w trybie ratunkowym, odzyskiwania lub przerwać jego
+        ładowanie w momencie gdy głównym system plików jest jeszcze
+        <em>intrd</em> (mały obraz systemu plików ładowany do pamięci przez
+        jądro aby zapewnić mu dostęp do sterowników dysków, żeby mógł
+        zamontować właściwy system plików z katalogiem głównym). Za pomocą
+        takiego uruchomienia systemu możemy zmienić zagubione hasło 
+        superużytkownika. Aby zapoznać się z tym trybem przywrócimy utracone
+        hasło <em>root</em>. <strong>Do tego ćwiczenia potrzebne będzie RHEL 8
+        gdyż w RHEL 9 nie ważne jaki tryb uruchominy nadal wymagane będzie
+        hasło aby przejść do powłoki.</strong> Zatem jedyną opcją na odzyskanie
+        dostępu w RHEL 9 jest podmontowanie systemu plików w środowisku 
+        powłoki instalatora.
+      </p>
+      <p>
+        Po uruchomieniu maszyny, podczas wyświetlania menu <em>GRUB</em> 
+        naciskamy <em>e</em>, następnie w linii rozpoczynającej się od 
+        <em>linux</em> dopisujemy na końcu <strong>rd.break</strong>.
+        Następnie naciskamy <em>Ctrl+x</em>, aby uruchomić tak zmodyfikowany
+        wpis. Po uruchomieniu się systemu uzyskamy poniższy znak zachęty: 
+      </p>
+<pre class="code-block">
+switch_root:/#
+</pre>
+      <p>
+        W tym momencie musimy zmienić katalog główny <em>ramdysku</em> na
+        katalog główny znajdujący się na dysku. Kernel po odnalezieniu
+        dysku z katalogiem głównym montuje go w katalogu <em>/sysroot</em>
+        środowiska <em>ramdysku</em>. Do przełączanie katalogu głównego
+        posłuży nam polecenie <strong>chroot</strong>:
+      </p>
+<pre class="code-block">
+switch_root:/# chroot /sysroot
+</pre>
+      <p>
+        Po przełączeniu się uzyskamy taki znak zachęty jak ten poniżej.
+      </p>
+<pre class="code-block">
+sh-4.4#
+</pre>
+      <p>
+        Z zamontowanym w tym momencie katalogiem głównym jest pewien problem,
+        otóż na tym etapie uruchomienia systemu jest on zamontowany w trybie
+        tylko do odczytu, a zmiana hasła wymaga zapisania informacji w
+        pliku <em>/etc/shadow</em>, dlatego też musimy zamontować katalog
+        główny tym razem w pełnym dostępie.
+      </p>
+<pre class="code-block">
+sh-4.4# mount -o remount,rw /
+</pre>
+      <p>
+        Teraz możemy wydawać polecenie <em>passwd</em> i ustalić nowe hasło dla
+        superużytkownika. Następnie musimy stworzyć pusty plik w katalogu
+        głównym o nazwie <em>.autorelabel</em>. Ponieważ <em>SELinux</em> musi
+        wytworzyć nowe etykiety, jeśli tego nie zrobimy zmiany nie przyniosą
+        skutku.
+      </p>
+<pre class="code-block">
+sh-4.4# passwd
+sh-4.4# touch .autorelabel
+</pre>
+      <p>
+        Po wykonaniu tych czynności możemy opuścić środowisko zmienionego
+        katalogu a następnie zrestartować maszynę uruchamiając ją już
+        normalnie.
+      </p>
+<pre class="code-block">
+sh-4.4# exit
+switch_root:/# reboot
+</pre>
+      <p>
+        Po uruchomieniu systemu następi nadawanie nowych etykiet, po tym
+        system może zostać ponownie uruchomiony, kiedy będzie gotowy do pracy
+        możemy zalować się nowym hasłem na super użytkownika.
+      </p>
+      <p class="exam_tip">
+        Musimy wiedzieć jak załadować system do określonego trybu z poziomu
+        menu GRUB2, aby na przykład móc zmodyfikować plik <em>/etc/fstab</em>,
+        lub zresetować hasło superużytkownika.
+      </p>
+      <h2 id="11.2.kernel">11.2. Jądro systemu Linuks</h2>
+      <p>
+        Jądro to rdzeń każdej dystrybucji, odpowiada za wiele apektów działania
+        systemów oraz udostępnia masę funkcji, bez których dystrybucjom cięzko
+        było by być systemami operacyjnymi. Jedną z takich funkcji jest
+        zarządzanie urządzeniami. Do komunikacji z nimi jądro potrzebuje
+        sterowników. Sterownik w odniesieniu do jądra nazywane są modułami
+        część modułów wymaganych przez jądro może być już wnie wbudowana a
+        część jest ładowana w razie potrzeby (do tego też służy <em>initrd</em>).
+        RHEL 8.6, którego używam również i w tym rozdziale jest dostarczany
+        z jądrem
+      </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

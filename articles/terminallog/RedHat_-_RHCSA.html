@@ -328,6 +328,28 @@
             <li><a href="#ch10summary">Podsumowanie</a></li>
           </ul>
         </li>
+        <li><a href="#11.bootprocess">11. Proces ładowania systemu, GRUB oraz jądro</a>
+          <ul class="toc">
+            <li><a href="#11.1.grub">11.1. Program rozruchowy GRUB</a>
+              <ul class="toc">
+                <li><a href="#11.1.1.grubconfig">11.1.1. Konfiguracja programu GRUB</a></li>
+                <li><a href="#11.1.2.rescuemode">11.1.2. Ładowanie systemu do określonego trybu</a></li>
+              </ul>
+            </li>
+            <li><a href="#11.2.kernel">11.2. Jądro systemu Linuks</a>
+              <ul class="toc">
+                <li><a href="#11.2.1.kernelfiles">11.2.1. Pliki jądra w systemie</a></li>
+                <li><a href="#11.2.2.kernelpackes">11.2.2. Pakiety jądra</a></li>
+                <li><a href="#11.2.3.kernelversion">11.2.3. Wersja jądra</a></li>
+                <li><a href="#11.2.4.rebuidkernel">11.2.4. Przebudowa jądra</a></li>
+              </ul>
+            </li>
+            <li><a href="#exec11.1">Ćwiczenie 1: Właczenie komunikatów podczas ładowania systemu</a></li>
+            <li><a href="#exec11.2">Ćwiczenie 2: Przywrócenie hasła superużytkownika</a></li>
+            <li><a href="#exec11.3">Ćwiczenie 3: Instalacja nowego jądra</a></li>
+            <li><a href="#ch11summary">Podsumowanie</a></li>
+          </ul>
+        </li>
       </ul>
       <h1 id="1.introduction">1. Wstęp</h1>
       <p>
@@ -8448,7 +8470,396 @@ switch_root:/# reboot
         część modułów wymaganych przez jądro może być już wnie wbudowana a
         część jest ładowana w razie potrzeby (do tego też służy <em>initrd</em>).
         RHEL 8.6, którego używam również i w tym rozdziale jest dostarczany
-        z jądrem
+        z jądrem 4.18.0-372.9.1.el8.x86_64, tę informację można uzyskać za
+        pomocą polecenia <code class="code-inline">uname -r</code>. I to jądro
+        wystarcza dla potrzeb systemu operacyjnego.
+      </p>
+      <p>
+        Warto jednak pamiętać o tym, że rozwój technologiczny komputerów oraz
+        całej dziedziny informatyki nie stoi w miejscu i jądro Linuks próbuje
+        za nim nadąrzyć. W związku z tym funkcjonalność jądra również ulega
+        zmianie, więc jeśli odbiorcy chcą skorzystać z tych zmian muszą
+        przebudować jądra używane na ich komputerach. Najprostszą i za razem
+        bezpieczną metodą jest instalacja jednego jądra obok drugiego.
+        Oczywiście tylko jedno jądro może działać w tym samym czasie. Ta
+        metoda w względu na przechowywanie dotychczas używanego jądra pozwala
+        wrócić do niego, gdy nowe jądro okaże się nie odpowiednie dla naszego
+        środowiska. Rozwój jądra Linuks to nie tylko dokładanie nowych funkcji
+        ale również usuwanie już niewspieranych technologii, chociaż
+        dystrybucje mogą działajać na różnym sprzęcie, który może mieć lata
+        świetności dawno za sobą, stąd też modułowa budowa jądra. Rózwój jądra
+        nie jest jedym powodem do jego <em>przebudowania</em>, nie które
+        aplikacje lub systemy bazodanowe mogą wymagać nowszej jego wersji, aby
+        zapewnić maksimum wydajności. Tym zajmiemy się w tym podrozdziale
+        <em>przebudową</em> jądra. Omówimy sobie również gdzie znajduje się
+        jądro w systemie. 
+      </p>
+      <h3 id="11.2.1.kernelfiles">11.2.1. Pliki jądra w systemie</h3>
+      <p>
+        Jądro to zwykły program, którego zadaniem jest wykonanie czynnośc 
+        i zapewnienie funkcji, które przez większość z nas uznałaby za 
+        "systemowe". Jednak to nadal program, więc musi gdzieś w systemie
+        plików istnieć jego plik. Pliki jądra najczęściej znajdują się w
+        katalogu <em>/boot</em>. Plik jądra zazwyczaj nazywa się 
+        <em>vmlinuz-*</em>, część po myślniku już zależy od dystrybucji. Obok
+        pliku jądra w tym samym katalogu znajduje sie również plik
+        <em>ramdysku</em>. W przypadku RHEL w katalogu <em>/boot</em> zajdują
+        się podkatalogi: <em>grub</em> - zawierający konfigurację programu
+        ładującego, <em>loaders</em> - zawierający pliki <em>blscfg</em>
+        zawierajace wpisy menu programu ładującego oraz katalog <em>efi</em>
+        przechowujący program ładujący dla komputerów uruchamianych w trybie 
+        UEFI. W tym katalogu znajdują się również pliki pomocnicze jądra takie 
+        jak <em>config-*</em> oraz <em>System.map-*</em>. Gwiazdki
+        (<strong>*</strong>) w nazwach plików ozaczczają wersję jądro. Poniżej
+        znajduje się listing zawartości tego katalogu.
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 ~]$ ls -l /boot
+razem 213492
+-rw-r--r--. 1 root root    195982 04-16 04:33 config-4.18.0-372.9.1.el8.x86_64
+drwxr-xr-x. 3 root root        17 07-10 17:27 efi
+drwx------. 4 root root        83 07-14 07:33 grub2
+-rw-------. 1 root root 112548052 07-10 17:50 initramfs-0-rescue-1ad7389b6ff44aac9cfcab2485444bc8.img
+-rw-------. 1 root root  53300132 07-10 17:57 initramfs-4.18.0-372.9.1.el8.x86_64.img
+-rw-------. 1 root root  27283456 07-10 18:00 initramfs-4.18.0-372.9.1.el8.x86_64kdump.img
+drwxr-xr-x. 3 root root        21 07-10 17:42 loader
+lrwxrwxrwx. 1 root root        49 07-10 17:45 symvers-4.18.0-372.9.1.el8.x86_64.gz -> /lib/modules/4.18.0-372.9.1.el8.x86_64/symvers.gz
+-rw-------. 1 root root   4359450 04-16 04:33 System.map-4.18.0-372.9.1.el8.x86_64
+-rwxr-xr-x. 1 root root  10460528 07-10 17:47 vmlinuz-0-rescue-1ad7389b6ff44aac9cfcab2485444bc8
+-rwxr-xr-x. 1 root root  10460528 04-16 04:34 vmlinuz-4.18.0-372.9.1.el8.x86_64
+</pre>
+      <p>
+        Katalog <em>/boot</em> nie jest jedynym miejscem, w którym znajdują się
+        pliki jądra. Dynamicznie ładowane modułu znajdują sie w katalogu
+        <em>/usr/lib/modules</em>. Katalog zawiera cała strukturę katalogową
+        w której znajdują sie najróżniejsze modułu z podziałem na wersję jądra
+        dostępne w systemie.
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 ~]$ ls -l /usr/lib/modules
+razem 4
+drwxr-xr-x. 3 root root   19 07-10 17:31 4.18.0-372.2.1.el8.x86_64
+drwxr-xr-x. 6 root root 4096 07-10 17:55 4.18.0-372.9.1.el8.x86_64
+</pre>
+      <p>
+        W wewnątrz tej struktury znajdują się moduły sterowników:
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 ~]$ ls -l /usr/lib/modules/4.18.0-372.9.1.el8.x86_64/kernel/drivers/ | head -25
+razem 48
+drwxr-xr-x.  5 root root  239 07-10 17:30 acpi
+drwxr-xr-x.  2 root root  169 07-10 17:30 ata
+drwxr-xr-x.  3 root root   20 07-10 17:30 base
+drwxr-xr-x.  2 root root   24 07-10 17:30 bcma
+drwxr-xr-x.  3 root root  180 07-10 17:30 block
+drwxr-xr-x.  2 root root  272 07-10 17:30 bluetooth
+drwxr-xr-x.  3 root root   17 07-10 17:30 bus
+drwxr-xr-x.  2 root root   25 07-10 17:30 cdrom
+drwxr-xr-x.  6 root root  192 07-10 17:30 char
+drwxr-xr-x.  2 root root   50 07-10 17:30 counter
+drwxr-xr-x.  2 root root  143 07-10 17:30 cpufreq
+drwxr-xr-x.  2 root root   36 07-10 17:30 cpuidle
+drwxr-xr-x.  6 root root  107 07-10 17:30 crypto
+drwxr-xr-x.  4 root root   54 07-10 17:30 dax
+drwxr-xr-x.  2 root root   23 07-10 17:30 dca
+drwxr-xr-x.  5 root root   60 07-10 17:30 dma
+drwxr-xr-x.  2 root root 4096 07-10 17:30 edac
+drwxr-xr-x.  2 root root  113 07-10 17:30 firewire
+drwxr-xr-x.  2 root root   69 07-10 17:30 firmware
+drwxr-xr-x.  2 root root  107 07-10 17:30 gpio
+drwxr-xr-x.  3 root root   17 07-10 17:30 gpu
+drwxr-xr-x.  5 root root 4096 07-10 17:30 hid
+drwxr-xr-x.  2 root root   74 07-10 17:30 hv
+drwxr-xr-x.  3 root root 4096 07-10 17:30 hwmon
+...
+</pre>
+      <p>
+        Poza zwykłymi plikami jądra, w systemie istnieje interfejs przez nie
+        udostępniany, a jest nim katalog <strong>/proc</strong>. Ten katalog
+        zawiera masę podkatalogów odpowiadających uruchomionym w systemie
+        procesom oraz kilkdziesiąt plików pomocniczych. Z tego katalogu
+        korzystają takie narzędzia jak: <em>ps</em>, <em>top</em>, <em>mem</em>
+        czy <em>lscpu</em>. Poniżej znajduje sie listing podkatalogów procesów:
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 ~]$ ls -l /proc | head 
+razem 0
+dr-xr-xr-x.  9 root           root                         0 07-14 07:28 1
+dr-xr-xr-x.  9 root           root                         0 07-14 07:28 10
+dr-xr-xr-x.  9 root           root                         0 07-14 07:28 1000
+dr-xr-xr-x.  9 root           root                         0 07-14 07:28 1010
+dr-xr-xr-x.  9 root           root                         0 07-14 07:28 1011
+dr-xr-xr-x.  9 root           root                         0 07-14 07:28 1015
+dr-xr-xr-x.  9 root           root                         0 07-14 07:29 1017
+dr-xr-xr-x.  9 root           root                         0 07-14 07:28 1020
+dr-xr-xr-x.  9 root           root                         0 07-14 07:28 11
+</pre>
+      <p>
+        Informacje na temat procesora oraz pamięci możemy uzyskać bezpośrednio
+        od jądra korzystając takich pliki <em>/proc/cpuinfo</em> oraz
+        <em>/proc/meminfo</em>.
+      </p>
+      <p>
+        Plik zawierający informacje o procesorze:
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 ~]$ cat /proc/cpuinfo 
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 60
+model name	: Intel Core Processor (Haswell, no TSX)
+stepping	: 1
+microcode	: 0x1
+cpu MHz		: 1696.073
+cache size	: 16384 KB
+physical id	: 0
+siblings	: 1
+core id		: 0
+cpu cores	: 1
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+...
+</pre>
+      <p>
+        Plik zawierający informacje o pamięci:
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 ~]$ cat /proc/meminfo 
+MemTotal:         824024 kB
+MemFree:           92668 kB
+MemAvailable:     285968 kB
+Buffers:              20 kB
+Cached:           284704 kB
+SwapCached:         1628 kB
+Active:           167040 kB
+Inactive:         396240 kB
+...
+</pre>
+      <h3 id="11.2.2.kernelpackes">11.2.2. Pakiety jądra</h3>
+      <p>
+        Jądro do dystrybucji dostarczane jest za pomocą zwykłych pakietów
+        z oprogramowaniem, które mozemy zainstalować z repozytorium. Jądro
+        rozbite jest na kilka pakietów, których lista oraz opis zawartości
+        znajdują się poniżej.
+      </p>
+      <ul>
+        <li><strong>kernel</strong> - Nie zawiera plików, zapewnia jedynie
+          poprawną instalację innych pakietów jądra.</li>
+        <li><strong>kernel-core</strong> - Zawiera pliki jądra wraz z niewielką
+          ilością modułów zepewniającą podstawową funkcjonalność.</li>
+        <li><strong>kernel-devel</strong> - Zawiera pliki wspomagające
+          kompilację modułów.</li>
+        <li><strong>kernel-modules</strong> - Zawiera modułu powszechnie
+          znanych urządzeń.</li>
+        <li><strong>kernel-modules-extra</strong> - Zawiera modułu dodatkowych,
+          różnych urządzeń (mniej spotykanych).</li>
+        <li><strong>kernel-headers</strong> - Zawiera pliki wspierające wymianę
+          informacji pomiędzy jądrem, bibliotekami przestrzeni użytkownika oraz
+          programami.</li>
+        <li><strong>kernel-tools</strong> - Zawiera narzędzia pozwalające na
+          kontrolę jądra.</li>
+        <li><strong>kernel-tools-libs</strong> - Zawiera biblioteki
+          wspomagające działanie narzędzi jądra.</li>
+      </ul>
+      <p>
+        Nie wszystkie z tych pakietów muszą występować w systemie, aby jądro
+        normalnie funkcjonowało, oraz nie wszystkie one są potrzebne do jego
+        przebudowania za pomoca polecenia poniżej możemy sprawdzić jakie 
+        pakiety jądra są zainstalowane w naszym systemie.
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 ~]$ rpm -qa | grep 'kernel'
+kernel-tools-libs-4.18.0-372.9.1.el8.x86_64
+kernel-tools-4.18.0-372.9.1.el8.x86_64
+kernel-4.18.0-372.9.1.el8.x86_64
+kernel-core-4.18.0-372.9.1.el8.x86_64
+kernel-modules-4.18.0-372.9.1.el8.x86_64
+</pre>
+      <p>
+        Te pakiety należało będzie pobrać, kiedy bedziemy chcieli przebudować
+        jądro. Zanim jednak to nastąpi przeanlizujemy wersje jądro aby móc
+        wybrać to najbardziej odpowiednie.
+      </p>
+      <h3 id="11.2.3.kernelversion">11.2.3. Wersja jądra</h3>
+      <p>
+        Wersje jądra możemy sprawdzić za pomocą polecenia
+        <code class="code-inline">uname -r</code>. Dzieli się ona na kilka
+        części które mogą pomóc nam w zidentyfikowaniu nowego jądra
+        odpowiedniego dla naszego systemu:
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 ~]$ uname -r
+4.18.0-372.9.1.el8.x86_64
+</pre>
+      <ul>
+        <li><code class="code-inline">4</code> - Numer główny wersji. Numer
+          rodziny wersji jąder. Ulega on zmianie gdy następuje wewnątrz jądra
+          duża zmiana.</li>
+        <li><code class="code-inline">18</code> - Numer rewizji. Zmiany 
+          zachodące w jądrze są za małe aby utworzyć na nową linię (zmienić
+          główny numer), jednak są dość znaczące.</li>
+        <li><code class="code-inline">0</code> - Numer łatki. Łatki poprawiają
+          błędy oraz zabezpieczenia, mogą również wprowadzać drobne ulepszenia.
+        </li>
+        <li><code class="code-inline">-372.9.1.el8</code> - sygnatura budowania
+          jądra przez dystrybucję. Każda główna dystrybucja zajmuje się
+          samodzielnym budowaniem jądra. Więc w tej części znajduje się
+          numer <em>buildu</em> przprowadzanego prze dystrybucje. Kiedy
+          będziemy wybierać jądro dla naszej dystrybucji możemy kierować się
+          tymi oznaczeniami.</li>
+        <li><code class="code-inline">x86_64</code></li> - nazwa architektury.
+          W tym przypadku jest AMD64 lub kto woli EM64T.</li>
+      </ul>
+      <p>
+        Po za zapoznaniu się z wersją, możemy przejść do przebudowy jądra na
+        naszych maszynych.
+      </p>
+      <h3 id="11.2.4.rebuidkernel">11.2.4. Przebudowa jądra</h3>
+      <p>
+        Przebudowę jądra rozpoczniemy od ustalenia jego obecnej wersji oraz
+        wybrania odpowiedniej dla naszych rozwiązań. Z racji tego iż jest to
+        tylko przykład wybierzemy kolejny <em>build</em> dystrybucji.
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 ~]$ uname -r
+4.18.0-372.9.1.el8.x86_64
+</pre>
+      <p>
+        W wiec w naszym przypadku najlepiej będzie zainstalować wersje np.
+        <em>373</em> lub inną nieco wyższą. Teraz musimy ustalić źródło, skąd
+        pobierzemy pakiety potrzebne do zainstalowania nowego jądra. Opcje
+        mamy dwie: strona Red Hat (ponieważ nasze system nie są zarejestrowane
+        w sieci Red Hat, musimy pobrać pakiety logując się na stronie a
+        następnie wybrać z sekcji pobierania odpowiednie pakiety) lub strona
+        <em>rpmfind.net</em>, która jest wyszukiwarką pakietów śródróżnych
+        serwerów lustrzanych różnych dystrybucji dystrybucji klasy
+        <em>enterprise</em>. Skutkiem użycia pakietów ze strony <em>rpmfind</em>
+        jest to, iż poźniej nasze jądro może widnieć jako np. <em>CentOS</em> w
+        menu <em>GRUB</em>, więc najlepszym rozwiazaniem jest pobranie pakietów
+        na swój komputer, następnie przesłanie zbiorczego archiwum do maszyny.
+        Listę pakietów niezbędnych do zainstalowania nowego jądra mozemy
+        wyświetlić za pomocą polecenia:
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 ~]$ rpm -qa | grep 'kernel'
+kernel-tools-libs-4.18.0-372.9.1.el8.x86_64
+kernel-tools-4.18.0-372.9.1.el8.x86_64
+kernel-4.18.0-372.9.1.el8.x86_64
+kernel-core-4.18.0-372.9.1.el8.x86_64
+kernel-modules-4.18.0-372.9.1.el8.x86_64
+</pre>
+      <p>
+        Na komputerze na którym hostuje maszynę wirtualną pobrałem z strony
+        Red Hat najnowsze pakiety jądra przeznaczone dla RHEL 8. Stworzyłem
+        z nich archiwum nastepnie przesłałem do wcześniej utworzonego 
+        podkatalogu w katalogu <em>/tmp</em> na maszynie z RHEL 8. Poniżej
+        znajduje się lista pobranych pakietów:
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 kernel]$ ls -l 
+razem 97736
+-rw-r--r--. 1 user user  8436304 07-14 10:22 kernel-4.18.0-372.16.1.el8_6.x86_64.rpm
+-rw-r--r--. 1 user user 41240076 07-14 10:22 kernel-core-4.18.0-372.16.1.el8_6.x86_64.rpm
+-rw-r--r--. 1 user user 33296868 07-14 10:22 kernel-modules-4.18.0-372.16.1.el8_6.x86_64.rpm
+-rw-r--r--. 1 user user  8654240 07-14 10:23 kernel-tools-4.18.0-372.16.1.el8_6.x86_64.rpm
+-rw-r--r--. 1 user user  8445172 07-14 10:23 kernel-tools-libs-4.18.0-372.16.1.el8_6.x86_64.rpm
+</pre>
+      <p>
+        Teraz instalacja jest już banalna, wystarczy użyć polecenia
+        <em>dnf</em>, a ono wykona wszystkie czynności za nas.
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 kernel]$ sudo dnf install kernel-*
+Updating Subscription Management repositories.
+Unable to read consumer identity
+
+This system is not registered with an entitlement server. You can use subscription-manager to register.
+
+Rozwiązano zależności.
+================================================================================
+ Pakiet               Arch.     Wersja                    Repozytorium    Rozm.
+================================================================================
+Instalowanie:
+ kernel               x86_64    4.18.0-372.16.1.el8_6     @commandline    8.0 M
+Aktualizowanie:
+ kernel-tools         x86_64    4.18.0-372.16.1.el8_6     @commandline    8.3 M
+ kernel-tools-libs    x86_64    4.18.0-372.16.1.el8_6     @commandline    8.1 M
+Instalowanie zależności:
+ kernel-core          x86_64    4.18.0-372.16.1.el8_6     @commandline     39 M
+ kernel-modules       x86_64    4.18.0-372.16.1.el8_6     @commandline     32 M
+
+Podsumowanie transakcji
+================================================================================
+Instalacja    3 pakiety
+Aktualizacja  2 pakiety
+
+Całkowity rozmiar: 95 M
+W porządku? [t/N]: 
+</pre>
+      <p>
+        Po zatwierdzeniu rozpocznie się instalacja. Po skończonej instalacji
+        musimy uruchomić ponownie maszynę. W menu <em>GRUB</em> nowe jądro
+        będzie na pierwszej domyślnej pozycji. Po załadowaniu systemu wersją
+        jądra używana przez ten system to:
+      </p>
+<pre class="code-block">
+[user@rhel8-vm1 ~]$ uname -r
+4.18.0-372.16.1.el8_6.x86_64
+</pre>
+      <p>
+        Jak możemy zauważyć to jądro różni się od porzednie dorobnymi zmianami
+        prowadzonymi przez dystrybucję, gdyż zmianie uległ numer rewizji w 
+        numerze <em>buildu</em>.
+      </p>
+      <p class="exam_tip">
+        Zawsze należy instalować nowe jądro, a nie aktualizować stare.
+        Aktualizacja usuwa każde istniejące jądro i zastępuje je nowym w
+        przypadku problemów po instalacji z nowym jądrem nie będzie możliwości
+        powrotu do poprzednie działającego poprawnie jądra.
+      </p>
+      <h3 id="exec11.1">Ćwiczenie 1: Właczenie komunikatów podczas ładowania systemu</h3>
+      <p>
+        Jako użytkownik z możlwością podniesienia uprawnień na maszynie
+        z <strong>RHEL 8</strong>, usuń wartość
+        <em>quiet</em>, z opcji <em>GRUB_CMDLINE_LINUX</em> w pliku
+        <em>/etc/default/grub</em>. Następnie uruchom polecenie
+        <em>grub2-mkconfig</em> aby wygenerować nowy plik konfiguracyjny
+        <em>GRUB</em>. Na koniec uruchom ponownie system, aby zobaczyć 
+        komunikaty generowane przez jądro.
+      </p>
+      <h3 id="exec11.2">Ćwiczenie 2: Przywrócenie hasła superużytkownika</h3>
+      <p>
+        Na maszynie z <strong>RHEL 8</strong>, przerwij ładowanie systemu i
+        zmień hasło superużytkownika. Po ponownym uruchomieniu maszyny zaloguj
+        się na jego konto i ustaw hasło takie jakie było do tej pory
+        (chyba, że go nie pamiętasz).
+      </p>
+      <h3 id="exec11.3">Ćwiczenie 3: Instalacja nowego jądra</h3>
+      <p>
+        Na maszynie z <strong>RHEL 8</strong>, jako użytkownik z możliwością
+        podniesienia uprawnień, sprawdź wersję jądra domyślnie używaną w
+        w systemie, następnie ustal jakie pakiety jądra są zainstalowane w
+        systemie. Pobierz nowszą wersję jądra z 
+        <em>Red Hat Customer Portal</em> lub <em>rpmfind.net</em> i 
+        przeprowadź instalacje nowego jądra. Po czym zrestartuj system i
+        sprawdź obecną jego wersję.
+      </p>
+      <h2 id="ch11summary">Podsumowanie</h2>
+      <p>
+        W tym rodziale zapoznaliśmy się procesem ładowania systemu. Poznaliśmy
+        po krótce każdą z jego faz. Zapoznaliśmy się bliżej z program ładującym
+        <em>GRUB</em> jego plikami konfiguracyjnymi oraz narzędziem z nim
+        związanym. Nauczyliśmy się uruchamiać system w trybie awaryjnym aby
+        przywrócić hasło superużytkownika lub poprawić wpisy w pliku
+        <em>/etc/fstab</em>. Na koniec poruszyliśmy temat jądra, dowiedzieliśmy
+        sie gdzie znajdują się pliki jądra, jakie pakiety odpowiadają za nie
+        w systemie oraz nauczyliśmy się poprawnie interpretować jego wersje
+        aby móc zainstalować nową jego wersję. Następnym rodziale przyjrzymy
+        się ostatniej fazie rozruchu.
       </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">

@@ -8858,6 +8858,162 @@ W porządku? [t/N]:
         aby móc zainstalować nową jego wersję. Następnym rodziale przyjrzymy
         się ostatniej fazie rozruchu.
       </p>
+      <h1 id="12.sysinitlogsandtuned">12. Inicjalizacja systemu, pliki dziennika oraz dostarajanie systemu</h1>
+      <p>
+        W tym rozdziale zajmiemy się czwartą ostatnią fazą uruchamiania systemu
+        czyli jego inicjalizacją. Dla dystrybucji Linuksa istnieje wiele
+        programów typu <em>init</em>. Większość z wiodących dystrybucji
+        używa <em>Systemd</em> (ang. <em>System daemon</em>), jednak wielu
+        programistów uważa, że <em>systemd</em> jest sprzeczne z filozofią
+        <em>Uniksa</em>, dlatego też wśród społeczności powstało wiele
+        dystrybucji, będących odpowiednikami dystrybucji wiodących ale dających
+        końcowemu użytkownikowi wybór z jakiego (poza <em>systemd</em>) 
+        z programów typu <em>init</em> chce korzystać, w niektórych przypadkach
+        decyzje podejmujemy sciągając odpowiedni obraz płyty, a w niektórych
+        wyboru dokonujemy podczas instalacji. Nie mniej jednak RHEL korzysta
+        z <em>systemd</em> to nim się zajmiemy, dlatego też odniesienia jako
+        programu lub procesu typu <em>init</em> będą odnośić się do <em>systemd</em>.
+      </p>
+      <p>
+        Jak zapewne zdajemy sobie sprawę wiele programów generuje komunikaty
+        diagnostyczne. Nie które z nich są wyświetlane na naszych terminalach,
+        inne te których nie widzimy, albo nie są generowane albo są zbierane
+        przez jednego z demonów systemowych i zapisywane w jednym z systemowych
+        katalogów. W tych katalogach znajdują się właśnie pliki dziennika.
+      </p>
+      <p>
+        Poza instalacją i konfiguracją programowania, zarządzania plikamia i
+        katalogami, czy użytkownikami być może będziemy musieli dostoswać nasz
+        system, aby bardziej wydajny co może spowodować większy pobór energii
+        elektrycznej, lub będziemy zmuszeni, aby nasz system był bardziej
+        energooszczędny, to bedziemy mogli zrealizować za pomocą jednego z
+        demonów, którego będzie trzeb zainstalować.
+      </p>
+      <h2 id="12.1.systeminit">12. Inicjalizacja systemu - <em>systemd</em></h2>
+      <p>
+        W większości wiodących dystrybucji, wybiera <em>systemd</em> jak
+        program typu <em>init</em> dla swoich systemów. Mimo sprzeciwu części
+        społeczności, to <em>systemd</em> nie jest program, który jest
+        pozbawiony zalet. Ma ich bardzo wiele i są one dość istotne. 
+        <em>Systemd</em> jest program typu <em>init</em>, którego głównymi
+        zadaniami jest przygotowanie systemu do pracy oraz zarządanie usługami.
+        W fazie inicjalizacji uruchamiana jest większość usług, które do czasu
+        wdrożenie <em>systemd</em> uruchamiane są jedna po drugiej co wydłużało
+        proces uruchamiania systemu. Natomiast nowy program postawił na 
+        współbieżność uruchamiania - wszystkie usługi startują w tym samym
+        czasie. <em>Systemd</em> może również opóźnić uruchomienie konkretej
+        usługi kiedy będzie ona rzeczywiście wymaga zaoszczędzając przy tym
+        zasoby systemu. Kolejną rzeczą, którą wprowadza <em>systemd</em> jest
+        zarządzanie zasobami, którymi operuja usługi. Program za pomocą
+        oczywiście odpowiedniej konfiguracji jest wstanie stworzyć zasób, który
+        potrzebują inne usługi, następnie uruchomić demona, który taki zasób
+        powinien udostępniać w momencie gdy demon z zasobem jeszcze się
+        uruchamia, inne te które go wymagają widzą że jest on dostępny i
+        wysyłają zapytania do tego demona te zapytania są buforowane do momentu
+        jego pełnego uruchomienia, na koniec te zapytania wraz kontrolą nad
+        zasobem są przekazywane do niego. Jest to kolejna cecha, która 
+        przyspiesza ładowanie systemu. Kolejną cechą <em>systemd</em> jest
+        zmiana administracji usługi. Teraz nie są wymgane już skrypty wystarczy
+        krótki plik, kilka, kilkanaście linijek i usługą jest już zdefiniowana. 
+      </p>
+      <h3 id="12.1.1.units">12.1.1. Jednostki</h3>
+      <p>
+        <strong>Jednostki</strong> są to pliki za pomocą których opisuje się 
+        różne komponenty
+        systemu dla <em>systemd</em>. Pliki jednostek są to zwykłe pliki
+        tekstowe, podzielone na dwie, trzy sekcje. Pierwsza sekcją służy do
+        opisu jednostki, druga jest zależna od typu jednostki i zawiera
+        specyficzne dla niego dyrektywy. Trzecia sekcja służy w zazwyczaj
+        od określania włączania i wyłączania jednostki (Uwaga, tutaj włączanie
+        i wyłączanie tyczy się angielskich słów <em>enable</em> oraz 
+        <em>disable</em>.  Jednostki <em>systemd</em> się aktywuje lub
+        uruchamia [ang. <em>start</em>]). Poniżej znajduje się jednostka
+        demona <em>ssh</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ cat /usr/lib/systemd/system/sshd.service
+[Unit]
+Description=OpenSSH server daemon
+Documentation=man:sshd(8) man:sshd_config(5)
+After=network.target sshd-keygen.target
+Wants=sshd-keygen.target
+
+[Service]
+Type=notify
+EnvironmentFile=-/etc/sysconfig/sshd
+ExecStart=/usr/sbin/sshd -D $OPTIONS
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=42s
+
+[Install]
+WantedBy=multi-user.target
+</pre>
+      <p>
+        Ten plik przestawia jednostkę usługi, omawaiania dyretyw wykracza
+        poza ramy tego materiału. Dlatego nie będzie tutaj to omawiane
+        więcej wiedzy znajduje się na stronie podręcznika
+        <code class="code-inline">man systemd.unit</code>. Poniżej znajduje
+        się lista typów jednostek oraz krótki opis za co odpowiadają w
+        systemie.
+      </p>
+      <ul>
+        <li><strong>.socket</strong> - Jednostki gniazd zazwyczaj są powiązane
+          z jednostkami usług, służą do przestawiania gniazd, które są
+          wykorzystywane w komunikacji miedzyprocesowej lub sieciowej.</li>
+        <li><strong>.device</strong> - Jednostka urządzenia, wystąpnie
+          urządzenia w ujęciu <em>systemd</em>. Takie jednostki są
+          wykorzystywane do aktywacji innych jednostke w momencie pojawienia
+          się urządzenia w systemie.</li>
+        <li><strong>.mount</strong> - Jednostka montowania, określa gdzie i jak
+          zamontować lub odmontować określony system plików.</li>
+        <li><strong>.automount</strong> - Jednostka automontowania wspomaga
+          montowanie systemów plików na żądanie.</li>
+        <li><strong>.swap</strong> - Jednostka przestrzeni wymiany, określa
+          przestrzeń wymiany w odniesieniu do <em>systemd</em>.</li>
+        <li><strong>.target</strong> - Cel. Jednostka logiczna, zestaw plików
+          jednostek.</li>
+        <li><strong>.path</strong> - Jednostka ścieżki. Wykorzystywana do
+          aktywacji inne jednostki w momencie próby uzyskania dostępu do
+          określonego pliku lub katalogu.</li>
+        <li><strong>.timer</strong> - Jednostka służy do aktywacji innej
+          jednostki na podstawie czasu w niej zdefiniowanego.</li>
+        <li><strong>.slice</strong> - Jednostka wycinka, służy do przydzielania
+          i zarządania zasobami grupie proceswó.</li>
+        <li><strong>.service</strong> - Jednostka usługi. Wystąpienie
+          demona w <em>systemd</em>.</li>
+      </ul>
+      <h3 id="12.1.2.target">Jednostki celu</h3>
+      <p>
+        <strong>Cel</strong> w ujęciu system jest logiczna grupa jednostek
+        różnego rozdzaju, które mogą na przykład składać się na jeden z
+        komponentów systemu operacyjnego, na przykład środowisko graficzne.
+        Często cele mogą odpowiadać klasycznym pozimom uruchomienia systemu.
+        W systemie jest zdefiniowanych kilka celów, o to one: 
+      </p>
+      <ul>
+        <li><strong>halt</strong> - Zamyka i zatrzymuje system. Wyłączenie
+          komputera wymaga naciśnięcia przycisku zasilania.</li>
+        <li><strong>poweroff</strong> - Zamyka i wyłącza system.</li>
+        <li><strong>shutdown</strong> - Zamyka system.</li>
+        <li><strong>rescue</strong> - Tryb jednego użytkownika dla funkcji
+          administracyjnych oraz przywracania systemu. Lokalne systemy plików
+          zostają zamontowane, nie które podstawowe usługi są uruchamiane ale
+          sieć pozostaje odłączona od systemu.</li>
+        <li><strong>emergency</strong> - Uruchomiana zostaje powłoka ratunkowa,
+          a główny system plików zostaje zamontowany w trybie tylko do odczytu.
+          Sieć oraz pozostałe usługi są wyłączone.</li>
+        <li><strong>multi-user</strong> - Normalne działanie systemu, ale bez
+          trybu graficznego.</li>
+        <li><strong>graphical</strong> - Normalne działanie systemu z trybem
+          graficznym.</li>
+        <li><strong>reboot</strong> - Zamyka system, a następnie uruchamia
+          komputer ponownie.</li>
+        <li><strong>default</strong> - Dowiązanie symboliczne najczęściej do
+          celu <em>graphical</em> lub <em>multi-user</em>.</li>
+        <li><strong>hibernate</strong> - Przenosi system w stan hibernacji.</li>
+      </ul>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

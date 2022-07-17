@@ -350,6 +350,42 @@
             <li><a href="#ch11summary">Podsumowanie</a></li>
           </ul>
         </li>
+        <li><a href="#12.sysinitlogsandtuned">12. Inicjalizacja systemu, pliki dziennika oraz dostarajanie systemu</a>
+          <ul class="toc">
+            <li><a href="#12.1.systeminit">12. Inicjalizacja systemu - systemd</a>
+              <ul class="toc">
+                <li><a href="#12.1.1.units">12.1.1. Jednostki</a></li>
+                <li><a href="#12.1.2.target">12.1.2. Jednostki celu</a></li>
+                <li><a href="#12.1.3.systemctl">12.1.3. Polecenie systemctl</a></li>
+                <li><a href="#12.1.4.managingunits">12.1.4. Zarządzanie jednostkami</a></li>
+                <li><a href="#12.1.5.managingtargets">12.1.5. Zarządzanie jednostkami celów</a></li>
+              </ul>
+            </li>
+            <li><a href="#12.2.logging">12.2. Prowadzenie plików dzienników systemowych</a>
+              <ul class="toc">
+                <li><a href="#12.2.1.rsyslog">12.2.1. Rejestrator systemowy - rsyslog</a></li>
+                <li><a href="#12.2.2.logrotating">12.2.2. Obrót plików dziennika</a></li>
+                <li><a href="#12.2.3.bootlog">12.2.3. Plik dziennika rozruchu</a></li>
+                <li><a href="#12.2.4.logger">12.2.4. Własne komunikaty diagnostyczne</a></li>
+              </ul>
+            </li>
+            <li><a href="#12.3.systemdjournal">12.3. Dzienniki systemd</a>
+              <ul class="toc">
+                <li><a href="#12.3.1.displaingjournald">12.3.1. Wyświetlanie dziennika systemd</a></li>
+                <li><a href="#12.3.2.storageforjournald">12.3.2. Konfiguracja miejsca do przechwywania dzienników systemd</a></li>
+              </ul>
+            </li>
+            <li><a href="#12.4.tuned">12.4. Dostosowywanie systemu</a>
+              <ul class="toc">
+                <li><a href="#12.4.1.tuned-adm">12.4.1. Polecenie tuned-adm</a></li>
+              </ul>
+            </li>
+            <li><a href="#exec12.1">Ćwiczenie 1: Zmiana domyślnego celu ładowania systemu</a></li>
+            <li><a href="#exec12.2">Ćwiczenie 2: Zapis własnego komunikatu diagnostycznego</a></li>
+            <li><a href="#exec12.3">Ćwiczenie 3: Zastosowanie profili wydajności</a></li>
+            <li><a href="#ch12summary">Podsumowanie</a></li>
+          </ul>
+        </li>
       </ul>
       <h1 id="1.introduction">1. Wstęp</h1>
       <p>
@@ -8889,7 +8925,7 @@ W porządku? [t/N]:
         energooszczędny, to bedziemy mogli zrealizować za pomocą jednego z
         demonów, którego będzie trzeb zainstalować.
       </p>
-      <h2 id="12.1.systeminit">12. Inicjalizacja systemu - <em>systemd</em></h2>
+      <h2 id="12.1.systeminit">12. Inicjalizacja systemu - systemd</h2>
       <p>
         W większości wiodących dystrybucji, wybiera <em>systemd</em> jak
         program typu <em>init</em> dla swoich systemów. Mimo sprzeciwu części
@@ -8984,12 +9020,12 @@ WantedBy=multi-user.target
         <li><strong>.service</strong> - Jednostka usługi. Wystąpienie
           demona w <em>systemd</em>.</li>
       </ul>
-      <h3 id="12.1.2.target">Jednostki celu</h3>
+      <h3 id="12.1.2.target">12.1.2. Jednostki celu</h3>
       <p>
         <strong>Cel</strong> w ujęciu system jest logiczna grupa jednostek
         różnego rozdzaju, które mogą na przykład składać się na jeden z
         komponentów systemu operacyjnego, na przykład środowisko graficzne.
-        Często cele mogą odpowiadać klasycznym pozimom uruchomienia systemu.
+        Często cele mogą odpowiadać klasycznym poziomom uruchomienia systemu.
         W systemie jest zdefiniowanych kilka celów, o to one: 
       </p>
       <ul>
@@ -9014,6 +9050,790 @@ WantedBy=multi-user.target
           celu <em>graphical</em> lub <em>multi-user</em>.</li>
         <li><strong>hibernate</strong> - Przenosi system w stan hibernacji.</li>
       </ul>
+      <p>
+        Cele wykorzystywane są do uruchamiania wielu jednostek zapisanych w ich
+        zależnościach.
+      </p>
+      <h3 id="12.1.3.systemctl">12.1.3. Polecenie systemctl</h3>
+      <p>
+        Polecenie służącym do zarządzania <em>systemd</em> jest
+        <strong>systemctl</strong>, za jego pomocą możemy wykonywać
+        proste czyności administracyjne związane z jednostkami oraz celami.
+        Polecenie to zawiera duża ilość różnego rodzaju podpoleceń oraz
+        modyfikatorów, są one opisane na stronie podręcznika tego polecenia.
+        My za poznamy się z nim w praktyce.
+      </p>
+      <p>
+        Wydając polecenie <em>systemctl</em> bez żadnej opcji polecenie
+        wyświetli table przedstawiącą wszystkie aktywne jednostki wraz z ich
+        stanem oraz krótkim opisem. Poniżej znajduje się jej fragment
+      </p>
+<pre class="code-block">
+UNIT                                LOAD   ACTIVE SUB       DESCRIPTION
+...
+rhsmcertd.service                   loaded active running   Enable periodic update of ...
+rsyslog.service                     loaded active running   System Logging Service
+rtkit-daemon.service                loaded active running   RealtimeKit Scheduling Policy ...
+spice-vdagentd.service              loaded active running   Agent daemon for Spice guests
+sshd.service                        loaded active running   OpenSSH server daemon
+switcheroo-control.service          loaded active running   Switcheroo Control Proxy service
+systemd-journal-flush.service       loaded active exited    Flush Journal to Persistent ...
+...
+</pre>
+      <p>
+        Tego nie widać na przykładzie ale jeśli wywołamy w terminala polecenie,
+        możemy zobaczyć, że poszczególe typy jedenostek są oddzielone od siebie
+        za pomocą poziomej linii. W drugiej kolumnie znajduje się stan
+        jednostki. Ta kolumna podzielona jest na trzy mniejsze kolumny.
+        Pierwsza określa czy jednostka jest załadowana, druga określa tzw.
+        stan wyższego poziomu aktywacji. Jest to ogólny stan aktywacji i może
+        przybierać on różne wartości takim najważniejszymi są <em>active</em>,
+        <em>failed</em>, <em>inactive</em>. Trzecia zaś określa niższy poziom
+        aktywacji, może on zawierać informacje specyficzne dla typu jednostki
+        lub demona. 
+      </p>
+      <p>
+        Powyższy przykład zawiera tylko załadowane jednostki, ale jeśli
+        chcielibyśmy zobaczyć wszystkie jednostki dostępne w systemie musimy
+        dodać do polecenia modyfikator <em>--all</em>. Innym przydatnym
+        modyfikatorem jest <em>-t</em> pozwalająca podać typ jednostki.
+      </p>
+<pre class="code-block">
+  UNIT                          LOAD      ACTIVE   SUB     DESCRIPTION                                                                  
+  accounts-daemon.service       loaded    active   running Accounts Service
+  alsa-restore.service          loaded    inactive dead    Save/Restore Sound Card State
+  alsa-state.service            loaded    active   running Manage Sound Card State (restore and store)
+  atd.service                   loaded    active   running Deferred execution scheduler
+  auditd.service                loaded    active   running Security Auditing Service
+● auto-cpufreq.service          not-found inactive dead    auto-cpufreq.service
+● autofs.service                not-found inactive dead    autofs.service
+  avahi-daemon.service          loaded    active   running Avahi mDNS/DNS-SD Stack
+  blk-availability.service      loaded    inactive dead    Availability of block devices
+  chronyd.service               loaded    active   running NTP client/server
+  colord.service                loaded    active   running Manage, Install and Generate Color Profiles
+  cpupower.service              loaded    inactive dead    Configure CPU power related settings
+  crond.service                 loaded    active   running Command Scheduler
+  cups.service                  loaded    active   running CUPS Scheduler
+  dbus-broker.service           loaded    active   running D-Bus System Message Bus
+  dm-event.service              loaded    inactive dead    Device-mapper event daemon
+</pre>
+      <p>
+        Kolejnym dość istonym modyfikatorem, który pozwoli man namierzyć
+        jednostki, których aktywacja zakończyła się niepowodzeniem. Jest nim
+        <em>--failed</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ systemctl --failed
+  UNIT          LOAD   ACTIVE SUB    DESCRIPTION                 
+● kdump.service loaded failed failed Crash recovery kernel arming
+
+LOAD   = Reflects whether the unit definition was properly loaded.
+ACTIVE = The high-level unit activation state, i.e. generalization of SUB.
+SUB    = The low-level unit activation state, values depend on unit type.
+1 loaded units listed.
+</pre>
+      <p>
+        Pod tabelą znajduje się również krótki opis kolumn ze stanem.
+      </p>
+      <p>
+        Za pomocą podpolecenia <em>list-dependencies</em> możemy wyświetlić 
+        zależności jednostki.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ systemctl list-dependencies tuned.service
+tuned.service
+● ├─dbus-broker.service
+● ├─dbus.socket
+● ├─polkit.service
+● ├─system.slice
+● └─sysinit.target
+●   ├─dev-hugepages.mount
+●   ├─dev-mqueue.mount
+●   ├─dracut-shutdown.service
+○   ├─iscsi-onboot.service
+●   ├─kmod-static-nodes.service
+○   ├─ldconfig.service
+●   ├─lvm2-lvmpolld.socket
+●   ├─lvm2-monitor.service
+○   ├─multipathd.service
+...
+</pre>
+      <p>
+        Koła oznaczają aktywną jednostkę, a okręgi nieaktywną jednostkę.
+      </p>
+      <h3 id="12.1.4.managingunits">12.1.4. Zarządzanie jednostkami</h3>
+      <p>
+        Poza podpolecaniami służacymi wyświetlaniu informacji o jednostkach
+        <em>systemctl</em> posiada dużą ilość podpoleceń związanych z
+        zarządzaniem jednostkami. Jednostki możemy aktywować, dezaktywować,
+        włączać, wyłączać, wyświetlić podsumowanie na ich temat czy zablokwać
+        zmianę stanu. Pierwszą rzeczą jak zrobimy z będzie wyświetlenie
+        informacji o jednostce, a służy do tego podpolecenie
+        <strong>status</strong>
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo systemctl status atd.service
+[sudo] password for user: 
+● atd.service - Deferred execution scheduler
+     Loaded: loaded (/usr/lib/systemd/system/atd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2022-07-17 07:40:58 CEST; 1h 34min ago
+       Docs: man:atd(8)
+   Main PID: 934 (atd)
+      Tasks: 1 (limit: 5760)
+     Memory: 300.0K
+        CPU: 5ms
+     CGroup: /system.slice/atd.service
+             └─934 /usr/sbin/atd -f
+
+Jul 17 07:40:58 server1.example.com systemd[1]: Started Deferred execution scheduler.
+</pre>
+      <p>
+        Na podstawie tych informacji możemy wywnioskować, że jednostka jest
+        załadowana, jest aktywna a jej demon nadal działa. Znamy także stronę
+        podręcznika opisującą tego demona oraz jego <em>PID</em>. Ważną rzeczą
+        podczas wyświetlania status jednostki jest wykonanie tego z
+        uprawnieniami administratora, wówczas na samym dole zostaną nam
+        wyświetlone komunikaty diagnostyczne, pobrane z plików dziennika
+        <em>systemd</em>, te komunikaty pomagają zlokalizować usterki, które
+        mogą być odpowiedzialne za problem z aktywacją jednostkki.
+      </p>
+      <p>
+        Jednostkę możemy zatrzymać oraz uruchomić za pomocą podpoleceń
+        <strong>stop</strong> oraz <strong>start</strong>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo systemctl stop atd.service
+[sudo] password for user: 
+[user@server1 ~]$ sudo systemctl status atd.service
+○ atd.service - Deferred execution scheduler
+     Loaded: loaded (/usr/lib/systemd/system/atd.service; enabled; vendor preset: enabled)
+     Active: inactive (dead) since Sun 2022-07-17 09:23:11 CEST; 2s ago
+       Docs: man:atd(8)
+    Process: 934 ExecStart=/usr/sbin/atd -f $OPTS (code=exited, status=0/SUCCESS)
+   Main PID: 934 (code=exited, status=0/SUCCESS)
+        CPU: 5ms
+
+Jul 17 07:40:58 server1.example.com systemd[1]: Started Deferred execution scheduler.
+Jul 17 09:23:11 server1.example.com systemd[1]: Stopping Deferred execution scheduler...
+Jul 17 09:23:11 server1.example.com systemd[1]: atd.service: Deactivated successfully.
+Jul 17 09:23:11 server1.example.com systemd[1]: Stopped Deferred execution scheduler.
+
+[user@server1 ~]$ sudo systemctl start atd.service
+[user@server1 ~]$ sudo systemctl status atd.service
+● atd.service - Deferred execution scheduler
+     Loaded: loaded (/usr/lib/systemd/system/atd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2022-07-17 09:23:44 CEST; 2s ago
+       Docs: man:atd(8)
+   Main PID: 1576 (atd)
+      Tasks: 1 (limit: 5760)
+     Memory: 260.0K
+        CPU: 4ms
+     CGroup: /system.slice/atd.service
+             └─1576 /usr/sbin/atd -f
+
+Jul 17 09:23:44 server1.example.com systemd[1]: Started Deferred execution scheduler.
+</pre>
+      <p>
+        Do ponownego uruchomienia jednostki służy inne podpolecenie niż 
+        <em>stop</em>, <em>start</em>, a jest nim <strong>restart</strong>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo systemctl restart atd.service
+[sudo] password for user: 
+[user@server1 ~]$ sudo systemctl status atd.service
+● atd.service - Deferred execution scheduler
+     Loaded: loaded (/usr/lib/systemd/system/atd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2022-07-17 09:41:38 CEST; 3s ago
+       Docs: man:atd(8)
+   Main PID: 1595 (atd)
+      Tasks: 1 (limit: 5760)
+     Memory: 264.0K
+        CPU: 3ms
+     CGroup: /system.slice/atd.service
+             └─1595 /usr/sbin/atd -f
+
+Jul 17 09:41:38 server1.example.com systemd[1]: Started Deferred execution scheduler.
+</pre>
+      <p>
+        Do włączanie i wyłączania jednostek służą podpolecenia takie jak
+        <strong>enable</strong> oraz <strong>disable</strong>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo systemctl disable atd.service
+[sudo] password for user: 
+Removed /etc/systemd/system/multi-user.target.wants/atd.service.
+[user@server1 ~]$ sudo systemctl status atd.service
+● atd.service - Deferred execution scheduler
+     Loaded: loaded (/usr/lib/systemd/system/atd.service; disabled; vendor preset: enabled)
+     Active: active (running) since Sun 2022-07-17 09:41:38 CEST; 6min ago
+       Docs: man:atd(8)
+   Main PID: 1595 (atd)
+      Tasks: 1 (limit: 5760)
+     Memory: 264.0K
+        CPU: 3ms
+     CGroup: /system.slice/atd.service
+             └─1595 /usr/sbin/atd -f
+
+Jul 17 09:41:38 server1.example.com systemd[1]: Started Deferred execution scheduler.
+</pre>
+      <p>
+        W linii <code class="code-inline">Loaded:</code> za ścieżką do pliku
+        jednostki, status zmienił się z <em>enabled</em> na
+        <code class="code-inline">disabled</code>. Jeśli użyjemy podpolecenia
+        <em>enable</em>, status wróci do poprzedniej wartości.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo systemctl enable atd.service
+Created symlink /etc/systemd/system/multi-user.target.wants/atd.service → /usr/lib/systemd/system/atd.service.
+[user@server1 ~]$ sudo systemctl status atd.service
+● atd.service - Deferred execution scheduler
+     Loaded: loaded (/usr/lib/systemd/system/atd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2022-07-17 09:41:38 CEST; 9min ago
+       Docs: man:atd(8)
+   Main PID: 1595 (atd)
+      Tasks: 1 (limit: 5760)
+     Memory: 264.0K
+        CPU: 3ms
+     CGroup: /system.slice/atd.service
+             └─1595 /usr/sbin/atd -f
+
+Jul 17 09:41:38 server1.example.com systemd[1]: Started Deferred execution scheduler.
+</pre>
+      <p>
+        Włączenie jednostki powoduje utworzenie dowiązania symboliczne w
+        katalogu zależności celu, natomiast wyłączenie usuwa to dowiązanie.
+      </p>
+      <p>
+        Za pomocą podpoleceń <strong>>mask</strong> oraz 
+        <strong>unmask</strong> możemy zablokować włączenie oraz aktywację 
+        jednostki. Użycie podpolecenia <em>mask</em> tworzy dowiązanie do pliku
+        <em>/dev/null</em> i zaznacza w <em>systemd</em>, że jednostka jest
+        zablokowana. Podpolecenie <em>umask</em> odwraca działania podpolecenia
+        <em>mask</em>. Usuwa stworzone dowiązanie oraz zmienia status jednostki
+        w <em>systemd</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo systemctl mask atd.service
+[sudo] password for user: 
+Created symlink /etc/systemd/system/atd.service → /dev/null.
+[user@server1 ~]$ sudo systemctl status atd.service 
+● atd.service
+     Loaded: masked (Reason: Unit atd.service is masked.)
+     Active: active (running) since Sun 2022-07-17 09:41:38 CEST; 28min ago
+   Main PID: 1595 (atd)
+        CPU: 3ms
+     CGroup: /system.slice/atd.service
+             └─1595 /usr/sbin/atd -f
+
+Jul 17 09:41:38 server1.example.com systemd[1]: Started Deferred execution scheduler.
+Jul 17 10:09:58 server1.example.com systemd[1]: atd.service: Current command vanished from the unit file, execution of the command list ...
+
+[user@server1 ~]$ sudo systemctl unmask atd.service
+Removed /etc/systemd/system/atd.service.
+[user@server1 ~]$ sudo systemctl status atd.service 
+● atd.service - Deferred execution scheduler
+     Loaded: loaded (/usr/lib/systemd/system/atd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2022-07-17 09:41:38 CEST; 30min ago
+       Docs: man:atd(8)
+   Main PID: 1595 (atd)
+      Tasks: 1 (limit: 5760)
+     Memory: 264.0K
+        CPU: 3ms
+     CGroup: /system.slice/atd.service
+             └─1595 /usr/sbin/atd -f
+
+Jul 17 09:41:38 server1.example.com systemd[1]: Started Deferred execution scheduler.
+Jul 17 10:09:58 server1.example.com systemd[1]: atd.service: Current command vanished from the unit file, execution of the command list ...
+</pre>
+      <h3 id="12.1.5.managingtargets">12.1.5. Zarządzanie jednostkami celów</h3>
+      <p>
+        Zarządzaniem jednostkami celów, różni się od zarządzania jednostkami
+        usług czy innych typów. Jednostki celów przestawiają różne stany
+        uruchomienia systemu operacyjnego, więc aby miało to jakiś sens
+        zarządzanie nim sprowadza się głównie do dwóch czynności, jedną z nich
+        jest określenie oraz ustawienie domyślnego stanu, w którym to system
+        operacyjny jest zdatny do użycia. W tym przypadku określa to jednostka
+        celu - <strong>default</strong>. Za pomocą pod poleceń możemy sprawdzić
+        jaka z dostarczonych z system jednostek jest wskazywana przez to
+        dowiązanie. Możemy to określić za pomocą podpolecenie
+        <strong>get-default</strong>.
+      </p> 
+<pre class="code-block">
+[user@server1 ~]$ sudo systemctl get-default
+[sudo] password for user: 
+graphical.target
+</pre>
+      <p>
+        Tę wartość możemy zmienić, wypływając również na sposób ładowania
+        systemu. Jeśli zmienię domyślny cel z
+        <code class="code-inline">graphical.target</code> na 
+        <em>multi-user.target</em>, wówczas system zatrzyma ładowanie systemu
+        przez uruchomieniem środowiska graficznego. Zmianie domyślnego celu
+        służy podpolecenie <strong>set-default</strong>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo systemctl set-default multi-user.target
+[sudo] password for user: 
+Removed /etc/systemd/system/default.target.
+Created symlink /etc/systemd/system/default.target → /usr/lib/systemd/system/multi-user.target.
+[user@server1 ~]$ sudo systemctl get-default
+multi-user.target
+</pre>
+      <p>
+        Jeśli zrestartujemy teraz maszynę, uruchomi się ona bez środowiska
+        graficznego. 
+      </p>
+      <p class="exam_tip">
+        Może być tak, że na egzaminie będzie trzeba zmienić domyślny cel
+        ładowanie systemu.
+      </p>
+      <p>
+        Pomiędzy celami możemy się przełączać w trakcie działania systemu.
+        Służy do tego podpolecenie <strong>isolate</strong>. 
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo systemctl isolate multi-user.target
+</pre>
+      <p>
+        Po wydaniu tego polecenia, jeśli otworzymy okno maszyny zobaczymy, że
+        środowisko graficzne zostało wyłączone. Aby włączyć je z powrotem
+        użyjemy tego samego polecenia, jednak wskazując inny cel.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo systemctl isolate graphical.target
+[sudo] password for user: 
+</pre>
+      <p>
+        Tym że akcentem zakończyliśmy omawianie <em>systemd</em>. Oczywiście
+        to zagadnienia jest tak obszerne, że można by napisać około 200, 300
+        stronicową książke na ten temat bazując na samej dokumentacji programu.
+      </p>
+      <h2 id="12.2.logging">12.2. Prowadzenie plików dzienników systemowych</h2>
+      <p>
+        Zbieranie informacji o tym co się dzieje w systemie do bardzo ważna
+        czynność wykonywana przez systemy operacyjne. Nie które kz kompnentów
+        instalowanych w nich zwracają bardzo ubogie w informacje komunikaty
+        o błędach lub ostrzeżenia z których nic niewynika. Najczęściej ma to
+        na celu poprawienie wyglądu oraz doświadczeń użytkownika 
+        (<em>UI/UX Design</em>), przez co wielu użytkowników zostaje na lodzie
+        chcąc samodzielnie rozwiązać problemy. Ta cecha nie tyczy się tylko
+        systemów MS Windows. Wiodące środowiska graficzne w dystrybucjach
+        również mają z tym problem. Ale w Uniksach mamy dobrze zorganizowane
+        pliki dzienników, dzieki którym w możemy znaleźć przyczynę, nie których
+        problemów. 
+      </p>
+      <h3 id="12.2.1.rsyslog">12.2.1. Rejestrator systemowy - rsyslog</h3>
+      <p>
+        <strong>Rsyslog</strong> jest odpowiedzialny za zbieranie komunikatów
+        diagnostycznych i umieszczenie ich przeznaczonych dla nich miejscach.
+        Nie które komunikaty mogą trafiać do plików inne mogą być wyświetlane
+        w terminalach pracujących na serwerze użytkowników. Te reguły są
+        zapisane w pliku konfiguracyjnym demona <em>/etc/rsyslog.conf</em>.
+        Program wspiera dostoswane pliki konfiguracyjne użytkowników
+        przechowywane w <em>/etc/rsyslog.d</em>. Plik konfiguracyjny
+        <em>rsyslog</em> wygląda następująco:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ grep -v -e '^#' -e '^$' /etc/rsyslog.conf 
+global(workDirectory="/var/lib/rsyslog")
+module(load="builtin:omfile" Template="RSYSLOG_TraditionalFileFormat")
+include(file="/etc/rsyslog.d/*.conf" mode="optional")
+module(load="imuxsock" 	  # provides support for local system logging (e.g. via logger command)
+       SysSock.Use="off") # Turn off message reception via local log socket; 
+			  # local messages are retrieved through imjournal now.
+module(load="imjournal" 	    # provides access to the systemd journal
+       StateFile="imjournal.state") # File to store the position in the journal
+*.info;mail.none;authpriv.none;cron.none                /var/log/messages
+authpriv.*                                              /var/log/secure
+mail.*                                                  -/var/log/maillog
+cron.*                                                  /var/log/cron
+*.emerg                                                 :omusrmsg:*
+uucp,news.crit                                          /var/log/spooler
+local7.*                                                /var/log/boot.log
+</pre>
+      <p>
+        Ostatnie linie zawierające na końcu zawierają <strong>zasady</strong>, 
+        które określaja jakie komunikaty należy zbierać i co z nimi 
+        zrobić. Zasady dzielą się na dwie części na <strong>selektor</strong>,
+        określający komunikaty diagostyczne oraz <strong>akcje</strong>
+        definiującą dla nich miejsce docelowe. Poza tym selektor również możemy
+        rozłożyć na <strong>funckję</strong> - wskazującą na demona, od którego
+        należy przechwycić komunikaty oraz <strong>priorytet</strong>
+        określający ważność komunikatów. Funkcję od priorytetu oddziela się
+        kropką. Spis funkcji oraz priorytetów znajduje się na stronie
+        podręcznika pliku <em>/etc/rsyslog.conf</em>. Gwiazdka to symbol
+        wieloznaczny wskazujący zarówno wszystkie priorytet jak i wszystkie
+        funkcje w zależności gdzie został użyty. Priorytet
+        <code class="code-inline">none</code> wskazuje aby nie przechwytywać
+        komunikatów z tej funkcji. Jak możemy zobaczyć w pierwszej zasadzie
+        na jedną akcje może przypadać wiele selektorów. Selektory oddziela się
+        średnikiem (<strong>;</strong>). W polu akcji zazwyczaj znajdują się
+        ścieżki do plików wskazujące gdzie należy zapisać komunikaty
+        diagnostyczne, jedyny wyjątkiem są komunikaty o najwyższym priorytecie
+        za pomocą wewnętrzengo modułu są one wyświetlane w terminalach jako
+        wiadomości do użytkowników.
+      </p>
+      <p>
+        Jak możemy zauważyć większość plików dzienników znajduje się w katalogu
+        <em>/var/log</em>. A prawie wszystkie komunikaty diagostyczne trafiają
+        do jednego pliki <em>/var/log/messages</em>. Ten pliki jest głównym
+        plikiem dziennika w systemie. Każda linia reprezentuje jeden z
+        komunikatów. Taki plik najlepiej wyświetlać za pomocą polecenia less
+        lub more.
+      </p>
+      <p class="exam_tip">
+        Używanie polecenie <em>tail</em> wraz z opcją <em>-f</em> może okazać
+        się przydatne podczas śledzenia komunikatów diagnostycznych w trakcie
+        uruchamiania usług lub testowania, aby wychwycić wszysktie problemy.
+      </p>
+      <p>
+        Jeśli będziemy chcieli coś zmienić w konfiguracji, warto przed
+        uruchomieniem ponowym usługi sprawdzić poprawność konfiguracji za
+        pomocą polecenia <code class="code-inline">rsyslog -N 1</code>. Gdzie
+        <code class="code-inline">1</code> oznacza ilość wyświetlanych 
+        komunikatów dianostycznych.
+      </p>
+      <h3 id="12.2.2.logrotating">12.2.2. Obrót plików dziennika</h3>
+      <p>
+        Pliki dziennika to zwykłe pliki tekstowe, które potrafią bardzo szybko
+        przyrastać w zależności od tego co się dzieje w systemie. Taki nie
+        kontrolowany przyrost plików może szybko wypełnić dostępne miejsce
+        dysku. Więc zastosowano mechanizm rotacji plików dziennika. Stare pliki
+        są usuwane robiąc miejsce nowym. Tym zadaniem zajmuje się wywoływany
+        w codziennym katalogu <em>cron</em> skrypt
+        <strong>logrotate</strong>. Skrypt ten posiada swój plik konfiguracyjny
+        <em>/etc/logrotate.conf</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ grep -v -e '^$' /etc/logrotate.conf 
+# see "man logrotate" for details
+# global options do not affect preceding include directives
+# rotate log files weekly
+weekly
+# keep 4 weeks worth of backlogs
+rotate 4
+# create new (empty) log files after rotating old ones
+create
+# use date as a suffix of the rotated file
+dateext
+# uncomment this if you want your log files compressed
+#compress
+# packages drop log rotation information into this directory
+include /etc/logrotate.d
+# system-specific logs may be also be configured here.
+</pre>
+      <p>
+        Na podstawie tego pliku możemy dowiedzieć się, że rotacja jest
+        dokonywana co tydzień, pozostawione mają zostać pliki dziennika na
+        cztery tygodnie wstecz oraz po usunięciu starych, następnie zmianie 
+        nazw obecnym skrypt utworzy nowe puste pliki dla nowych komunikatów
+        zapisywanych w plikach dzienika. Definicje zachowania dla
+        rotacji plików dziennika dostarczane wraz z programami znajdują się w 
+        katalogu <em>/etc/logrotate.d</em>. Oto zawartość tego katalogu.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l /etc/logrotate.d/
+total 56
+-rw-r--r--. 1 root root  91 Mar 31  2021 bootlog
+-rw-r--r--. 1 root root 130 Oct 14  2019 btmp
+-rw-r--r--. 1 root root 160 May 12  2021 chrony
+-rw-r--r--. 1 root root  88 Oct 21  2021 dnf
+-rw-r--r--. 1 root root  93 Nov 23  2021 firewalld
+-rw-r--r--. 1 root root 172 Jul 29  2021 iscsiuiolog
+-rw-r--r--. 1 root root 162 Apr 14 19:04 kvm_stat
+-rw-r--r--. 1 root root 312 Nov  1  2021 psacct
+-rw-r--r--. 1 root root 226 Jan 19 16:31 rsyslog
+-rw-r--r--. 1 root root 155 Mar 18 10:32 samba
+-rw-r--r--. 1 root root 237 Jan 17 20:46 sssd
+-rw-r--r--. 1 root root  88 Apr 13 17:00 subscription-manager
+-rw-r--r--. 1 root root 100 Feb  4 15:58 wpa_supplicant
+-rw-r--r--. 1 root root 145 Oct 14  2019 wtmp
+</pre>
+      <p>
+        Zawartość tego pliku może zdradza, w jaki sposób <em>logrotate</em>
+        zachowa się wobec takiego pliku, nadpisując tym samym konfigurację
+        z pliku z wcześniejszego przykładu.
+      </p>
+      <h3 id="12.2.3.bootlog">12.2.3. Plik dziennika rozruchu</h3>
+      <p>
+        W katalogu <em>/var/log</em> znajduje się pliki <em>boot.log</em>
+        przedstawiający uruchamianie ostatniej fazy rozruchu. W tym pliku
+        możemy podejrzeć czy wszystkie usługi wystartowały czy też nie. Uwaga,
+        plik nie nadaje się do przeglądania za pomocą polecenie <em>less</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo head /var/log/boot.log
+[  OK  ] Started User Login Management.
+[  OK  ] Started Daemon for power management.
+[  OK  ] Started Authorization Manager.
+         Starting Modem Manager...
+         Starting firewalld - dynamic firewall daemon...
+[  OK  ] Finished Rotate log files.
+[  OK  ] Started Accounts Service.
+[  OK  ] Started Power Profiles daemon.
+[  OK  ] Started Modem Manager.
+[  OK  ] Started Disk Manager.
+...
+[FAILED] Failed to start Crash recovery kernel arming.
+See 'systemctl status kdump.service' for details.
+</pre>
+      <p>
+        W nawiasach kwadratowych wyświetla on <code class="code-inline">OK</code>
+        lub <code class="code-inline">FAILED</code>.
+      </p>
+      <h3 id="12.2.4.logger">12.2.4. Własne komunikaty diagnostyczne</h3>
+      <p>
+        Czasami możemy chcieć uzupełnić systemowy plik dziennika
+        <em>/var/log/messages</em> o kilka komunikatów, które będą wyznaczać
+        początek i koniec testowanego oprogramowania lub dodwać kilka notatek
+        wyjaśniających takie a nie inny komunikaty. Dzięki <em>rsyslog</em> za
+        pomocą jednego z jego wewnętrznych modułów możemy dokonać wpisów do
+        tego pliku dziennika. Realizować to będziemy za pomocą polecenia
+        <em>logger</em>. Na przykład:
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ logger "Hello, World! It's $LOGNAME"
+[user@server1 ~]$ sudo tail -1 /var/log/messages
+[sudo] password for user: 
+Jul 17 13:03:42 server1 user[2706]: Hello, World! It's user
+</pre>
+      <p>
+        Te komunikaty są rozpoznawane przez <em>rsyslog</em> jako 
+        <em>user.notice</em>, jednak za pomocą opcjij -p możemy podać swój
+        selektor. Polecenie <em>logger</em> możemy być przydatne do testowania
+        zmian w konfiguracji <em>rsyslog</em>. 
+      </p>
+      <h2 id="12.3.systemdjournal">12.3. Dzienniki systemd</h2>
+      <p>
+        <em>Systemd</em> poza funkcjami omówiony na początku tego rozdziału
+        dostarcza wielu narzędzi, które czasami bywają irytujące, ale nie które
+        znich jak np. demon <strong>systemd-journald</strong> jest całkiem 
+        przydatny
+        ponieważ to za jego zasługą dowiadujemy się dlaczego nasza usługa
+        nie chce się uruchomić. Ten demon przechwytuje komunikaty z bardzo
+        wielu źródeł od jądro przez <em>ramdysk</em> do różnorakich usług.
+        Swoje komunikaty przechowuje w pliku <em>/run/log/journal</em>, zatem
+        w pliku, który nie jest trwały i zostanie zniszczony w momencie 
+        zamknięcia systemu. Konfiguracja tego demona przechowywana jest w pliku
+        <em>/etc/systemd/journald.conf</em>, w którym w razie potrzeby możemy
+        zmienić.
+      </p>
+      <h3 id="12.3.1.displaingjournald">12.3.1. Wyświetlanie dziennika systemd</h3>
+      <p>
+        Do wyświetlenia informacji zebranych przez demona 
+        <em>systemd-journald</em> ma do dyspozycji takie polecenie jak 
+        <strong>journalctl</strong>. Jesli wydamy to polecenie bez żadnych 
+        opcji to polecenie zróci ono treść podobną do zawartości
+        <em>/var/log/messages</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo journalctl 
+[sudo] password for user: 
+Jul 16 12:48:20 server1.example.com kernel: Linux version 5.14.0-70.13.1.el9_0.x86_64 (mockbuild@x86-vm-08.build.eng.bos.redhat.com) (gcc (GCC) 11.2.>
+Jul 16 12:48:20 server1.example.com kernel: Linux version 5.14.0-70.13.1.el9_0.x86_64 (mockbuild@x86-vm-08.build.eng.bos.redhat.com) (gcc (GCC) 11.2.>
+Jul 16 12:48:20 server1.example.com kernel: The list of certified hardware and cloud instances for Red Hat Enterprise Linux 9 can be viewed at the Re>
+Jul 16 12:48:20 server1.example.com kernel: Linux version 5.14.0-70.13.1.el9_0.x86_64 (mockbuild@x86-vm-08.build.eng.bos.redhat.com) (gcc (GCC) 11.2.>
+Jul 16 12:48:20 server1.example.com kernel: Linux version 5.14.0-70.13.1.el9_0.x86_64 (mockbuild@x86-vm-08.build.eng.bos.redhat.com) (gcc (GCC) 11.2.>
+Jul 16 12:48:20 server1.example.com kernel: The list of certified hardware and cloud instances for Red Hat Enterprise Linux 9 can be viewed at the Re>
+Jul 16 12:48:20 server1.example.com kernel: Command line: BOOT_IMAGE=(hd0,msdos1)/vmlinuz-5.14.0-70.13.1.el9_0.x86_64 root=/dev/mapper/rhel-root ro c>
+Jul 16 12:48:20 server1.example.com kernel: x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+Jul 16 12:48:20 server1.example.com kernel: x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+Jul 16 12:48:20 server1.example.com kernel: x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+...
+</pre>
+      <p> 
+        Przy użyciu opcji <em>-o</em> wraz z wartością <em>verbose</em>,
+        narzędzie zwróci bardzo szczegółowy opis każdego z komunikatów.
+      </p>
+<pre class="code-block">
+Sat 2022-07-16 12:48:20.235840 CEST [s=5135ad3430d34e718c820bc5b157f883;i=1;b=9ca0ad75315f4891b4807b449a2ce046;m=233ae8;t=5e3e9df815e40;x=7786ef23901>
+    _SOURCE_MONOTONIC_TIMESTAMP=0
+    _TRANSPORT=kernel
+    PRIORITY=5
+    SYSLOG_FACILITY=0
+    SYSLOG_IDENTIFIER=kernel
+    MESSAGE=Linux version 5.14.0-70.13.1.el9_0.x86_64 (mockbuild@x86-vm-08.build.eng.bos.redhat.com) (gcc (GCC) 11.2.1 20220127 (Red Hat 11.2.1-9), G>
+    _BOOT_ID=9ca0ad75315f4891b4807b449a2ce046
+    _MACHINE_ID=4015aef220c344e1875a3fbbd1453b45
+    _HOSTNAME=server1.example.com
+</pre>
+      <p>
+        Polecenie ma masę opcji nie ma sensu ich tutaj wszsytkich przytaczać.
+        Znajdziemy je na stronie podręcznika 
+        <code class="code-inline">man journalctl</code>.
+      </p>
+      <h3 id="12.3.2.storageforjournald">12.3.2. Konfiguracja miejsca do przechwywania dzienników systemd</h3>
+      <p>
+        Jak wiem dziennik <em>systemd</em> nie jest przechowywany na stałe w
+        systemie. To możemy zmienić. W bardzo prosty sposób. Otóz, dyrektywa
+        <em>Storage</em> może mieć cztery wartości:
+      </p> 
+      <ul>
+          <li><em>volatile</em> - Przechowuje informacje tylko w pamięci</li>
+          <li><em>persistent</em> - Przechowuje informacje w katalogu
+            <em>/var/log/journal</em>, jeśli katalog nie istnieje zostanie
+            utworzony, chyba że jest tym jakiś problem to demon wraca do
+            przechowywania komunikatów wyłącznie w pamięci.</li>
+          <li><em>auto</em> - Podobnie do <em>presistent</em>, jednak nie
+            tworzy ona katalogu.</li>
+          <li><em>none</em> - wyłącza przechowywanie komunikatów
+            diagnostycznych gdzie kolwiek.</li>
+      </ul>
+      <p>
+        Domyślną opcją jest <em>auto</em>, więc aby włączyć przechowywanie
+        dzienników na stałe, wystarczy utworzyć katalog <em>journal</em> w
+        katalogu <em>/var/log</em>. Tutaj pragnę zaznaczyć, że w <em>RHEL</em>
+        8 wystarczyło zrestartować usługę, ale w przypadku <em>RHEL</em> 9
+        należy zrestatować cały system. Kiedy system będzie gotowy wewnątrz
+        katalogu zostanie utworzony podkatalogu o nazwany wartością 
+        <em>/etc/machine-id</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ ls -l /var/log/journal/
+total 4
+drwxr-sr-x+ 2 root systemd-journal 4096 Jul 16 20:17 4015aef220c344e1875a3fbbd1453b45
+[user@server1 ~]$ cat /etc/machine-id 
+4015aef220c344e1875a3fbbd1453b45
+</pre>
+      <h2 id="12.4.tuned">12.4. Dostosowywanie systemu</h2>
+      <p>
+        W <em>RHEL</em> jak i inych systemach klasy <em>enterprise</em> możemy
+        spotkać się z narzędziem, które na podstawie monitorowania zasóbów
+        komputera może zmienić ich ustawienia aby podnieść ich wydajność lub
+        gdy przestanie być to konieczne ją obniżyć aby zaoszczędzić
+        wykorzystywaną energię elektryczną. Tym zajmuje się demon <em>tuned</em>.
+        Nie występuję on domyślnie w systemie i trzeba go zainstalować.
+      </p>
+      <p>
+        <em>Tuned</em> może dynamicznie na podstawie danych uzyskanych z
+        różnych monitorów zasobów dostosowywać wydajność sprzętu do potrzeb.
+        Może on również zostać przez nas statycznie skonfigurowany za pomocą
+        predefiniowanych profili. Wydajność systemu wówczas nie zmieni się
+        dopóki my nie załadujemy innego profilu. Konfiguracja statyczna jest
+        jego domyślną konfiguracją.
+      </p>
+      <h3 id="12.4.1.tuned-adm">12.4.1. Polecenie tuned-adm</h3>
+      <p>
+        Demon <em>tuned</em> dostarczany jest w postaci pakietów i znajduje się 
+        na płycie instalacyjnej z <em>RHEL</em>. Instalacji dokonuje za pomocą
+        poniższego polecenia:
+      </p> 
+<pre class="code-block">
+[user@server1 ~]$ sudo dnf install tuned -y
+Updating Subscription Management repositories.
+Unable to read consumer identity
+
+This system is not registered with an entitlement server. You can use subscription-manager to register.
+
+Last metadata expiration check: 2:38:24 ago on Sun 17 Jul 2022 11:44:30 AM CEST.
+Package tuned-2.18.0-1.el9.noarch is already installed.
+Dependencies resolved.
+Nothing to do.
+Complete!
+</pre>
+      <p>
+        Uwaga, w <em>RHEL</em> 9 demon może wymagać ręcznej aktywacji
+        jednostki za pomocą polecenie <em>systemctl</em>.
+        Wraz z demonem zostanie nam dostarczone polecenie 
+        <strong>tuned-adm</strong> za pomocą, które będziemy mogli 
+        administrować wydajnością systemu dostosowywany przez ten profil.
+        za pomocą podpolecenia <em>list</em> możemy wyświetlić listę dostępnych
+        profili.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo tuned-adm list
+Available profiles:
+- accelerator-performance     - Throughput performance based tuning with disabled higher latency STOP states
+- balanced                    - General non-specialized tuned profile
+- desktop                     - Optimize for the desktop use-case
+- hpc-compute                 - Optimize for HPC compute workloads
+- intel-sst                   - Configure for Intel Speed Select Base Frequency
+- latency-performance         - Optimize for deterministic performance at the cost of increased power consumption
+- network-latency             - Optimize for deterministic performance at the cost of increased power consumption, focused on low latency network performance
+- network-throughput          - Optimize for streaming network throughput, generally only necessary on older CPUs or 40G+ networks
+- optimize-serial-console     - Optimize for serial console use.
+- powersave                   - Optimize for low power consumption
+- throughput-performance      - Broadly applicable tuning that provides excellent performance across a variety of common server workloads
+- virtual-guest               - Optimize for running inside a virtual guest
+- virtual-host                - Optimize for running KVM guests
+Current active profile: virtual-guest
+</pre>
+      <p>
+        Poza listą polecenie zwraca również aktywny profil. Identyczne 
+        działanie możemy otrzymać poprzez wydanie polecenia <em>tuned-adm</em>
+        wraz z podpoleceniem <em>active</em>.
+      </p>
+[user@server1 ~]$ sudo tuned-adm active
+[sudo] password for user: 
+Current active profile: virtual-guest
+      <p>
+        Zmiany profilu dokonujemy za pomocą podpolecenia <em>profile</em> a
+        następnie podajemy nazwę profilu.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo tuned-adm profile balanced
+[user@server1 ~]$ sudo tuned-adm active
+Current active profile: balanced
+</pre>
+      <p>
+        Demon sam jest wstanie na podstawie naszej konfiguracji sprzętowej
+        dobrać odpowiedni profil. Aby uzyskać od niego taką informację wydajemy
+        polecenie z podpoleceniem <em>recommend</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo tuned-adm recommend
+virtual-guest
+</pre>
+      <p>
+        Profil rekomendowany możemy ustawić przez podanie jego nazwy jako
+        argumentu podpolecenia <em>profile</em> lub tak jak przedstawiłem to
+        na poniższym przykładzie.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo tuned-adm profile $(sudo tuned-adm recommend)
+</pre>
+      <p>
+        Jeśli dostosowanie wydajności nie jest już nam potrzebne możemy je
+        wyłączyć za pomocą podpolecenia <em>off</em>.
+      </p>
+<pre class="code-block">
+[user@server1 ~]$ sudo tuned-adm off
+[user@server1 ~]$ sudo tuned-adm active
+No current active profile.
+</pre>
+      <h3 id="exec12.1">Ćwiczenie 1: Zmiana domyślnego celu ładowania systemu</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień na maszynie
+        oznaczonej jako <em>server1</em> zmień domyślny cel ładowania systemu
+        na <em>multi-user.target</em>. Uruchom ponownie maszynę i za pomocą
+        polecenie <em>systemctl</em> oraz <em>who</em> sprawdź zmiany.
+        Następnie wróć do standardowego celu i ponownie zweryfikuj zmiany.
+      </p>
+      <h3 id="exec12.2">Ćwiczenie 2: Zapis własnego komunikatu diagnostycznego</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień na maszynie
+        oznaczonej jako <em>server1</em> zapis swój komunikat diagnotyczny.
+        Następnie wyświetl go w terminalu lub konsoli.
+      </p>
+      <h3 id="exec12.3">Ćwiczenie 3: Zastosowanie profili wydajności</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień na maszynie
+        oznaczonej jako <em>server1</em> za pomocą polecenia <em>tuned-adm</em>
+        Wyświetl listę profil, następnie ustaw profil <em>balanced</em> i 
+        potwierdź to za pomocą odpowiednie podpolecenia. Ustaw profil 
+        rekomendowany, następnie wyłacz profil. Pamiętaj! Może być konieczna
+        ręczna aktywacja jednostki <em>tuned.service</em>. 
+      </p>
+      <h2 id="ch12summary">Podsumowanie</h2>
+      <p>
+        W tym rodziale dowiedzieliśmy się w jaki sposób realizowany jest
+        ostatni etap rozruchu systemu. Poznaliśmy odpowiedzialne za nie
+        narzędzie oraz część jego możliwości. Dowiedzieliśmy się za co
+        odpowiada <em>rsyslogd</em> oraz gdzie możemy szukać zapisanych w
+        systemie komunikatów diagnostycznych. Na koniec poznaliśmy narzędzie
+        które możemy dostoswać wydajność naszego komputera do określonych
+        potrzeb. Następnym rodziale zajmiemy się podstawami obsługi dysków.
+      </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

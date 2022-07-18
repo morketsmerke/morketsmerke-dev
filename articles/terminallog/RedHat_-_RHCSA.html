@@ -8902,11 +8902,11 @@ W porządku? [t/N]:
         używa <em>Systemd</em> (ang. <em>System daemon</em>), jednak wielu
         programistów uważa, że <em>systemd</em> jest sprzeczne z filozofią
         <em>Uniksa</em>, dlatego też wśród społeczności powstało wiele
-        dystrybucji, będących odpowiednikami dystrybucji wiodących ale dających
+        rozwidleń, będących odpowiednikami dystrybucji wiodących ale dających
         końcowemu użytkownikowi wybór z jakiego (poza <em>systemd</em>) 
-        z programów typu <em>init</em> chce korzystać, w niektórych przypadkach
+        z programów typu <em>init</em> chce korzystać. W niektórych przypadkach
         decyzje podejmujemy sciągając odpowiedni obraz płyty, a w niektórych
-        wyboru dokonujemy podczas instalacji. Nie mniej jednak RHEL korzysta
+        wyboru dokonujemy go podczas instalacji. Nie mniej jednak RHEL korzysta
         z <em>systemd</em> to nim się zajmiemy, dlatego też odniesienia jako
         programu lub procesu typu <em>init</em> będą odnośić się do <em>systemd</em>.
       </p>
@@ -8915,26 +8915,26 @@ W porządku? [t/N]:
         diagnostyczne. Nie które z nich są wyświetlane na naszych terminalach,
         inne te których nie widzimy, albo nie są generowane albo są zbierane
         przez jednego z demonów systemowych i zapisywane w jednym z systemowych
-        katalogów. W tych katalogach znajdują się właśnie pliki dziennika.
+        katalogów. W jednym z nich znajdują się właśnie pliki dziennika.
       </p>
       <p>
-        Poza instalacją i konfiguracją programowania, zarządzania plikamia i
-        katalogami, czy użytkownikami być może będziemy musieli dostoswać nasz
-        system, aby bardziej wydajny co może spowodować większy pobór energii
-        elektrycznej, lub będziemy zmuszeni, aby nasz system był bardziej
-        energooszczędny, to bedziemy mogli zrealizować za pomocą jednego z
-        demonów, którego będzie trzeb zainstalować.
+        Poza instalacją i konfiguracją oprogramowania, zarządzaniem plikami,
+        katalogami czy użytkownikami być może będziemy musieli dostoswać nasz
+        system, aby był bardziej wydajny co może spowodować większy pobór 
+        energii elektrycznej lub będziemy zmuszeni, aby nasz system był 
+        bardziej energooszczędny, to bedziemy mogli zrealizować za pomocą 
+        jednego z demonów, którego będzie trzeba zainstalować.
       </p>
       <h2 id="12.1.systeminit">12. Inicjalizacja systemu - systemd</h2>
       <p>
         W większości wiodących dystrybucji, wybiera <em>systemd</em> jak
         program typu <em>init</em> dla swoich systemów. Mimo sprzeciwu części
-        społeczności, to <em>systemd</em> nie jest program, który jest
+        społeczności, to <em>systemd</em> nie jest programem, który jest
         pozbawiony zalet. Ma ich bardzo wiele i są one dość istotne. 
-        <em>Systemd</em> jest program typu <em>init</em>, którego głównymi
+        <em>Systemd</em> jest to program typu <em>init</em>, którego głównymi
         zadaniami jest przygotowanie systemu do pracy oraz zarządanie usługami.
         W fazie inicjalizacji uruchamiana jest większość usług, które do czasu
-        wdrożenie <em>systemd</em> uruchamiane są jedna po drugiej co wydłużało
+        wdrożenia <em>systemd</em> uruchamiane są jedna po drugiej co wydłużało
         proces uruchamiania systemu. Natomiast nowy program postawił na 
         współbieżność uruchamiania - wszystkie usługi startują w tym samym
         czasie. <em>Systemd</em> może również opóźnić uruchomienie konkretej
@@ -8945,11 +8945,12 @@ W porządku? [t/N]:
         potrzebują inne usługi, następnie uruchomić demona, który taki zasób
         powinien udostępniać w momencie gdy demon z zasobem jeszcze się
         uruchamia, inne te które go wymagają widzą że jest on dostępny i
-        wysyłają zapytania do tego demona te zapytania są buforowane do momentu
+        wysyłają zapytania do tego demona o dostęp do zasobu. Te zapytania są 
+        buforowane do momentu
         jego pełnego uruchomienia, na koniec te zapytania wraz kontrolą nad
         zasobem są przekazywane do niego. Jest to kolejna cecha, która 
         przyspiesza ładowanie systemu. Kolejną cechą <em>systemd</em> jest
-        zmiana administracji usługi. Teraz nie są wymgane już skrypty wystarczy
+        zmiana administracji usług. Teraz nie są wymgane już skrypty wystarczy
         krótki plik, kilka, kilkanaście linijek i usługą jest już zdefiniowana. 
       </p>
       <h3 id="12.1.1.units">12.1.1. Jednostki</h3>
@@ -8963,7 +8964,7 @@ W porządku? [t/N]:
         od określania włączania i wyłączania jednostki (Uwaga, tutaj włączanie
         i wyłączanie tyczy się angielskich słów <em>enable</em> oraz 
         <em>disable</em>.  Jednostki <em>systemd</em> się aktywuje lub
-        uruchamia [ang. <em>start</em>]). Poniżej znajduje się jednostka
+        uruchamia [ang. <em>start</em>]). Poniżej znajduje się plik jednostki
         demona <em>ssh</em>.
       </p>
 <pre class="code-block">
@@ -8987,8 +8988,8 @@ RestartSec=42s
 WantedBy=multi-user.target
 </pre>
       <p>
-        Ten plik przestawia jednostkę usługi, omawaiania dyretyw wykracza
-        poza ramy tego materiału. Dlatego nie będzie tutaj to omawiane
+        Ten plik przestawia jednostkę usługi, omawaianie dyretyw wykracza
+        poza ramy tego materiału. Dlatego nie będzie tutaj to realizowane
         więcej wiedzy znajduje się na stronie podręcznika
         <code class="code-inline">man systemd.unit</code>. Poniżej znajduje
         się lista typów jednostek oraz krótki opis za co odpowiadają w
@@ -8998,9 +8999,9 @@ WantedBy=multi-user.target
         <li><strong>.socket</strong> - Jednostki gniazd zazwyczaj są powiązane
           z jednostkami usług, służą do przestawiania gniazd, które są
           wykorzystywane w komunikacji miedzyprocesowej lub sieciowej.</li>
-        <li><strong>.device</strong> - Jednostka urządzenia, wystąpnie
+        <li><strong>.device</strong> - Jednostka urządzenia, wystąpienie
           urządzenia w ujęciu <em>systemd</em>. Takie jednostki są
-          wykorzystywane do aktywacji innych jednostke w momencie pojawienia
+          wykorzystywane do aktywacji innych jednostek w momencie pojawienia
           się urządzenia w systemie.</li>
         <li><strong>.mount</strong> - Jednostka montowania, określa gdzie i jak
           zamontować lub odmontować określony system plików.</li>
@@ -9016,13 +9017,14 @@ WantedBy=multi-user.target
         <li><strong>.timer</strong> - Jednostka służy do aktywacji innej
           jednostki na podstawie czasu w niej zdefiniowanego.</li>
         <li><strong>.slice</strong> - Jednostka wycinka, służy do przydzielania
-          i zarządania zasobami grupie proceswó.</li>
+          i zarządania zasobami grupie procesów.</li>
         <li><strong>.service</strong> - Jednostka usługi. Wystąpienie
           demona w <em>systemd</em>.</li>
       </ul>
       <h3 id="12.1.2.target">12.1.2. Jednostki celu</h3>
       <p>
-        <strong>Cel</strong> w ujęciu system jest logiczna grupa jednostek
+        <strong>Cel</strong> w ujęciu <em>systemd</em> jest logiczna grupą
+        jednostek
         różnego rozdzaju, które mogą na przykład składać się na jeden z
         komponentów systemu operacyjnego, na przykład środowisko graficzne.
         Często cele mogą odpowiadać klasycznym poziomom uruchomienia systemu.
@@ -9096,7 +9098,7 @@ systemd-journal-flush.service       loaded active exited    Flush Journal to Per
         Powyższy przykład zawiera tylko załadowane jednostki, ale jeśli
         chcielibyśmy zobaczyć wszystkie jednostki dostępne w systemie musimy
         dodać do polecenia modyfikator <em>--all</em>. Innym przydatnym
-        modyfikatorem jest <em>-t</em> pozwalająca podać typ jednostki.
+        modyfikatorem jest <em>-t</em> pozwalający podać typ jednostki.
       </p>
 <pre class="code-block">
   UNIT                          LOAD      ACTIVE   SUB     DESCRIPTION                                                                  
@@ -9119,7 +9121,7 @@ systemd-journal-flush.service       loaded active exited    Flush Journal to Per
 </pre>
       <p>
         Kolejnym dość istonym modyfikatorem, który pozwoli man namierzyć
-        jednostki, których aktywacja zakończyła się niepowodzeniem. Jest nim
+        jednostki, których aktywacja zakończyła się niepowodzeniem. Jest
         <em>--failed</em>.
       </p>
 <pre class="code-block">
@@ -9300,7 +9302,7 @@ Created symlink /etc/systemd/system/multi-user.target.wants/atd.service → /usr
 Jul 17 09:41:38 server1.example.com systemd[1]: Started Deferred execution scheduler.
 </pre>
       <p>
-        Włączenie jednostki powoduje utworzenie dowiązania symboliczne w
+        Włączenie jednostki powoduje utworzenie dowiązania symbolicznego w
         katalogu zależności celu, natomiast wyłączenie usuwa to dowiązanie.
       </p>
       <p>
@@ -9353,9 +9355,9 @@ Jul 17 10:09:58 server1.example.com systemd[1]: atd.service: Current command van
         zarządzanie nim sprowadza się głównie do dwóch czynności, jedną z nich
         jest określenie oraz ustawienie domyślnego stanu, w którym to system
         operacyjny jest zdatny do użycia. W tym przypadku określa to jednostka
-        celu - <strong>default</strong>. Za pomocą pod poleceń możemy sprawdzić
-        jaka z dostarczonych z system jednostek jest wskazywana przez to
-        dowiązanie. Możemy to określić za pomocą podpolecenie
+        celu - <strong>default</strong>. Za pomocą podpoleceń możemy sprawdzić
+        jaka z dostarczonych z systemem jednostek jest wskazywana przez to
+        dowiązanie. Możemy to określić za pomocą podpolecenia
         <strong>get-default</strong>.
       </p> 
 <pre class="code-block">
@@ -9411,9 +9413,9 @@ multi-user.target
       <h2 id="12.2.logging">12.2. Prowadzenie plików dzienników systemowych</h2>
       <p>
         Zbieranie informacji o tym co się dzieje w systemie do bardzo ważna
-        czynność wykonywana przez systemy operacyjne. Nie które kz kompnentów
+        czynność wykonywana przez systemy operacyjne. Nie które z komponentów
         instalowanych w nich zwracają bardzo ubogie w informacje komunikaty
-        o błędach lub ostrzeżenia z których nic niewynika. Najczęściej ma to
+        o błędach lub ostrzeżenia z których nic nie wynika. Najczęściej ma to
         na celu poprawienie wyglądu oraz doświadczeń użytkownika 
         (<em>UI/UX Design</em>), przez co wielu użytkowników zostaje na lodzie
         chcąc samodzielnie rozwiązać problemy. Ta cecha nie tyczy się tylko
@@ -9425,7 +9427,7 @@ multi-user.target
       <h3 id="12.2.1.rsyslog">12.2.1. Rejestrator systemowy - rsyslog</h3>
       <p>
         <strong>Rsyslog</strong> jest odpowiedzialny za zbieranie komunikatów
-        diagnostycznych i umieszczenie ich przeznaczonych dla nich miejscach.
+        diagnostycznych i umieszczenie ich w przeznaczonych dla nich miejscach.
         Nie które komunikaty mogą trafiać do plików inne mogą być wyświetlane
         w terminalach pracujących na serwerze użytkowników. Te reguły są
         zapisane w pliku konfiguracyjnym demona <em>/etc/rsyslog.conf</em>.
@@ -9452,14 +9454,15 @@ uucp,news.crit                                          /var/log/spooler
 local7.*                                                /var/log/boot.log
 </pre>
       <p>
-        Ostatnie linie zawierające na końcu zawierają <strong>zasady</strong>, 
+        Ostatnie linie na końcu zawierają <strong>zasady</strong>, 
         które określaja jakie komunikaty należy zbierać i co z nimi 
         zrobić. Zasady dzielą się na dwie części na <strong>selektor</strong>,
         określający komunikaty diagostyczne oraz <strong>akcje</strong>
         definiującą dla nich miejsce docelowe. Poza tym selektor również możemy
-        rozłożyć na <strong>funckję</strong> - wskazującą na demona, od którego
+        rozłożyć na <strong>funkcje</strong> - wskazującą na demona lub
+        komponent od którego
         należy przechwycić komunikaty oraz <strong>priorytet</strong>
-        określający ważność komunikatów. Funkcję od priorytetu oddziela się
+        określający ważność komunikatu. Funkcję od priorytetu oddziela się
         kropką. Spis funkcji oraz priorytetów znajduje się na stronie
         podręcznika pliku <em>/etc/rsyslog.conf</em>. Gwiazdka to symbol
         wieloznaczny wskazujący zarówno wszystkie priorytet jak i wszystkie
@@ -9468,7 +9471,7 @@ local7.*                                                /var/log/boot.log
         komunikatów z tej funkcji. Jak możemy zobaczyć w pierwszej zasadzie
         na jedną akcje może przypadać wiele selektorów. Selektory oddziela się
         średnikiem (<strong>;</strong>). W polu akcji zazwyczaj znajdują się
-        ścieżki do plików wskazujące gdzie należy zapisać komunikaty
+        ścieżki do plików wskazujących gdzie należy zapisać komunikaty
         diagnostyczne, jedyny wyjątkiem są komunikaty o najwyższym priorytecie
         za pomocą wewnętrzengo modułu są one wyświetlane w terminalach jako
         wiadomości do użytkowników.
@@ -9487,20 +9490,21 @@ local7.*                                                /var/log/boot.log
         uruchamiania usług lub testowania, aby wychwycić wszysktie problemy.
       </p>
       <p>
-        Jeśli będziemy chcieli coś zmienić w konfiguracji, warto przed
+        Jeśli będziemy chcieli coś zmienić w konfiguracji <em>rsyslog</em>, 
+        warto przed
         uruchomieniem ponowym usługi sprawdzić poprawność konfiguracji za
         pomocą polecenia <code class="code-inline">rsyslog -N 1</code>. Gdzie
         <code class="code-inline">1</code> oznacza ilość wyświetlanych 
-        komunikatów dianostycznych.
+        przez polecenie komunikatów.
       </p>
       <h3 id="12.2.2.logrotating">12.2.2. Obrót plików dziennika</h3>
       <p>
         Pliki dziennika to zwykłe pliki tekstowe, które potrafią bardzo szybko
         przyrastać w zależności od tego co się dzieje w systemie. Taki nie
         kontrolowany przyrost plików może szybko wypełnić dostępne miejsce
-        dysku. Więc zastosowano mechanizm rotacji plików dziennika. Stare pliki
+        dysku. Zastosowano więc mechanizm rotacji plików dziennika. Stare pliki
         są usuwane robiąc miejsce nowym. Tym zadaniem zajmuje się wywoływany
-        w codziennym katalogu <em>cron</em> skrypt
+        w codziennym katalogu <em>cron</em> (<em>/etc/cron.daily</em>) skrypt
         <strong>logrotate</strong>. Skrypt ten posiada swój plik konfiguracyjny
         <em>/etc/logrotate.conf</em>.
       </p>
@@ -9552,11 +9556,11 @@ total 56
       <p>
         Zawartość tego pliku może zdradza, w jaki sposób <em>logrotate</em>
         zachowa się wobec takiego pliku, nadpisując tym samym konfigurację
-        z pliku z wcześniejszego przykładu.
+        z pliku z wcześniejszego przykładu (globalnego pliku konfiguracji).
       </p>
       <h3 id="12.2.3.bootlog">12.2.3. Plik dziennika rozruchu</h3>
       <p>
-        W katalogu <em>/var/log</em> znajduje się pliki <em>boot.log</em>
+        W katalogu <em>/var/log</em> znajduje się plik <em>boot.log</em>
         przedstawiający uruchamianie ostatniej fazy rozruchu. W tym pliku
         możemy podejrzeć czy wszystkie usługi wystartowały czy też nie. Uwaga,
         plik nie nadaje się do przeglądania za pomocą polecenie <em>less</em>.
@@ -9586,7 +9590,7 @@ See 'systemctl status kdump.service' for details.
         Czasami możemy chcieć uzupełnić systemowy plik dziennika
         <em>/var/log/messages</em> o kilka komunikatów, które będą wyznaczać
         początek i koniec testowanego oprogramowania lub dodwać kilka notatek
-        wyjaśniających takie a nie inny komunikaty. Dzięki <em>rsyslog</em> za
+        wyjaśniających takie a nie inne komunikaty. Dzięki <em>rsyslog</em> za
         pomocą jednego z jego wewnętrznych modułów możemy dokonać wpisów do
         tego pliku dziennika. Realizować to będziemy za pomocą polecenia
         <em>logger</em>. Na przykład:
@@ -9599,16 +9603,16 @@ Jul 17 13:03:42 server1 user[2706]: Hello, World! It's user
 </pre>
       <p>
         Te komunikaty są rozpoznawane przez <em>rsyslog</em> jako 
-        <em>user.notice</em>, jednak za pomocą opcjij -p możemy podać swój
+        <em>user.notice</em>, jednak za pomocą opcji -p możemy podać swój
         selektor. Polecenie <em>logger</em> możemy być przydatne do testowania
         zmian w konfiguracji <em>rsyslog</em>. 
       </p>
       <h2 id="12.3.systemdjournal">12.3. Dzienniki systemd</h2>
       <p>
-        <em>Systemd</em> poza funkcjami omówiony na początku tego rozdziału
+        <em>Systemd</em> poza funkcjami omówionymi na początku tego rozdziału
         dostarcza wielu narzędzi, które czasami bywają irytujące, ale nie które
-        znich jak np. demon <strong>systemd-journald</strong> jest całkiem 
-        przydatny
+        znich jak np. demon <strong>systemd-journald</strong> są całkiem 
+        przydatne, 
         ponieważ to za jego zasługą dowiadujemy się dlaczego nasza usługa
         nie chce się uruchomić. Ten demon przechwytuje komunikaty z bardzo
         wielu źródeł od jądro przez <em>ramdysk</em> do różnorakich usług.
@@ -9621,7 +9625,7 @@ Jul 17 13:03:42 server1 user[2706]: Hello, World! It's user
       <h3 id="12.3.1.displaingjournald">12.3.1. Wyświetlanie dziennika systemd</h3>
       <p>
         Do wyświetlenia informacji zebranych przez demona 
-        <em>systemd-journald</em> ma do dyspozycji takie polecenie jak 
+        <em>systemd-journald</em> mamy do dyspozycji takie polecenie jak 
         <strong>journalctl</strong>. Jesli wydamy to polecenie bez żadnych 
         opcji to polecenie zróci ono treść podobną do zawartości
         <em>/var/log/messages</em>.
@@ -9662,11 +9666,16 @@ Sat 2022-07-16 12:48:20.235840 CEST [s=5135ad3430d34e718c820bc5b157f883;i=1;b=9c
         Znajdziemy je na stronie podręcznika 
         <code class="code-inline">man journalctl</code>.
       </p>
+      <p>
+        Komunikaty dla poszczególnych usług znajdziemy na końcu informacji
+        zwracanych przez <em>systemctl status</em>. Dlatego ważne jest, aby
+        używać tego polecenia z uprawnieniami administratora.
+      </p>
       <h3 id="12.3.2.storageforjournald">12.3.2. Konfiguracja miejsca do przechwywania dzienników systemd</h3>
       <p>
         Jak wiem dziennik <em>systemd</em> nie jest przechowywany na stałe w
         systemie. To możemy zmienić. W bardzo prosty sposób. Otóz, dyrektywa
-        <em>Storage</em> może mieć cztery wartości:
+        <em>Storage</em> w konfiguracji demona może mieć cztery wartości:
       </p> 
       <ul>
           <li><em>volatile</em> - Przechowuje informacje tylko w pamięci</li>
@@ -9680,11 +9689,12 @@ Sat 2022-07-16 12:48:20.235840 CEST [s=5135ad3430d34e718c820bc5b157f883;i=1;b=9c
             diagnostycznych gdzie kolwiek.</li>
       </ul>
       <p>
-        Domyślną opcją jest <em>auto</em>, więc aby włączyć przechowywanie
+        Domyślną jej wartością jest <em>auto</em>, więc aby włączyć 
+        przechowywanie
         dzienników na stałe, wystarczy utworzyć katalog <em>journal</em> w
         katalogu <em>/var/log</em>. Tutaj pragnę zaznaczyć, że w <em>RHEL</em>
         8 wystarczyło zrestartować usługę, ale w przypadku <em>RHEL</em> 9
-        należy zrestatować cały system. Kiedy system będzie gotowy wewnątrz
+        należy zrestartować cały system. Kiedy system będzie gotowy wewnątrz
         katalogu zostanie utworzony podkatalogu o nazwany wartością 
         <em>/etc/machine-id</em>.
       </p>
@@ -9695,10 +9705,14 @@ drwxr-sr-x+ 2 root systemd-journal 4096 Jul 16 20:17 4015aef220c344e1875a3fbbd14
 [user@server1 ~]$ cat /etc/machine-id 
 4015aef220c344e1875a3fbbd1453b45
 </pre>
+      <p>
+        Teraz komunikaty dziennika <em>systemd</em> bedą przechowywane w tym
+        katalogu. 
+      </p>
       <h2 id="12.4.tuned">12.4. Dostosowywanie systemu</h2>
       <p>
         W <em>RHEL</em> jak i inych systemach klasy <em>enterprise</em> możemy
-        spotkać się z narzędziem, które na podstawie monitorowania zasóbów
+        spotkać się z narzędziem, które na podstawie monitorowania zasobów
         komputera może zmienić ich ustawienia aby podnieść ich wydajność lub
         gdy przestanie być to konieczne ją obniżyć aby zaoszczędzić
         wykorzystywaną energię elektryczną. Tym zajmuje się demon <em>tuned</em>.
@@ -9733,11 +9747,11 @@ Complete!
 </pre>
       <p>
         Uwaga, w <em>RHEL</em> 9 demon może wymagać ręcznej aktywacji
-        jednostki za pomocą polecenie <em>systemctl</em>.
+        jednostki za pomocą polecenia <em>systemctl</em>.
         Wraz z demonem zostanie nam dostarczone polecenie 
         <strong>tuned-adm</strong> za pomocą, które będziemy mogli 
-        administrować wydajnością systemu dostosowywany przez ten profil.
-        za pomocą podpolecenia <em>list</em> możemy wyświetlić listę dostępnych
+        administrować wydajnością systemu dostosowywaną przez te profile.
+        Za pomocą podpolecenia <em>list</em> możemy wyświetlić listę dostępnych
         profili.
       </p>
 <pre class="code-block">
@@ -9759,7 +9773,7 @@ Available profiles:
 Current active profile: virtual-guest
 </pre>
       <p>
-        Poza listą polecenie zwraca również aktywny profil. Identyczne 
+        Poza listą podpolecenie zwraca również aktywny profil. Identyczne 
         działanie możemy otrzymać poprzez wydanie polecenia <em>tuned-adm</em>
         wraz z podpoleceniem <em>active</em>.
       </p>
@@ -9806,13 +9820,13 @@ No current active profile.
         Jako użytkownik z możliwością podniesienia uprawnień na maszynie
         oznaczonej jako <em>server1</em> zmień domyślny cel ładowania systemu
         na <em>multi-user.target</em>. Uruchom ponownie maszynę i za pomocą
-        polecenie <em>systemctl</em> oraz <em>who</em> sprawdź zmiany.
+        polecenia <em>systemctl</em> oraz <em>who</em> sprawdź zmiany.
         Następnie wróć do standardowego celu i ponownie zweryfikuj zmiany.
       </p>
       <h3 id="exec12.2">Ćwiczenie 2: Zapis własnego komunikatu diagnostycznego</h3>
       <p>
         Jako użytkownik z możliwością podniesienia uprawnień na maszynie
-        oznaczonej jako <em>server1</em> zapis swój komunikat diagnotyczny.
+        oznaczonej jako <em>server1</em> zapis swój komunikat diagnostyczny.
         Następnie wyświetl go w terminalu lub konsoli.
       </p>
       <h3 id="exec12.3">Ćwiczenie 3: Zastosowanie profili wydajności</h3>
@@ -9832,7 +9846,7 @@ No current active profile.
         odpowiada <em>rsyslogd</em> oraz gdzie możemy szukać zapisanych w
         systemie komunikatów diagnostycznych. Na koniec poznaliśmy narzędzie
         które możemy dostoswać wydajność naszego komputera do określonych
-        potrzeb. Następnym rodziale zajmiemy się podstawami obsługi dysków.
+        potrzeb. W następnym rodziale zajmiemy się podstawami obsługi dysków.
       </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">

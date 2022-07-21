@@ -10298,6 +10298,44 @@ Number  Start (sector)    End (sector)  Size       Code  Name
         bardziej zaawansowanych czynności związanych z zarządzaniem pamięcią
         masową w <em>RHEL</em>.
       </p>
+      <h1 id="14.advancedstoragemanagement">14. Zaawansowane zarządzanie pamięcią masową</h1>
+      <p>
+        W tym rodziale zajmiemy się bardziej zawansowanymi zagadnieniami
+        związanymi zarządzaniem pamiecią masową. W tym rozdziale poruszymy
+        również pominięty z względu na zmiany w <em>RHEL</em> podrozdział
+        związany z bardziej efektywnym wykorzystaniem przestrzeni na dysku
+        dzięki <em>VDO</em>. Kolejnym zagadnienieniem będzie <em>LVM</em>,
+        który pozwala spojrzeć nieco inaczej na urządzenia służące do
+        przechowywania danych. Ostatnim zagadnieniem będzie <em>Stratis</em>,
+        który łączy ze sobą kilka komponentów systemu pozwalających na
+        stworzenie stablinego i wydajnego systemu plików (o systemach plików)
+        będzie w następnym rozdziale.
+      </p>
+      <h2 id="14.1.lvm">14.1. Zarządzanie pamięcią masową przy użyciu LVM</h2>
+      <p>
+        <strong>LVM</strong>, czyli <em>Logical Volume Manager</em> pozwala
+        inaczej spojrzeć na dostępne w naszych komputerach dyski. Za pomocą
+        tego narzędzia możemy zebrać wszystkie dostępne w systemie dyski
+        zainicjować je, aby były gotowe do pracy z <em>LVM</em>, wówczas
+        dyski stają się <strong>wolumenami fizycznymi</strong>. Wolumeny
+        fizyczne łączy się w <strong>grupę wolumenów</strong>, która staje
+        się pulą to tworzenie nowych urządzeń dyskowych bazujących na miejscu
+        dostępnym w grupie. Takie urządznie noszą nazwę
+        <strong>wolumenów logicznych</strong>. W ujęciu <em>LVM</em>
+        najmiejszą logiczną jednostką alokacji przestrzeni dyskowej są 
+        <strong>ekstenty</strong>. Ekstenty dzielą się na logiczne będą
+        cząstkami woluminów logicznych oraz na fizyczne będą elementami
+        woluminów fizycznych. Ekstenty podczas tworzenia woluminów
+        logicznych oraz fizycznych mają domyślną wielkość wynoszącą około
+        <strong>4 MB</strong>. Oczywiście można to zmienić, te wartości również
+        nie muszą być sobie równe. Pojęcie ekstenów będzie potrzebne nam
+        przy <em>VDO</em>.
+      </p>
+      <p>
+        Elementy logiczne <em>LVM</em> są bardzo eleastyczne, może je dodawać
+        usuwać, rozszerzać, zmieniejszać i zmieniać wcześniej nadane nazwy, i
+        tym się właśnie zajmiemy w tym rodziale.
+      </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

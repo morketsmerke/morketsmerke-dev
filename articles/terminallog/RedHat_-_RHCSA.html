@@ -10334,7 +10334,740 @@ Number  Start (sector)    End (sector)  Size       Code  Name
       <p>
         Elementy logiczne <em>LVM</em> są bardzo eleastyczne, może je dodawać
         usuwać, rozszerzać, zmieniejszać i zmieniać wcześniej nadane nazwy, i
-        tym się właśnie zajmiemy w tym rodziale.
+        tym się właśnie zajmiemy w tym rodziale. Oczywiście będziemy pracować
+        z urządzeniami więc niezbędne będą uprawnienia administratora.
+      </p>
+      <h3 id="14.1.1.createpv">14.1.1. Tworzenie woluminów fizycznych</h3>
+      <p>
+        Aby rozpocząć pracę z <em>LVM</em> musimy przekształcić dysk lub
+        partycję aby nadawała się do pracy z tym rozwiązaniem. Na tych
+        urządzeniach blokowych zostaną utworzone specjalne struktury, dzięki
+        czemu będzie można później włączyć je do grupy.
+      </p>
+      <p>
+        Chcąc użyć partycji jako woluminu fizycznego tworzmy partycje, bez
+        znaczenia czy jest schemat tablicy partycji GPT czy MBR, następnie
+        partycji ustawiamy flagę <em>lvm</em>. Tak przygotowana partycja
+        jest gotowa by użyć jej jako woluminu fizycznego. Poniżej znajduje się
+        przykład przestawiający jak to zrealizować.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo gdisk /dev/vdb
+GPT fdisk (gdisk) version 1.0.7
+
+Partition table scan:
+  MBR: not present
+  BSD: not present
+  APM: not present
+  GPT: not present
+
+Creating new GPT entries in memory.
+
+Command (? for help): o
+This option deletes all partitions and creates a new protective MBR.
+Proceed? (Y/N): Y
+
+Command (? for help): p
+Disk /dev/vdb: 524288 sectors, 256.0 MiB
+Sector size (logical/physical): 512/512 bytes
+Disk identifier (GUID): 66CCB514-9659-461D-834B-1661E9D112F4
+Partition table holds up to 128 entries
+Main partition table begins at sector 2 and ends at sector 33
+First usable sector is 34, last usable sector is 524254
+Partitions will be aligned on 2048-sector boundaries
+Total free space is 524221 sectors (256.0 MiB)
+
+Number  Start (sector)    End (sector)  Size       Code  Name
+
+Command (? for help): n
+Partition number (1-128, default 1): 
+First sector (34-524254, default = 2048) or {+-}size{KMGTP}: 
+Last sector (2048-524254, default = 524254) or {+-}size{KMGTP}: +128M
+Current type is 8300 (Linux filesystem)
+Hex code or GUID (L to show codes, Enter = 8300): 8e00
+Changed type of partition to 'Linux LVM'
+
+Command (? for help): w
+
+Final checks complete. About to write GPT data. THIS WILL OVERWRITE EXISTING
+PARTITIONS!!
+
+Do you want to proceed? (Y/N): y
+OK; writing new GUID partition table (GPT) to /dev/vdb.
+The operation has completed successfully.
+</pre>
+      <p>
+        Tak utworzoną partycje możemy zainicjować jako wolumin fizyczny za
+        pomocą polecenie <strong>pvcreate</strong>.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo pvcreate /dev/vdb1
+  Devices file /dev/vdb is excluded by filter: device is partitioned.
+  Physical volume "/dev/vdb1" successfully created.
+</pre>
+      <p>
+        Teraz wolumin nadaje się do podłączenia do grupy.
+      </p>
+      <p>
+        Inicjowanie całych dysków jest o wiele prostsze. Wystarczy użyć
+        polecenie <em>pvcreate</em> i podać nazwę urządzenia jako argument.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo pvcreate /dev/vdc
+  Devices file /dev/vdb is excluded by filter: device is partitioned.
+  Physical volume "/dev/vdc" successfully created.
+</pre>
+      <p>
+        Listę dostępnych w systemie wolumenów fizycznych możemy wyświetlić
+        za pomocą polecenia <strong>pvs</strong>.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo pvs
+[sudo] hasło użytkownika user: 
+  Devices file PVID none last seen on /dev/vdd1 not found.
+  Devices file PVID none last seen on /dev/vdd2 not found.
+  Devices file PVID none last seen on /dev/vdc1 not found.
+  Devices file /dev/vdb is excluded by filter: device is partitioned.
+  PV         VG   Fmt  Attr PSize   PFree  
+  /dev/vda2  rhel lvm2 a--  &lt;11,00g      0 
+  /dev/vdb1       lvm2 ---  128,00m 128,00m
+  /dev/vdc        lvm2 ---  256,00m 256,00m
+</pre>
+      <p>
+        Kolumny oznaczają kolejno: fizyczny wolumin 
+        (<code class="code-inline">PV</code>), grupę do której należy fizyczny
+        wolumin (<code class="code-inline">VG</code>), format
+        (<code class="code-inline">Fmt</code>), atrybuty
+        (<code class="code-inline">Attr</code>, wartości poszczególnych bitów
+        są rozpisane w na stronie podręcznika), rozmiar fizyczny
+        (<code class="code-inline">PSize</code>) oraz fizyczną ilość wolnego
+        miejsca (<code class="code-inline">PFree</code>).
+      </p>
+      <h3 id="14.1.2.vgcreate">14.1.2. Tworzenie grup woluminów</h3>
+      <p>
+        Posiadając już odpowiednie zasoby w postaci woluminów fizycznych,
+        możemy utworzyć grupę woluminów, aby móc zarządzać zaawansowanymi
+        właściwościami <em>LVM</em>. Grupy tworzone są za pomocą polecenia
+        <strong>vgcreate</strong>. Utworzę teraz grupę z wcześniej stworzonych
+        woluminów.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo vgcreate vg_course /dev/vdb1 /dev/vdc
+  Devices file /dev/vdb is excluded by filter: device is partitioned.
+  Volume group "vg_course" successfully created
+</pre>
+      <p>
+        Polecenie przyjmuje jako pierwszy argument nazwę grupy a następnie
+        wchodzące w jej skład fizyczne woluminy. Listę utworzonych w systemie
+        grup możemy wyświetlić za pomocą polecenia <strong>vgs</strong>.
+        Natomiast bardziej szczegółowe informacje na temat grupy możemy
+        uzyskać więcej informacji za pomocą polecenia <strong>vgdisplay</strong>.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo vgs
+[sudo] hasło użytkownika user: 
+  Devices file PVID none last seen on /dev/vdd1 not found.
+  Devices file PVID none last seen on /dev/vdd2 not found.
+  Devices file PVID none last seen on /dev/vdc1 not found.
+  Devices file /dev/vdb is excluded by filter: device is partitioned.
+  VG        #PV #LV #SN Attr   VSize   VFree  
+  rhel        1   2   0 wz--n- &lt;11,00g      0 
+  vg_course   2   0   0 wz--n- 376,00m 376,00m
+</pre>
+      <p>
+        Polecenie to zwraca informacje podobne do poprzednie polecenia
+        <em>pvs</em>. Dodatkowe kolumny zwracają informacje na temat
+        ilości woluminów fizycznych w grupie
+        (<code class="code-block">#PV</code>), ilości woluminów logicznych
+        (<code class="code-block">#LV</code>) oraz ilość <em>snapshotów</em> w
+        grupie woluminów. Reszta kolumn jest podobna do tych informacji
+        zwracanych przez <em>pvs</em>. Innym narzędziem zwracającym więcej
+        informacji na temat grupy woluminów jest <strong>vgdisplay</strong>.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo vgdisplay vg_course 
+[sudo] hasło użytkownika user: 
+  Devices file PVID none last seen on /dev/vdd1 not found.
+  Devices file PVID none last seen on /dev/vdd2 not found.
+  Devices file PVID none last seen on /dev/vdc1 not found.
+  --- Volume group ---
+  VG Name               vg_course
+  System ID             
+  Format                lvm2
+  Metadata Areas        2
+  Metadata Sequence No  1
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                0
+  Open LV               0
+  Max PV                0
+  Cur PV                2
+  Act PV                2
+  VG Size               376,00 MiB
+  PE Size               4,00 MiB
+  Total PE              94
+  Alloc PE / Size       0 / 0   
+  Free  PE / Size       94 / 376,00 MiB
+  VG UUID               g4X6FW-P1fu-jS0t-UaGg-8mIK-Kv0J-2bLWSD
+</pre>
+      <p>
+        Polecenie to zwraca rozmiar fizycznych ekstentów, który w tym
+        przypadku posiada wartość domyślną. Rozmiar ten możemym zmienić
+        podając opcje <em>-s</em> oraz wielkość fizycznych extentów jako
+        argument opcji podczas tworzenia grupy. Chcąc wydobyć konkretne
+        informacje z tego polecenie możemy posłużyć się poleceniem 
+        <em>grep</em>.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo vgdisplay vg_course | grep 'PE Size'
+[sudo] hasło użytkownika user: 
+  Devices file PVID none last seen on /dev/vdd1 not found.
+  Devices file PVID none last seen on /dev/vdd2 not found.
+  Devices file PVID none last seen on /dev/vdc1 not found.
+  PE Size               4,00 MiB
+</pre>
+      <h3 id="14.1.3.lvcreate">14.1.3. Tworzenie woluminów logicznych LVM</h3>
+      <p>
+        Do tworzenia woluminów logicznych służy polecenie 
+        <strong>lvcreate</strong>. Wydając to polecenie wraz z opcją
+        <em>--help</em>, zostaną nam zwrócone wszystkie możliwe rodzaje
+        woluminów logicznych. W tym materiale będą nas interesować tylko dwa
+        <em>linear</em> (liniowy, zwykły) oraz <em>VDO</em>. O VDO będzie w
+        następnym podrozdziale. Zatem do stworzenia liniowego woluminu
+        logicznego potrzebujemy wielkości (<em>-L</em>) oraz nazwy grupy w 
+        której ma zostać
+        stworzony. Inną dość przydatną opcją, niezależną od rodzaju woluminu
+        jest opcja <em>-n</em>, która pozwala na nadanie nazwy woluminowi.
+        Teraz utworzę wolumin logiczny w grupie, którą wcześniej utworzyłem.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo lvcreate -L 100MB -n lvol0 vg_course
+  Logical volume "lvol0" created.
+</pre>
+      <p>
+        Czasami podana wielkość woluminu może zostać zaokrąglona, ze względu
+        na potrzebe użycia okrągłej liczby extentów. W przypadku tego woluminu
+        zostały zużyte 25 extenty (25 x 4 MB = 100 MB), co możemy podjerzeć 
+        wydając polecenie
+        <em>vgdisplay</em> z opcją <em>-v</em> Przez co zwróci ona bardziej
+        szczegółowe informacje na temat grupy, w tym informacje na temat
+        woluminów logicznych w niej zawartych.
+      </p> 
+<pre class="code-block">
+[user@rhel90 ~]$ sudo vgdisplay -v vg_course
+...
+  --- Logical volume ---
+  LV Path                /dev/vg_course/lvol0
+  LV Name                lvol0
+  VG Name                vg_course
+  LV UUID                Z2cH37-sWGu-NEIR-JoKN-AT5M-o5EI-d8QmKU
+  LV Write Access        read/write
+  LV Creation host, time rhel90, 2022-07-22 11:35:47 +0200
+  LV Status              available
+  # open                 0
+  LV Size                100,00 MiB
+  Current LE             25
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           253:2
+...
+</pre>
+      <p>
+        Innm narzędziem, które zwraca informacje na temat woluminów logicznych
+        jest <strong>lvs</strong>. Zwraca ono podobne informacje do <em>vgs</em>
+        na przykład.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo lvs
+  Devices file PVID none last seen on /dev/vdd1 not found.
+  Devices file PVID none last seen on /dev/vdd2 not found.
+  Devices file PVID none last seen on /dev/vdc1 not found.
+  LV   VG   Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  root rhel -wi-ao---- 9,79g                                                    
+  swap rhel -wi-ao---- 1,20g       
+</pre>
+      <p>
+        Informacje zwracją nazwę woluminu (<code class="code-inline">LV</code>),
+        grupę woluminów (<code class="code-inline">VG</code>), atrybuty
+        (<code class="code-inline">Attr</code>) oraz wielkości
+        (<code class="code-inline">LSize</code>).
+      </p>
+      <p>
+        Poza klasyczną wielkością podawną w wielkrotnościach bajtów, wielkość
+        woluminu możemy podawać ilości extentów, służy do tego opcją <em>-l</em>.
+      </p>
+      <p>
+        Tak utworzone woluminy są pełno prawnymi urządzeniami blokowymi
+        przypominającymi dyski. Mozemy zainstalować na nich odpowiedni system
+        plików (będzie o tym w następnym rozdziale), za zamontować w systemie
+        i wykorzystać do przechowywania danych.
+      </p>
+      <h3 id="14.1.4.rename">14.1.4. Zmiana nazwy elementów LVM</h3>
+      <p>
+        Nazwę możemy zmienić takim elementom jak wolumin logiczny - polecenie
+        <strong>lvrename</strong> oraz grupa woluminów - polecenie
+        <strong>vgrename</strong>. Polecenie <em>lvrename</em> wymaga podania 
+        scieżki do woluminu (znajdziemy go za pomocą polecenia 
+        <em>vgdisplay -v</em>) oraz nowej nazwy. Możemy ominąć potrzebę
+        podawania ścieżki do woluminu, poprzedzając jego nazwę, nazwą grupy. 
+        Z nazwą grupy jest o wiele prościej wystarczy podać poleceniu
+        <em>vgrename</em> starą nazwę grupy oraz nową.
+      </p>
+      <p>
+        Zmiana nazwy woluminu za pomoca ścieżki woluminu:
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo lvrename /dev/vg_course/lvol0 rhelvol0
+  Renamed "lvol0" to "rhelvol0" in volume group "vg_course"
+</pre>
+      <p>
+        Zmiana nazwy woluminu za pomocą nazwy grupy:
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo lvrename vg_course rhelvol0 rhel9vol0
+  Renamed "rhelvol0" to "rhel9vol0" in volume group "vg_course"
+</pre>
+      <p>
+        Zmiana nazwy grupy:
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo vgrename vg_course rhcsa9
+  Devices file /dev/vdb is excluded by filter: device is partitioned.
+  Volume group "vg_course" successfully renamed to "rhcsa9"
+</pre>
+      <h3 id="14.1.5.extend">14.1.5. Rozszerzanie elementów LVM</h3>
+      <p>
+        Za pomocą poleceń <strong>vgextend</strong> możemy rozszerzyć grupę
+        woluminów o dodatkowe woluminy fizyczne. Natomiast za pomocą polecenia
+        <strong>lvextend</strong> możemy rozszerzyć wolumin logiczny o
+        dodatkowe miejsce, przy czym wolumin należy podać w postaci ścieżki. 
+      </p>
+      <p>
+        Rozszerzenie grupy woluminów o kolejny wolumin fizyczny:
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo vgextend rhcsa9 /dev/vdd
+  Devices file /dev/vdb is excluded by filter: device is partitioned.
+  Volume group "rhcsa9" successfully extended
+</pre>
+      <p>
+        Rozszerzenie woluminów logicznych o dodatkową przestrzeń:
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo lvextend -L +100M /dev/rhcsa9/rhel9vol0
+  Size of logical volume rhcsa9/rhel9vol0 changed from 100,00 MiB (25 extents) to 200,00 MiB (50 extents).
+  Logical volume rhcsa9/rhel9vol0 successfully resized.
+</pre>
+      <p>
+        Zwróćmy uwagę w jaki sposób podajemy wielkość o którą chcemy rozszerzyć
+        podany wolumin.
+      </p>
+      <h3 id="14.1.6.reduce">14.1.6. Zmieniejszanie elementów LVM</h3>
+      <p>
+        Za pomocą kolejnej pary poleceń <strong>lvreduce</strong>, oraz
+        <strong>vgreduce</strong> możemym zmieniejszyć ilość miejsca w
+        przypadku woluminów logicznych oraz usunąć z grupy okreslone woluminy
+        fizyczne. Przyczym warto dodać, o ile rozszerzenie miejsca nie było
+        działaniem destrukcyjnym (gdy np. na woluminach logicznych znajdują
+        sie systemy plików oraz dane) to zmieniejszanie z całą pewnością jest
+        takim działaniem.
+      </p>
+      <p>
+        Zmniejszenie woluminu logicznego o 50 MB, przyczm wielkość możemy
+        podać odejmując podaną wartość lub podając już nową wielkość dla
+        woluminu. Obie formy są poprawne.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo lvreduce -L -50M /dev/rhcsa9/rhel9vol0
+[sudo] hasło użytkownika user: 
+  Rounding size to boundary between physical extents: 48,00 MiB.
+  WARNING: Reducing active logical volume to 152,00 MiB.
+  THIS MAY DESTROY YOUR DATA (filesystem etc.)
+Do you really want to reduce rhcsa9/rhel9vol0? [y/n]: y
+  Size of logical volume rhcsa9/rhel9vol0 changed from 200,00 MiB (50 extents) to 152,00 MiB (38 extents).
+  Logical volume rhcsa9/rhel9vol0 successfully resized.
+
+[user@rhel90 ~]$ sudo lvreduce -L 100M /dev/rhcsa9/rhel9vol0
+  WARNING: Reducing active logical volume to 100,00 MiB.
+  THIS MAY DESTROY YOUR DATA (filesystem etc.)
+Do you really want to reduce rhcsa9/rhel9vol0? [y/n]: y
+  Size of logical volume rhcsa9/rhel9vol0 changed from 152,00 MiB (38 extents) to 100,00 MiB (25 extents).
+  Logical volume rhcsa9/rhel9vol0 successfully resized.
+</pre>
+      <p>
+        Usunięcie z grupy jednego z woluminów fizycznych. 
+      </p> 
+<pre class="code-block">
+[user@rhel90 ~]$ sudo vgreduce rhcsa9 /dev/vdd
+[sudo] hasło użytkownika user: 
+  Devices file /dev/vdb is excluded by filter: device is partitioned.
+  Removed "/dev/vdd" from volume group "rhcsa9"
+</pre>
+      <h3 id="14.1.7.undo">14.1.7. Wycofywanie zmian LVM na dyskach</h3>
+      <p>
+        Wycofywanie zmian rozpoczniemy od usunięcia woluminów logicznych a
+        służy temu polecenie <strong>lvremove</strong>, aby usunąć wolumin
+        podaje się nazwę grupy oraz nazwę woluminu:
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo lvremove rhcsa9 rhel9vol0
+  Devices file /dev/vdb is excluded by filter: device is partitioned.
+Do you really want to remove active logical volume rhcsa9/rhel9vol0? [y/n]: y
+  Logical volume "rhel9vol0" successfully removed.
+  Volume group "rhel9vol0" not found
+  Cannot process volume group rhel9vol0
+</pre>
+      <p>
+        Kombinację tych dwóch wartości możemy zastąpić ścieżką do woluminu, a
+        potwierdzenie możemy wymusić za pomocą opcji <em>-f</em>. 
+      </p>
+      <p>
+        Po usunięciu woluminu przszedł czas na usunięci grupy woluminów, do
+        tego należy wykorzystać polecenie <strong>vgremove</strong>. Polecenie
+        to przyjmuje nazwę grupy jako argument.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo vgremove rhcsa9
+[sudo] hasło użytkownika user: 
+  Devices file /dev/vdb is excluded by filter: device is partitioned.
+  Volume group "rhcsa9" successfully removed
+</pre>
+      <p>
+        Po usunięciu grupy pozostaje tylko wyczyszcznie dysków ze wszelkich
+        struktur stworzonych na potrzeby <em>LVM</em>. Polecenie, które wykona
+        tę czynność to <strong>pvremove</strong>.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo pvremove /dev/vdb1 /dev/vdc
+  Devices file /dev/vdb is excluded by filter: device is partitioned.
+  Labels on physical volume "/dev/vdb1" successfully wiped.
+  Labels on physical volume "/dev/vdc" successfully wiped.
+</pre>
+      <h2 id="14.2.vdo">14.2. Wykorzystanie VDO do zarządzania pamięciami masowymi</h2>
+      <p>
+        <strong>VDO</strong>, czyli <em>Virtual Disk Optimizer</em> jest 
+        technologia zarządzania pamięciami masowymi pozwalająca na 
+        zaoszczędzenie wykorzystywanej przestrzeni, zwiększenie wydajności
+        przesyłanych danych oraz zaoszczędzenie pieniędzy przeznaczonych na
+        zakup dysków. <em>VDO</em> wykorzystuje takie techniki jak kompresja,
+        technologia <em>thin provisioning</em> oraz unikanie tworzenia
+        duplikatów plików. Kiedyś <em>VDO</em> było odrębną techniką tak jak
+        <em>LVM</em> czy <em>Stratis</em>. Obecnie od <em>RHEL</em> 8.5
+        zostało z unifikowane wraz z <em>LVM</em> jako jeden z rodzajów 
+        logicznych woluminów. Tym zajmiemy się tym podrodziale otóż utworzymy
+        logiczny volumin <em>VDO</em>.
+      </p>
+      <p>
+        Aby użyć wolumin typu <em>VDO</em> musimy dysponować co najmniej 5GB
+        przestrzenii w grupie woluminów. Ja poniżej stworzyłem grupę składającą
+        się z jednego 10GB fizycznego voluminu.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo pvcreate /dev/vdf
+[sudo] hasło użytkownika user: 
+  Devices file /dev/vdb is excluded by filter: device is partitioned.
+  Physical volume "/dev/vdf" successfully created.
+[user@rhel90 ~]$ sudo vgcreate vg-vdo /dev/vdf
+  Devices file /dev/vdb is excluded by filter: device is partitioned.
+  Volume group "vg-vdo" successfully created
+[user@rhel90 ~]$ sudo vgs
+  Devices file PVID none last seen on /dev/vdd1 not found.
+  Devices file PVID none last seen on /dev/vdd2 not found.
+  Devices file PVID none last seen on /dev/vdc1 not found.
+  Devices file /dev/vdb is excluded by filter: device is partitioned.
+  VG     #PV #LV #SN Attr   VSize   VFree  
+  rhel     1   2   0 wz--n- &lt;11,00g      0 
+  vg-vdo   1   0   0 wz--n- &lt;10,00g &lt;10,00g
+</pre>
+      <p>
+        Przed utworzeniem woluminu, musimy poznać ilość ekstentów dostępnych
+        w grupie. Za pomocą poniższego polecenia możemy ustalić te liczbę.
+        Jest ona istotna, ponieważ jeśli jej nie podamy nie będziemy mogi
+        skorzystać z <em>thin provisioning</em>.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo vgdisplay -v vg-vdo | grep 'Free PE'
+[sudo] hasło użytkownika user: 
+  Devices file PVID none last seen on /dev/vdd1 not found.
+  Devices file PVID none last seen on /dev/vdd2 not found.
+  Devices file PVID none last seen on /dev/vdc1 not found.
+  Total PE / Free PE    2559 / 2559
+</pre>
+      <p>
+        Teraz możemy za pomocą polecenia <em>lvcreate</em> utworzyć wolumin
+        logiczny w stylu <em>VDO</em>:
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo lvcreate --type vdo -n vdo-vol0 -l 2559 -V 1TB vg-vdo
+    The VDO volume can address 6 GB in 3 data slabs, each 2 GB.
+    It can grow to address at most 16 TB of physical storage in 8192 slabs.
+    If a larger maximum size might be needed, use bigger slabs.
+  Logical volume "vdo-vol0" created.
+</pre>
+      <p>
+        W ten sposób stworzyłem wolumin w stylu <em>VDO</em>, za pomocą opcji
+        <em>-V</em> podaje wirtualną wielkość tego urządzenia. Polecenie poza
+        utworzeniem woluminu dodatkowy wolumin puli. Tak utworzony wolumin
+        <em>VDO</em> może nam posłużyć do przechowywania danych na serwerze.
+        Poniżej znajduje się wynik działania poleceń <em>lvs</em>,
+        <em>vgdisplay</em>.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo lvs -a vg-vdo
+  Devices file PVID none last seen on /dev/vdd1 not found.
+  Devices file PVID none last seen on /dev/vdd2 not found.
+  Devices file PVID none last seen on /dev/vdc1 not found.
+  LV             VG     Attr       LSize   Pool   Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  vdo-vol0       vg-vdo vwi-a-v---   1,00t vpool0        0,00                                   
+  vpool0         vg-vdo dwi------- &lt;10,00g            40,02                                  
+  [vpool0_vdata] vg-vdo Dwi-ao---- &lt;10,00g                                                      
+</pre>
+      <p>
+        Zwróćmy uwagę, że samo utrzymanie takiego woluminu, kosztuje nas 4GB
+        miejsca na dysku i nie jest to zależne od jego rozmiaru. Poniżej
+        znajdują się informacje uzyskane z polecenia <em>vgdisplay</em>: 
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo vgdisplay -v vg-vdo
+  Devices file PVID none last seen on /dev/vdd1 not found.
+  Devices file PVID none last seen on /dev/vdd2 not found.
+  Devices file PVID none last seen on /dev/vdc1 not found.
+  --- Volume group ---
+  VG Name               vg-vdo
+  System ID             
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  16
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                2
+  Open LV               0
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               &lt;10,00 GiB
+  PE Size               4,00 MiB
+  Total PE              2559
+  Alloc PE / Size       2559 / &lt;10,00 GiB
+  Free  PE / Size       0 / 0   
+  VG UUID               qPdY4n-YQUG-x5tu-szTe-B3bT-idC8-vseZXH
+   
+  --- Logical volume ---
+  LV Path                /dev/vg-vdo/vpool0
+  LV Name                vpool0
+  VG Name                vg-vdo
+  LV UUID                H9mloX-8x8N-4OHz-HHvz-qWhZ-dnJE-Sq1sCX
+  LV Write Access        read/write
+  LV Creation host, time rhel90, 2022-07-22 15:17:50 +0200
+  LV VDO Pool data       vpool0_vdata
+  LV VDO Pool usage      40,02%
+  LV VDO Pool saving     100,00%
+  LV VDO Operating mode  normal
+  LV VDO Index state     online
+  LV VDO Compression st  online
+  LV VDO Used size       4,00 GiB
+  LV Status              NOT available
+  LV Size                &lt;10,00 GiB
+  Current LE             2559
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+   
+  --- Logical volume ---
+  LV Path                /dev/vg-vdo/vdo-vol0
+  LV Name                vdo-vol0
+  VG Name                vg-vdo
+  LV UUID                sc5RL6-LfF6-jzCT-6TNK-c4Q3-J2sf-m1ZufS
+  LV Write Access        read/write
+  LV Creation host, time rhel90, 2022-07-22 15:17:53 +0200
+  LV VDO Pool name       vpool0
+  LV Status              available
+  # open                 0
+  LV Size                1,00 TiB
+  Current LE             262144
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           253:4
+   
+  --- Physical volumes ---
+  PV Name               /dev/vdf     
+  PV UUID               kAxqd2-v4Xo-nmB8-311H-nM2d-DtHn-WutyCf
+  PV Status             allocatable
+  Total PE / Free PE    2559 / 0
+</pre>
+      <p>
+        Usuwanie takiego woluminu wygląda jak usuwanie każdego innego woluminu,
+        jednak w tym przypadku program zapyta czy usunąć także zależny wolumin
+        puli.
+      </p>
+      <h2 id="14.3.stratis">14.4. Zarządzanie pamięcią masową za pomocą Stratis</h2>
+      <p>
+        <strong>Stratis</strong> jest to technologia łącząca ze sobą trzy
+        kompnenty systemowe, pozwalając łączenie dysków w pule oraz tworzenie
+        już gotowych do monotwania systemów plików typu <strong>XFS</strong>.
+        <em>Stratis</em> jest praktycznie rzecz biorąc bardzo podobny do
+        <em>LVM</em> jednak nie tworzymy logicznych woluminów, a gotowe
+        <strong>systemy plików</strong>, grupa do której należą dyski nazwane
+        w tym przypadku <strong>blockdev</strong> nazywana jest
+        <strong>pulą</strong>. 
+      </p>
+      <p>
+        Stratis nie jest natywnie dostępny w systemie i trzeba go zainstalować.
+        Pakiety znajdują się w repozytorium na płycie instalacyjnej z RHEL9.
+        Aby zainstalować w <em>Stratis</em> za systemie wydajemy poniższe
+        polecenie:
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo dnf install stratisd stratis-cli -y
+[sudo] hasło użytkownika user: 
+Updating Subscription Management repositories.
+Unable to read consumer identity
+
+This system is not registered with an entitlement server. You can use subscription-manager to register.
+
+Ostatnio sprawdzono ważność metadanych: 0:36:10 temu w dniu pią, 22 lip 2022, 15:23:29.
+Pakiet stratisd-2.4.2-3.el9.x86_64 jest już zainstalowany.
+Pakiet stratis-cli-2.4.3-2.el9.noarch jest już zainstalowany.
+Rozwiązano zależności.
+Nie ma nic do zrobienia.
+Ukończono.
+</pre>
+      <p>
+        Stratis występuje w systemie w postaci demona, dlatego też należy
+        włączyć i uruchomić jego jednostkę.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo systemctl enable stratisd.service
+[user@rhel90 ~]$ sudo systemctl start stratisd.serivce
+[user@rhel90 ~]$ sudo systemctl status stratisd
+● stratisd.service - Stratis daemon
+     Loaded: loaded (/usr/lib/systemd/system/stratisd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Fri 2022-07-22 08:16:57 CEST; 7h ago
+       Docs: man:stratisd(8)
+   Main PID: 758 (stratisd)
+      Tasks: 6 (limit: 7746)
+     Memory: 4.1M
+        CPU: 8.731s
+     CGroup: /system.slice/stratisd.service
+             └─758 /usr/libexec/stratisd --log-level debug
+
+lip 22 08:16:56 rhel90 stratisd[758]: [2022-07-22T06:16:56Z INFO  libstratis::stratis::run] stratis daemon version 2.4.2 started
+lip 22 08:16:56 rhel90 stratisd[758]: [2022-07-22T06:16:56Z INFO  libstratis::stratis::run] Using StratEngine
+lip 22 08:16:56 rhel90 stratisd[758]: [2022-07-22T06:16:56Z INFO  libstratis::engine::strat_engine::liminal::identify] Beginning initial search for S>
+lip 22 08:16:56 rhel90 stratisd[758]: [2022-07-22T06:16:56Z DEBUG libstratis::stratis::run] 2: thread started
+lip 22 08:16:56 rhel90 stratisd[758]: [2022-07-22T06:16:56Z DEBUG libstratis::stratis::run] 3: thread started
+lip 22 08:16:57 rhel90 stratisd[758]: [2022-07-22T06:16:57Z INFO  libstratis::stratis::ipc_support::dbus_support] D-Bus API is available
+...
+</pre>
+      <h3 id="14.3.1.createpool">14.3.1. Tworzenie puli Stratis</h3>
+      <p>
+        Teraz kiedy <em>Stratis</em> jest uruchomiony. Możemy przejsć do
+        utworzenia puli. Do utworzenia puli użyjemy podpolecenia <em>pool</em>
+        polecenia <em>stratis</em> oraz podpolecenia <em>create</em>
+        podpolecenia <em>pool</em>. Jako argumenty podajemy nazwę puli oraz
+        listę dysków.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo stratis pool create rhcsa /dev/vdg
+[sudo] hasło użytkownika user: 
+</pre>
+      <p>
+        Informacje na temat puli możemy uzyskać za pomocą podpolecenia
+        <em>list</em> podpolecenia <em>pool</em>.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo stratis pool list
+Name                    Total Physical   Properties                                   UUID
+rhcsa   1 GiB / 37.63 MiB / 986.37 MiB      ~Ca,~Cr   5091bc53-7693-4a92-a434-fe8e682d0f58
+</pre>
+      <p>
+        Z informacji zwracanych z tego polecenie nas na tym etapie powinno
+        interesować kolumna zawierająca informacje o wielkości puli. Teraz
+        możemy utworzyć system plików. 
+      </p>
+      <h3 id="14.3.2.createfilesystem">14.3.2. Tworzenie systemu plików Stratis</h3>
+      <p>
+        Tworzenie systemu plików odbywa się za pomocą podpolecenie
+        <em>create</em>, podpolecenia <em>filesystem</em>. To podpolecenie
+        wymaga jako argumenty nazwę puli oraz nazwę systemu plików.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo stratis filesystem create rhcsa rhcsafs0
+[user@rhel90 ~]$ sudo stratis filesystem
+Pool Name   Name       Used      Created             Device                        UUID                                
+rhcsa       rhcsafs0   546 MiB   Jul 22 2022 16:34   /dev/stratis/rhcsa/rhcsafs0   5ca8e5b1-f32a-42e0-ac90-29777b3fc8ed
+</pre>
+      <p>
+        Zwróćmy uwagę na to, iż <em>Stratis</em> sam dobiera na podstawie
+        wielkości puli wielkość systemu plików. Tak utworzony system jest
+        dostępnym jako urządzenie blokowe pod ścieżką w kolumnie
+        <code class="code-inline">Device</code>.
+      </p>
+      <h3 id="14.3.3.expandandrenamestratis">14.3.3. Rozszerzenie oraz zmiana nazwy puli oraz systemu plików Stratis</h3>
+      <p>
+        Do rozszerzenia puli <em>Stratis</em> służy podpolecenie
+        <em>add-data</em> podpolecenia <em>pool</em>. To podpolecenie oczekuje
+        podania nazwy urządzenia dyskowego.
+      </p> 
+<pre class="code-block">
+[user@rhel90 ~]$ sudo stratis pool add-data rhcsa /dev/vdh
+[user@rhel90 ~]$ sudo stratis blockdev
+Pool Name   Device Node   Physical Size   Tier
+rhcsa       /dev/vdg              1 GiB   Data
+rhcsa       /dev/vdh              1 GiB   Data
+</pre>
+      <p>
+        Za pomoca podpolecenia <code class="code-inline">blockdev</code>, mamy
+        możliwość podejrzenia przypisanych do puli dysków. Jak widzimy teraz
+        w puli znajdują się dwa dyski, zatem będziemy mogli utworzyć kolejny
+        system plików, ponieważ samych systemów plików nie możemy zmienić.
+        Teraz zmienimy nazwę puli oraz nazwę systemu plików.
+      </p>
+      <p>
+        Do zmiany nazw służy podpolecenie kolejno podpolecenia <em>pool</em>
+        oraz <em>filesystem</em>. Na poniższym przykładzie znajduje się 
+        zastosowanie tego podpolecenia:
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo stratis pool rename rhcsa rhcsa9
+[user@rhel90 ~]$ sudo stratis filesystem rename rhcsa9 rhcsafs0 rhcsa9fs0
+</pre>
+      <h3 id="14.3.4.destroy">14.3.4. Usuwanie elementów Stratis</h3>
+      <p>
+        Za pomocą podpolecenia <em>destroy</em> możemy usunąć zarówno system
+        plików jak i pulę <em>Stratis</em>. Poniżej znajduje się przykład
+        użycia, tego podpolecenia w innych ujęciach.
+      </p>
+      <p>
+        Usunięcie systemu plików:
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo stratis filesystem destroy rhcsa9 rhcsa9fs0
+</pre>
+      <p>
+        Usunięcie puli <em>Stratis</em>:
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo stratis pool destroy rhcsa9
+</pre>
+      <p>
+        Żadna pula już w systemie nie istnieje. 
+      </p>
+<pre class="code-inline">
+[user@rhel90 ~]$ sudo stratis pool
+Name   Total Physical   Properties   UUID
+</pre>
+      <p class="exam_tip">
+        Nie musimy uczyć się na pamięć podpoleceń czy składni. Wiekszość
+        informacji możemy uzyskać wydając polecenie z opcją <em>--help</em> lub
+        wydać samo podpolecenie bez argumentów. Jedyne o czym należy pamiętać
+        to które polecenie lub podpolecenie jest od czego.
       </p>
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">

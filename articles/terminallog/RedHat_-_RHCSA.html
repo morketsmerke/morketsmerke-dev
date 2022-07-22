@@ -10902,6 +10902,22 @@ Do you really want to remove active logical volume rhcsa9/rhel9vol0? [y/n]: y
   Total PE / Free PE    2559 / 0
 </pre>
       <p>
+        W RHEL pozostało jeszcze jedno polecenie, które pozwala zwrócić
+        statystykę na temat obecnego w systemie woluminu puli <em>VDO</em>,
+        takim poleceniem jest <em>vdostats</em>. Poniżej znajduje się
+        przykład użycia.
+      </p>
+<pre class="code-block">
+[user@rhel90 ~]$ sudo vdostats --si
+Device                    Size      Used Available Use% Space saving%
+vg--vdo-vpool0-vpool     10.7G      4.3G      6.4G  40%            0%
+</pre>
+      <p>
+        Na powyższym przykładzie użyłem opcji 
+        <code class="code-inline">--si</code>, aby przeskalować jedostki to
+        poziomu czytelnego dla człowieka.
+      </p> 
+      <p>
         Usuwanie takiego woluminu wygląda jak usuwanie każdego innego woluminu,
         jednak w tym przypadku program zapyta czy usunąć także zależny wolumin
         puli.
@@ -11069,6 +11085,81 @@ Name   Total Physical   Properties   UUID
         wydać samo podpolecenie bez argumentów. Jedyne o czym należy pamiętać
         to które polecenie lub podpolecenie jest od czego.
       </p>
+      <h3 id="exec14.1">Ćwiczenie 1: Tworzenie grup woluminów oraz logicznych woluminów</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień na serwerze
+        oznaczonym jako <em>server2</em>. Stwórz z jedego z 250MB dysków
+        wolumin fizyczny następnie utwórz grupę <em>vg100</em> ustawiając
+        wielkość fizycznych ekstentów na 16MB, a następnie dodaj fizyczny
+        wolumin. Utwórz dwa woluminy logiczne o nazwach kolejno <em>lvol0</em>
+        oraz <em>swapvol</em> o wielkości 100 oraz 120MB. Zweryfikuj wykonane
+        wcześniej czynności za pomocą poleceń: <em>pvs</em>, <em>lvs</em>,
+        <em>vgs</em> oraz <em>vgdisplay</em>.
+      </p>
+      <h3 id="exec14.2">Ćwiczenie 2: Rozszerzenie grupy woluminów oraz logicznego woluminu</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień na serwerze
+        oznaczonym jako <em>server2</em>. Użyj kolejnego dysku o wielkości 
+        250MB jako woluminu fizycznego <em>LVM</em>. Dodaj nowy wolumin do
+        grupy z poprzedniego ćwiczenia. Rozszerz pojemność woluminu logicznego
+        <em>lvol0</em> do 300MB. Sprawdź wykonane czynności za pomocą poleceń:
+        <em>pvs</em>, <em>lvs</em>, <em>vgs</em> oraz <em>vgdisplay</em>.
+      </p>
+      <h3 id="exec14.3">Ćwiczenie 3: Redukcja oraz usunięcie woluminów logicznych</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień na serwerze
+        oznaczonym jako <em>server2</em>. Zmieniejsz rozmiar woluminu
+        logicznego <em>lvol0</em> do 80MB. Usuń oba woluminy logiczne.
+        Sprawdź wykonane czynności za pomocą poleceń:
+        <em>pvs</em>, <em>lvs</em>, <em>vgs</em> oraz <em>vgdisplay</em>.
+      </p>
+      <h3 id="exec14.4">Ćwiczenie 4: Wycofywanie zmian LVM na dyskach</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień na serwerze
+        oznaczonym jako <em>server2</em>. Usuń grupę woluminów logicznych
+        <em>vg100</em>. Wyczyść konfiguracje <em>LVM</em> z dysków.
+        Sprawdź wykonane czynności za pomocą polecenia <em>lsblk</em>.
+      </p>
+      <h3 id="exec14.5">Ćwiczenie 5: Logiczne woluminy VDO</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień na serwerze
+        oznaczonym jako <em>server2</em>. Utwórz konfigurację <em>LVM</em> na
+        podstawie jedno z 10GB dysków (jeśli nie masz takiego dysku, dodaj go).
+        W utworzonej grupie utwórz wolumin <em>VDO</em> o wielkości wirtualnej
+        50GB. Zweryfikuj wykonanie czynności za pomocą poleceń 
+        <em>vgdisplay</em> oraz <em>vdostats</em>. Wycofaj wszystkie dokonane
+        zmiany.
+      </p>
+      <h3 id="exec14.6">Ćwiczenie 6: Tworzenie puli Stratis</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień na serwerze
+        oznaczonym jako <em>server2</em>. Sprawdź za pomocą <em>lsblk</em>
+        dostępność jednego dysków o pojemności 1GB. Nastepnie utwórz z jego
+        użyciem nową pulę <em>Stratis</em> o nazwie <em>strpool</em>.
+        Potwierdź wykonanie czynności wyświetlając informacje o puli oraz
+        o urządzenia blokowych za pomocą podpoleceń polecenia <em>Stratis</em>
+        oraz polecenia <em>lsblk</em>.
+      </p>
+      <h3 id="exec14.7">Ćwiczenie 7: Rozszerzenie i usunięcie puli Stratis</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień na serwerze
+        oznaczonym jako <em>server2</em>. Za pomocą drugiego dysku o pojemności
+        1GB rozszerz rozmiar puli <em>Stratis</em> <em>strpool</em>.
+        Zweryfikuj wykonaną czynność. Na koniec usuń pulę <em>Stratis</em>,
+        zweryfikuj to za pomocą polecenia <em>lsblk</em>.
+      </p>
+      <h2 id="ch14summary">Podsumowanie</h2>
+      <p>
+        W tym rozdziale poznaliśmy zaawasowane sposoby na zarządzanie
+        zainstalowanymi w naszych komputerach dyskami. Poznaliśmy wiele poleceń,
+        których składni nie trzeb się uczyć na pamięć. Trzeba się jednak
+        orientować jakie polecenie jest do czego. Poznaliśmy zaległą
+        technologię <em>VDO</em> oraz trochę uprzedzającą fakty zebrane w
+        następnym rodziale technologię <em>Stratis</em>. W następnym rozdziale
+        poznamy systemy plików oraz sposoby na formatowanie tworzonych w tym
+        oraz w poprzednim rozdziale urządzeń blokowych, aby w końcu można
+        było ich użyć do przechowywania danych.
+      </p> 
 		</div>
 	  <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

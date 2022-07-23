@@ -404,6 +404,38 @@
             <li><a href="#ch13summary">Podsumowanie</a></li>
           </ul>
         </li>
+        <li><a href="#14.advancedstoragemanagement">14. Zaawansowane zarządzanie pamięcią masową</a>
+          <ul class="toc">
+            <li><a href="#14.1.lvm">14.1. Zarządzanie pamięcią masową przy użyciu LVM</a>
+              <ul class="toc">
+                <li><a href="#14.1.1.createpv">14.1.1. Tworzenie woluminów fizycznych</a></li>
+                <li><a href="#14.1.2.vgcreate">14.1.2. Tworzenie grup woluminów</a></li>
+                <li><a href="#14.1.3.lvcreate">14.1.3. Tworzenie woluminów logicznych LVM</a></li>
+                <li><a href="#14.1.4.rename">14.1.4. Zmiana nazwy elementów LVM</a></li>
+                <li><a href="#14.1.5.extend">14.1.5. Rozszerzanie elementów LVM</a></li>
+                <li><a href="#14.1.6.reduce">14.1.6. Zmniejszanie elementów LVM</a></li>
+                <li><a href="#14.1.7.undo">14.1.7. Wycofywanie zmian LVM na dyskach</a></li>
+              </ul>
+            </li>
+            <li><a href="#14.2.vdo">14.2. Wykorzystanie VDO do zarządzania pamięciami masowymi</a></li>
+            <li><a href="#14.3.stratis">14.4. Zarządzanie pamięcią masową za pomocą Stratis</a>
+              <ul class="toc">
+                <li><a href="#14.3.1.createpool">14.3.1. Tworzenie puli Stratis</a></li>
+                <li><a href="#14.3.2.createfilesystem">14.3.2. Tworzenie systemu plików Stratis</a></li>
+                <li><a href="#14.3.3.expandandrenamestratis">14.3.3. Rozszerzenie oraz zmiana nazwy puli oraz systemu plików Stratis</a></li>
+                <li><a href="#14.3.4.destroy">14.3.4. Usuwanie elementów Stratis</a></li>
+              </ul>
+            </li>
+            <li><a href="#exec14.1">Ćwiczenie 1: Tworzenie grup woluminów oraz logicznych woluminów</a></li>
+            <li><a href="#exec14.2">Ćwiczenie 2: Rozszerzenie grupy woluminów oraz logicznego woluminu</a></li>
+            <li><a href="#exec14.3">Ćwiczenie 3: Redukcja oraz usunięcie woluminów logicznych</a></li>
+            <li><a href="#exec14.4">Ćwiczenie 4: Wycofywanie zmian LVM na dyskach</a></li>
+            <li><a href="#exec14.5">Ćwiczenie 5: Logiczne woluminy VDO</a></li>
+            <li><a href="#exec14.6">Ćwiczenie 6: Tworzenie puli Stratis</a></li>
+            <li><a href="#exec14.7">Ćwiczenie 7: Rozszerzenie i usunięcie puli Stratis</a></li>
+            <li><a href="#ch14summary">Podsumowanie</a></li>
+          </ul>
+        </li>
       </ul>
       <h1 id="1.introduction">1. Wstęp</h1>
       <p>
@@ -10306,10 +10338,10 @@ Number  Start (sector)    End (sector)  Size       Code  Name
         związany z bardziej efektywnym wykorzystaniem przestrzeni na dysku
         dzięki <em>VDO</em>. Kolejnym zagadnienieniem będzie <em>LVM</em>,
         który pozwala spojrzeć nieco inaczej na urządzenia służące do
-        przechowywania danych. Ostatnim zagadnieniem będzie <em>Stratis</em>,
+        przechowywania danych. Ostatnim tematem będzie <em>Stratis</em>,
         który łączy ze sobą kilka komponentów systemu pozwalających na
-        stworzenie stablinego i wydajnego systemu plików (o systemach plików)
-        będzie w następnym rozdziale.
+        stworzenie stablinego i wydajnego systemu plików (o systemach plików
+        będzie w następnym rozdziale).
       </p>
       <h2 id="14.1.lvm">14.1. Zarządzanie pamięcią masową przy użyciu LVM</h2>
       <p>
@@ -10320,21 +10352,21 @@ Number  Start (sector)    End (sector)  Size       Code  Name
         dyski stają się <strong>wolumenami fizycznymi</strong>. Wolumeny
         fizyczne łączy się w <strong>grupę wolumenów</strong>, która staje
         się pulą to tworzenie nowych urządzeń dyskowych bazujących na miejscu
-        dostępnym w grupie. Takie urządznie noszą nazwę
+        dostępnym w grupie. Takie urządzenia noszą nazwę
         <strong>wolumenów logicznych</strong>. W ujęciu <em>LVM</em>
         najmiejszą logiczną jednostką alokacji przestrzeni dyskowej są 
-        <strong>ekstenty</strong>. Ekstenty dzielą się na logiczne będą
-        cząstkami woluminów logicznych oraz na fizyczne będą elementami
-        woluminów fizycznych. Ekstenty podczas tworzenia woluminów
-        logicznych oraz fizycznych mają domyślną wielkość wynoszącą około
-        <strong>4 MB</strong>. Oczywiście można to zmienić, te wartości również
-        nie muszą być sobie równe. Pojęcie ekstenów będzie potrzebne nam
-        przy <em>VDO</em>.
+        <strong>ekstenty</strong>. Ekstenty dzielą się na logiczne będące
+        cząstkami woluminów logicznych oraz na fizyczne będące elementami
+        woluminów fizycznych. Ekstenty podczas tworzenia grupy woluminów
+        mają domyślną wielkość wynoszącą około <strong>4 MB</strong>. 
+        Oczywiście można to zmienić. A wielkości ekstentów (logicznych i
+        fizycznych) nie muszą być sobie równe. Pojęcie ekstenów będzie 
+        potrzebne nam przy <em>VDO</em>.
       </p>
       <p>
         Elementy logiczne <em>LVM</em> są bardzo eleastyczne, może je dodawać
-        usuwać, rozszerzać, zmieniejszać i zmieniać wcześniej nadane nazwy, i
-        tym się właśnie zajmiemy w tym rodziale. Oczywiście będziemy pracować
+        usuwać, rozszerzać, zmniejszać i zmieniać wcześniej nadane nazwy.
+        Tym się właśnie zajmiemy w tym rodziale. Oczywiście będziemy pracować
         z urządzeniami więc niezbędne będą uprawnienia administratora.
       </p>
       <h3 id="14.1.1.createpv">14.1.1. Tworzenie woluminów fizycznych</h3>
@@ -10398,7 +10430,7 @@ The operation has completed successfully.
 </pre>
       <p>
         Tak utworzoną partycje możemy zainicjować jako wolumin fizyczny za
-        pomocą polecenie <strong>pvcreate</strong>.
+        pomocą polecenia <strong>pvcreate</strong>.
       </p>
 <pre class="code-block">
 [user@rhel90 ~]$ sudo pvcreate /dev/vdb1
@@ -10418,7 +10450,7 @@ The operation has completed successfully.
   Physical volume "/dev/vdc" successfully created.
 </pre>
       <p>
-        Listę dostępnych w systemie wolumenów fizycznych możemy wyświetlić
+        Listę dostępnych w systemie woluminów fizycznych możemy wyświetlić
         za pomocą polecenia <strong>pvs</strong>.
       </p>
 <pre class="code-block">
@@ -10475,14 +10507,16 @@ The operation has completed successfully.
   vg_course   2   0   0 wz--n- 376,00m 376,00m
 </pre>
       <p>
-        Polecenie to zwraca informacje podobne do poprzednie polecenia
+        Polecenie to zwraca informacje podobne do poprzedniego polecenia
         <em>pvs</em>. Dodatkowe kolumny zwracają informacje na temat
-        ilości woluminów fizycznych w grupie
-        (<code class="code-block">#PV</code>), ilości woluminów logicznych
-        (<code class="code-block">#LV</code>) oraz ilość <em>snapshotów</em> w
+        ilość woluminów fizycznych w grupie
+        (<code class="code-inline">#PV</code>), ilość woluminów logicznych
+        (<code class="code-inline">#LV</code>) oraz ilość <em>snapshotów</em> w
         grupie woluminów. Reszta kolumn jest podobna do tych informacji
         zwracanych przez <em>pvs</em>. Innym narzędziem zwracającym więcej
-        informacji na temat grupy woluminów jest <strong>vgdisplay</strong>.
+        informacji na temat grupy woluminów jest <strong>vgdisplay</strong>,
+        jako argument przyjmuje ona nazwę grupy, jeśli zostanie pominięta
+        polecenie zwróci informacje na temat wszystkich grup w systemie.
       </p>
 <pre class="code-block">
 [user@rhel90 ~]$ sudo vgdisplay vg_course 
@@ -10513,10 +10547,10 @@ The operation has completed successfully.
 </pre>
       <p>
         Polecenie to zwraca rozmiar fizycznych ekstentów, który w tym
-        przypadku posiada wartość domyślną. Rozmiar ten możemym zmienić
+        przypadku posiada wartość domyślną. Rozmiar ten możemy zmienić
         podając opcje <em>-s</em> oraz wielkość fizycznych extentów jako
         argument opcji podczas tworzenia grupy. Chcąc wydobyć konkretne
-        informacje z tego polecenie możemy posłużyć się poleceniem 
+        informacje z tego polecenia możemy posłużyć się poleceniem 
         <em>grep</em>.
       </p>
 <pre class="code-block">
@@ -10535,9 +10569,9 @@ The operation has completed successfully.
         woluminów logicznych. W tym materiale będą nas interesować tylko dwa
         <em>linear</em> (liniowy, zwykły) oraz <em>VDO</em>. O VDO będzie w
         następnym podrozdziale. Zatem do stworzenia liniowego woluminu
-        logicznego potrzebujemy wielkości (<em>-L</em>) oraz nazwy grupy w 
-        której ma zostać
-        stworzony. Inną dość przydatną opcją, niezależną od rodzaju woluminu
+        logicznego potrzebujemy wielkości (opcja <em>-L</em>) oraz nazwy grupy 
+        w której ma zostać stworzony. 
+        Inną dość przydatną opcją, niezależną od rodzaju woluminu
         jest opcja <em>-n</em>, która pozwala na nadanie nazwy woluminowi.
         Teraz utworzę wolumin logiczny w grupie, którą wcześniej utworzyłem.
       </p>
@@ -10547,8 +10581,8 @@ The operation has completed successfully.
 </pre>
       <p>
         Czasami podana wielkość woluminu może zostać zaokrąglona, ze względu
-        na potrzebe użycia okrągłej liczby extentów. W przypadku tego woluminu
-        zostały zużyte 25 extenty (25 x 4 MB = 100 MB), co możemy podjerzeć 
+        na potrzebę użycia okrągłej liczby ekstentów. W przypadku tego woluminu
+        zostały użyte 25 ekstenty (25 x 4MB = 100MB), co możemy podejrzeć 
         wydając polecenie
         <em>vgdisplay</em> z opcją <em>-v</em> Przez co zwróci ona bardziej
         szczegółowe informacje na temat grupy, w tym informacje na temat
@@ -10578,7 +10612,7 @@ The operation has completed successfully.
       <p>
         Innm narzędziem, które zwraca informacje na temat woluminów logicznych
         jest <strong>lvs</strong>. Zwraca ono podobne informacje do <em>vgs</em>
-        na przykład.
+        na przykład:
       </p>
 <pre class="code-block">
 [user@rhel90 ~]$ sudo lvs
@@ -10590,19 +10624,21 @@ The operation has completed successfully.
   swap rhel -wi-ao---- 1,20g       
 </pre>
       <p>
-        Informacje zwracją nazwę woluminu (<code class="code-inline">LV</code>),
+        Informacje zawierają nazwę woluminu 
+        (<code class="code-inline">LV</code>),
         grupę woluminów (<code class="code-inline">VG</code>), atrybuty
         (<code class="code-inline">Attr</code>) oraz wielkości
         (<code class="code-inline">LSize</code>).
       </p>
       <p>
         Poza klasyczną wielkością podawną w wielkrotnościach bajtów, wielkość
-        woluminu możemy podawać ilości extentów, służy do tego opcją <em>-l</em>.
+        woluminu możemy podawać ilości ekstentów, służy do tego opcją 
+        <em>-l</em>.
       </p>
       <p>
         Tak utworzone woluminy są pełno prawnymi urządzeniami blokowymi
         przypominającymi dyski. Mozemy zainstalować na nich odpowiedni system
-        plików (będzie o tym w następnym rozdziale), za zamontować w systemie
+        plików (będzie o tym w następnym rozdziale), zamontować je w systemie
         i wykorzystać do przechowywania danych.
       </p>
       <h3 id="14.1.4.rename">14.1.4. Zmiana nazwy elementów LVM</h3>
@@ -10613,7 +10649,7 @@ The operation has completed successfully.
         scieżki do woluminu (znajdziemy go za pomocą polecenia 
         <em>vgdisplay -v</em>) oraz nowej nazwy. Możemy ominąć potrzebę
         podawania ścieżki do woluminu, poprzedzając jego nazwę, nazwą grupy. 
-        Z nazwą grupy jest o wiele prościej wystarczy podać poleceniu
+        Ze zmianą nazwy grupy jest o wiele prościej wystarczy podać poleceniu
         <em>vgrename</em> starą nazwę grupy oraz nową.
       </p>
       <p>
@@ -10665,10 +10701,10 @@ The operation has completed successfully.
         Zwróćmy uwagę w jaki sposób podajemy wielkość o którą chcemy rozszerzyć
         podany wolumin.
       </p>
-      <h3 id="14.1.6.reduce">14.1.6. Zmieniejszanie elementów LVM</h3>
+      <h3 id="14.1.6.reduce">14.1.6. Zmniejszanie elementów LVM</h3>
       <p>
         Za pomocą kolejnej pary poleceń <strong>lvreduce</strong>, oraz
-        <strong>vgreduce</strong> możemym zmieniejszyć ilość miejsca w
+        <strong>vgreduce</strong> możemy zmniejszyć ilość miejsca w
         przypadku woluminów logicznych oraz usunąć z grupy okreslone woluminy
         fizyczne. Przyczym warto dodać, o ile rozszerzenie miejsca nie było
         działaniem destrukcyjnym (gdy np. na woluminach logicznych znajdują
@@ -10676,8 +10712,8 @@ The operation has completed successfully.
         takim działaniem.
       </p>
       <p>
-        Zmniejszenie woluminu logicznego o 50 MB, przyczm wielkość możemy
-        podać odejmując podaną wartość lub podając już nową wielkość dla
+        Zmniejszenie woluminu logicznego o 50 MB, przy czym wielkość możemy
+        podać odejmując podaną wartość lub podając nową wielkość dla
         woluminu. Obie formy są poprawne.
       </p>
 <pre class="code-block">
@@ -10725,7 +10761,7 @@ Do you really want to remove active logical volume rhcsa9/rhel9vol0? [y/n]: y
         potwierdzenie możemy wymusić za pomocą opcji <em>-f</em>. 
       </p>
       <p>
-        Po usunięciu woluminu przszedł czas na usunięci grupy woluminów, do
+        Po usunięciu woluminów przyszedł czas na usunięcie grupy woluminów, do
         tego należy wykorzystać polecenie <strong>vgremove</strong>. Polecenie
         to przyjmuje nazwę grupy jako argument.
       </p>
@@ -10810,9 +10846,10 @@ Do you really want to remove active logical volume rhcsa9/rhel9vol0? [y/n]: y
       <p>
         W ten sposób stworzyłem wolumin w stylu <em>VDO</em>, za pomocą opcji
         <em>-V</em> podaje wirtualną wielkość tego urządzenia. Polecenie poza
-        utworzeniem woluminu dodatkowy wolumin puli. Tak utworzony wolumin
+        utworzeniem podanego woluminu utworzy dodatkowy wolumin puli. Tak 
+        utworzony wolumin
         <em>VDO</em> może nam posłużyć do przechowywania danych na serwerze.
-        Poniżej znajduje się wynik działania poleceń <em>lvs</em>,
+        Poniżej znajduje się wynik działania poleceń <em>lvs</em> oraz
         <em>vgdisplay</em>.
       </p>
 <pre class="code-block">
@@ -10902,10 +10939,11 @@ Do you really want to remove active logical volume rhcsa9/rhel9vol0? [y/n]: y
   Total PE / Free PE    2559 / 0
 </pre>
       <p>
-        W RHEL pozostało jeszcze jedno polecenie, które pozwala zwrócić
+        W <em>RHEL</em> pozostało jeszcze jedno polecenie, które pozwala 
+        zwrócić
         statystykę na temat obecnego w systemie woluminu puli <em>VDO</em>,
         takim poleceniem jest <em>vdostats</em>. Poniżej znajduje się
-        przykład użycia.
+        przykład jego użycia.
       </p>
 <pre class="code-block">
 [user@rhel90 ~]$ sudo vdostats --si
@@ -10914,7 +10952,7 @@ vg--vdo-vpool0-vpool     10.7G      4.3G      6.4G  40%            0%
 </pre>
       <p>
         Na powyższym przykładzie użyłem opcji 
-        <code class="code-inline">--si</code>, aby przeskalować jedostki to
+        <code class="code-inline">--si</code>, aby przeskalować jednostki do
         poziomu czytelnego dla człowieka.
       </p> 
       <p>
@@ -10926,7 +10964,7 @@ vg--vdo-vpool0-vpool     10.7G      4.3G      6.4G  40%            0%
       <p>
         <strong>Stratis</strong> jest to technologia łącząca ze sobą trzy
         kompnenty systemowe, pozwalając łączenie dysków w pule oraz tworzenie
-        już gotowych do monotwania systemów plików typu <strong>XFS</strong>.
+        już gotowych do montowania systemów plików typu <strong>XFS</strong>.
         <em>Stratis</em> jest praktycznie rzecz biorąc bardzo podobny do
         <em>LVM</em> jednak nie tworzymy logicznych woluminów, a gotowe
         <strong>systemy plików</strong>, grupa do której należą dyski nazwane
@@ -10975,7 +11013,7 @@ Ukończono.
 
 lip 22 08:16:56 rhel90 stratisd[758]: [2022-07-22T06:16:56Z INFO  libstratis::stratis::run] stratis daemon version 2.4.2 started
 lip 22 08:16:56 rhel90 stratisd[758]: [2022-07-22T06:16:56Z INFO  libstratis::stratis::run] Using StratEngine
-lip 22 08:16:56 rhel90 stratisd[758]: [2022-07-22T06:16:56Z INFO  libstratis::engine::strat_engine::liminal::identify] Beginning initial search for S>
+lip 22 08:16:56 rhel90 stratisd[758]: [2022-07-22T06:16:56Z INFO  libstratis::engine::strat_engine::liminal::identify] Beginning initial ...
 lip 22 08:16:56 rhel90 stratisd[758]: [2022-07-22T06:16:56Z DEBUG libstratis::stratis::run] 2: thread started
 lip 22 08:16:56 rhel90 stratisd[758]: [2022-07-22T06:16:56Z DEBUG libstratis::stratis::run] 3: thread started
 lip 22 08:16:57 rhel90 stratisd[758]: [2022-07-22T06:16:57Z INFO  libstratis::stratis::ipc_support::dbus_support] D-Bus API is available
@@ -11009,7 +11047,7 @@ rhcsa   1 GiB / 37.63 MiB / 986.37 MiB      ~Ca,~Cr   5091bc53-7693-4a92-a434-fe
       </p>
       <h3 id="14.3.2.createfilesystem">14.3.2. Tworzenie systemu plików Stratis</h3>
       <p>
-        Tworzenie systemu plików odbywa się za pomocą podpolecenie
+        Tworzenie systemu plików odbywa się za pomocą podpolecenia
         <em>create</em>, podpolecenia <em>filesystem</em>. To podpolecenie
         wymaga jako argumenty nazwę puli oraz nazwę systemu plików.
       </p>
@@ -11022,7 +11060,7 @@ rhcsa       rhcsafs0   546 MiB   Jul 22 2022 16:34   /dev/stratis/rhcsa/rhcsafs0
       <p>
         Zwróćmy uwagę na to, iż <em>Stratis</em> sam dobiera na podstawie
         wielkości puli wielkość systemu plików. Tak utworzony system jest
-        dostępnym jako urządzenie blokowe pod ścieżką w kolumnie
+        dostępny jako gotowy do montowania system plików pod ścieżką w kolumnie
         <code class="code-inline">Device</code>.
       </p>
       <h3 id="14.3.3.expandandrenamestratis">14.3.3. Rozszerzenie oraz zmiana nazwy puli oraz systemu plików Stratis</h3>
@@ -11046,7 +11084,8 @@ rhcsa       /dev/vdh              1 GiB   Data
         Teraz zmienimy nazwę puli oraz nazwę systemu plików.
       </p>
       <p>
-        Do zmiany nazw służy podpolecenie kolejno podpolecenia <em>pool</em>
+        Do zmiany nazw służy podpolecenie <em>rename</em> kolejno podpolecenia 
+        <em>pool</em>
         oraz <em>filesystem</em>. Na poniższym przykładzie znajduje się 
         zastosowanie tego podpolecenia:
       </p>
@@ -11090,7 +11129,7 @@ Name   Total Physical   Properties   UUID
         Jako użytkownik z możliwością podniesienia uprawnień na serwerze
         oznaczonym jako <em>server2</em>. Stwórz z jedego z 250MB dysków
         wolumin fizyczny następnie utwórz grupę <em>vg100</em> ustawiając
-        wielkość fizycznych ekstentów na 16MB, a następnie dodaj fizyczny
+        wielkość fizycznych ekstentów na 16MB, wykorzystując utworzony fizyczny
         wolumin. Utwórz dwa woluminy logiczne o nazwach kolejno <em>lvol0</em>
         oraz <em>swapvol</em> o wielkości 100 oraz 120MB. Zweryfikuj wykonane
         wcześniej czynności za pomocą poleceń: <em>pvs</em>, <em>lvs</em>,
@@ -11108,7 +11147,7 @@ Name   Total Physical   Properties   UUID
       <h3 id="exec14.3">Ćwiczenie 3: Redukcja oraz usunięcie woluminów logicznych</h3>
       <p>
         Jako użytkownik z możliwością podniesienia uprawnień na serwerze
-        oznaczonym jako <em>server2</em>. Zmieniejsz rozmiar woluminu
+        oznaczonym jako <em>server2</em>. Zmniejsz rozmiar woluminu
         logicznego <em>lvol0</em> do 80MB. Usuń oba woluminy logiczne.
         Sprawdź wykonane czynności za pomocą poleceń:
         <em>pvs</em>, <em>lvs</em>, <em>vgs</em> oraz <em>vgdisplay</em>.
@@ -11137,7 +11176,7 @@ Name   Total Physical   Properties   UUID
         dostępność jednego dysków o pojemności 1GB. Nastepnie utwórz z jego
         użyciem nową pulę <em>Stratis</em> o nazwie <em>strpool</em>.
         Potwierdź wykonanie czynności wyświetlając informacje o puli oraz
-        o urządzenia blokowych za pomocą podpoleceń polecenia <em>Stratis</em>
+        o urządzeniach blokowych za pomocą podpoleceń polecenia <em>Stratis</em>
         oraz polecenia <em>lsblk</em>.
       </p>
       <h3 id="exec14.7">Ćwiczenie 7: Rozszerzenie i usunięcie puli Stratis</h3>
@@ -11150,7 +11189,7 @@ Name   Total Physical   Properties   UUID
       </p>
       <h2 id="ch14summary">Podsumowanie</h2>
       <p>
-        W tym rozdziale poznaliśmy zaawasowane sposoby na zarządzanie
+        W tym rozdziale poznaliśmy zaawansowane sposoby na zarządzanie
         zainstalowanymi w naszych komputerach dyskami. Poznaliśmy wiele poleceń,
         których składni nie trzeb się uczyć na pamięć. Trzeba się jednak
         orientować jakie polecenie jest do czego. Poznaliśmy zaległą

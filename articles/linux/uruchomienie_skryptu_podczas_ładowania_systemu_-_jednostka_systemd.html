@@ -37,39 +37,41 @@
       Wykonanie skryptu w trakcie uruchamiania systemu, do bardzo stary
       problem wielu administratorów oraz entuzjastów systemu Linuks. Wraz ze
       zmianianą <em>mainstreamowego</em> programu typu <em>init</em> problem
-      ten stał się wręcz trywialny. Jednak nie którzy nie więdzą jak się do
-      tego zabrać.
+      ten stał się wręcz trywialny, bo można użyć jednostki <em>systemd</em>,
+      jednak nie którzy nie więdzą jak się do tego zabrać.
     </p>
     <p>
       Każda jednostka <em>systemd</em> to plik tekstowy składający się z
       minimum dwóch sekcji. Pierwszą z nich jest sekcja <em>Unit</em> opisująca
-      jednostkę. W wewnątrz niej mogą zanajdować się takie informacje jak
-      kiedy ma zostać ona uruchomiona oraz jej ewentualne zależności. Druga
+      jednostkę. W wewnątrz niej mogą znajdować się takie informacje jak opis,
+      kiedy ma zostać uruchomiona oraz jej ewentualne zależności. Druga
       sekcja jest już zależna od jednostki. Wśród jedenastu typów jednostek
-      najbardziej odpowiednim typem jednostki jest jednostka usługi, ponieważ
-      podpowiada ona poniękąd za uruchomienie programu, a tym w mniejszym lub
-      większym stopniu jest nasz skrypt. Sekcji typu jednostki znajdują się
+      najbardziej odpowiednim jest jednostka usługi, ponieważ
+      odpowiada ona poniękąd za uruchomienie programu, a tym w mniejszym lub
+      większym stopniu jest nasz skrypt. W sekcji jednostki znajdują się
       dyrektywy są specyficzne dla tego typu jednostki. Opcjonalnie w pliku
       jednostki może znaleźć się sekcja <em>Install</em>, w której deklaruje
       się zależności wsteczne (inna jednostka może wymagać lub chcieć aktywacji
-      tej jednostki podczas aktywacji swojej). Zależności wsteczne pozwalają
+      tej jednostki podczas swojej aktywacji). Zależności wsteczne pozwalają
       na włączenie lub wyłączenie aktywacji jednostki w systemie.
     </p>
     <p>
-      Po scharakteryzowaniu pliku jednostki możemy przejść ustalić potrzebne
-      dyrektywy budując pliki jednostki. W sekcji <em>Unit</em> na pewno
+      Po scharakteryzowaniu pliku jednostki możemy przejść ustalania 
+      potrzebnych
+      dyrektyw budując pliki jednostki. W sekcji <em>Unit</em> na pewno
       powinna znaleźć się dyrektywa <em>Description</em>, w której zawierany
-      jest krótki opis jednostki. Jest on wyświetlamy podczas uruchamiania
+      jest krótki opis jednostki. Jest on wyświetlany podczas uruchamiania
       jednostki w trakcie uruchamiania systemu. Za pewne chcielibyśmy aby
       skrypt był uruchamiany w takim samym środowisku jak byś uruchamiali go
-      z poziomu wiersza polecenia, zatem należy opóźnić aktywacje na tylko się
+      z poziomu wiersza polecenia, zatem należy opóźnić aktywacje jak tylko się
       da. Do tego posłuży nam dyrektywa <em>After</em>, która wskazuje
       <em>systemd</em> aby aktywował jednostkę <strong>po</strong> aktywacji
       jednostki zapisanej w tej dyrektywie. Najpóźniej aktywowaną jednostką
       w dystrybucjach Linuksa opartych o <em>systemd</em> jest
       <em>default.target</em>, po aktywacji której zazwyczaj uznaje się, że
       system jest już gotowy do pracy. Ta jednostka jest dowiązaniem
-      symbolicznym. Następnie już w sekcji <em>Service</em>, za pomocą
+      symbolicznym do innej właściwej dla konfiguracji systemu jednostki.
+      Następnie już w sekcji <em>Service</em>, za pomocą
       dyrektywy <em>ExecStart</em> wskazujemy ścieżkę do pliku skryptu, w tym
       przypadku jest to jedyna dyrektywa w tej sekcji. Abyśmy mogli włączać i
       wyłączać jednostkę powinniśmy dodać także sekcje <em>Install</em> a 
@@ -77,7 +79,7 @@
       na <em>default.target</em>. Spowoduje to automatyczne uruchomienie
       tej jednostki w momencie uruchomienia celu <em>default.target</em>, z
       opóźnieniem wynikającym z dyrektywy <em>After</em>. Zależność typu
-      <em>WantedBy</em>, nie spowoduje problemów jednostką 
+      <em>WantedBy</em>, nie spowoduje problemów z jednostką 
       <em>default.target</em> gdy uruchomienie jednostki ze skryptem
       nie powiedzie się. Zawartość pliku jednostki powinna wyglądać mniej
       więcej jak na poniższym przykładzie.
@@ -93,8 +95,9 @@ ExecStart=/home/xf0r3m/tunnel.sh
 WantedBy=default.target
 </pre>
     <p>
-      W moim przypadku jest skrypt który uruchamia tunel SSH z przekazywaniem
-      portów oraz zajmuj się jego utrzymaniem. Zwróćmy uwagę na lokalizacje
+      W moim przypadku jest to skrypt który uruchamia tunel SSH z 
+      przekazywaniem
+      portów oraz zajmuję się jego utrzymaniem. Zwróćmy uwagę na lokalizacje
       pliku jednostki. Jest ona jak najbardziej odpowiednia. Po utworzeniu
       pliku możemy, przystąpić do włączenia jednostki w celu 
       <em>default.target</em>.
@@ -129,7 +132,7 @@ lip 24 10:12:42 wyse3040 systemd[1]: Started SSH Tunnel for remote access.
 </pre>
     <p>
       Oczywiście statusy nie wszystkich jednostek, które uruchamiają skrypty
-      będą wyglądać tak samo, nie które z nich mogą się dezaktywować po
+      będą wyglądać tak samo, nie które z nich mogą się dezaktywować się po
       zakończeniu działania skryptu. Moj skrypt działa ponieważ jego trzonem
       jest nieskończona pętla, która sprawia, że jeśli dojdzie do zerwania
       tunelu, zostanie on za 30 sekund zestawiony ponownie.
@@ -145,7 +148,7 @@ lip 24 10:12:42 wyse3040 systemd[1]: Started SSH Tunnel for remote access.
 		</p>
     </div>
 		<p style="margin: 15px; padding: 0; outline: 0;">
-			2021; COPYLEFT; ALL RIGHTS REVERSED;
+			2022; COPYLEFT; ALL RIGHTS REVERSED;
 		</p>
 	</body>
 </html>

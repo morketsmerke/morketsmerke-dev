@@ -436,6 +436,39 @@
             <li><a href="#ch14summary">Podsumowanie</a></li>
           </ul>
         </li>
+        <li><a href="#15.filesystemsandswap">15. Systemy plików oraz przestrzeń wymiany</a>
+          <ul class="toc">
+            <li><a href="#15.1.filesystems">15.1 Systemy plików na RHEL 9</a></li>
+            <li><a href="#15.2.mountandunmount">15.2. Montowanie oraz odłączanie systemów plików</a></li>
+            <li><a href="#15.3.gettinguuid">15.3. Pozyskiwanie identyfikatora UUID systemu plików</a></li>
+            <li><a href="#15.4.labeling">15.4. Nadawanie etykiet systemom plików</a></li>
+            <li><a href="#15.5.fstab">15.5. Automatyczne monotowanie systemów plików - /etc/fstab</a></li>
+            <li><a href="#15.6.df">15.6. Monitorowanie zużycia miejsca w systemie plików</a></li>
+            <li><a href="#15.7.du">15.7. Określenie użycia systemu plików</a></li>
+            <li><a href="#15.8.managingfilesystems">15.8. Zarządzanie systemami plików</a>
+              <ul class="toc">
+                <li><a href="#15.8.1.createfs">15.8.1. Tworzenie systemów plików</a></li>
+                <li><a href="#15.8.2.mountumount">15.8.2. Montowanie oraz odłączanie systemu plików</a></li>
+                <li><a href="#15.8.3.automount">15.8.3. Montowanie automatyczne z użyciem pliku /etc/fstab</a></li>
+                <li><a href="#15.8.4.expandvolumes">15.8.4. Rozszerzanie systemu plików na woluminie logicznym LVM</a></li>
+              </ul>
+            </li>
+            <li><a href="#15.9.swapmanaging">15.9. Zarządzanie przestrzenią wymiany</a>
+              <ul class="toc">
+                <li><a href="#15.9.1.createswap">15.9.1. Tworzenie przestrzeni wymiany</a></li>
+                <li><a href="#15.9.2.swaponoff">15.9.2. Włączanie i wyłączanie swapu</a></li>
+                <li><a href="#15.9.3.autoswapon">15.9.3. Automatyczne włączanie przetrzeni wymiany - /etc/fstab</a></li>
+                <li><a href="#15.9.4.swapmonitoring">15.9.4. Monitorowanie zużycia przestrzeni wymiany</a></li>
+              </ul>
+            </li>
+            <li><a href="#exec15.1">Ćwiczenie 1: Tworzenie systemów plików oraz dodawanie wpisów do /etc/fstab</a></li>
+            <li><a href="#exec15.2">Ćwiczenie 2: Wolumin VDO z XFS</a></li>
+            <li><a href="#exec15.3">Ćwiczenie 3: Zarządzanie systemami plików z LVM</a></li>
+            <li><a href="#exec15.4">Ćwiczenie 4: Montowanie automatyczne woluminu Stratis</a></li>
+            <li><a href="#exec15.5">Ćwiczenie 5: Przestrzeń wymiany</a></li>
+            <li><a href="#ch15summary">Podsumowanie</a></li>
+          </ul>
+        </li>
       </ul>
       <h1 id="1.introduction">1. Wstęp</h1>
       <p>
@@ -11216,9 +11249,9 @@ Name   Total Physical   Properties   UUID
         zasobów. Jednym z nich jest pamięć operacyjna, która przechowuję
         zarówno kod uruchomionych programów jak i dane, na których one pracują.
         W zależności od konfiguracji sprzętowej może się ona szybko wyczerpać,
-        więc wymyślono co takiego jak <strong>przestrzeń wymiany</strong>.
+        więc wymyślono coś takiego jak <strong>przestrzeń wymiany</strong>.
         Jest specjalny rodzaj alokacji przestrzeni na dysku, przechowywujący
-        na dysku nieużywane w danym momencie obszary pamięci operacyjnej. Jeśli
+        w niej nieużywane w danym momencie obszary pamięci operacyjnej. Jeśli
         te dane będą potrzebne znów wrócą one do pamięci, a inne zostaną
         przeniesione właśnie do przestrzeni wymiany. Przestrzeń wymiany inaczej
         nosi nazwę <em>swapu</em> (czyt. <em>słapu</em>).
@@ -11233,14 +11266,15 @@ Name   Total Physical   Properties   UUID
           dla każdej dystrybucji. Jest on dostępny w 4 wersjach przy czym
           <em>EXT</em> w wersji 1 jest przestarzy i nie jest już wspierany.
           Korzystając z <em>EXT</em> nalepiej jest korzystać z wersji 4,
-          zawiera ona najwięcej udogodnień oraz funckji.</li>
+          zawiera ona najwięcej udogodnień oraz funkcji.</li>
         <li>Systemy plików <strong>XFS</strong> - jest to system plików
           stosowany w systemach klasy enterprise, choć obecnie powoli staje
           się standarem jako podstawowy system plików dla dystrybucji Linuksa.
           Może on obsłużyć większe pliki niż <em>EXT4</em> oraz zaalokować
-          przestrzesnie dyskowe.</li>
+          przestrzenie dyskowe. Póki co nie ma narzędzia które pozwalało by na
+          zmniejszenie systemu plików.</li>
         <li>System plików <strong>VFAT</strong> - system plików utrzymywany w
-          dystrybucjach, aby można było utrzymać zgodność w przesyłaniu plików
+          dystrybucjach, aby można było zapewnić zgodność w przesyłaniu plików
           między Linuksem a systemami MS Windows. Najczęściej jest on stosowany
           na pamięciach USB.</li>
         <li>System plików <strong>ISO 9660</strong> - system plików stosowany
@@ -11256,13 +11290,13 @@ Name   Total Physical   Properties   UUID
         poznawać w trakcie wykonywania przykładów, poza nimi system posiada
         jeszcze kilka poleceń dotyczących ogólnie systemów plików.
       </p>
-      <h2 id="15.2.mountandunmount">15.2. Montowanie oraz odmontowywanie systemów plików</h2>
+      <h2 id="15.2.mountandunmount">15.2. Montowanie oraz odłączanie systemów plików</h2>
       <p>
         Chcąc skorzystać z przestrzeni dyskowej zawartej na partycji, musi
-        zostać sformatowana pod określny system plików. Załóżmy że zostało
-        już to zrobione. Musi on również zostać podłączona do katalogu
-        głównego, tym właśnie zajmuje się montowanie. Do montowanie służy
-        polecenie <strong>mount</strong>. Wydanie go bez podanią żadnego
+        ona zostać sformatowana pod określny system plików. Załóżmy, że zostało
+        już to zrobione. Musi ona również zostać podłączona do katalogu
+        głównego, tym właśnie zajmuje się montowanie. Do montowania służy
+        polecenie <strong>mount</strong>. Wydanie go bez podania żadnego
         argumentu spowoduje wyświetlenie wszystkich zamontowanych w systemie
         systemów plików.
       </p>
@@ -11282,7 +11316,7 @@ configfs on /sys/kernel/config type configfs (rw,nosuid,nodev,noexec,relatime)
       <p>
         System do działania potrzebuje wielu systemów plików i to nie tylko
         tych dyskowych ale także tych wirtualnych dla tego wynik działania tego
-        polecenia nie jest zbyt czytelnym. Możemy go jednak bardzej uściślić
+        polecenia nie jest zbyt czytelny. Możemy go jednak bardzej uściślić
         podając w za pomocą opcji <em>-t</em> interesującyu nas system plików.
       </p>
 <pre class="code-block">
@@ -11298,7 +11332,7 @@ configfs on /sys/kernel/config type configfs (rw,nosuid,nodev,noexec,relatime)
         zamontowanego katalogu przesłonią jego rzeczywistą zawartość.
       </p>
       <p>
-        Innym arguemntem są opcje montowanie. Polecenie posiada kilka opcji
+        Innym argumentem są opcje montowania. Polecenie posiada kilka opcji
         ogólnych, natomiast montowanie określnego systemu plików pozwala także
         na użycie specyficznych dla niego opcji. Poniżej znajduje się kilka
         ogólnych opcji, opcje specyficzne znajdują się na stronie podręcznika
@@ -11335,10 +11369,11 @@ configfs on /sys/kernel/config type configfs (rw,nosuid,nodev,noexec,relatime)
         Podczas montowanie jednym z podawanych argumentów jest nazwa
         urządzenia. Sprawdza się to podczas szybkiego montowania w trakcie
         działania systemu. Nazwa urządzenia nie jest jedyną wartością jaką
-        możemy podać poleceniu <em>mount</em> podczas montowania jak wartość
+        możemy podać poleceniu <em>mount</em> podczas montowania jako wartość
         wskazującą na urządzenie. Do montowania możemy użyć etykiety, którą
         ustawiamy podczas formatowania partycji lub specjalnego identyfikatora
-        <strong>UUID</strong>.
+        <strong>UUID</strong> nadawanego po zainstalowaniu systemu plików na
+        partycji.
       </p>
       <p>
         Identyfikator w przypadku systemów plików takich jak <em>EXT</em> oraz
@@ -11346,7 +11381,7 @@ configfs on /sys/kernel/config type configfs (rw,nosuid,nodev,noexec,relatime)
         natomiast w przypadku <em>VFAT</em> są to tylko <strong>32</strong>
         bity, 8 heksadecymalnych znaków. <em>UUID</em> możemy uzyskać za przy 
         użyciu specyficznego narzędzia dostarczanego wraz system plików lub
-        dwóch programów ogólnych <strong>blkid</strong> lub zananego już
+        dwóch programów ogólnych <strong>blkid</strong> lub znanego już
         wcześniej <strong>lsblk</strong> wraz z opcją <em>-f</em>.
       </p>
 <pre class="code-block">
@@ -11362,27 +11397,27 @@ vda
   ├─rhel-root xfs                       c09cb7eb-2f8e-459e-bb64-21dde92cd7c0      5,9G    39% /
   └─rhel-swap swap      1               be58cfe2-c3a6-4731-9b0b-f58604074bd8                 [SWAP]
 </pre>
-      <p>
+      <p class="exam_tip">
         Alternatywne nazwenictwo jest istotne gdy chcemy utworzyć wpisy
         automatycznego montowania podczas uruchamiania systemu. Klasyczne
         nazwy, którymi posługujemy się w systemie przy następnym uruchomieniu
-        mogą już być zupełnie inne, a <em>UUID</em> czy etykieta jest 
-        przypisana na stałe do systemu plików, dopiero ponowne sformatowanie
-        partycji zmienia <em>UUID</em>.
+        mogą już być zupełnie inne dla tych samych urządzeń, a <em>UUID</em> 
+        czy etykieta jest przypisana na stałe do systemu plików, dopiero 
+        ponowne sformatowanie partycji zmienia <em>UUID</em>.
       </p>
       <h2 id="15.4.labeling">15.4. Nadawanie etykiet systemom plików</h2>
       <p>
         Etykiety są jedną z metod alternatywnego nazewnictwa urządzeń
         przechowywujących systemy plików. Możemy je nadwać za pomocą narzędzi
-        dostarczanych wraz z system plików. Dla systemów <em>EXT</em> jest
+        dostarczanych wraz z systemem plików. Dla systemów <em>EXT</em> jest
         narzędzie <strong>e2label</strong>, natomiast dla <em>XFS</em> jest
         polecenie <strong>xfs_admin</strong> wraz z opcją <em>-L</em>. 
-        Przy czym etykiety mają swoje ograniczenia w ilość znaków podanych w 
-        etykiecie. Dla <em>XFS</em> ten limit wynosi 12 znaków, a w przypadku
+        Przy czym etykiety mają swoje ograniczenia w ilość znaków. Dla 
+        <em>XFS</em> ten limit wynosi 12 znaków, a w przypadku
         <em>EXT4</em> jest to 16 znaków. Teraz
         odmontuje system plików zamontowany w <em>/boot</em> a następnie nadam
-        mu etykietę. Na początku jednak sprawdzam nazwę urzędzenia partycji
-        oraz zainstalowany na niej system plików.
+        mu etykietę i zamontuje ponownie. Na początku jednak sprawdzam nazwę 
+        urzędzenia partycji oraz zainstalowany na niej system plików.
       </p>
 <pre class="code-block">
 [user@rhel90 ~]$ lsblk -f
@@ -11419,8 +11454,8 @@ vda
      swap   1                           be58cfe2-c3a6-4731-9b0b-f58604074bd8                 [SWAP]
 </pre>
       <p>
-        Jak możemy zauważyć różnice pomiędzy pierwszym wołaniem <em>lsblk</em>
-        a drugim. Przy drugim wywowałaniu przy partycji partycji zamontowanej
+        Jak możemy zauważyć różnice pomiędzy pierwszym wywołaniem <em>lsblk</em>
+        a drugim. Przy drugim wywowałaniu przy partycji zamontowanej
         w katalogu <code class="code-inline">/boot</code> w kolumnie
         <code class="code-inline">LABEL</code> widnieje teraz napis
         <code class="code-inline">bootfs</code>. Tak utworzoną etykietę
@@ -11433,7 +11468,7 @@ vda
         systemu, dlatego też w systemie w katalogu <em>/etc</em> znajduje się
         plik tekstowy <strong>fstab</strong>, w którym to przechowywane są
         wpisy systemów plików montowanych podczas uruchamiania systemu. Wpisy
-        poza automatycznym montowaniem, skracają też potrzebę podania
+        poza automatycznym montowaniem, skracają też potrzebę podawania
         wszystkich argumentów poleceniu <em>mount</em>. Jeśli taki system
         plików nie jest montowany automatycznie to, żeby go zamontować
         wystarczy podać albo punkt montowania albo nazwę urządzenia. Raczej
@@ -11454,8 +11489,10 @@ UUID=fb4c6cf9-8041-42ce-9e75-82026a4a0164 /boot                   xfs     defaul
       </p>
       <ul>
         <li>Kolumna 1: <strong>nazwa urządzenia</strong>. Zazwyczaj znajdują
-          się tutaj identyfikatory <em>UUID</em>, jednak możliwe jest kilka
-          wyjątków otóż: nazwy woluminów logicznych <em>LVM</em> są unikatowymi
+          się tutaj identyfikatory <em>UUID</em> lub etykiety, jednak możliwe 
+          jest kilka
+          wyjątków, otóż: nazwy woluminów logicznych <em>LVM</em> są 
+          unikatowymi
           identyfikatorami i będą wskazywać to samo urządzenie za każdym razem.
           Tak samo jest z systemami plików tworzonymi przez usługę 
           <em>Stratis</em>. Na końcu przykładu znajduje się montowanie płyty.
@@ -11463,7 +11500,7 @@ UUID=fb4c6cf9-8041-42ce-9e75-82026a4a0164 /boot                   xfs     defaul
           optyczny w systemie. Zatem jeśli w komputerze mamy tylko jeden napęd
           również możemy tak zapisać automatyczne montowanie</li>
         <li>Kolumna 2: <strong>punkt montowania</strong>. Ta kolumna wskazuje
-          nazwy katalogów do których należy podłączyć monotowne systemy plików.
+          nazwy katalogów do których należy podłączyć monotowane systemy plików.
           Wyjątkiem jest tutaj przestrzeń wymiany, ponieważ w miejscu
           montowania wstawia się wartość <em>none</em> lub <em>swap</em>.</li>
         <li>Kolumna 3: <strong>typ systemu plików</strong></li>
@@ -11493,7 +11530,13 @@ UUID=fb4c6cf9-8041-42ce-9e75-82026a4a0164 /boot                   xfs     defaul
         pliku. Często będziemy korzystać z tego polecenia zatwierdzając zamiany
         w tym pliku.
       </p>
-      <h2 id="15.6.df">15.6. Monitorowanie zużycia miejsca na systemie plików</h2>
+      <p class="exam_tip">
+        Zgubiony lub niepoprawny wpis w pliku <em>/etc/fstab</em> może
+        unieruchomić system. Aby to naprawić należy poprawić wpisy w trybie
+        ratunkowy. Ze względu na to należy zwrócić szczególną uwagę na
+        poprawność umieszczanych w tym pliku wpisów.
+      </p>
+      <h2 id="15.6.df">15.6. Monitorowanie zużycia miejsca w systemie plików</h2>
       <p>
         Jednym z zadań administracyjnych serwerem jest monitorowanie zużycia
         miejsca w systemie plików. Jednym z domyślnie dostępnych narzędzi jest
@@ -11531,7 +11574,8 @@ tmpfs                  128M   36K  128M   1% /run/user/1000
       </ul>
       <h2 id="15.7.du">15.7. Określenie użycia systemu plików</h2>
       <p>
-        Za pomocą polecenia mogliśmy ustalić ogólne wartości na temat zużycia
+        Za pomocą polecenia <em>df</em> mogliśmy ustalić ogólne wartości na 
+        temat zużycia
         systemu plików. Za pomocą polecenia <strong>du</strong> możemy ustalić
         i ile miejsca zajmują określone pliki oraz foldery. To polecenie
         również domyślnie zwraca informacje w KB. Najczęściej wykorzystywanymi
@@ -11545,9 +11589,9 @@ tmpfs                  128M   36K  128M   1% /run/user/1000
 </pre>
       <h2 id="15.8.managingfilesystems">15.8. Zarządzanie systemami plików</h2>
       <p>
-        Zarządzenia systemami plików wygląda podobnie w wszystkich poznanych
-        tutaj przypadkach. W tym podrozdziale skupimy się na najbardziej
-        zaawansowanych przypadkach.
+        Zarządzanie systemami plików wygląda podobnie w wszystkich poznanych
+        tutaj przypadkach (metodach zarządzania pamięcią masową). W tym 
+        podrozdziale skupimy się na najbardziej zaawansowanych przypadkach.
       </p>
       <h3 id="15.8.1.createfs">15.8.1. Tworzenie systemów plików</h3>
       <p>
@@ -11585,21 +11629,20 @@ log      =log wewnętrzny        bsize=4096   blocks=1368, version=2
 realtime =brak                   extsz=4096   blocks=0, rtextents=0
 </pre>
       <p>
-        W przykładzie użyłem polecenie <strong>mkfs</strong>, za pomocą opcji 
-        <em>-t</em> lub w
-        nazwie polecenia po kropce podawany jest typ systemu plików
-        (np. <em>mkfs.ext4</em>) i uruchamiany jest właściwy dla systemu plików
-        program, przez co my nie musimy pamiętać, który program jest od którego
-        systemu plików. Następnie podaje się urządzenie blokowe, które ma
-        zostać sformatowane pod określony system plików.
+        W przykładzie użyłem polecenia <strong>mkfs</strong> i za pomocą opcji 
+        <em>-t</em> podałem typ żadanego systemu plików. Równie dobrze możemy
+        podać nazwę polecenia a następnie po kropce typ systemu plików
+        (np. <em>mkfs.ext4</em>). Następnie podaje się urządzenie blokowe, 
+        które ma zostać sformatowane.
       </p>
       <p>
         Tworzenie systemu plików dla woluminu <em>VDO</em> najlepiej jest
         przeprowadzić z użyciem opcji <em>-E nodiscard</em> dla 
         <em>EXT4</em> lub opcją <em>-K</em> dla <em>XFS</em> obie wykonują 
-        tę samą czynność. 
+        tę samą czynność i pozwalają zainstalować je szybciej na tego typu
+        pamięciach masowych. 
       </p>
-      <h3 id="15.8.2.mountumount">15.8.2. Montowanie oraz odmontowywanie systemu plików</h3>
+      <h3 id="15.8.2.mountumount">15.8.2. Montowanie oraz odłączanie systemu plików</h3>
       <p>
         Za pomocą polecenia <em>mount</em> możemy podłączyć systemy plików z
         poprzednie podrozdziału do naszego systemu. Polenie mount nie wymaga
@@ -11633,14 +11676,14 @@ realtime =brak                   extsz=4096   blocks=0, rtextents=0
       <p>
         Tak jak już wcześniej wspomiałem, za pomocą pliku <em>/etc/fstab</em>
         możemy zdefiniować wpisy z systemami plików, które będą automatycznie
-        montowane podczas uruchaminia systemu lub będzie możliwość ich
+        montowane podczas uruchamiania systemu lub będzie możliwość ich
         szybszego montowania, za pomocą polecenia <em>mount</em>. Definiując
         nowy wpis musimy wypełnić, każdą z kolumn. Należy również dodać, że
         tworząc wpisy <em>/etc/fstab</em>, należy pisać bardzo uważnie,
         ponieważ jeden błąd może unieruchomić cały system. 
       </p>
       <p>
-        Dodania wpisów do <em>/etc/fstab</em> można dokonąć na wiele sposobów.
+        Dodanie wpisów do <em>/etc/fstab</em> można dokonać na wiele sposobów.
         Ja na przykład przełączyłem się na superużytkownika i za pomocą
         <em>echo</em> dodawałem kolejne wpisy, co zobrazowałem na poniższym 
         przykładzie.
@@ -11686,9 +11729,9 @@ System plików         rozm. użyte dost. %uż. zamont. na
         <em>mount</em> wraz z opcją <em>-a</em>, aby zamontować wszystkie wpisy 
         w pliku, polecenie oczywiście te zamontowane pomija, wiec spokojnie
         każdą zmianę w tym pliku możemy potwierdzać za pomocą tego polecenia.
-        Na koniec wyświetliłem sprawdzenie stanu zużycią systemów plików, aby
+        Na koniec wyświetliłem sprawdzenie stanu zużycia systemów plików, aby
         lepiej zaprezentować fakt, iż systemy wcześniej zapisane do pliku
-        <em>/etc/fstab</em> zostały poprawnie zamontowane.
+        <em>/etc/fstab</em> zostały poprawnie podłączone.
       </p>
       <p>
         Wpis do pliku dotyczący <em>LVM</em>, różniłby się tylko tym że zamiast
@@ -11704,14 +11747,14 @@ System plików         rozm. użyte dost. %uż. zamont. na
       <p>
         W systemie posiadam już zamontowane dwa woluminy logiczne z <em>LVM</em>.
         Chcę rozszerzyć ich wielkość o 100MB. Wszystkie czynności takiej jak
-        związane z <em>LVM</em> zostały już wykonane po samym rozszerzeniem
+        związane z <em>LVM</em> zostały już wykonane poza samym rozszerzeniem
         woluminów. Polecenie <em>lvextend</em> jak i <em>lvresize</em>
         posiadają opcję <strong>-r</strong>, która pozwala na uruchomienie
         programu odpowiedzialnego za zmianę rozmiaru systemu plików. W
         przypadku <em>EXT4</em> uruchamiany jest program 
         <strong>resize2fs</strong> a w przypadku <em>XFS</em>
         <strong>xfs_growfs</strong>. Opcję <em>-r</em> możemy pominąć lub o
-        niej zapomnieć, wówczas należy uruchomić te polecenie z poziomu
+        niej zapomnieć, wówczas należy uruchomić te programy z poziomu
         wiersza polecenia. Poniżej znajdują się przykłady jak można rozszerzyć
         zamontowane już woluminy logiczne.
       </p>
@@ -11757,7 +11800,7 @@ bloki danych zmienione z 64512 na 90112
         <strong>mkswap</strong>. Polecenie to może nadać etykietę partycji,
         poprzez użycie opcji <em>-L</em>. Do użycia mamy maksymalnie 16
         znaków. Poniżej znajduje się przykład, w którym utworzyłem przestrzeń
-        wymiany, definiowałem także etykietę dla tej przestrzeni wymiany.
+        wymiany, zdefiniowałem także dla niej etykietę.
       </p>
 <pre class="code-block">
 [user@rhel90 ~]$ sudo mkswap -L swapvol /dev/vg-lvm/swapvol
@@ -11769,9 +11812,8 @@ LABEL=swapvol, UUID=3c99f75a-4559-4f6b-970b-f78cc4333e9b
         Utworzony wcześniej <em>swap</em> jeszcze nie działa. Wymagane jest
         jego włączenie za pomocą polecenia <strong>swapon</strong>.
         To polecenie potrafi również wyświetlić wszystkie dostępne w systemie
-        przestrzeni wymiany. Ręczne włączenie przestrzeni wymiany wymaga
-        nazwy urządzenia, które ma służyć jako przestrzeń wymiany. Poniżej
-        znajduje się przykład:
+        przestrzeni wymiany. Ręczne włączenie wymaga podania nazwy urządzenia. 
+        Poniżej znajduje się przykład:
       </p>
 <pre class="code-block">
 [user@rhel90 ~]$ sudo swapon /dev/vg-lvm/swapvol
@@ -11839,13 +11881,14 @@ Swap:          1,3Gi       6,0Mi       1,2Gi
         tego polecenia możemy wykorzystać dowolne polecenie monitorujące
         zasoby komputera, np. <em>top</em>.
       </p>
-      <h3 id="exec15.1">Ćwiczenie 1: Tworzenie systemów plików na partycjach oraz montowanie na stałe</h3>
+      <h3 id="exec15.1">Ćwiczenie 1: Tworzenie systemów plików oraz dodawanie wpisów do /etc/fstab</h3>
       <p>
         Jako użytkownik z możliwością podniesienia uprawnień, na maszynie
         oznaczonej jako <em>server2</em>. Na jednym z 250MB dysków utwórz
         tablicę partycji w schemacie <em>MBR</em>. Utwórz 3 partycje po 70MB
         na każdej z nich utwórz inny system plików. Utworz adekwatne dla nich
-        punkty montowania. Za montuj je ręcznie. Określ ich UUID a następnie
+        punkty montowania. Zamontuj je ręcznie. Określ ich <em>UUID</em> a 
+        następnie
         dodaj wpisy montowania do pliku <em>/etc/fstab</em>. Ręcznie odłącz
         zamontowane wcześniej partycje, następnie zamontuj je automatycznie i
         potwierdź to za pomocą polecenia <em>df -h</em>.
@@ -11885,17 +11928,18 @@ Swap:          1,3Gi       6,0Mi       1,2Gi
         Jako użytkownik z możliwością podniesienia uprawnień, na maszynie
         oznaczonej jako <em>server2</em>. Na pozostałych z trzeciego ćwiczenia 
         ekstentach, utwórz kolejny wolumin o nazwie <em>swap</em>. Stwórz z 
-        niego przestrzeń wymiany. Do wpis tej przetrzeni do pliku
+        niego przestrzeń wymiany. Dodaj wpis tej przetrzeni do pliku
         <em>/etc/fstab</em>. Aktywują ją automatycznie, następnie wyświetl
         wszystkie dostępne przestrzenie wymiany w systemie oraz wyświetl 
         łaczną pojemność <em>swapu</em> w systemie.
       </p>
       <h2 id="ch15summary">Podsumowanie</h2>
       <p>
-        Tym rozdziałem zakończyliśmy naukę zarządzania pamieciami masowymi.
+        Tym rozdziałem zakończyliśmy naukę zarządzania pamieciami masowymi w
+        <em>RHEL</em>.
         Poznaliśmy systemy plików oraz mechanizmy z nimi związane. Nauczyliśmy
         się instalować systemy plików na partycjach oraz woluminach logicznych.
-        Dowiedzialiśmy się w jaki spoób montowane są automatycznie dostępne w
+        Dowiedzieliśmy się w jaki sposób montowane są automatycznie dostępne w
         w systemie operacyjnym systemy plików oraz w jaki sposób poprawnie
         utworzyć wpis do pliku <em>/etc/fstab</em>. Na koniec poznaliśmy w jaki
         sposób zarządzać przestrzenią wymiany w RHEL. W następnym rozdziale

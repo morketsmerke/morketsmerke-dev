@@ -11945,6 +11945,501 @@ Swap:          1,3Gi       6,0Mi       1,2Gi
         sposób zarządzać przestrzenią wymiany w RHEL. W następnym rozdziale
         zajmiemy się już podstawowymi pojęciami związanymi z siecią.
       </p>
+      <h1 id="16.networkfundamentals">16. Podstawy sieci w RHEL 9</h1>
+      <p>
+        Potrzeba współdzielenia danych oraz zasobów między komputerami
+        spowodowała, że zaczęto je łączyć w sieci. Na sieć komputerową
+        składają się minimum dwa komputery, połączone ze sobą albo bezpośrednio
+        albo za pomocą urządzenie pośredniczącego np. przełącznika. Aby
+        komunikacja między nimi mogła być możliwa wbudowane w nie urządzenia
+        sieciowe muszą zostać odpowiednio skonfigurowane z użyciem
+        podstawowej wiedzy na temat sieci IP. Poznaną tutaj wiedzę na temat
+        sieci IP, wykorzystamy do tworzenie oraz konfigurowania nowych
+        połączeń sieciowych w systemach klasy <em>enterprise</em>.
+      </p>
+      <h2 id="16.1.fundamentalstermsaboutnetworking">16.1. Podstawowe pojęcia o sieciach komputerowych</h2>
+      <p>
+        Aby poprawnie skonfigurować interfejs sieciowy komputera musimy poznać
+        podstawowe pojęcia związane z sieciami. 
+      </p>
+      <h3 id="16.1.1.ipv4">16.1.1. Adres IPv4</h3>
+      <p>
+        Adres protokołu internetowego w wersji 4, bo tak możemy rozszyfować
+        nazwę tego podrozdziału jest podstawowym identyfikatorem służący to
+        komunikacji w sieci. Każdy z komputerów podłączonych do sieci posiada
+        ten adres przydzielony automatycznie z serwera <em>DHPC</em> lub
+        przypisany ręcznie. Adres <em>IPv4</em> występuje w postaci 4 
+        oddzielonych
+        kropką oktetów, każdy z oktetów może przyjąć wartości od 0 do 255.
+        Adres <em>IPv4</em> możemy sprawdzić za pomocą polecenia
+        <strong>ip</strong> z podpoleceniem <em>addr</em>
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ ip addr
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: enp1s0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 52:54:00:55:b7:60 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.122.6/24 brd 192.168.122.255 scope global noprefixroute enp1s0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::5054:ff:fe55:b760/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+</pre>
+      <p>
+        Polecenie to wyświetla informacje na temat dostępnych w systemie
+        <strong>Połączeń sieciowych</strong> (<em>interfejsów</em>). Jednym z
+        z nich jest połączenie o nazwie <code class="code-inline">enp1s0</code>
+        posiadające adres <strong>192.168.122.6</strong>. Drugie połączenie
+        sieciowe, to specjalnyc interfejs systemowy tzw.
+        <strong>pętla zwrotna</strong>, pozwala ona na komunikację z usługami
+        sieciowym w tym systemie. Adresem pętli zwrotnej jest zawsze
+        <em>127.0.0.1</em>.
+      </p>
+      <p>
+        Komputery podłączone do tej samej sieci posiadają identyczne, niektóre
+        z częsci adresu <em>IPv4</em>. Część wspólna nazywana jest częścią 
+        sieciową, pozostała część (część hosta) jest ustatalna indywidualnie
+        dla każdego hosta i tylko jemu przypisywana. Które części adresu są
+        są częścią hosta, a które są częscią sieci ustatalne w trakcie jej
+        konfiguracji na podstawie <strong>klas sieciowych</strong>. Klasy
+        sieciowe możemy podzieli trzy klasy:
+      </p>
+      <ul>
+        <li><strong>Klasę A</strong> - W klasie A, część sieciowa obejmuje
+          tylko jeden oktet przez co możemy utworzyć do 126 sieci po
+          16 777 214 host w każdej z nich. W klasie A pierwszy oktet przyjmuje
+          wartości od 0 do 126, z wyłączeniem 10.</li>
+        <li><strong>Klasę B</strong> - W klasie B za część sieciową odpowiadają
+          dwa oktety co daje większą ilość mniejszych sieci to i taki liczby
+          potrafią zaskakiwać, ponieważ w tej klasie można utworzyć 16384 sieci
+          po 65534 hosty w sieci. Klasa B w pierwszym oktecie stosuje wartości
+          od 128 do 191.</li>
+        <li><strong>Klasę C</strong> - W klasie C za część sieciową odpowiadają
+          aż trzy oktety, dzięki czemu możemy stworzyć dużą ilość małych sieci,
+          a konkretnie 2 097 152 sieci po 254 hosty każda. Klasa C w pierwszym
+          oktecie stosuje wartości od 192 do 223.</li>
+      </ul>
+      <p>
+        Poza tym klasami w specyfikacji wyróżnia się takie klasy jak 
+        <em>D</em> oraz <em>E</em>, jednak mają one specjalne przeznaczenie.
+      </p>
+      <p>
+        Tak duże klasy adresów są dzielone na mniejsze części, aby zarządzać
+        takimi sieciami, zwiększyć ich wydajność oraz zapewnić oporność na
+        na awarie czy odsepraować je od siebie. Po podziale każda z takich
+        sieci posiada logicznie wytyczone granice. Te granice są wskazywane
+        przez <strong>maskę podsieci</strong>, której zadaniem zaznaczenie
+        części sieciowej adresu <em>IPv4</em> oraz części przeznaczonej dla
+        komputerów w sieci. Oktety maski podsieci mogą posiadać wartości takie
+        jak <strong>255</strong>, <strong>0</strong> oraz inne przyczym
+        wartości większe od 0 nie mogą znajdować się przed oktetami
+        zawierającymi 255 lub wartości inne niż 0. Z czego to wynika? Otóż
+        z podstaw adresacji <em>IPv4</em>. Każdy adres składa się z 4 oktetów.
+        Co to tak naprawdę oznacza? Każdy adres <em>IPv4</em> możemy rozpisać
+        za pomocą systemu binarnego (0 i 1), oktet o poprostu 8 bitów (bit -
+        najmniejsza ilość informacji, przestawia pojedyńczy stan 0 lub 1), 8
+        zer lub jedynek. Na masce podsieci jedynki określają bity, które są
+        częścią sieciową adresów, a zera tą część która pozostaje do
+        adresowania hostów. Poniżej znajduje się przykład. Mój serwer ma adres
+        <em>192.168.122.7</em> oraz maskę podsieci: <em>255.255.255.0</em>.
+        Poniżej znajduje się zapis tych parametrów w postaci binarnej:
+      </p>
+<pre class="code-block">
+11000000.10101000.01111010.00000111 = 192.168.122.7
+11111111.11111111.11111111.00000000 = 255.255.255.0
+====================================================
+11000000.10101000.01111010. | 00000111 
+        192.168.122.              7
+    Część sieciowa adresu     Część hosta 
+</pre>
+      <p>
+        Maskę możemy zapisać w innej postaci niż dziesiętna (255.255.255.0),
+        jest zapis w którym do określenia maski używa się ilości jedynek.
+        Zatem maska z poprzedniego przykładu <em>255.255.255.0</em> wynosiła
+        by <strong>24</strong>. Kombinację adresu <em>IPv4</em> hosta wraz
+        z maską w takim zapisie oddzieloną ukośnikiem (<strong>/</strong>)
+        nazywa się <strong>notacją CIDR</strong> i jest to obecnie
+        najpopularnieszy sposób nadawania adresów <em>IPv4</em> interfejsom
+        sieciowym.
+      </p>
+      <p>
+        Maska podsieci może mieć maksymalną wartość 32 bity, pozwalając na
+        na istnienie jednego adresu w sieci (najczęciej jest wskazanie na
+        konkretny adres) lub minimalną wartość jaką jest 0, alokując tym samym
+        wszystkie możliwe adresy, ok. 4,3 miliarda.
+      </p>
+      <h3 id="16.1.2.privateaddreses">16.1.2. Adresy prywatne</h3>
+      <p>
+        Upowszechnienie się łącz szerokopasmowych dał możliwość budowania w
+        sieci lokalnych, w których systemy są konfigurowane przez centralny
+        serwer (<em>router</em> lub <em>bramę</em>). Tego typu sieci posługują
+        się wenętrzną adresacją zawaną także 
+        <strong>prywatnymi klasami adresów</strong>. Tak jak w klasach
+        publicznych, ogólno dostępne są trzy klasy:
+      </p>
+      <ul>
+        <li><strong>Klasa A</strong>: 10.0.0.0 - 10.255.255.255; maska 8 bitów
+          (255.0.0.0) = 16 777 214 hostów.</li>
+        <li><strong>Klasa B</strong>: 172.16.0.0 - 172.31.255.255; maska 12 
+          bitów (255.240.0.0) = 983010 hostów.</li>
+        <li><strong>Klasa C</strong>: 192.168.0.0 - 192.168.255.255; maska 16
+          bitów (255.255.0.0) = 65534 hostów.</li>
+      </ul>
+      <p>
+        Te klasy są ustalano w standardzie dotyczącym klas prywatnych, jednak
+        administratorzy wolą używać mniejszych klas. Dlatego też klasa A
+        pozostaje bez zmian, ale w klasie B używa się maski 16 bitowej, a 
+        w klasie C maski 24 bitowej.
+      </p>
+      <h3 id="16.1.3.protocols">16.1.3. Protokoły</h3>
+      <p>
+        Protokoły definiują standardy komunikacyjne, które umożliwiają
+        wymianę informacji przez sieć. Protokoły działają na niższych
+        warstwach niż usługi. Do protokołów możemy zaliczyć np. protokół
+        <em>IP</em>, którego adresacji poświęciliśmy cały poprzedni
+        podrozdział. W RHEL oraz w innych dystrybucjach w katalogu 
+        <em>/etc</em> w pliku <em>protocols</em> znajduje się zestawienie
+        protokółów. Poniżej znajduje się fragment tego pliku.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ cat /etc/protocols 
+...
+ip	0	IP		# internet protocol, pseudo protocol number
+hopopt	0	HOPOPT		# hop-by-hop options for ipv6
+icmp	1	ICMP		# internet control message protocol
+igmp	2	IGMP		# internet group management protocol
+ggp	3	GGP		# gateway-gateway protocol
+ipv4	4	IPv4		# IPv4 encapsulation
+st	5	ST		# ST datagram mode
+tcp	6	TCP		# transmission control protocol
+...
+</pre>
+      <h3 id="16.1.4.tcpudp">16.1.4. Protokoły TCP i UDP</h3>
+      <p>
+        Z pośród wcześniejszego zestawienia protokołów, za transmisję danych
+        odpowiedzialne są dwa protokoły <strong>TCP</strong> oraz
+        <strong>UDP</strong>.
+      </p>
+      <p>
+        Protokół <em>TCP</em> stosowany w przypadku usług, w których liczy
+        się jakość danych. Ten protokół zestawia połączenie w swojej wartstwie
+        między klient oraz serwerem. Wówczas następuje sekwencjonowana
+        transmisja danych, strony potwierdzają otrzymanie pakietu danych przez
+        w przypadku zaginięcia pakietu jest on przesyłany ponownie. Większość
+        usług w internecie opiera się o ten protokół, gdyż pozwala on na
+        rzetelną wymianę informacji.
+      </p>
+      <p>
+        Innym również często wykorzysywanym protokołem jest <em>UDP</em>.
+        Protokół ten nie zestawia połączenia i poprostu pusza swoje pakiety
+        prawdopodbnie licząc na niezawodność protokołów warstwy niższej jak
+        <em>IP</em>. Nie dokonują on retransmisji gdy pakiety zostaną zgubione.
+        Jednak jest on znacznie szybszy niż <em>TCP</em> dlatego też jest
+        on wykorzystywany do przesyłania danych w czasie rzeczywistym. 
+      </p>
+      <p>
+        Protokoły <em>TCP</em> oraz <em>UDP</em> w wprowadzają pojecie
+        <strong>portu</strong> czyli numeru <em>połączenia</em>,
+        wykorzystywanego do komunikacji. Dane są przesyłane z 
+        <strong>portu prywatnego</strong> 
+        (portu klienta, port wysoki &gt; 10000) do 
+        <strong>portu publicznego</strong> usługi. Do portów publicznych możemy
+        zaliczyć: <em>HTTP</em> - <strong>80/TCP</strong>, 
+        <em>HTTPS</em> - <strong>443/TCP</strong> czy
+        <em>SSH</em> - <strong>22/TCP</strong>. Rodzaj transmisji został podany
+        po ukośniku. Więcej portów publicznych znajduje się w pliku
+        <em>/etc/services</em>, fragment zawartości tego pliku znajduje się
+        poniżej:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ head -100 /etc/services
+...
+ftp             21/tcp
+ftp             21/udp          fsp fspd
+ssh             22/tcp                          # The Secure Shell (SSH) Protocol
+ssh             22/udp                          # The Secure Shell (SSH) Protocol
+telnet          23/tcp
+telnet          23/udp
+# 24 - private mail system
+lmtp            24/tcp                          # LMTP Mail Delivery
+lmtp            24/udp                          # LMTP Mail Delivery
+smtp            25/tcp          mail
+smtp            25/udp          mail
+time            37/tcp          timserver
+...
+</pre>
+      <h3 id="16.1.5.icmp">16.1.5. Protokół ICMP</h3>
+      <p>
+        Protokół <strong>ICMP</strong> jest protokołem diagnostycznym, a jego
+        zadaniem jest sprawdzenie możliwości połaczenia z podanym komputerem.
+        Narzędziem korzystającym z tego protokołu jest <strong>ping</strong>.
+        Zadaniem tego narzędzia jest wysłanie do komputera pakietu i otrzymanie
+        odpowiedzi, na podstawie otrzymanych (lub nie) danych polecenie pod
+        koniec działania wyświetla statystkę.
+      </p> 
+<pre class="code-block">
+[user@server10 ~]$ ping -c4 192.168.122.7
+PING 192.168.122.7 (192.168.122.7) 56(84) bytes of data.
+64 bytes from 192.168.122.7: icmp_seq=1 ttl=64 time=0.354 ms
+64 bytes from 192.168.122.7: icmp_seq=2 ttl=64 time=0.344 ms
+64 bytes from 192.168.122.7: icmp_seq=3 ttl=64 time=0.517 ms
+64 bytes from 192.168.122.7: icmp_seq=4 ttl=64 time=0.573 ms
+
+--- 192.168.122.7 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3086ms
+rtt min/avg/max/mdev = 0.344/0.447/0.573/0.100 ms
+</pre>
+      <p>
+        Przy dużej i w pełni działającej sieci odpowiedzi powinny nie
+        przekraczać 2, 3 ms (milisekund). Czasy tutaj są poniżej 1 ms, ponieważ
+        to sieć wirtualna w wewnątrz tego samego komputera.
+      </p>
+      <h3 id="16.1.6.mac">16.1.6. Adres fizyczny</h3>
+      <p>
+        Każdy z interfejsów posiada swój adres fizyczny. Jest on wykorzystywany
+        do transmisji danych w najniżej warstwie logicznej. Każdy z pakietów,
+        które opuściły komputer źródłówy są opatrzone właśnie tym adresami.
+        Aby poznać adres naszej karty sieciowej należy wydać poniższe polecenie:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ ip addr | grep 'ether'
+    link/ether 52:54:00:55:b7:60 brd ff:ff:ff:ff:ff:ff
+</pre>
+      <p>
+        Adres mojej karty to: <code class="code-inline">52:54:00:55:b7:60</code>.
+        Protokół <em>IP</em> ściśle współpracuje adresem fizycznym. Istnieje
+        nawet protokół <strong>ARP</strong>, który umożliwia zamianę adresów
+        <em>IP</em> na adresy fizyczne.
+      </p>
+      <h3 id="16.1.7.ipv6">16.1.7. Adres IPv6</h3>
+      <p>
+        Ze względu na dość szybką ekspansję internetu, okazało sie że pula
+        adresów <em>IPv4</em> jest na wyczerpaniu. Czego się dziwić, jeśli
+        mamy 8 miliardów ludzi na świecie, a tylko 4.3 miliarda adresów. Nie
+        pomogły również adresacja prywatna. Zatem była potrzeba nowego
+        rozwiązania. I w ten sposób narodził się 
+        <em>Protokół internetowy w wersji 6</em>. Jest on dostępny w 
+        <em>RHEL</em> od wersji 8. Zamiast 32-bitowego adresu wprowadza on
+        128-bitowy adres, który pozwoli zaadresować praktycznie nieosiągalną
+        liczbę hostów (bo aż 340 i 36 zer). Adres ten składa się z 8
+        oddzielonych dwu kropkiem grupy, w której znajdują po cztery liczby
+        heksadecymalne (0 - F). 
+      </p>
+      <p>
+        Protokół <em>IPv6</em>, korzysta z protokołu <em>NDP</em>
+        (ang. <em>Neighbor Discover Protocol</em>), do przeszukiwania sieci
+        i odnajwydwania innych urządzeń sieciowych skonfigurowanych za pomocą
+        tego protokołu. Ten protokół rozszerza również funkcjonalność
+        <em>IPv4</em> o diagnostykę problemów związanych z połączniem,
+        powtarzalność adresów oraz routing. Za pomocą poniższego polecnia
+        wyświetliłem adres <em>IPv6</em> interfejsu na swoim komputerze.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ ip addr | grep 'inet6'
+    inet6 fe80::5054:ff:fe55:b760/64 scope link noprefixroute 
+</pre>
+      <h3 id="16.1.8.hostname">16.1.8. Nazwa hosta</h3>
+      <p>
+        Każdy system operacyjny ma swoją nazwę, aby ułatwić jego identyfikację
+        w sieci. Nazwa hosta występuje w przypadku dystrybucji Linuksa w
+        symbolu zachęty chociaż możemy ją poznać na kilka róznych sposób.
+        Na przykład:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ hostname
+server10.example.com
+[user@server10 ~]$ hostnamectl --static
+server10.example.com
+[user@server10 ~]$ uname -n
+server10.example.com
+[user@server10 ~]$ nmcli general hostname 
+server10.example.com
+[user@server10 ~]$ cat /etc/hostname
+server10.example.com
+</pre>
+      <p>
+        Natomiast najlepszym i najszybszym sposóbem aby zmienić taką nazwę
+        jest zmiana jej w pliku użytym w ostatnim poleceniu przykładu:
+        <em>/etc/hostname</em>. Po zmianie pliku musimy jeszcze zrestartować
+        usługę <em>systemd-hostnamed.service</em>.
+      </p>
+      <h2 id="16.2.networkdevsandcons">16.2. Urządzenia sieciowe i połączenia</h2>
+      <p>
+        Teraz kiedy mamy solidną porcę wiedzy teoretycznej możemy przejść do 
+        konfiguracji połączeń sieciowych w <em>RHEL</em> 9.
+      </p>
+      <h3 id="16.2.1.networkdevsnaming">16.2.1. Nazewnictwo urządzeń sieciowych w systemie</h3>
+      <p>
+        Do pewnego czasu nazwy urządzeń sieciowych, tj. interfejsów sieciowych
+        były łatwe do zapamiętania, przez co upraszczały zadania
+        administracyjne z nimi związane. Wywodziły się one od takich słów jak
+        <em>Ethernet</em> czy <em>wireless lan</em> i były numerowane od 0 
+        kolejno w takiej samej kolejności w jakiej zostały odnalezione w
+        momencie uruchomienia systemu. Jednak jak to bywa z takimi
+        rozwiązaniami, w przypadku dużej ilość interfejsów po ponownym
+        uruchomieniu systemu ich nazwy mogły być już zupełnie inne. Podobnie
+        jest z dyskami.
+      </p>
+      <p>
+        Obecnie nazwy interfejsów są ustalana za pomocą zasad demona
+        <em>udevd</em>, przez co wprowadza się do systemu spójne oraz
+        przewidywalne nazwenictwo bez wcześniej wspomnianego problemu.
+      </p>
+      <p>
+        Teraz zamiast <em>eth0</em> interfejs może widnieć po nazwą np.
+        <em>enp7s0</em> lub <em>ens160</em>.
+      </p>
+      <h3 id="16.2.2.connectionprofiles">16.2.2. Profile połączeń sieciowych</h3>
+      <p>
+        Do <em>RHEL</em> 9 każe połączenie sieciowe miało swój profil
+        (plik konfiguracyjny) w katalogu <em>/etc/sysconfig/network-scripts</em>
+        Obecnie zrezygnowano z tej metody na rzecz tworzenia plików
+        <em>key-file</em> dla podsystemu sieciowego 
+        <strong>NetworkManager</strong>. Sens profili został w nowych plikach
+        zachowany ponieważ koniec, końców chodzi o konfigurację sieciową
+        interfejsu. Jak jedno z zalet plików <em>key-file</em> jest to iż są
+        prostsze i łatwiejsze do utworzenia, poniżej znajduje się pliki
+        <em>key-file</em> głównego połączenia sieciowego na mojej maszynie.
+      </p>
+<pre class="code-block">
+[connection]
+id=enp1s0
+uuid=eb849d6a-d642-32e9-9219-9496570c1d45
+type=ethernet
+autoconnect-priority=-999
+interface-name=enp1s0
+timestamp=1658937868
+
+[ethernet]
+
+[ipv4]
+address1=192.168.122.6/24,192.168.122.1
+dns=192.168.122.1;
+method=manual
+
+[ipv6]
+addr-gen-mode=eui64
+method=auto
+
+[proxy]
+
+</pre>
+      <p>
+        Posługiwanie się plikami <em>key-file</em>
+        <strong>jest najlepszym rozwiązaniem jeśli definiujemy dodatkowy interfejs w systemie</strong>.
+        Wówczas do dyspozycji mamy już gotowy plik i na jego podstawie możemy
+        zbudować nasz plik. Poniżej zamieściłem plik, który utworzyłem na
+        potrzeby drugiego połączenia na mojej maszynie.
+        Ten plik zawiera minimalną ilość informacji potrzebną do prawidłowego
+        połączenia sieciowego. To połączenie nie posiada definicji adresu
+        bramy domyślniej (tam kierowane są pakiety jeśli ich adres, jest poza
+        naszą siecią lokalną - adres <em>routera</em> lub bramy) oraz adresów
+        serwerów <em>DNS</em> (serwery <em>DNS</em> zmieniają nazwy domenowe
+        na adresu <em>IP</em>).       
+      </p>
+<pre class="code-block">
+[connection]
+id=enp7s0
+uuid=13e3cf57-9a36-4cb3-a4e0-c1b2411bf984
+type=ethernet
+interface-name=enp7s0
+
+[ethernet]
+
+[ipv4]
+address1=192.168.100.6/24
+method=manual
+
+[ipv6]
+addr-gen-mode=eui64
+method=auto
+
+[proxy]
+
+</pre>
+      <p>
+        Usunąłem z sekcji <code clas="code-inline">[connection]</code> takie 
+        dyrektywy jak
+        <code class="code-inline">autoconnect-priority=-999</code>, oraz
+        <code class="code-inline">timestamp<code>. Z tego względu iż moje
+        połączenie jest w sieci wewnętrznej, usunąłem drugi adres po
+        przecinku w dyrektywie <code class="code-inline">address1</code> oraz
+        dyrektywę <code class="code-inline">dns</code>, z sekcji
+        <code class="code-inline">[ipv4]</code>. Ten plik od pliku bazowego
+        różni się również wartością w dyrektywie
+        <code class="code-inline">uuid</code>, wartość UUID możemy uzyskać za
+        pomocą polecenia <code class="code-inline">uuidgen</code>, podając
+        jako argument nazwę interfejsu. Tak stworzony należy
+        przenieść do katalogu <em>/etc/NetworkManager/system-connections</em>
+        a następnie załadować za pomocą polecenia
+        <code class="code-inline">nmcli connection load</code> podając
+        ścieżkę do pliku jako argument. Po załadowaniu go, możemy aktywować
+        połączenie za pomocą polecenia
+        <code class="code-inline">nmcli connection up filename</code> i w tym
+        poleceniu również należy podać ścieżkę pliku <em>profilu</em>.
+      </p>
+      <p>
+        Po aktywowaniu tego pliku w systemie pojawi się nowe połączenie:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ ip addr
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: enp1s0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 52:54:00:55:b7:60 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.122.6/24 brd 192.168.122.255 scope global noprefixroute enp1s0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::5054:ff:fe55:b760/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+3: enp7s0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 52:54:00:ef:9f:e0 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.100.6/24 brd 192.168.100.255 scope global noprefixroute enp7s0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::5054:ff:feef:9fe0/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+</pre>
+      <p class="exam_tip">
+        Jak będziemy mogli zauważyć większość konfiguracji sieciowej obecnie
+        w <em>RHEL</em> kręci się wokół podsystemu <em>NetworkManager</em>.
+        Wystarczy, że będziemy znać jeden ze sposób na konfigurację połączenia
+        sieciowego w systemie.
+      </p>
+      <h3 id="16.2.4.nmcli">16.2.4. Zarządzanie połączeniami sieciowym za pomocą podsystemu NetworkManager</h3>
+      <p>
+        Podsystem <strong>NetworkManager</strong>, to potężne narzędzie, które
+        potrafi ułatwić zarządzania połączeniami sieciowymi. Za pomocą
+        polecenia <em>nmtui</em>, może zarządzać połaczeniami za pomocą
+        prostego interfejsu okien w trybie tekstowym (pakiety dialog, whiptail).
+        Innym narzędziem jest polecenie <strong>nmcli</strong>, którego
+        działanie opiera się na kategoriach objektów. W tym materiale skupimy
+        się wyłącznie na połączeniach - <em>connection</em> oraz urządzeniach
+        - <em>device</em>. Dostęp do czynności możliwych do wykonania otrzymamy
+        gdy podamy po poleceniu nazwę kategorii obiektu. Na przykład: 
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ nmcli connection 
+add      delete   edit     help     load     monitor  show     
+clone    down     export   import   modify   reload   up       
+</pre>
+      <p>
+        Jeśli wydamy polecenie <code class="code-inline">nmcli connection</code>
+        bez żadnej akcji wówczas polecenie zwróci nam listę dostępnych
+        w systemie połączeń.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ nmcli connection
+NAME    UUID                                  TYPE      DEVICE 
+enp1s0  eb849d6a-d642-32e9-9219-9496570c1d45  ethernet  enp1s0 
+enp7s0  13e3cf57-9a36-4cb3-a4e0-c1b2411bf984  ethernet  enp7s0 
+</pre>
     </div> 
     <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

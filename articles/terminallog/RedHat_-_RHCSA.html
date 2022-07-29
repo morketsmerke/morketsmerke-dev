@@ -12670,6 +12670,184 @@ rtt min/avg/max/mdev = 0.302/0.404/0.497/0.086 ms
         <em>IP</em> oraz sposób na testowanie łączności. W następnym rozdziale
         zajmiemy się sieciowym systemem plików.
       </p>
+      <h1 id="17.nfs">17. Network File System</h1>
+      <p>
+        Niektóre z mechanizmów współdzielenia dostępnych na Red Hat
+        Enterprise Linux pozwalają na korzystanie z udostępnionych plików, tak
+        jakby były by one lokalnie dostępne. Jednym z takich mechanizmów jest
+        <strong>NFS</strong>, jego obsługa na docelowym systemie sprowadza się
+        do wydanie pojedyńczego polecenia <em>mount</em>, a z dodatkowym
+        demonem <strong>AutoFS</strong> tak na prawdę wystarczy próba dostępu
+        do katalogu w którym powinny znajdować się dane aby były one dostępne
+        na zdalnym komputerze.
+      </p>
+      <p>
+        <em>NFS</em> czyli (ang. <em>Network File System</em>) sieciowy
+        system plików jest usługą sieciową pozalającna na współdzielenie
+        zasobów plikowych. NFS działa w architekturze klient-serwer. Co oznacza
+        że jeden z komputerów udostępnia pliki, na których drugi komputer 
+        zdalny po podłączeniu jest w stanie pracować. <em>NFS</em> udostępnia
+        foldery, a każdy taki folder nazwany jest <strong>udziałem</strong>.
+        Natomiast proces proces udostępniania folder (udziału) nazwywany jest
+        jest <strong>eksportem</strong>. Przyczym eksport może być dokonany w
+        kierunku <strong>okreslonego/określonych</strong> klienta/klientów.
+        Klient chcąc skorzystać udziału <em>NFS</em> dokonuje jego montowania
+        tak jakby podłączał dodatkowy system plików do swojego systemu,
+        podając oczywiście odpowiednie parametry.
+      </p>
+      <p>
+        Za stosowaniem <em>NFS</em> płynie wiele korzyści o takich jak
+        wieloplatformowość, wieloużytkowość, redukcja kosztów administracyjnych
+        oraz związanych z dyskami. Po zastosowaniu mechanizmów <em>AutoFS</em>
+        będziemy w stanie zapewnić użytkownikom zdalne katalogi domowe.
+      </p>
+      <p>
+        Dostępnych jest wiele wersji <em>NFS</em>. W <em>RHEL</em> od wersji 8
+        domyślną wersją <em>NFS</em> jest wersja 4.2, która daje możliwość
+        wykorzystania wyłącznie protokołu <em>TCP</em> zapisu
+        asynchronicznego oraz obsługuje plik powyżej 2GB. Po za tym pozwala ona
+        na połączenia przez <em>firewall</em> oraz internet. Wersja ta
+        usprawnia kilka zabezpieczeń, wspiera szyfrowanie transmisji oraz
+        możliwość użycia <em>ACL</em>.
+      </p>
+      <h2 id="17.1.nfsconfig">17.1. Konfiguracja serwera oraz klienta NFS</h2>
+      <p>
+        Na początku zadań praktycznych skonfigurujemy sobie prosty udział, aby
+        mniej więcej wiedzieć jak się zabrać za konfigurację <em>NFS</em>.
+      </p>
+      <h3 id="17.1.1.nfsserverconfis">17.1.1. Konfiguracja serwera <em>NFS</em></h3>
+      <p>
+        Konfigurację zaczynamy od serwera i tam na początku instalujemy
+        niezbędne oprogramowanie. 
+      </p>
+<pre class="code-block">
+[user@server20 ~]$ sudo dnf install nfs-utils
+[sudo] hasło użytkownika user: 
+Updating Subscription Management repositories.
+Unable to read consumer identity
+
+This system is not registered with an entitlement server. You can use subscription-manager to register.
+
+Ostatnio sprawdzono ważność metadanych: 1:05:53 temu w dniu pią, 29 lip 2022, 15:59:59.
+Pakiet nfs-utils-1:2.5.4-10.el9.x86_64 jest już zainstalowany.
+Rozwiązano zależności.
+Nie ma nic do zrobienia.
+Ukończono.
+</pre>
+      <p>
+        Następnie tworzymy katalog w który będzie udziałem. Nadajemy mu
+        odpowiednie uprawnienia, aby każdy klient mógł zapisywać w nim swoje
+        pliki.
+      </p>
+<pre class="code-block">
+[user@server20 ~]$ sudo mkdir /nfstest
+[sudo] hasło użytkownika user: 
+[user@server20 ~]$ sudo chmod 777 /nfstest
+<pre>
+      <p>
+        Następnie w pliku <em>/etc/exports</em>, definiuje eksport udziału do
+        klienta. Eksport pozwala mi również na zdefiniowanie dodatkowych opcji
+        dotyczących udziału, w naszym przypadku będzie przypisanie klientowi
+        możliwości zapisu oraz odczytu.
+      </p>
+<pre class="code-block">
+/nfstest server10(rw)
+</pre>
+      <p>
+        Po zdefiniowaniu eksportu możemy przejść do uruchomienia eksportu.
+        Następnie otworzymy port na zaporze sieciowej na pozwalający na 
+        swobodną komunikację klienta z serwerem. 
+      </p>
+<pre class="code-block">
+[user@server20 ~]$ sudo systemctl enable --now nfs-server.service
+Created symlink /etc/systemd/system/multi-user.target.wants/nfs-server.service → /usr/lib/systemd/system/nfs-server.service.
+[user@server20 ~]$ sudo firewall-cmd --permanent --add-service nfs
+success
+[user@server20 ~]$ sudo firewall-cmd --reload 
+success
+</pre>
+      <p>
+        Teraz wystarczy tylko zmuśić demona <em>NFS</em>, aby dokonał eksportu.
+        A możemy to zrobić za pomocą poniższego polecenia.
+      </p>
+<pre class="code-block">
+[user@server20 ~]$ sudo exportfs -av
+exporting server10.example.com:/nfstest
+</pre>
+      <p>
+        Opcja <code class="code-inline">-a</code> nakazuje eksport wszystkich
+        udziałów zapisanych w pliku <em>/etc/exports</em>, natomiast opcją
+        <code class="code-inline">-v</code> włącza bardziej szczegółowe
+        wyświetlanie komunikatów diagnostycznych. Bez tej opcji polecenie nie
+        zwróci nic. Konfigurację serwera możemy uznać za zakończoną. Teraz
+        przejdziemy do konfiguracji serwera.
+      </p>
+      <h3 id="17.1.2.nfsclientconfig">17.1.2. Konfiguracja klienta NFS</h3>
+      <p>
+        Konfigurację klienta tak jak serwera musimy rozpocząć od zainstalowania
+        niezbędnego oprogramowania, ponieważ obsługa <em>NFS</em> nie jest
+        natywnie wbudowana.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo dnf install nfs-utils
+Updating Subscription Management repositories.
+Unable to read consumer identity
+
+This system is not registered with an entitlement server. You can use subscription-manager to register.
+
+Ostatnio sprawdzono ważność metadanych: 0:24:05 temu w dniu pią, 29 lip 2022, 17:16:50.
+Pakiet nfs-utils-1:2.5.4-10.el9.x86_64 jest już zainstalowany.
+Rozwiązano zależności.
+Nie ma nic do zrobienia.
+Ukończono.
+</pre>
+      <p> 
+        Podłączanie się do serwera <em>NFS</em> wygląda jak zwykłe montowanie
+        systemu plików w systemie.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo mount server20:/nfstest /media
+</pre>
+      <p>
+        Nie musimy podawać nawet typu systemu plików. Aby nie musieć podłączać
+        się za każdym razem możemy dopisać poniższy wiersz do plik
+        <em>/etc/fstab</em>.
+      </p>
+<pre class="code-block">
+server20:/nfstest /local nfs _netdev 0 0
+</pre>
+      <p>
+        Na powyższym przykładzie użyłem opcji 
+        <code class="code-inline">_netdev</code>, ponieważ do realizacji tego
+        montowania potrzebna jest działająca na systemie sieć.
+      </p>
+      <h2 id="17.2.autofs">17.2. Konfiguracja udziału NFS za pomocą AutoFS</h2>
+      <p>
+        Dla konfiguracji klienta jest o wiele lepsze rozwiązanie niż ręczne
+        montowanie <em>NFS</em> lub wpis w <em>/etc/fstab</em>. W <em>RHEL</em>
+        jest dostępny demon, który pozwala na zamontowanie udziału <em>NFS</em>
+        w momecie gdy jest on potrzebny. Na przykład gdy chcemy wyświetlić
+        zawartość katalogu, w którym powinny znajdować się udostępnione przez
+        niego pliku. Tym zajmuje się właśnie <strong>AutoFS</strong>. Ten
+        demon, nie tylko montuje na rządanie ale także odłącza go gdy nie ma
+        prób uzyskania dostępu do niego przez okres 5 minut. Główny katalog
+        konfiguracyjny znajduje się w katalogu <em>/etc</em> pod nazwą
+        <em>autofs.conf</em>. Poniżej znajduje się jego zawartość:
+      </p>
+<pre class="code-block">
+[ autofs ]
+timeout = 300
+browse_mode = no
+mount_nfs_default_protocol = 4
+[ amd ]
+dismount_interval = 300
+</pre>
+      <p>
+        W tym pliku są ustawiane globalne opcje takie jak czas oczekiwania 
+        na udział (<code class="code-inline">timeout=300</code>) czy czas po
+        którym udział zostanie odłączony 
+        (<code class="code-inline">dismount_interval=300</code>).
+      </p>
     </div> 
     <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

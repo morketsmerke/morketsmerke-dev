@@ -12846,8 +12846,108 @@ dismount_interval = 300
         W tym pliku są ustawiane globalne opcje takie jak czas oczekiwania 
         na udział (<code class="code-inline">timeout=300</code>) czy czas po
         którym udział zostanie odłączony 
-        (<code class="code-inline">dismount_interval=300</code>).
+        (<code class="code-inline">dismount_interval=300</code>). Jednak ten
+        plik nie służy do definicji automatycznego montowania.
       </p>
+      <p>
+        Wszelkiego rozdzaju montowanie bo nie tylko udziałów definiowane jest w 
+        pliku <em>/etc/auto.master</em>. Poniżej znajduje się jego zawartość 
+        bez komentarzy oraz pustych linii.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ grep -v -e '^#' -e '^$' /etc/auto.master
+/misc	/etc/auto.misc
+/net	-hosts
++dir:/etc/auto.master.d
++auto.master
+</pre>
+      <p>
+        Montowania za pomocą <em>AutoFS</em> nazwane jest 
+        <strong>mapowaniem</strong>. Mapowania możemy dokonać na trzy sposóby:
+        <strong>główny</strong>, <strong>bezpośredni</strong> oraz
+        <strong>pośredni</strong>. Przyczym główny sposób mapowania służy
+        jedynie do określenia czy mapowanie będzie bezpośrednie oraz pośrednie.
+        Samych mapowań dokonuje się w plikach użytkowników składowanych w
+        katalogu <em>/etc/auto.master.d</em>. W jednym z takich plików może
+        znajdować się wiele punktów montowania. W pliku <em>/etc/auto.master</em>
+        najczęściej definiuje się co ma zostać
+        zamontowane i gdzie. Przy czym to co ma zostać zamontowane zapisuje
+        się właśnie w plikach użytkowników. Jedno z mapowań jest już zapisane
+        w pierwszej linii powyższego przykładu.
+      </p>
+      <h3 id="17.2.1.directmap">17.2.1. Mapowanie bezpośrednie</h3>
+      <p>
+        W przypadku mapowania bezpośredniego montowana jest dowolna ilość 
+        niepowiązanych ze sobą punktów montowania. Przyczym o to kilka
+        o których trzeba wiedzieć używając tego rodzaju mapowania. 
+      </p>
+      <ul>
+        <li>Każdy udział montowany bezpośrednio jest widoczny dla użytkowników.</li>
+        <li>Montowanie lokalne oraz bezpośrednio montowane udziały mogą
+          istnieć w tym samym katalogu nadrzędnym.</li>
+        <li>Uzyskanie dostępu do katalogu zawierającego wiele montowanych
+          bezpośrednio udziałów podłączy do systemu je wszystkie.</li>
+      </ul>
+      <p>
+        Każdy udział montowany bezpośrenio będzie mieć osobny wpis w wyniku
+        działania polecenia <em>mount</em> wydanego bez argumentów. Na
+        poniższych przykładach pokazałem jak możemym wykorzystać 
+        <em>AutoFS</em> do bezpośredniego montowania udziału <em>NFS</em> z
+        poprzednie pod rozdziału.
+      </p>
+      <p>
+        W plik <em>/etc/auto.master</em> zapisuje poniższą linię:
+      </p>
+<pre class="code-block">
+/-  /etc/auto.master.d/auto.direct
+</pre>
+      <p>
+        Oznacza ona mapowanie bezpośrednie. <code class="code-inline">/-</code>
+        onznacza, że punkty montowania w pliku mapowania użytkownika
+        <code class="code-inline">/etc/auto.master.d/auto.direct</code> będą
+        przestawiowe w postaci ścieżek bezwzględnych. W pliku mapowania
+        zapisujemy poniższą linię.
+      </p>
+<pre class="code-block">
+/nfstest  server20:/nfstest
+</pre>
+      <p>
+        Po włączeniu usługi za pomocą polecenia
+        <code class="code-inline">sudo systemctl enable --now autofs.service</code>
+        wystarczy, że wyświetlimy zawartość głównego katalogu i zauważym nowy
+        folder z zamontowanym udziałem.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ ls -l /
+razem 26
+dr-xr-xr-x.   2 root root    6 2021-08-10  afs
+drwxr-xr-x.   2 root root    6 07-29 13:11 autodir
+lrwxrwxrwx.   1 root root    7 2021-08-10  bin -&gt; usr/bin
+dr-xr-xr-x.   5 root root 4096 07-16 21:23 boot
+drwxr-xr-x.  21 root root 3280 07-29 12:36 dev
+drwxr-xr-x. 108 root root 8192 07-29 21:46 etc
+drwxr-xr-x.   3 root root   18 07-16 21:25 home
+lrwxrwxrwx.   1 root root    7 2021-08-10  lib -&gt; usr/lib
+lrwxrwxrwx.   1 root root    9 2021-08-10  lib64 -&gt; usr/lib64
+drwxr-xr-x.   2 root root    6 07-29 12:39 local
+drwxr-xr-x.   2 root root    6 2021-08-10  media
+drwxr-xr-x.   2 root root    0 07-29 21:46 misc
+dr-xr-xr-x.   1 root root 2048 04-19 22:42 mnt
+drwxr-xr-x.   2 root root    0 07-29 21:46 net
+drwxr-xr-x.   2 root root    6 07-29 15:14 nfshome
+drwxrwxrwx.   2 root root    6 07-29 17:17 nfstest
+drwxr-xr-x.   2 root root    6 2021-08-10  opt
+dr-xr-xr-x. 199 root root    0 07-29 12:36 proc
+dr-xr-x---.   2 root root  167 07-29 21:46 root
+drwxr-xr-x.  37 root root 1220 07-29 21:46 run
+lrwxrwxrwx.   1 root root    8 2021-08-10  sbin -&gt; usr/sbin
+drwxrwxrwx.   2 root root    6 07-29 15:34 sharenfs
+drwxr-xr-x.   2 root root    6 2021-08-10  srv
+dr-xr-xr-x.  13 root root    0 07-29 12:36 sys
+drwxrwxrwt.   9 root root 4096 07-29 21:46 tmp
+drwxr-xr-x.  12 root root  144 07-16 21:11 usr
+drwxr-xr-x.  20 root root 4096 07-16 21:29 var
+</pre>
     </div> 
     <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

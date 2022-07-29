@@ -12412,7 +12412,7 @@ method=auto
         Wystarczy, że będziemy znać jeden ze sposób na konfigurację połączenia
         sieciowego w systemie.
       </p>
-      <h3 id="16.2.4.nmcli">16.2.4. Zarządzanie połączeniami sieciowym za pomocą podsystemu NetworkManager</h3>
+      <h3 id="16.2.3.nmcli">16.2.3. Zarządzanie połączeniami sieciowym za pomocą podsystemu NetworkManager</h3>
       <p>
         Podsystem <strong>NetworkManager</strong>, to potężne narzędzie, które
         potrafi ułatwić zarządzania połączeniami sieciowymi. Za pomocą
@@ -12440,6 +12440,203 @@ NAME    UUID                                  TYPE      DEVICE
 enp1s0  eb849d6a-d642-32e9-9219-9496570c1d45  ethernet  enp1s0 
 enp7s0  13e3cf57-9a36-4cb3-a4e0-c1b2411bf984  ethernet  enp7s0 
 </pre>
+      <p>
+        Poniżej znajduje się lista czynności związana z połączeniami:
+      </p>
+      <ul>
+        <li><strong>show</strong> - Wyświetla listę dostępnych połaczeń.</li>
+        <li><strong>up / down</strong> - Aktywuje/dezaktywuje połączenie.</li>
+        <li><strong>add</strong> - Dodaje połączenie.</li>
+        <li><strong>edit</strong> - Zmienia obecnie istniejące połączenie lub
+          dodaje nowe.</li>
+        <li><strong>modify</strong> - Modyfikuje jedno z parametrów połączenia.</li>
+        <li><strong>delete</strong> - Usuwa połączenie.</li>
+        <li><strong>reload</strong> - Nakazuje <em>NetworkManager</em> aby
+          ponownie załadował wszystkie profile połączeń.</li>
+        <li><strong>load</strong> - Nakazuje <em>NetworkManager</em> aby
+          załadował profil połączenia.</li>
+      </ul>
+      <p>
+        Lista czynności związana z urządzeniami.
+      </p>
+      <ul>
+        <li><strong>status</strong> - Pokazuje status urządzenia.</li>
+        <li><strong>show</strong> - Wyświetla informacje na temat wszystkich
+          lub określonych interfejsów sieciowych.
+      </ul>
+      <p>
+        Nazwy kategorii obiektów oraz niektórych czynności możemy zapisać za
+        pomocą jedno literowych skrótów. Na przykład chcąc wyświetlić
+        dostępne w systemie połączenia możemy wydać następujące polecenie:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo nmcli c s
+[sudo] hasło użytkownika user: 
+NAME    UUID                                  TYPE      DEVICE 
+enp1s0  eb849d6a-d642-32e9-9219-9496570c1d45  ethernet  enp1s0 
+enp7s0  13e3cf57-9a36-4cb3-a4e0-c1b2411bf984  ethernet  enp7s0 
+</pre>
+      <p>
+        W powyższym przykładzie użyłem skrótu 
+        <code class="code-inline">c</code> od kategorii <em>connection</em>
+        oraz skrótu <code class="code-inline">s</code> od czynności 
+        <em>show</em>. Więcej skrótów znajdziemy na stronie podręcznika.
+      </p>
+      <h3 id="16.2.4.nmcliaddconnection">16.2.4. Tworzenie nowych połączeń sieciowych za pomocą nmcli</h3>
+      <p>
+        Jak moglismy wynioskować na podstawie czynność z poprzedniego
+        podrozdziału, możemy wykorzystać polecenie <strong>nmcli</strong> do
+        tworzenia nowych połączeń. Dodawanie połączenia rozpoczniemy od
+        sprawdzenia dostępnych w systemie interfejsów sieciowych.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo nmcli d s
+[sudo] hasło użytkownika user: 
+DEVICE  TYPE      STATE          CONNECTION 
+enp1s0  ethernet  połączono      enp1s0     
+enp7s0  ethernet  połączono      enp7s0     
+enp8s0  ethernet  rozłączono     --         
+lo      loopback  niezarządzane  --         
+</pre>
+      <p>
+        Jeden z interfejsów znajduje się w stanie
+        <code class="code-inline">rozłączono</code>. Ten interfejs posłuży nam
+        do stworzenia nowego połączenia. Za pomocą czynności <em>add</em>
+        tworzmy nowe połączenie sieciowe.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo nmcli c add type Ethernet ifname enp8s0 con-name enp8s0 ip4 192.168.100.8/24 gw4 192.168.100.1
+[sudo] hasło użytkownika user: 
+Pomyślnie dodano połączenie „enp8s0” (ff0d4164-b179-4d03-804d-ff08f8f4da31).
+</pre>
+      <p>
+        Na powyższym przykładzie dodałem nowe połączenie
+        (<code class="code-inline">c add</code>) typu <em>Ethernet</em>
+        (<code class="code-inline">type Ethernet</code>), użyłem do tego
+        interfejsu <em>enp8s0</em> 
+        (<code class="code-inline">ifname enp8s0</code>). Nadałem nazwę
+        połączenie <em>enp8s0</em>
+        (<code class="code-inline">con-name enp8s0</code>), na końcu nadałem
+        adres <em>IPv4</em> z 24 bitową maską
+        (<code class="code-inline">ip4 192.168.100.8/24</code>) oraz adres
+        bramy domyślnej (<code class="code-inline">gw4 192.168.100.1</code>).
+      </p>
+      <p>
+        Tak utworzone połączenie nie wymaga już żadnej czynności, od razu jest
+        ono gotowe do pracy, o czym może świadczyć lista połączeń na poniższym
+        przykładzie.
+      </p>
+      <p>
+        Połączenia zarządzane za pomocą <em>NetworkManager</em> możemy wyłączać
+        oraz włączać.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo nmcli c s
+[sudo] hasło użytkownika user: 
+NAME    UUID                                  TYPE      DEVICE 
+enp1s0  eb849d6a-d642-32e9-9219-9496570c1d45  ethernet  enp1s0 
+enp7s0  13e3cf57-9a36-4cb3-a4e0-c1b2411bf984  ethernet  enp7s0 
+enp8s0  ff0d4164-b179-4d03-804d-ff08f8f4da31  ethernet  enp8s0 
+</pre>
+      <p>
+        Połączenia zarządzane za pomocą <em>NetworkManager</em> możemy wyłączać
+        oraz włączać.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo nmcli c down enp8s0
+Pomyślnie dezaktywowano połączenie „enp8s0” (ścieżka aktywacji D-Bus: /org/freedesktop/NetworkManager/ActiveConnection/3)
+[user@server10 ~]$ sudo nmcli c s
+NAME    UUID                                  TYPE      DEVICE 
+enp1s0  eb849d6a-d642-32e9-9219-9496570c1d45  ethernet  enp1s0 
+enp7s0  13e3cf57-9a36-4cb3-a4e0-c1b2411bf984  ethernet  enp7s0 
+enp8s0  ff0d4164-b179-4d03-804d-ff08f8f4da31  ethernet  --     
+
+[user@server10 ~]$ sudo nmcli c up enp8s0
+Pomyślnie aktywowano połączenie (ścieżka aktywacji D-Bus: /org/freedesktop/NetworkManager/ActiveConnection/4)
+[user@server10 ~]$ sudo nmcli c s
+NAME    UUID                                  TYPE      DEVICE 
+enp1s0  eb849d6a-d642-32e9-9219-9496570c1d45  ethernet  enp1s0 
+enp7s0  13e3cf57-9a36-4cb3-a4e0-c1b2411bf984  ethernet  enp7s0 
+enp8s0  ff0d4164-b179-4d03-804d-ff08f8f4da31  ethernet  enp8s0 
+</pre>
+      <h3 id="16.2.5.hostsfile">16.2.5. Plik /etc/hosts</h3>
+      <p>
+        Za pomocą pliku <em>/etc/hosts</em> możemy zbudować wewnątrz systemu
+        mapowanie nazw domenowych na adresy <em>IP</em>, dzięki czemu będziemy
+        mogli posługiwać się prostymi nazwamia zamiast adresami <em>IP</em>.
+        Każdy z wpisów w pliku składa się z trzech kolumn: adresu <em>IP</em>,
+        nazwy domenowej oraz aliasu (krótkiej dodatkowej nazwy, której możemy
+        używać zamiast nazwy domenowej, jeśli ta okaże się dość długa).
+        Najczęściej w aliasie zapisywana jest nazwa hosta bez sufiksu
+        domenowego. Na poniższym przykładzie znajduje się zawartość pliku
+        <em>/etc/hosts</em> z mojego serwera.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.122.6 server10.example.com server10
+192.168.122.7 server20.example.com server20
+192.168.100.6 server10s7.example.com server10s7
+192.168.100.7 server20s7.example.com server20s7
+</pre>
+      <p>
+        Pierwsze dwa wpisy dotyczą tego aby odwołanie się do
+        <code class="code-inline">localhost</code> zwracało adres pętli
+        zwrotnej. Wpisy poniżej to mapowania adresów na nazwy maszyn
+        korzystywanych do ćwiczeń w tym materiale. Zwróćmy uwagę na to, iż
+        w pierwszych wierszach zdefiniowano więcej niż jeden alias.
+      </p>
+      <h3 id="16.2.6.connectivitytest">16.2.6. Testowanie łączności</h3>
+      <p>
+        A przetestować możliwość połączenia między klietem a serwera lub
+        między serwerami możemy skorzystać z jednego z narzędzi potokołu
+        <em>ICMP</em>, a mianowicie narzędzia <strong>ping</strong>.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ ping -c4 server20s7.example.com 
+PING server20s7.example.com (192.168.100.7) 56(84) bytes of data.
+64 bytes from server20s7.example.com (192.168.100.7): icmp_seq=1 ttl=64 time=0.497 ms
+64 bytes from server20s7.example.com (192.168.100.7): icmp_seq=2 ttl=64 time=0.335 ms
+64 bytes from server20s7.example.com (192.168.100.7): icmp_seq=3 ttl=64 time=0.483 ms
+64 bytes from server20s7.example.com (192.168.100.7): icmp_seq=4 ttl=64 time=0.302 ms
+
+--- server20s7.example.com ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3096ms
+rtt min/avg/max/mdev = 0.302/0.404/0.497/0.086 ms
+</pre>
+      <p>
+        Za pomocą poniższego polecenia wysłałem cztery pakiety diagnostyczne
+        (<code class="code-inline">-c4</code>) przy użyciu sieci wewnętrznej
+        do drugiej maszyny w labolatorium.
+      </p>
+      <h3 id="exec16.1">Ćwiczenie 1: Zmiana nazwy hosta</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień, na maszynie
+        oznaczonej <em>server1</em> oraz <em>server2</em> zmień nazwę hosta
+        z <em>server1</em> na <em>server10</em> oraz z <em>server2</em> na
+        <em>server20</em>. Wyloguj się i zaloguj ponownie aby potwierdzić
+        zmiany.
+      </p>
+      <h3 id="exec16.2">Ćwiczenie 2: Nowe połączenia sieciowe</h3>
+      <p>
+        Przy użyciu wykorzystywanego przez ciebie sposóbu wirtualizacji,
+        stwórz sieć wewnętrzną. Następnie dodaj do każdej z maszyn dodatkowy
+        interfejs sieciowy. Następnie za pomocą dowolnej metody dodaj i
+        skonfiguruj połączenia sieciowe. Dodaj wpisy wskazujące na maszyny do
+        pliku <em>/etc/hosts</em> na każdej znich. Następnie sprawdź
+        połączenie.
+      </p>
+      <h2 id="ch16summary">Podsumowanie</h2>
+      <p>
+        W tym rozdziale zapoznaliśmy się z fundamentalnymi pojęciami 
+        związanymi z sieci. Pozalimśmy adresy <em>IPv4</em>, klasy adresów,
+        adresy </em>IPv6</em> oraz kilka protokołów. Dowiedzieliśmy się jak
+        zarządzać połączeniami sieciowym w <em>RHEL</em> 9. Poznaliśmy
+        prosty system, który umożliwi nam pisanie nazw hostów zamiast adresów
+        <em>IP</em> oraz sposób na testowanie łączności. W następnym rozdziale
+        zajmiemy się sieciowym system plików.
+      </p>
     </div> 
     <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

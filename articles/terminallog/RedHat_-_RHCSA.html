@@ -498,6 +498,26 @@
             <li><a href="#ch16summary">Podsumowanie</a></li>
           </ul>
         </li>
+        <li><a href="#17.nfs">17. Network File System</a>
+          <ul class="toc">
+            <li><a href="#17.1.nfsconfig">17.1. Konfiguracja serwera oraz klienta NFS</a>
+              <ul class="toc">
+                <li><a href="#17.1.1.nfsserverconfig">17.1.1. Konfiguracja serwera <em>NFS</em></a></li>
+                <li><a href="#17.1.2.nfsclientconfig">17.1.2. Konfiguracja klienta NFS</a></li>
+              </ul>
+            </li>
+            <li><a href="#17.2.autofs">17.2. Konfiguracja udziału NFS za pomocą AutoFS</a>
+              <ul class="toc">
+                <li><a href="#17.2.1.directmap">17.2.1. Mapowanie bezpośrednie</a></li>
+                <li><a href="#17.2.2.indirectmap">17.2.2. Mapowanie pośrednie</a></li>
+                <li><a href="#17.2.3.homeautomount">17.2.3. Automatyczne montowanie zdalnych katalogów domowych</a></li>
+              </ul>
+            </li>
+            <li><a href="#exec17.1">Ćwiczenie 1: Tworzenie udziału NFS oraz mapowanie bezpośrednie</a></li>
+            <li><a href="#exec17.2">Ćwiczenie 2: Pośrednie mapowanie udziału NFS</a></li>
+            <li><a href="#ch17summary">Podsumowanie</a></li>
+          </ul>
+        </li>
       </ul>
       <h1 id="1.introduction">1. Wstęp</h1>
       <p>
@@ -12676,30 +12696,31 @@ rtt min/avg/max/mdev = 0.302/0.404/0.497/0.086 ms
         Enterprise Linux pozwalają na korzystanie z udostępnionych plików, tak
         jakby były by one lokalnie dostępne. Jednym z takich mechanizmów jest
         <strong>NFS</strong>, jego obsługa na docelowym systemie sprowadza się
-        do wydanie pojedyńczego polecenia <em>mount</em>, a z dodatkowym
+        do wydania pojedyńczego polecenia <em>mount</em>, a z dodatkowym
         demonem <strong>AutoFS</strong> tak na prawdę wystarczy próba dostępu
         do katalogu w którym powinny znajdować się dane aby były one dostępne
         na zdalnym komputerze.
       </p>
       <p>
         <em>NFS</em> czyli (ang. <em>Network File System</em>) sieciowy
-        system plików jest usługą sieciową pozalającna na współdzielenie
+        system plików jest usługą sieciową pozwalającna na współdzielenie
         zasobów plikowych. NFS działa w architekturze klient-serwer. Co oznacza
         że jeden z komputerów udostępnia pliki, na których drugi komputer 
-        zdalny po podłączeniu jest w stanie pracować. <em>NFS</em> udostępnia
+        po podłączeniu jest w stanie pracować. <em>NFS</em> udostępnia
         foldery, a każdy taki folder nazwany jest <strong>udziałem</strong>.
-        Natomiast proces proces udostępniania folder (udziału) nazwywany jest
+        Natomiast sam proces udostępniania folderu (udziału) nazwywany jest
         jest <strong>eksportem</strong>. Przyczym eksport może być dokonany w
         kierunku <strong>okreslonego/określonych</strong> klienta/klientów.
-        Klient chcąc skorzystać udziału <em>NFS</em> dokonuje jego montowania
+        Klient chcąc skorzystać z udziału <em>NFS</em> dokonuje jego montowania
         tak jakby podłączał dodatkowy system plików do swojego systemu,
         podając oczywiście odpowiednie parametry.
       </p>
       <p>
         Za stosowaniem <em>NFS</em> płynie wiele korzyści o takich jak
         wieloplatformowość, wieloużytkowość, redukcja kosztów administracyjnych
-        oraz związanych z dyskami. Po zastosowaniu mechanizmów <em>AutoFS</em>
-        będziemy w stanie zapewnić użytkownikom zdalne katalogi domowe.
+        oraz związanych z zakupem kolejnych dysków. Po zastosowaniu mechanizmów
+        <em>AutoFS</em> będziemy w stanie zapewnić użytkownikom zdalne 
+        katalogi domowe.
       </p>
       <p>
         Dostępnych jest wiele wersji <em>NFS</em>. W <em>RHEL</em> od wersji 8
@@ -12713,9 +12734,9 @@ rtt min/avg/max/mdev = 0.302/0.404/0.497/0.086 ms
       <h2 id="17.1.nfsconfig">17.1. Konfiguracja serwera oraz klienta NFS</h2>
       <p>
         Na początku zadań praktycznych skonfigurujemy sobie prosty udział, aby
-        mniej więcej wiedzieć jak się zabrać za konfigurację <em>NFS</em>.
+        mniej więcej wiedzieć jak skonfigurować serwer <em>NFS</em>.
       </p>
-      <h3 id="17.1.1.nfsserverconfis">17.1.1. Konfiguracja serwera <em>NFS</em></h3>
+      <h3 id="17.1.1.nfsserverconfig">17.1.1. Konfiguracja serwera <em>NFS</em></h3>
       <p>
         Konfigurację zaczynamy od serwera i tam na początku instalujemy
         niezbędne oprogramowanie. 
@@ -12743,10 +12764,10 @@ Ukończono.
 [user@server20 ~]$ sudo mkdir /nfstest
 [sudo] hasło użytkownika user: 
 [user@server20 ~]$ sudo chmod 777 /nfstest
-<pre>
+</pre>
       <p>
         Następnie w pliku <em>/etc/exports</em>, definiuje eksport udziału do
-        klienta. Eksport pozwala mi również na zdefiniowanie dodatkowych opcji
+        klienta. Eksport pozwala również na zdefiniowanie dodatkowych opcji
         dotyczących udziału, w naszym przypadku będzie przypisanie klientowi
         możliwości zapisu oraz odczytu.
       </p>
@@ -12767,7 +12788,7 @@ success
 success
 </pre>
       <p>
-        Teraz wystarczy tylko zmuśić demona <em>NFS</em>, aby dokonał eksportu.
+        Teraz wystarczy tylko zmusić demona <em>NFS</em>, aby dokonał eksportu.
         A możemy to zrobić za pomocą poniższego polecenia.
       </p>
 <pre class="code-block">
@@ -12780,7 +12801,7 @@ exporting server10.example.com:/nfstest
         <code class="code-inline">-v</code> włącza bardziej szczegółowe
         wyświetlanie komunikatów diagnostycznych. Bez tej opcji polecenie nie
         zwróci nic. Konfigurację serwera możemy uznać za zakończoną. Teraz
-        przejdziemy do konfiguracji serwera.
+        przejdziemy do konfiguracji klienta.
       </p>
       <h3 id="17.1.2.nfsclientconfig">17.1.2. Konfiguracja klienta NFS</h3>
       <p>
@@ -12810,7 +12831,7 @@ Ukończono.
 </pre>
       <p>
         Nie musimy podawać nawet typu systemu plików. Aby nie musieć podłączać
-        się za każdym razem możemy dopisać poniższy wiersz do plik
+        się za każdym razem możemy dopisać poniższy wiersz do pliku
         <em>/etc/fstab</em>.
       </p>
 <pre class="code-block">
@@ -12828,9 +12849,9 @@ server20:/nfstest /local nfs _netdev 0 0
         jest dostępny demon, który pozwala na zamontowanie udziału <em>NFS</em>
         w momecie gdy jest on potrzebny. Na przykład gdy chcemy wyświetlić
         zawartość katalogu, w którym powinny znajdować się udostępnione przez
-        niego pliku. Tym zajmuje się właśnie <strong>AutoFS</strong>. Ten
+        niego pliki. Tym zajmuje się właśnie <strong>AutoFS</strong>. Ten
         demon, nie tylko montuje na rządanie ale także odłącza go gdy nie ma
-        prób uzyskania dostępu do niego przez okres 5 minut. Główny katalog
+        prób uzyskania dostępu do niego przez okres 5 minut. Główny plik
         konfiguracyjny znajduje się w katalogu <em>/etc</em> pod nazwą
         <em>autofs.conf</em>. Poniżej znajduje się jego zawartość:
       </p>
@@ -12863,17 +12884,17 @@ dismount_interval = 300
 </pre>
       <p>
         Montowania za pomocą <em>AutoFS</em> nazwane jest 
-        <strong>mapowaniem</strong>. Mapowania możemy dokonać na trzy sposóby:
+        <strong>mapowaniem</strong>. Mapowania możemy dokonać na trzy sposoby:
         <strong>główny</strong>, <strong>bezpośredni</strong> oraz
         <strong>pośredni</strong>. Przyczym główny sposób mapowania służy
-        jedynie do określenia czy mapowanie będzie bezpośrednie oraz pośrednie.
+        jedynie do określenia czy mapowanie będzie bezpośrednie lub pośrednie.
         Samych mapowań dokonuje się w plikach użytkowników składowanych w
         katalogu <em>/etc/auto.master.d</em>. W jednym z takich plików może
         znajdować się wiele punktów montowania. W pliku <em>/etc/auto.master</em>
         najczęściej definiuje się co ma zostać
-        zamontowane i gdzie. Przy czym to co ma zostać zamontowane zapisuje
-        się właśnie w plikach użytkowników. Jedno z mapowań jest już zapisane
-        w pierwszej linii powyższego przykładu.
+        zamontowane i w jaki sposób. Przy czym to co ma zostać zamontowane
+        zapisuje się właśnie w plikach użytkowników. Jedno z mapowań jest już 
+        zapisane w pierwszej linii powyższego przykładu.
       </p>
       <h3 id="17.2.1.directmap">17.2.1. Mapowanie bezpośrednie</h3>
       <p>
@@ -12893,10 +12914,10 @@ dismount_interval = 300
         działania polecenia <em>mount</em> wydanego bez argumentów. Na
         poniższych przykładach pokazałem jak możemym wykorzystać 
         <em>AutoFS</em> do bezpośredniego montowania udziału <em>NFS</em> z
-        poprzednie pod rozdziału.
+        poprzedniego podrozdziału.
       </p>
       <p>
-        W plik <em>/etc/auto.master</em> zapisuje poniższą linię:
+        W pliku <em>/etc/auto.master</em> zapisuje poniższą linię:
       </p>
 <pre class="code-block">
 /-  /etc/auto.master.d/auto.direct
@@ -12915,7 +12936,7 @@ dismount_interval = 300
         Po włączeniu usługi za pomocą polecenia
         <code class="code-inline">sudo systemctl enable --now autofs.service</code>
         wystarczy, że wyświetlimy zawartość głównego katalogu i zauważym nowy
-        folder z zamontowanym udziałem.
+        folder <em>/nfstest</em> z zamontowanym udziałem.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ ls -l /
@@ -12963,7 +12984,7 @@ addr=192.168.122.7)
 </pre>
       <h3 id="17.2.2.indirectmap">17.2.2. Mapowanie pośrednie</h3>
       <p>
-        Mapowanie bezpośrednie jest wykorzystywane gdy chcemy zamontować
+        Mapowanie pośrednie jest wykorzystywane gdy chcemy zamontować
         wszystkie udziały w jednym wspólnym katalogu nadrzędnym. Oto kilka
         punktów jakie trzeba znać podczas mapowania pośredniego.
       </p>
@@ -12972,7 +12993,7 @@ addr=192.168.122.7)
           nich dostępu.</li>
         <li>Montowania lokalne oraz montowania pośrednie nie mogą istnieć w tym
           samym katalogu nadrzędnym.</li>
-        <li>Każdy montowanie pośrednie generuje jeden wpis w pliku
+        <li>Każde montowanie pośrednie generuje jeden wpis w pliku
           <em>/etc/mtab</em> - systemowa tablica montowania (stąd informacje
           pobiera polecenie <em>mount</em> wydane bez żadnego argumentu).</li>
         <li>Próba uzyskania dostępu katalogu zawierającego punkty montowania
@@ -12980,7 +13001,7 @@ addr=192.168.122.7)
       </ul>
       <p>
         Poniżej przedstawiam w jaki sposób można zamontować udział <em>NFS</em>
-        z poprzednie podrozdziału za pomocą mapowania pośredniego 
+        z poprzedniego podrozdziału za pomocą mapowania pośredniego 
         <em>AutoFS</em>.
       </p>
       <p>
@@ -12998,7 +13019,7 @@ addr=192.168.122.7)
         W pierszej linii znajduje się definicja katalogu nadrzędnego
         przygotowana przez <em>AutoFS</em>. W tej linii znajduje się także
         ścieżka do pliku, w którym należy zapisać definicje udziałów do
-        montowania. Zapisujemy więc poniższą linię do pliku
+        montowania pośredniego. Zapisujemy więc poniższą linię do pliku
         <code class="code-inline">/etc/auto.misc</code>.
       </p>
 <pre class="code-block">
@@ -13025,7 +13046,7 @@ namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.122.6,l
 addr=192.168.122.7)
 </pre>
       <p>
-        Zwróćmy uwagę na to iż występuje tylko jeden wpisy dotyczący katalogu
+        Zwróćmy uwagę na to, iż występuje tylko jeden wpisy dotyczący katalogu
         <em>/misc</em> typu <em>autofs</em>. Gdzie w przypadku montowania
         bezpośredniego, każdy punkt montowania posiadał własny wpis typu 
         <em>autofs</em>.
@@ -13048,13 +13069,13 @@ addr=192.168.122.7)
         <li>Katalog <em>/home</em> na serwerze powinien zostać wyeksportowany.</li>
         <li>Udwzorowanie użytkowników na obu systemach powinno być takie same,
           tj. najlepiej aby użytkownicy mieli te same <em>UID</em>-y aby
-          uniknąć problemów z prawem własności plików złożonych katalogu
-          domowym.</li> 
+          uniknąć problemów z prawem własności plików złożonych katalogch
+          domowych.</li> 
       </ol>
       <p>
         Aby przetestować <em>AutoFS</em> w praktyce wykonamy kilka czynności,
-        aby odzworowany użytkownik z jednego serwera na drugim miał dostęp do
-        swoich danych.
+        aby odzworowany użytkownik z jednego serwera na drugim serwerze miał 
+        dostęp do swoich danych.
       </p>
       <p>
         Na początku na <strong>serwerze, który udostępnia katalogi domowe</strong>
@@ -13072,7 +13093,7 @@ Proszę ponownie wpisać nowe hasło:
 </pre>
       <p>
         Następnie dokonujemy eksportu katalogu <em>/home</em> oraz wymuszamy
-        zmianę eksportu.
+        zmianę udziałów <em>NFS</em>.
       </p>
 <pre class="code-block">
 [user@server20 ~]$ cat /etc/exports
@@ -13111,9 +13132,9 @@ exporting server10.example.com:/home
       <p>
         W tym zapisie gwiazdka odnosi się dowolnej nazwy punktu montowania,
         ponieważ użytkowników może być bardzo dużo i nie sensu ich tu
-        wszystkich wypisywać. Ampersand (<strong>&</strong>) może być
+        wszystkich wypisywać. Ampersand (<strong>&amp;</strong>) może być
         odwołaniem do wielu serwerów lub wielu udziałów <em>NFS</em>. W tym
-        przypadku został użyty do wskazania wielu katalogów w na udziale.
+        przypadku został użyty do wskazania wielu katalogów w udziale.
         Po zapisaniu zmian w pliku należy zrestartować usługę.
       </p>
 <pre class="code-block">
@@ -13135,11 +13156,11 @@ Hasło:
         domowych (<code class="code-inline">-b /nfshome</code>) w tym przypadku
         jest katalog nadrzędny dla punktów montowania pośredniego 
         <em>AutoFS</em>. Użyłem również opcji 
-        <code class="code-inline">-M</code>, aby podczas tworznie nowego
+        <code class="code-inline">-M</code>, aby podczas tworzenia nowego
         użytkownika nie został utworzony katalog domowy. Po utworzeniu 
         użytkownika przełączyłem się na niego. Poniżej znajdują się wpisy 
         z systemowego rejestru montowania, świadczące o tym iż katalog
-        domowy użytkownika <code class="code-inline">user4040</code> jest
+        domowy użytkownika <code class="code-inline">user40</code> jest
         katalogiem zdalnym podłączonym z pomocą <em>NFS</em>.
       </p>
 <pre class="code-block">
@@ -13154,8 +13175,12 @@ server20:/home/user40 on /nfshome/user40 type nfs4 (rw,relatime,vers=4.2,rsize=2
 addr=192.168.122.7)
 </pre>
       <p>
-        W ten sposób mogę utrzymać jeden katalog domowy na zadalnym serwerze 
+        W ten sposób mogę utrzymać jeden katalog domowy na zdalnym serwerze 
         i korzystać z niego na wielu komputerach.
+      </p>
+      <p class="exam_tip">
+        Jednym z zdań egzaminacyjnych może być automatyczne montowanie zdalnych
+        katalogów domowych z wykorzystaniem <em>NFS</em> oraz <em>AutoFS</em>.
       </p>
       <h3 id="exec17.1">Ćwiczenie 1: Tworzenie udziału NFS oraz mapowanie bezpośrednie</h3>
       <p>
@@ -13165,11 +13190,11 @@ addr=192.168.122.7)
         zainstaluj usługę <em>AutoFS</em>, następnie skonfiguruj automatyczne
         montowanie wcześniej utworzonego udziału w sposób bezpośredni.
         Spróbuj uzyskać dostęp do udziału, aby go zamontować. Potwierdź to
-        za pomocą polecenia <em>df -h </em>. 
+        za pomocą polecenia <em>df -h</em>. 
       </p>
       <h3 id="exec17.2">Ćwiczenie 2: Pośrednie mapowanie udziału NFS</h3>
       <p>
-        Wykorzystując konfiguracje z poprzedniego ćwiczenia zmień konfigurację
+        Wykorzystując udział z poprzedniego ćwiczenia zmień konfigurację
         <em>AutoFS</em> aby udział montowany był w sposób pośredni w katalogu
         nadrzędnym <em>/autoindir</em>. Spróbuj uzyskać dostęp do
         udostępnionego w ten sposób udziału. Potwierdź to za pomocą polecenia
@@ -13177,7 +13202,7 @@ addr=192.168.122.7)
       </p>
       <h2 id="ch17summary">Podsumowanie</h2>
       <p>
-        W tym rodziale poznaliśmy pierwszą usługę sieciową, który służy do
+        W tym rodziale poznaliśmy pierwszą usługę sieciową, która służy do
         udostępniania plików a jest nią <em>NFS</em>. Nauczyliśmy się
         konfigurować udziały na serwerze oraz montować je na systemach
         klienckich. Poznaliśmy usługę <em>AutoFS</em>, która pozwala na

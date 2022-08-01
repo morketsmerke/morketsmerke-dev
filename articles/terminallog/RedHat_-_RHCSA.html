@@ -13211,7 +13211,632 @@ addr=192.168.122.7)
         Następny rozdział będzie poświęcony synchronizacji czasu systemowego
         oraz rozwiązywaniu nazw domenowych.
       </p>
-    </div> 
+      <h1 id="18.ntpanddns">18. Synchronizacja czasu oraz rozwiązywanie nazw w RHEL 9</h1>
+      <p>
+        Wiele komponentów systemowych opiera swoje czynności o poprawność
+        daty i czasu. Jednym z nich, który każdemu przychodzi do głowy jest
+        <em>cron</em> - systemowy harmonogram zadań. Bez ustawień czasu 
+        harmonogram był by najzwyczajniej w świecie bezużyteczny. Nad
+        poprawnością czasu w systemach Uniksowych czuwa protokół
+        <strong>NTP</strong> wraz zjego najnowszą implementacją w postaci
+        programu <strong>chrony</strong>.
+      </p>
+      <p>
+        Aby osoba korzystająca z komputera nie musiała zapmiętać liczb adresu
+        <em>IP</em> chcąc zapmiętać adres strony, wprowadzono wśród nazewnictwa
+        hostów coś takiego jak prostsze do zapamiętania nazwy domenowe. Mimo
+        tego adres <em>IP</em> dalej jest potrzebny do realizacji połączania,
+        zatem wraz z nazwami domenowymi pojawiła się usługa 
+        <strong>DNS</strong>, której zadaniem jest zamiana nazw domenowych
+        na adresy <em>IP</em> i vice versa o ile jest to możliwe.
+      </p>
+      <h2 id="18.1.NTP">18.1. Network Time Protocol - synchronizacja czasu</h2>
+      <p>
+        Synchronizacja czasu za pomocą <em>NTP</em> polega na jak
+        najdokładnieszym ustawieniu czasu rzeczywistego na zegarze systemowym
+        za pomocą sieci. Czas na serwerach <em>NTP</em> nie bierze się z nikąd
+        najpopularniejszym sposób na uzyskanie dokładnego czasu są
+        <strong>zegary atomowe</strong> rozlokowane w wielu instytucjach
+        naukowych na całym świecie. Zegary te są podłączone do serwerów,
+        których adresy są dostępne na oficjalnej stronie protokołu:
+        <a href="http://ntp.org">ntp.org</a>, gdzie znajdziemy zbiory serwerów
+        nazywane <strong>pulami</strong>. Pule mogą mieć wiele różnych
+        podziałów, na przykład na poszczególne kraje, a nawet konkretne
+        dystrybucje Linuksa. W przypadku <em>RHEL</em> adres puli <em>NTP</em>
+        to: <em>rhel.pool.ntp.org</em>. W tych pulach, może znajdować się
+        wiele serwerów, które mają określone role. Wśród nich możemy wyróżnić
+        takie role jak:
+      </p>
+      <ul>
+        <li><strong>Serwer podstawowy</strong> - ten rodzaj serwera otrzymuje
+          czas bezpośrednio z jego źródła czyli zegara atomowego. Serwery tego
+          typu mogą przekazywać czas do serwerów podrzędnych jaki 
+          synchronizować czas klientów.</li>
+        <li><strong>Serwer podrzędny</strong> - serwery tego typu otrzymują
+          czas od serwera podstawowego, głównie zajmują się synchonizacją
+          czasu klientów, aby zmniejszyć obciążenie serwerów.</li>
+        <li><strong>Peer</strong> - jest rodzaj serwera który przekazuje czas
+          innym serwerom na tym samym poziomie. <em>Peer</em>-y mogą występować
+          wśród serwerów podstawowych jak podrzędnych.</li>
+        <li><strong>Klient</strong> - klient nie jest rolą serwera, a raczej
+          hostów, które korzystają z <em>NTP</em>. Klient pobiera czas z
+          jednego z serwerów z puli a następnie ustawia swój zegar na podstawie
+          uzyskanych z serwera <strong>różnic</strong>.</li>
+      </ul>
+      <p>
+        Sieć <em>NTP</em> ma hierachiczną budowę i opiera się ona poziomy
+        nazywane <strong>Stratum</strong>. Poziomy zaczynają się od poziomu 
+        <strong>0</strong>
+        na tym poziomie znajdują się głownie zegary atomowe lub inne wzorce
+        czasu. Klient <em>NTP</em> nie może uzyskać informacji z tego poziomu.
+        Nie jest on podłączony do sieci. Drugim poziom - 
+        poziom <strong>1</strong> - jest miejscem w hierarchii, który znajdują
+        się głównie serwery podstawowe oraz <em>peer</em>-y.  Na kolejnych
+        poziomach znajdując się serwery podrzędne oraz <em>peer</em>-y tych
+        poziomów. Czas uzyskany z najwyższych poziomów można uznać za
+        najbardziej dokładny i rzetelny. Wszystkich poziomów w hierarchi jest
+        <strong>15</strong>.
+      </p>
+      <p>
+        Klienci wybierają serwer na podstawie czasu oczekiwania na odpowiedź,
+        im krótszym tym czas będzie bardziej rzetelny.
+      </p>
+      <h3 id="18.1.1.chronyconfig">18.1.1. Konfiguracja demona chrony</h3>
+      <p>
+        <strong>Chrony</strong> jest najnowsza implementacja demona
+        synchronizacji czasu. Działa on na porcie 123 protokołu UDP. Jego plik
+        konfiguracjny znajduje się bezpośrednio w katalogu <em>/etc</em> pod
+        nazwą <em>chrony.conf</em>. Poniżej znajduje się jego zawartość. 
+      </p>
+<pre class="code-block">
+pool 2.rhel.pool.ntp.org iburst
+sourcedir /run/chrony-dhcp
+driftfile /var/lib/chrony/drift
+makestep 1.0 3
+rtcsync
+keyfile /etc/chrony.keys
+ntsdumpdir /var/lib/chrony
+leapsectz right/UTC
+logdir /var/log/chrony
+</pre>
+      <p>
+        Z tych przedstawionych na przykładzie na bardziej szczegółowe omówienie
+        zasługuje dyrektywa <code class="code-inline">pool</code> wskazująca na
+        adres puli, dodatkowo atrybut <code class="code-inline">iburst</code>
+        powoduje przyspieszenie uzyskania czasu z serwera <em>NTP</em>. Ma to
+        swój cel głównie podczas uruchamiania systemu. W pliku wskazywanym
+        przez dyrektywę <code class="code-inline">driftfile</code> 
+        przechowywany jest wskaźnik rozbierzności czasu zegara systemowego,
+        informacje przechowywane w tym pliku pomagają w utrzymaniu precyzji
+        zegara. Jeśli mielibyśmy wskazać konkretny serwer czasu, to wówczas
+        należało by użyć dyrektywy <em>server</em>. Dyrektywa
+        <code class="code-inline">/var/log/chrony</code>.
+      </p>
+      <p>
+        Demon <em>chrony</em> dostarczany jest wraz z polecniem
+        <strong>chronyc</strong> za pomocą którego możemy sprawdzić wydajność
+        demona oraz kontrolować jego działanie. Polecenie modyfikuje się za
+        pomocą podpoleceń takich jak <em>sources</em> oraz <em>tracking</em>.
+      </p>
+      <p>
+        Aby skonfigurować <em>chrony</em> nic nie trzeba robić. Wystarczy
+        instalacja oraz włączenie jednostki. Domyślna konfiguracja świetnie
+        sprawdza się w podstawowych zastosowaniach. Konfiguracje zacznie zatem
+        od sprawdzenia czy demon jest zainstalowany czy nie.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo dnf install chrony
+Updating Subscription Management repositories.
+Unable to read consumer identity
+
+This system is not registered with an entitlement server. You can use subscription-manager to register.
+
+Ostatnio sprawdzono ważność metadanych: 0:31:37 temu w dniu pon, 1 sie 2022, 14:03:11.
+Pakiet chrony-4.1-3.el9.x86_64 jest już zainstalowany.
+Rozwiązano zależności.
+Nie ma nic do zrobienia.
+Ukończono.
+</pre>
+      <p>
+        W przypadku Red Hat Enterprise Linux 9 jest on zainstalowany. To
+        pozostaje tylko go włączyć.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo systemctl enable --now chronyd.service 
+Created symlink /etc/systemd/system/multi-user.target.wants/chronyd.service → /usr/lib/systemd/system/chronyd.service.
+[user@server10 ~]$ sudo systemctl status chronyd.service --no-pager
+● chronyd.service - NTP client/server
+     Loaded: loaded (/usr/lib/systemd/system/chronyd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2022-08-01 14:37:11 CEST; 23s ago
+       Docs: man:chronyd(8)
+             man:chrony.conf(5)
+    Process: 1968 ExecStart=/usr/sbin/chronyd $OPTIONS (code=exited, status=0/SUCCESS)
+   Main PID: 1970 (chronyd)
+      Tasks: 1 (limit: 5891)
+     Memory: 824.0K
+        CPU: 18ms
+     CGroup: /system.slice/chronyd.service
+             └─1970 /usr/sbin/chronyd -F 2
+
+sie 01 14:37:11 server10.example.com systemd[1]: Starting NTP client/server...
+sie 01 14:37:11 server10.example.com chronyd[1970]: chronyd version 4.1 starting (+CMDMON +NTP +RE…EBUG)
+sie 01 14:37:11 server10.example.com chronyd[1970]: Frequency -6.706 +/- 0.264 ppm read from /var/…drift
+sie 01 14:37:11 server10.example.com chronyd[1970]: Using right/UTC timezone to obtain leap second data
+sie 01 14:37:11 server10.example.com chronyd[1970]: Loaded seccomp filter (level 2)
+sie 01 14:37:11 server10.example.com systemd[1]: Started NTP client/server.
+sie 01 14:37:16 server10.example.com chronyd[1970]: Selected source 178.215.228.24 (2.rhel.pool.ntp.org)
+sie 01 14:37:16 server10.example.com chronyd[1970]: System clock TAI offset set to 37 seconds
+Hint: Some lines were ellipsized, use -l to show in full.
+</pre>
+      <p>
+        Za pomocą polecenia <em>chronyc</em> wraz z podpoleceniem
+        <strong>sources</strong> możemy podejrzeć z jaki serwera czasu
+        połączył się nasz klient oraz na jakim poziomie <em>hierarchi</em>
+        się one znajdują.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ chronyc sources
+MS Name/IP address         Stratum Poll Reach LastRx Last sample               
+===============================================================================
+^+ pingless.com                  2   6   377     2  -3517us[-2773us] +/-   27ms
+^+ s.complex.net.pl              2   6   377     1  -2877us[-2877us] +/-   44ms
+^* ntp.ifj.edu.pl                2   6   377     1    +10ms[  +11ms] +/-   33ms
+^+ any.time.nl                   2   6   377    66  -2061us[-1153us] +/-   62ms
+</pre>
+      <p>
+        Gwiazdka w drugiej kolumnie wiersza oznacza, że to właśnie z tego
+        serwera został pobrany czas. Możemy się upewnić za pomocą drugiego
+        podpolecenia <strong>tracking</strong>. Aby poznać więcej informacji
+        na temat kolumn wszukajmy sekcji <em>sources</em> na stronie
+        podręcznika polecenia <em>chronyc</em>. Wynik działania podpolecenia
+        <em>tracking</em> znajduje się poniżej:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ chronyc tracking
+Reference ID    : C0560E43 (ntp.ifj.edu.pl)
+Stratum         : 3
+Ref time (UTC)  : Mon Aug 01 12:48:05 2022
+System time     : 0.001653226 seconds slow of NTP time
+Last offset     : -0.001851230 seconds
+RMS offset      : 0.001920320 seconds
+Frequency       : 7.629 ppm slow
+Residual freq   : -0.463 ppm
+Skew            : 4.887 ppm
+Root delay      : 0.042983003 seconds
+Root dispersion : 0.008079479 seconds
+Update interval : 64.8 seconds
+Leap status     : Normal
+</pre>
+      <p>
+        Zwróćmy uwagę na rozbierzność na temat poziomów serwera. W przypadku
+        mojego serwera czas systemowy spóźnia się o wartość zapisaną w wierszu
+        <code class="code-inline">System time</code>.
+      </p>
+      <p class="exam_tip">
+        Podczas egzaminu maszyny egzaminacyjne nie będą mieć dostępu do
+        internetu, więc podczas konfiguracji klienta NTP będzie trzeba 
+        wskazać na serwer w sieci egzaminacyjnej. Ujmujemy w komentarz
+        dyrektywę <em>pool</em> oraz <em>server</em> jeśli występuje,
+        następnie dopisujemy kolejną dyrektywę <em>server</em> z adresem
+        serwera NTP w sieci egzaminacyjnej. 
+      </p>
+      <h3 id="18.1.2.settingdateandtime">18.1.2. Ustawienia daty i czasu</h3>
+      <p>
+        Podczas omawiania synchronizacji czasu nie może zabraknąć ręcznych
+        ustawień daty oraz czasu. W przypadku <em>RHEL</em> można to
+        zrealizować na dwa sposób. Pierwszym z nich jest jest polecenie
+        <strong>timedatectl</strong> oraz <strong>date</strong>. Tak prezentują
+        się informacje zwracane przez oba narzędzia uruchomione bez żadnych
+        argumentów:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ timedatectl
+               Local time: pon 2022-08-01 15:34:51 CEST
+           Universal time: pon 2022-08-01 13:34:51 UTC
+                 RTC time: pon 2022-08-01 13:34:51
+                Time zone: Europe/Warsaw (CEST, +0200)
+System clock synchronized: yes
+              NTP service: active
+          RTC in local TZ: no
+
+[user@server10 ~]$ date
+pon, 1 sie 2022, 15:34:55 CEST
+</pre>
+      <p>
+        Aby móc ustawić ręcznie datę oraz czas trzeba wyłączyć możliwość 
+        ustawienia daty oraz czasu z protokołu <em>NTP</em>. Możemy to zrobić
+        za pomocą pomiższego polecenia:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo timedatectl set-ntp false
+[user@server10 ~]$ timedatectl
+               Local time: pon 2022-08-01 15:35:58 CEST
+           Universal time: pon 2022-08-01 13:35:58 UTC
+                 RTC time: pon 2022-08-01 13:35:58
+                Time zone: Europe/Warsaw (CEST, +0200)
+System clock synchronized: yes
+              NTP service: inactive
+          RTC in local TZ: no
+</pre>
+      <p>
+        Ustawienie daty oraz czasu następuje w przypadku <em>timedatectl</em>.
+        dokonujemy za pomocą podpolecnia <strong>set-time</strong> następnie
+        podajemy datę oraz godzinę.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo timedatectl set-time "1970-01-01 12:01"
+[user@server10 ~]$ timedatectl 
+               Local time: czw 1970-01-01 12:01:12 CET
+           Universal time: czw 1970-01-01 11:01:12 UTC
+                 RTC time: czw 1970-01-01 11:01:13
+                Time zone: Europe/Warsaw (CET, +0100)
+System clock synchronized: no
+              NTP service: inactive
+          RTC in local TZ: no
+</pre>
+      <p>
+        Natomiast w przypadku polecenia <em>date</em> używa się opcji
+        <strong>--set</strong>.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo date --set "1970-01-05 23:59"
+pon, 5 sty 1970, 23:59:00 CET
+[user@server10 ~]$ date
+pon, 5 sty 1970, 23:59:02 CET
+</pre>
+      <p>
+        Aby wszystko wróciło do normy, wystarczy że włączymy obsługę NTP.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo timedatectl set-ntp true
+[sudo] hasło użytkownika user: 
+[user@server10 ~]$ chronyc tracking
+Reference ID    : D4539E53 (dedibox.demongeot.biz)
+Stratum         : 3
+Ref time (UTC)  : Mon Aug 01 13:56:32 2022
+System time     : 0.000497948 seconds slow of NTP time
+Last offset     : -0.000775014 seconds
+RMS offset      : 0.000775014 seconds
+Frequency       : 6.770 ppm slow
+Residual freq   : -57.944 ppm
+Skew            : 0.724 ppm
+Root delay      : 0.065063119 seconds
+Root dispersion : 0.003521844 seconds
+Update interval : 1.5 seconds
+Leap status     : Normal
+[user@server10 ~]$ timedatectl 
+               Local time: pon 2022-08-01 15:57:19 CEST
+           Universal time: pon 2022-08-01 13:57:19 UTC
+                 RTC time: pon 2022-08-01 13:57:19
+                Time zone: Europe/Warsaw (CEST, +0200)
+System clock synchronized: yes
+              NTP service: active
+          RTC in local TZ: no
+</pre>
+      <h2 id="18.2.nameresolving">18.2. Rozwiązywanie nazw domenowych</h2>
+      <p>
+        Za rozwiązywanie nazw domenowych odpowiedzialna jest usługa
+        <strong>DNS</strong>. W tym podrozdziale przyjrzymy się tylko
+        konfiguracji klienta oraz poznamy narzędzie dzięki którym będziemy
+        mogli odpytać serwer w poszukiwaniu adresu <em>IP</em> lub nazwy
+        hosta. Na początek jednak trochę teorii.
+      </p>
+      <p>
+        Przestrzeń nazw domenowych posiada hierahiczną strukturę odwróconego
+        drzewa. Podobnie do katalogu głównego. Podbnie tutaj występuję wezeł
+        główny oznaczonony kropką (<strong>.</strong>). Kropka funkcjonuje
+        również jako separator w nazwach. Po głównym weźle, ktory jest
+        domyślny i nie trzeba do podawać występuje <strong>TLD</strong> czyli
+        domena najwyższego rzędu. Domenami najwyszego rzędu są między innymi
+        <em>.com</em>, <em>.net</em>, <em>.org</em> itd. Domeny geograficzne
+        na przykład <em>.pl</em> również są domenami najwyższego rzędu. Po nich
+        wystepują poddomeny niższego rzędu. Mogą być to domeny takie jak
+        <em>.com</em> itd. o ile w hierarchi poprzedza je na przykłąd domena
+        geograficzna. W poddomenach niższego rzędu występują już nazwy własne,
+        które się wydzierżawia od dostawcy usług domenowych. Taką nazwą własną
+        mozę być <em>redhat</em> lub <em>github</em>. Po nazwie własnej,
+        występuje nazwa hosta. Ma to miejsce w 80% przypadków, reszta to sieci
+        korporacyjne gdzie między nazwą hosta, a nazwą własną domeny możemy
+        występować jeszcze duża ilość poddomen. Weźmy dla przykładu nazwe
+        domenową tej strony. Jeśli zapiszemy ją zgodnie z hierarchią to będzie
+        wyglądać jak na przykładzie ponizej.
+      </p>
+<pre class="code-block">
+.-↓
+  io.↓
+     github.↓
+            morketsmerke
+.io.github.morketsmerke
+</pre>
+      <p>
+        W taki sposób są rozwiązywane nazwy domenowe na adresy <em>IP</em>
+        przyczym najczęsiej w początkowej fazie, kroka oznaczająca główny
+        węzeł zostaje pominięta, następnie szuka się serwera nazwy 
+        obsługującego <code class="code-inline">github.io</code>. Następnie 
+        otrzymuje się adres, który z hostów w sieci <em>github</em> to
+        <em>morketsmerke</em>. Ludzie za to wpisują adresy do aplikacji w
+        sposób odwrotny do hierarchi: <em>morketsmerke.github.io</em>. I w
+        momencie gdy takie zapytanie trafi do serwera system DNS zacznie
+        wysłać zapytania do innych serwerów odpowiedzialnych za utrzymanie 
+        poszczególnych części nazwy.
+      <p>
+      <p>
+        Serwery <em>DNS</em> zajmują się utrzymaniem bazy mapować adresów 
+        domenowych na adresy <em>IP</em>, odpowiadaniem na zapytania klientów
+        oraz synchronizacją tych baz z innymi serwerami. Dlatego też serwery
+        <em>DNS</em> dzieli się na <strong>serwery główne</strong> oraz
+        <strong>podrzędne</strong>. Serwery podrzędne wykorzystuje się głównie
+        do równoważenia obciążenia oraz nadmiarowości. Ponieważ bazy są
+        przesyłane na serwery podrzędne za każdą aktulizacją wprowadzą w 
+        konfiguracji domeny. 
+      </p>
+      <h3 id="18.2.1.resolv.conf">18.2.1. Plik /etc/resolv.conf</h3>
+      <p>
+        Za pomocą pliku <em>/etc/resolv.conf</em>, narzędzia odpowiedzialne
+        za rozwiązywanie nazw wiedzą w jaki sposób mają tworzyć zapytania oraz
+        gdzie przesyłać je dalej (na przykład, gdy korzystamy z aliasu 
+        zapisanego w pliku <em>/etc/hosts</em>). Plik można edytować jak każdy 
+        inny plik tekstowy. Zazwyczaj zawiera on do trzech dyrektyw. Zawartość 
+        pliku z jednej z moich maszyny prezentuje się na poniższym przykładzie
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ cat /etc/resolv.conf 
+# Generated by NetworkManager
+search example.com
+nameserver 192.168.122.1
+</pre>
+      <p>
+        Dyrektywa <code class="code-inline">search</code> zawiera sufiks z
+        nazwą domeny, jest on dodawany do każdej zapisanej nazwy hosta
+        pod czas tworzenia zapytania <em>DNS</em>. W tej dyrektywie może być
+        ich maksymalnie 6, przyczym warto pamiętać o tym aby na początku
+        zawsze znajdowała się domena lokalna. Kolejną dyrektywą jest
+        <code class="code-inline">nameserver</code> zawierającą adresy
+        <em>IP</em> odpytywanych po kolei serwerów <em>DNS</em>. W tej
+        dyrektywie mogą znaleźć się maksymalnie 3 adresy, będą one odpytywane
+        w takiej samej kolejności jak zostały zapisane.
+      </p>
+      <h3 id="18.2.2.nsswitch.conf">18.2.2. Plik /etc/nsswitch.conf</h3>
+      <p>
+        Inny plikiem wpływającym na działanie rozwiązywania nazw systemach
+        Uniksowych jest <em>/etc/nsswitch.conf</em>. Jego zadaniem jest
+        wybranie odpowiedniego źródła dla rozwiązywania nazw i w tym przypadku
+        nie chodzi tylko o nazwy domenowe. Każdy wpis składa się ze wskazania
+        bazy danych. W przypadku nazw domenowych jest <em>hosts:</em>.
+        Następnie wskazywane są źródła. Poniżej znajduje się przykładowy
+        wpis:
+      </p>
+<pre class="code-block">
+hosts:      files dns myhostname
+</pre>
+      <p>
+        Jeśli program podczas rozwiązywania nazwy nie znajdzie jej w pliku, co
+        akurat nawiązuje do pliku <em>/etc/hosts</em>, przechodzi do kolejego
+        źródła. Plik <em>/etc/nsswitch.conf</em> za pomocą słów kluczowych
+        pozwala na określenie akcji jeśli uzyskano dane lub nie z zapisanych
+        źródeł. Poniżej znajduje się lista słów kluczowych.
+      </p>
+      <ul>
+        <li><strong>success</strong> - Informacje znalezione w źródle.
+          Dostarczone do aplikacji, która ich żądała. Domyślna akcja:
+          <strong>return</strong> (nie szukaj w innych źródłach).</li>
+        <li><strong>notfound</strong> - Nie znalaleziono informacji w źródle.
+          Domyślna akcja: <strong>continue</strong> (szukaj w innym źródle)</li>
+        <li><strong>unavail</strong> - Źródło jest wyłączone, bądź nie 
+          odpowiada. Usługą może być wyłączona lub nie skonfigurowana.
+          Domyślna akcja: <strong>continue</strong> (szukaj w innym źródle)</li>
+        <li><strong>tryagain</strong> - Źródło jest zajęte, spróbuj poźniej.
+          Domyślna akcja: <strong>continue</strong> (szukaj w innym źródle)</li>
+      </ul>
+      <p>
+        Dzięki tym słowom kluczowym, jeśli np. nazwa hosta nie zostanie 
+        odnaleziona w pliku <em>/etc/resolv.conf</em> można przerwać dalsze
+        poszukiwania.
+      </p>
+<pre class="code-block">
+hosts:      files [notfound=return] dns myhostname
+</pre>
+      <h3 id="18.2.3.dnstools">18.2.3. Narzędzia do rozwiązywania nazw domenowych</h3>
+      <p>
+        Czasem może zdarzyć się potrzeba przetestowania rozwiązywania nazw
+        w systemie i do tego mogą posłużyć nam dostępne w systemie narzędzia.
+        Jest ich kilka.        
+      </p>
+      <p>
+        Pierwszym z nich jest <strong>dig</strong>. Bardzo elestyczne i
+        użyteczne narzędzie. Możemy wykorzystać je do wielu czynności. Plusem
+        tego narzędzia jest domyślna ilość zwracanych informacji. Poniżej
+        znajduje się rozwiązanie nazwy <em>redhat.com</em> za pomocą tego
+        narzędzia.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ dig redhat.com
+
+; &lt;&lt;&gt;&gt; DiG 9.16.23-RH &lt;&lt;&gt;&gt; redhat.com
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 20452
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;redhat.com.			IN	A
+
+;; ANSWER SECTION:
+redhat.com.		312	IN	A	52.200.142.250
+redhat.com.		312	IN	A	34.235.198.240
+
+;; Query time: 56 msec
+;; SERVER: 192.168.122.1#53(192.168.122.1)
+;; WHEN: Mon Aug 01 17:50:49 CEST 2022
+;; MSG SIZE  rcvd: 71
+</pre>
+      <p>
+        Na samym dole mamy podsumowanie, w którym znajdują się informacje o
+        tym jak długo trwało zapytanie, czy adres odpytywanego serwera.
+        Polecenie to również możemy odpytać podając adres <em>IP</em>.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ dig -x 52.200.142.250
+
+; &lt;&lt;&gt;&gt; DiG 9.16.23-RH &lt;&lt;&gt;&gt; -x 52.200.142.250
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 14382
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;250.142.200.52.in-addr.arpa.	IN	PTR
+
+;; ANSWER SECTION:
+250.142.200.52.in-addr.arpa. 300 IN	PTR	ec2-52-200-142-250.compute-1.amazonaws.com.
+
+;; Query time: 88 msec
+;; SERVER: 192.168.122.1#53(192.168.122.1)
+;; WHEN: Mon Aug 01 17:55:58 CEST 2022
+;; MSG SIZE  rcvd: 112
+</pre>
+      <p>
+        Użycie opcji <code class="code-inline">-x</code> pozwala na podanie
+        adresu <em>IP</em>.
+      </p>
+      <p>
+        Kolejny narzędziem jest polecenie <strong>host</strong>. Jak argument
+        przyjmuje nazwę domenową i zwraca adres <em>IP</em> serwera oraz
+        pozostałe wpisy w bazie <em>DNS</em> powiązane z tą nazwą. Poniżej
+        znajduje się przykład.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ host redhat.com
+redhat.com has address 34.235.198.240
+redhat.com has address 52.200.142.250
+redhat.com mail is handled by 10 us-smtp-inbound-2.mimecast.com.
+redhat.com mail is handled by 10 us-smtp-inbound-1.mimecast.com.
+</pre>
+      <p>
+        Za pomocą polecenia <em>host</em> możemy uzyskać podobne wyjście jak
+        w przypadku polecenia <em>dig</em>. Służy do tego opcja
+        <strong>-v</strong>.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ host -v redhat.com
+Trying "redhat.com"
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 5646
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;redhat.com.			IN	A
+
+;; ANSWER SECTION:
+redhat.com.		247	IN	A	52.200.142.250
+redhat.com.		247	IN	A	34.235.198.240
+
+Received 60 bytes from 192.168.122.1#53 in 4 ms
+Trying "redhat.com"
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 13010
+;; flags: qr rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;redhat.com.			IN	AAAA
+
+;; AUTHORITY SECTION:
+redhat.com.		1037	IN	SOA	a1-68.akam.net. noc.redhat.com. 2022080000 300 180 604800 14400
+
+Received 82 bytes from 192.168.122.1#53 in 51 ms
+Trying "redhat.com"
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 56767
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;redhat.com.			IN	MX
+
+;; ANSWER SECTION:
+redhat.com.		314	IN	MX	10 us-smtp-inbound-1.mimecast.com.
+redhat.com.		314	IN	MX	10 us-smtp-inbound-2.mimecast.com.
+
+Received 105 bytes from 192.168.122.1#53 in 50 ms
+</pre>
+      <p>
+        Kolejnym poleceniem jest <strong>nslookup</strong>. Polecenie to jest
+        interaktywne. Pozwala ono na zmianę serwera w bardzo prosty sposób,
+        ponieważ jego adres możemy podać jako argument polecenia lub już
+        po jego uruchomieniu w po poleceniu <em>server</em>.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ nslookup
+&gt; server 8.8.8.8 
+Default server: 8.8.8.8
+Address: 8.8.8.8#53
+&gt; redhat.com
+Server:		8.8.8.8
+Address:	8.8.8.8#53
+
+Non-authoritative answer:
+Name:	redhat.com
+Address: 52.200.142.250
+Name:	redhat.com
+Address: 34.235.198.240
+&gt; exit
+</pre>
+      <p>
+        W wyniku polecenia pojawił się taki zapis jak
+        <code class="code-inline">Non-authoritative answer</code>. Oznacza to, 
+        że rozwiązanie nazwy otrzymana od serwera, który nie zarządza tą
+        domeną. Polecenie opuszczamy tylko za pomocą polecenia
+        <code class="code-inline">exit</code>.
+      </p>
+      <p>
+        Ostatnim poleceniem jest <strong>getent</strong>. Polecenie to jest
+        związane z plikiem <em>/etc/nsswitch.conf</em>, dlatego aby uzyskać
+        za jego pomocą adres <em>IP</em> z jakiejś nazwy należy podać jako
+        pierwszy argument bazę danych z jakiej będziemy korzystać.
+        Przypominam, że jest to <em>hosts</em>. Poniżej znajduje się przykład
+        użycia tego polecenia.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ getent hosts redhat.com
+34.235.198.240  redhat.com
+52.200.142.250  redhat.com
+</pre>
+      <h3 id="exec18.1">Ćwiczenie 1: Zmiana daty i czasu</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień, na maszynie
+        oznaczonej jak <em>server10</em>, wyświetl obecną datę i godzine za
+        pomocą obu poznanych narzędzi. Za pomocą polecenia <em>timedatectl</em>
+        zmień datę i godzine na dowolną w przyszłość. Za pomocą polecenia
+        <em>date</em> zwiększ godzinę o jedną naprzód. Ponownie wyświetl
+        datę i godzinę za pomocą obu narzędzi. Przyróć datę i godzinę do
+        rzeczywistych wartości.
+      </p>
+      <h3 id="exec18.1">Ćwiczenie 2: Konfiguracja Chrony</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień, na maszynie
+        oznaczonej jak <em>server10</em>. Jeśli jest taka potrzeba 
+        zainstaluj <em>Chrony</em>. W pliku konfiguracyjny wyłączy wszystkie
+        dyrektywy (ujmij w komentarz) <em>pool</em> oraz <em>server</em>. 
+        Dodaj nową dyrektywę na <em>server</em> z adresem <em>127.127.1.0</em>.
+        Włącz/zrestartuj usługę. Potwierdź wykonanie zadania za pomocą 
+        wyświetlania źródeł <em>Chrony</em> - polecenie
+        <em>chronyc sources</em>.
+      </p>
+      <h2 id="ch18summary">Podsumowanie</h2>
+      <p>
+        W tym rozdziale poznaliśmy sposóby na efektywną i automatyczną
+        synchronizację czasu na zegarze systemowym. Za poznaliśmy się z
+        najnowszą implementacją protokołu <em>NTP</em> jaką definitywnie jest
+        <em>Chrony</em> poznaliśmy jego konfigurację oraz polecenia służące
+        zarządzania nim. Poza tym poznaliśmy w jaki sposób uzyskiwane są adresy
+        <em>IP</em> w systemie, czym jest <em>DNS</em>, pliki 
+        <em>/etc/resolv.conf</em> czy <em>/etc/nsswitch.conf</em>. Poznaliśmy
+        również kilka narzędzi, dzięki którym możemy przeprowadzić diagnostykę
+        rozwiązywania nazw na naszych systemach. W następnym rozdziale
+        zajmiemy się obsługą bezpiecznego zdalnego logowania do powłoki -
+        usługą <em>SSH</em>.
+      </p>
+    </div>
     <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;
 		</p>

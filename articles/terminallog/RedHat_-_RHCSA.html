@@ -517,6 +517,26 @@
             <li><a href="#exec17.2">Ćwiczenie 2: Pośrednie mapowanie udziału NFS</a></li>
             <li><a href="#ch17summary">Podsumowanie</a></li>
           </ul>
+          <li><a href="#18.ntpanddns">18. Synchronizacja czasu oraz rozwiązywanie nazw w RHEL 9</a>
+            <ul class="toc">
+              <li><a href="#18.1.ntp">18.1. Network Time Protocol - synchronizacja czasu</a>
+                <ul class="toc">
+                  <li><a href="#18.1.1.chronyconfig">18.1.1. Konfiguracja demona Chrony</a></li>
+                  <li><a href="#18.1.2.settingdateandtime">18.1.2. Ustawienia daty i czasu</a></li>
+                </ul>
+              </li>
+              <li><a href="#18.2.nameresolving">18.2. Rozwiązywanie nazw domenowych</a>
+                <ul class="toc">
+                  <li><a href="#18.2.1.resolv.conf">18.2.1. Plik /etc/resolv.conf</a></li>
+                  <li><a href="#18.2.2.nsswitch.conf">18.2.2. Plik /etc/nsswitch.conf</a></li>
+                  <li><a href="#18.2.3.dnstools">18.2.3. Narzędzia do rozwiązywania nazw domenowych</a></li>
+                </ul>
+              </li>
+              <li><a href="#exec18.1">Ćwiczenie 1: Zmiana daty i czasu</a></li>
+              <li><a href="#exec18.2">Ćwiczenie 2: Konfiguracja Chrony</a></li>
+              <li><a href="#ch18summary">Podsumowanie</a></li>
+            </ul>
+          </li>
         </li>
       </ul>
       <h1 id="1.introduction">1. Wstęp</h1>
@@ -13218,19 +13238,19 @@ addr=192.168.122.7)
         <em>cron</em> - systemowy harmonogram zadań. Bez ustawień czasu 
         harmonogram był by najzwyczajniej w świecie bezużyteczny. Nad
         poprawnością czasu w systemach Uniksowych czuwa protokół
-        <strong>NTP</strong> wraz zjego najnowszą implementacją w postaci
+        <strong>NTP</strong> wraz z jego najnowszą implementacją w postaci
         programu <strong>chrony</strong>.
       </p>
       <p>
-        Aby osoba korzystająca z komputera nie musiała zapmiętać liczb adresu
-        <em>IP</em> chcąc zapmiętać adres strony, wprowadzono wśród nazewnictwa
-        hostów coś takiego jak prostsze do zapamiętania nazwy domenowe. Mimo
-        tego adres <em>IP</em> dalej jest potrzebny do realizacji połączania,
+        Aby osoba korzystająca z komputera nie musiała zapamiętać liczb adresu
+        <em>IP</em> chcąc zapmiętać adres strony, wprowadzono
+        prostsze do zapamiętania nazwy domenowe. Mimo
+        tego adres <em>IP</em> dalej jest potrzebny do realizacji połączenia,
         zatem wraz z nazwami domenowymi pojawiła się usługa 
         <strong>DNS</strong>, której zadaniem jest zamiana nazw domenowych
         na adresy <em>IP</em> i vice versa o ile jest to możliwe.
       </p>
-      <h2 id="18.1.NTP">18.1. Network Time Protocol - synchronizacja czasu</h2>
+      <h2 id="18.1.ntp">18.1. Network Time Protocol - synchronizacja czasu</h2>
       <p>
         Synchronizacja czasu za pomocą <em>NTP</em> polega na jak
         najdokładnieszym ustawieniu czasu rzeczywistego na zegarze systemowym
@@ -13245,7 +13265,7 @@ addr=192.168.122.7)
         dystrybucje Linuksa. W przypadku <em>RHEL</em> adres puli <em>NTP</em>
         to: <em>rhel.pool.ntp.org</em>. W tych pulach, może znajdować się
         wiele serwerów, które mają określone role. Wśród nich możemy wyróżnić
-        takie role jak:
+        takie jak:
       </p>
       <ul>
         <li><strong>Serwer podstawowy</strong> - ten rodzaj serwera otrzymuje
@@ -13254,7 +13274,7 @@ addr=192.168.122.7)
           synchronizować czas klientów.</li>
         <li><strong>Serwer podrzędny</strong> - serwery tego typu otrzymują
           czas od serwera podstawowego, głównie zajmują się synchonizacją
-          czasu klientów, aby zmniejszyć obciążenie serwerów.</li>
+          czasu klientów, aby zmniejszyć obciążenie serwerów podstawowych.</li>
         <li><strong>Peer</strong> - jest rodzaj serwera który przekazuje czas
           innym serwerom na tym samym poziomie. <em>Peer</em>-y mogą występować
           wśród serwerów podstawowych jak podrzędnych.</li>
@@ -13279,9 +13299,9 @@ addr=192.168.122.7)
       </p>
       <p>
         Klienci wybierają serwer na podstawie czasu oczekiwania na odpowiedź,
-        im krótszym tym czas będzie bardziej rzetelny.
+        im krótszym tym czas będzie bardziej dokładny.
       </p>
-      <h3 id="18.1.1.chronyconfig">18.1.1. Konfiguracja demona chrony</h3>
+      <h3 id="18.1.1.chronyconfig">18.1.1. Konfiguracja demona Chrony</h3>
       <p>
         <strong>Chrony</strong> jest najnowsza implementacja demona
         synchronizacji czasu. Działa on na porcie 123 protokołu UDP. Jego plik
@@ -13310,19 +13330,21 @@ logdir /var/log/chrony
         informacje przechowywane w tym pliku pomagają w utrzymaniu precyzji
         zegara. Jeśli mielibyśmy wskazać konkretny serwer czasu, to wówczas
         należało by użyć dyrektywy <em>server</em>. Dyrektywa
+        <code class="code-inline">logdir</code> przechowuje plik dziennika
         <code class="code-inline">/var/log/chrony</code>.
       </p>
       <p>
-        Demon <em>chrony</em> dostarczany jest wraz z polecniem
+        Demon <em>chrony</em> dostarczany jest wraz z poleceniem
         <strong>chronyc</strong> za pomocą którego możemy sprawdzić wydajność
-        demona oraz kontrolować jego działanie. Polecenie modyfikuje się za
+        demona oraz kontrolować jego działanie. Informacje o NTP z demona 
+        możemy uzyskać za
         pomocą podpoleceń takich jak <em>sources</em> oraz <em>tracking</em>.
       </p>
       <p>
         Aby skonfigurować <em>chrony</em> nic nie trzeba robić. Wystarczy
         instalacja oraz włączenie jednostki. Domyślna konfiguracja świetnie
-        sprawdza się w podstawowych zastosowaniach. Konfiguracje zacznie zatem
-        od sprawdzenia czy demon jest zainstalowany czy nie.
+        sprawdza się w podstawowych zastosowaniach. Konfigurację zaczniemy 
+        zatem od sprawdzenia czy demon jest zainstalowany czy nie.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ sudo dnf install chrony
@@ -13338,8 +13360,8 @@ Nie ma nic do zrobienia.
 Ukończono.
 </pre>
       <p>
-        W przypadku Red Hat Enterprise Linux 9 jest on zainstalowany. To
-        pozostaje tylko go włączyć.
+        W przypadku Red Hat Enterprise Linux 9 jest on domyślnie zainstalowany.
+        To pozostaje tylko go włączyć.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ sudo systemctl enable --now chronyd.service 
@@ -13370,7 +13392,7 @@ Hint: Some lines were ellipsized, use -l to show in full.
 </pre>
       <p>
         Za pomocą polecenia <em>chronyc</em> wraz z podpoleceniem
-        <strong>sources</strong> możemy podejrzeć z jaki serwera czasu
+        <strong>sources</strong> możemy podejrzeć z jakim serwerem czasu
         połączył się nasz klient oraz na jakim poziomie <em>hierarchi</em>
         się one znajdują.
       </p>
@@ -13384,10 +13406,10 @@ MS Name/IP address         Stratum Poll Reach LastRx Last sample
 ^+ any.time.nl                   2   6   377    66  -2061us[-1153us] +/-   62ms
 </pre>
       <p>
-        Gwiazdka w drugiej kolumnie wiersza oznacza, że to właśnie z tego
+        Gwiazdka w pierwszej kolumnie wiersza oznacza, że to właśnie z tego
         serwera został pobrany czas. Możemy się upewnić za pomocą drugiego
         podpolecenia <strong>tracking</strong>. Aby poznać więcej informacji
-        na temat kolumn wszukajmy sekcji <em>sources</em> na stronie
+        na temat kolumn wyszukajmy sekcji <em>sources</em> na stronie
         podręcznika polecenia <em>chronyc</em>. Wynik działania podpolecenia
         <em>tracking</em> znajduje się poniżej:
       </p>
@@ -13517,7 +13539,7 @@ System clock synchronized: yes
       <p>
         Za rozwiązywanie nazw domenowych odpowiedzialna jest usługa
         <strong>DNS</strong>. W tym podrozdziale przyjrzymy się tylko
-        konfiguracji klienta oraz poznamy narzędzie dzięki którym będziemy
+        konfiguracji klienta oraz poznamy narzędzia dzięki którym będziemy
         mogli odpytać serwer w poszukiwaniu adresu <em>IP</em> lub nazwy
         hosta. Na początek jednak trochę teorii.
       </p>
@@ -13531,7 +13553,7 @@ System clock synchronized: yes
         <em>.com</em>, <em>.net</em>, <em>.org</em> itd. Domeny geograficzne
         na przykład <em>.pl</em> również są domenami najwyższego rzędu. Po nich
         wystepują poddomeny niższego rzędu. Mogą być to domeny takie jak
-        <em>.com</em> itd. o ile w hierarchi poprzedza je na przykłąd domena
+        <em>.com</em> itd. o ile w hierarchi poprzedza je na przykład domena
         geograficzna. W poddomenach niższego rzędu występują już nazwy własne,
         które się wydzierżawia od dostawcy usług domenowych. Taką nazwą własną
         mozę być <em>redhat</em> lub <em>github</em>. Po nazwie własnej,
@@ -13559,11 +13581,12 @@ System clock synchronized: yes
         momencie gdy takie zapytanie trafi do serwera system DNS zacznie
         wysłać zapytania do innych serwerów odpowiedzialnych za utrzymanie 
         poszczególnych części nazwy.
+      </p>
       <p>
-      <p>
-        Serwery <em>DNS</em> zajmują się utrzymaniem bazy mapować adresów 
+        Serwery <em>DNS</em> zajmują się utrzymaniem bazy mapowań adresów 
         domenowych na adresy <em>IP</em>, odpowiadaniem na zapytania klientów
-        oraz synchronizacją tych baz z innymi serwerami. Dlatego też serwery
+        oraz synchronizacją tych baz z innymi serwerami. Wpis bazie danych
+        <em>DNS</em> nazywany jest <strong>rekordem</strong>. Serwery
         <em>DNS</em> dzieli się na <strong>serwery główne</strong> oraz
         <strong>podrzędne</strong>. Serwery podrzędne wykorzystuje się głównie
         do równoważenia obciążenia oraz nadmiarowości. Ponieważ bazy są
@@ -13577,7 +13600,7 @@ System clock synchronized: yes
         gdzie przesyłać je dalej (na przykład, gdy korzystamy z aliasu 
         zapisanego w pliku <em>/etc/hosts</em>). Plik można edytować jak każdy 
         inny plik tekstowy. Zazwyczaj zawiera on do trzech dyrektyw. Zawartość 
-        pliku z jednej z moich maszyny prezentuje się na poniższym przykładzie
+        pliku z jednej z moich maszyny prezentuje się na poniższym przykładzie.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ cat /etc/resolv.conf 
@@ -13591,18 +13614,20 @@ nameserver 192.168.122.1
         pod czas tworzenia zapytania <em>DNS</em>. W tej dyrektywie może być
         ich maksymalnie 6, przyczym warto pamiętać o tym aby na początku
         zawsze znajdowała się domena lokalna. Kolejną dyrektywą jest
-        <code class="code-inline">nameserver</code> zawierającą adresy
+        <code class="code-inline">nameserver</code> zawierająca adresy
         <em>IP</em> odpytywanych po kolei serwerów <em>DNS</em>. W tej
         dyrektywie mogą znaleźć się maksymalnie 3 adresy, będą one odpytywane
-        w takiej samej kolejności jak zostały zapisane.
+        w takiej samej kolejności jak zostały zapisane. Ostatnia dyrektywą
+        jest dyrektywa <em>domain</em>, jednak nie jest ona stosowana jeśli
+        w pliku jest zapisana dyrektywa <code class="code-inline">search</code>.
       </p>
       <h3 id="18.2.2.nsswitch.conf">18.2.2. Plik /etc/nsswitch.conf</h3>
       <p>
         Inny plikiem wpływającym na działanie rozwiązywania nazw systemach
         Uniksowych jest <em>/etc/nsswitch.conf</em>. Jego zadaniem jest
-        wybranie odpowiedniego źródła dla rozwiązywania nazw i w tym przypadku
+        wybranie odpowiedniego źródła dla żądanych informacji i w tym przypadku
         nie chodzi tylko o nazwy domenowe. Każdy wpis składa się ze wskazania
-        bazy danych. W przypadku nazw domenowych jest <em>hosts:</em>.
+        bazy danych. W przypadku nazw domenowych jest <em>hosts</em>.
         Następnie wskazywane są źródła. Poniżej znajduje się przykładowy
         wpis:
       </p>
@@ -13610,8 +13635,13 @@ nameserver 192.168.122.1
 hosts:      files dns myhostname
 </pre>
       <p>
-        Jeśli program podczas rozwiązywania nazwy nie znajdzie jej w pliku, co
-        akurat nawiązuje do pliku <em>/etc/hosts</em>, przechodzi do kolejego
+        Gdzie <code class="code-inline">files</code> jest w tym przypadku
+        plikiem <em>/etc/hosts</em>; <code class="code-inline">dns</code> jest
+        odpytaniem serwerów zapisanych w <em>/etc/resolv.conf</em>.
+      </p>
+      <p>
+        Jeśli program podczas rozwiązywania nazwy nie znajdzie jej w pliku, 
+        przechodzi do kolejego
         źródła. Plik <em>/etc/nsswitch.conf</em> za pomocą słów kluczowych
         pozwala na określenie akcji jeśli uzyskano dane lub nie z zapisanych
         źródeł. Poniżej znajduje się lista słów kluczowych.
@@ -13784,14 +13814,14 @@ Address: 34.235.198.240
       <p>
         W wyniku polecenia pojawił się taki zapis jak
         <code class="code-inline">Non-authoritative answer</code>. Oznacza to, 
-        że rozwiązanie nazwy otrzymana od serwera, który nie zarządza tą
+        że rozwiązanie nazwy otrzymano od serwera, który nie zarządza tą
         domeną. Polecenie opuszczamy tylko za pomocą polecenia
         <code class="code-inline">exit</code>.
       </p>
       <p>
         Ostatnim poleceniem jest <strong>getent</strong>. Polecenie to jest
         związane z plikiem <em>/etc/nsswitch.conf</em>, dlatego aby uzyskać
-        za jego pomocą adres <em>IP</em> z jakiejś nazwy należy podać jako
+        za jego pomocą adres <em>IP</em> jednej z nazw należy podać jako
         pierwszy argument bazę danych z jakiej będziemy korzystać.
         Przypominam, że jest to <em>hosts</em>. Poniżej znajduje się przykład
         użycia tego polecenia.
@@ -13811,11 +13841,11 @@ Address: 34.235.198.240
         datę i godzinę za pomocą obu narzędzi. Przyróć datę i godzinę do
         rzeczywistych wartości.
       </p>
-      <h3 id="exec18.1">Ćwiczenie 2: Konfiguracja Chrony</h3>
+      <h3 id="exec18.2">Ćwiczenie 2: Konfiguracja Chrony</h3>
       <p>
         Jako użytkownik z możliwością podniesienia uprawnień, na maszynie
         oznaczonej jak <em>server10</em>. Jeśli jest taka potrzeba 
-        zainstaluj <em>Chrony</em>. W pliku konfiguracyjny wyłączy wszystkie
+        zainstaluj <em>Chrony</em>. W pliku konfiguracyjny wyłącz wszystkie
         dyrektywy (ujmij w komentarz) <em>pool</em> oraz <em>server</em>. 
         Dodaj nową dyrektywę na <em>server</em> z adresem <em>127.127.1.0</em>.
         Włącz/zrestartuj usługę. Potwierdź wykonanie zadania za pomocą 
@@ -13825,7 +13855,7 @@ Address: 34.235.198.240
       <h2 id="ch18summary">Podsumowanie</h2>
       <p>
         W tym rozdziale poznaliśmy sposóby na efektywną i automatyczną
-        synchronizację czasu na zegarze systemowym. Za poznaliśmy się z
+        synchronizację czasu zegara systemowego. Za poznaliśmy się z
         najnowszą implementacją protokołu <em>NTP</em> jaką definitywnie jest
         <em>Chrony</em> poznaliśmy jego konfigurację oraz polecenia służące
         zarządzania nim. Poza tym poznaliśmy w jaki sposób uzyskiwane są adresy

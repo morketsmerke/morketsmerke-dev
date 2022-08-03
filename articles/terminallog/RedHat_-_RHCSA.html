@@ -538,6 +538,32 @@
             </ul>
           </li>
         </li>
+        <li><a href="#19.ssh">19. Usługa bezpiecznej powłoki</a>
+          <ul class="toc">
+            <li><a href="#19.1.sshtheory">19.1. Podstawy teoretyczne na temat SSH</a>
+              <ul class="toc">
+                <li><a href="#19.1.1.sshcryptography">19.1.1. Kryptografia SSH</a></li>
+                <li><a href="#19.1.2.sshauthmethod">19.1.2. Metody uwierzytelniania OpenSSH</a></li>
+                <li><a href="#19.1.3.sshprograms">19.1.3. Oprogramowanie OpenSSH</a></li>
+              </ul>
+            </li>
+            <li><a href="#19.2.sshd">19.2. Serwer OpenSSH - sshd</a></li>
+            <li><a href="#19.3.sshclientconfig">19.3. Konfiguracja klienta - ssh</a></li>
+            <li><a href="#19.4.sshusage">19.4. Obsługa połączeń zdalnych - programy OpenSSH</a>
+              <ul class="toc">
+                <li><a href="#19.4.1.ssh">19.4. Połączenie ze zdalnym serwerem z pomocą ssh</a></li>
+                <li><a href="#19.4.2.sshpubkeys">19.4.2. Generowanie, dystrybucja oraz logowanie się za pomocą klucza publicznego</a></li>
+                <li><a href="#19.4.3.sshexecutioncommand">19.4.3. Wykonywanie pojedyńczych poleceń na zdalnym serwerze</a></li>
+                <li><a href="#19.4.4.scp">19.4.4. Bezpieczne kopiowanie plików</a></li>
+                <li><a href="#19.4.5.sftp">19.4.5. Przesyłanie plików za pomocą polecenia sftp</a></li>
+                <li><a href="#19.4.6.rsync">19.4.6. Synchronizacja danych ze zdalnym serwerem</a></li>
+              </ul>
+            </li>
+            <li><a href="#exec19.1">Ćwiczenie 1: Logowanie przez SSH z użyciem klucza</a></li>
+            <li><a href="#exec19.2">Ćwiczenie 2: Działanie dyrektywy PermitRootLogin</a></li>
+            <li><a href="#ch19summary">Podsumowanie</a></li>
+          </ul>
+        </li>
       </ul>
       <h1 id="1.introduction">1. Wstęp</h1>
       <p>
@@ -13866,9 +13892,10 @@ Address: 34.235.198.240
         zajmiemy się obsługą bezpiecznego zdalnego logowania do powłoki -
         usługą <em>SSH</em>.
       </p>
-      <h1 id="19.ssh">19. Usługa bezpiecznej połoki</h1>
+      <h1 id="19.ssh">19. Usługa bezpiecznej powłoki</h1>
       <p>
-        Usługa bezpiecznej powłoki, jest w obecnych czas jedną z podstawowych
+        Usługa bezpiecznej powłoki, jest w obecnych czasach jedną z 
+        podstawowych
         rzeczy bez których nie wyobrażamy sobie pracy z jakimi kolwiek
         odległymi maszynami. Bezpieczna powłoka czyli <strong>SSH</strong>
         pozwala na bezpieczne zarządzania maszynami oraz przesyłanie informacji
@@ -13882,10 +13909,9 @@ Address: 34.235.198.240
       <h2 id="19.1.sshtheory">19.1. Podstawy teoretyczne na temat SSH</h2>
       <p>
         W wielu Uniksach (w tym i dystrybucjach Linuksa) stosowana jest
-        darmowa oraz wolna wersja protkołu <em>SSH</em> - 
-        <strong>OpenSSH</strong>, jest ona odpowiednikiem własnościowej wersji
-        <em>SSH</em>. Obecnie najczęściej stoswany jest protokół 
-        <em>SSH</em> w wersji drugiej.
+        darmowa oraz wolna implementacja protokołu <em>SSH</em> - 
+        <strong>OpenSSH</strong>, jest ona odpowiednikiem własnościowej wersji.
+        Obecnie najczęściej stoswany jest protokół <em>SSH</em> w wersji 2.
       </p>
       <h3 id="19.1.1.sshcryptography">19.1.1. Kryptografia SSH</h3>
       <p>
@@ -13895,7 +13921,7 @@ Address: 34.235.198.240
         jawne dane aby nie mogły być one odczytane przez osoby nie znające
         <strong>klucza</strong>, czyli hasła bądź pliku, który za pomocą
         tych samych algorytmów pozwoli na odczytanie danych przeznaczonych dla
-        ich odbiorców. Wśród metod szyfrowwania możemy wymienić:
+        ich odbiorców. Wśród metod szyfrowania możemy wymienić:
       </p>
       <ul>
         <li><strong>Algorytmy symetryczne</strong> - w których do szyfrowania
@@ -13904,10 +13930,12 @@ Address: 34.235.198.240
         <li><strong>Algorytmów asymetrycznych</strong> - metody te są nazwane
           również <strong>algorytmami klucza publicznego</strong>. Każdy z
           hostów przed transmisją generuje klucz prywatny. Następnie na
-          podstawie tego klucza generowany jest klucz publiczny, który możebyć
+          podstawie tego klucza generowany jest klucz publiczny, który może być
           jawnie przesyłany przez internet, ponieważ służy on do identyfikacji
-          użytkownika oraz szyfrowania danych. Dane w przypadku tego typu
-          algorytmów mogą być odczytane tylko za pomocą klucza prywatne.
+          użytkownika oraz szyfrowania danych. Hosty przesyłają sobie klucze
+          prywatne i rozpoczyna się wymiana danych znanych tylko im. Dane w
+          przypadku tego typu
+          algorytmów mogą być odczytane tylko za pomocą klucza prywatnego.
           Algorytmy asymetryczne są wykorzystywane do zabezpieczania
           transmisji oraz uwierzytelniania użytkowników.</li>
       </ul>
@@ -13920,8 +13948,8 @@ Address: 34.235.198.240
       </p>
       <h3 id="19.1.2.sshauthmethod">19.1.2. Metody uwierzytelniania OpenSSH</h3>
       <p>
-        Aby użytkownik mógł pracować pracować na zdalnym serwerze za pomocą
-        <em>SSH</em> musi się uwierzytelnić. Uwierzytelniania możemy dokonać
+        Aby użytkownik mógł pracować na zdalnym serwerze za pomocą
+        <em>SSH</em> musi się uwierzytelnić. Uwierzytelnienia możemy dokonać
         na kilka różnych sposobów, a wsród nich możemy wyróżnić oparte na:
       </p>
       <ul>
@@ -13932,8 +13960,8 @@ Address: 34.235.198.240
         <li><strong>metodzie Challenge-response</strong></li>
       </ul>
       <p>
-        W tym materiale jednak skupimy się wyłącznie na domyślnej metodzie ją
-        jest ta oparta na haśle oraz tej opartej o klucz publiczny.
+        W tym materiale jednak skupimy się wyłącznie na domyślnej metodzie jaką
+        jest hasło oraz klucz publiczny.
       </p>
       <h3 id="19.1.3.sshprograms">19.1.3. Oprogramowanie OpenSSH</h3>
       <p>
@@ -13949,7 +13977,8 @@ Address: 34.235.198.240
       <p>
         Polecenie <em>ssh</em> zastępuje stare polecenia <em>telnet</em> czy
         <em>rlogin</em>. Z poleceniem <em>telnet</em> możemy się jeszcze
-        kiedyś spotkać. Polecenia <em>scp</em> zastępują kolejno <em>rcp</em>
+        kiedyś spotkać. Polecenia <em>scp</em> i <em>sftp</em> zastępują 
+        kolejno <em>rcp</em>
         oraz <em>ftp</em>. Mimo to <em>ftp</em> jest dalej stosowany, aby
         umożliwić publiczny dostęp na przykład do repozytoriów oprogramowania.
       </p>
@@ -13999,7 +14028,7 @@ AuthorizedKeysFile	.ssh/authorized_keys
       <h2 id="19.3.sshclientconfig">19.3. Konfiguracja klienta - ssh</h2>
       <p>
         Na każdej maszynie, na której znajduje się polecenie <em>ssh</em>
-        znajduje się polecenie <strong>ssh</strong> znajduje się także
+        znajduje się także
         plik konfiguracyjny <em>/etc/ssh/ssh_config</em>, który reguluje jego
         zachowanie posiada on też kilka dyrektyw sugerujących pewne domyślne
         ustawienia. Poniżej znajduje się jego fragment pobrany z jednej z
@@ -14043,7 +14072,7 @@ AuthorizedKeysFile	.ssh/authorized_keys
       <h3 id="19.4.1.ssh">19.4. Połączenie ze zdalnym serwerem z pomocą ssh</h3>
       <p>
         Połączenie ze zdalnym serwerem wymaga wydania pojedyńczego polecenia
-        w którym podajemy adres serwera, wówczas polecenie spróbuje zalować 
+        w którym podajemy adres serwera, wówczas polecenie spróbuje zalogować 
         na użytkownika z tą samą nazwą z jakiej korzystamy w lokalnym systemie.
       </p>
 <pre class="code-block">
@@ -14067,7 +14096,7 @@ Last login: Wed Aug  3 10:59:57 2022 from 192.168.122.6
         <strong>odciskiem klucza</strong>. Tak dzieje się gdy podłączamy się
         do serwera poraz pierwszy. Polecenie zapyta nas czy chcemy kontynuować
         połączenie, wybierając <code class="code-inline">Yes</code> odcisk
-        klucza wraz z adresem serwera zostaną złożone w pliku
+        klucza wraz z adresem serwera zostanie złożony w pliku
         <em>~/.ssh/known_hosts</em>. Następnie zostaniemy zapytani o hasło.
         Po jego podaniu jesteśmy podłączeni do serwera.
       </p>
@@ -14111,8 +14140,8 @@ Enter file in which to save the key (/home/user/.ssh/id_rsa):
         serwerze. Wykonamy tę czynność przy użyciu polecenia
         <strong>ssh-copy-id</strong>, przyjmuje on takie same argumenty jak
         polecenie <em>ssh</em>, więc żeby zainstalować klucz na serwerze
-        należy wydać poniższe polecenie. Polecenie to w ramach potwierdzania
-        naszej tożsamości zarząda hasła do połączenia się ze zdalnym
+        należy wydać poniższe polecenie. Polecenie to w ramach potwierdzenia
+        naszej tożsamości zażąda hasła do połączenia się ze zdalnym
         użytkownikiem na serwerze.
       </p>
 <pre class="code-block">
@@ -14128,7 +14157,7 @@ Now try logging into the machine, with:   "ssh 'user@server20'"
 and check to make sure that only the key(s) you wanted were added.
 </pre>
       <p>
-        Teraz kiedy klucz jest zainstalowany możemy bezprzeszkód logować się
+        Teraz kiedy klucz jest zainstalowany możemy bez przeszkód logować się
         na serwer. 
       </p>
 <pre class="code-block">
@@ -14160,8 +14189,8 @@ server20.example.com
       <h3 id="19.4.4.scp">19.4.4. Bezpieczne kopiowanie plików</h3>
       <p>
         Za pomocą polecenia <strong>scp</strong>, możemy kopiować pliki z
-        wykorzystaniem protokłu <em>SSH</em> w obu kierunkach. Tutaj dodatkową
-        rolę odgrywa zainstalowanie certyfikatów bez hasła. Jeśli to zrobimy
+        wykorzystaniem protokołu <em>SSH</em> w obu kierunkach. Tutaj dodatkową
+        rolę odgrywa zainstalowanie klucza bez hasła. Jeśli to zrobimy
         wówczas będziemy mogli rozwiajać scieżki ze zdalnego systemu za pomocą
         klawisza <em>Tab</em>. Na poniższym przykładzie skopiuje plik
         <em>/etc/chrony.conf</em> do katalogu <em>/tmp</em>. 
@@ -14208,11 +14237,11 @@ drwx------. 2 user user    80 08-03 12:00 .ssh
         Polecenie <strong>sftp</strong> działa na takiej samej zasadzie co
         polecenie <em>ftp</em>, jednak wykorzystuje do tego protokół
         <em>SSH</em> przy tym rozszerzając oraz usprawniając działanie
-        przesyłanie plików.  
+        przesyłania plików.  
       </p>
       <p>
         Polecenie to przyjmuje takie same argumenty jak <em>ssh</em>. Przy
-        czym to polecenie jest interaktywne, jak klasyczne <em>ftp</em> za
+        czym jest ono interaktywne, jak klasyczne <em>ftp</em> za
         pomocą znaku zapytania (<strong>?</strong>). 
       </p>
 <pre class="code-block">
@@ -14254,10 +14283,11 @@ version                            Show SFTP version
 ?                                  Synonym for help
 </pre>
       <p>
-        Zwróćmy uwagę to, iż wiele poleceń występuję podwójnie poprzedzonych
+        Zwróćmy uwagę to, iż wiele poleceń występuję podwójnie, i są one 
+        poprzedzonych
         literą <em>l</em>. Aby lepiej zarządzać transferem plików posiadmy
         polecenia, które odwołują się czynności wykonywanych na lokalnym
-        hoście, dzięku czemu nie musimy się rozłączać aby stworzyć katalog
+        hoście, dzięki czemu nie musimy się rozłączać aby stworzyć katalog
         specjalnie na dane pobrane z serwera. Pobierzemy teraz plik
         /etc/fstab do katalogu <em>/tmp</em>.
       </p>
@@ -14330,8 +14360,8 @@ sent 165 bytes  received 3,064 bytes  2,152.67 bytes/sec
 total size is 7,276  speedup is 2.25
 </pre>
       <p>
-        Aby taka synchronizacja miała sens potrzebne jest kilka przełączników
-        takich jak <code class="code-inline">-a</code>, powodujący włączenie
+        Aby taka synchronizacja miała sens potrzebne jest kilka opcji
+        takich jak <code class="code-inline">-a</code>, powodująca włączenie
         trybu archiwalnego, przez co pliki zostaną skopiowane wraz ze
         wszystkimi atrybutami; <code class="code-inline">-v</code> włączająca
         wyświetlanie komunikatów diagnostycznych; 
@@ -14339,7 +14369,10 @@ total size is 7,276  speedup is 2.25
         skopiowane katalogi wraz z podkatalogami; 
         <code class="code-inline">-P</code> włączająca zwrócenie statystyk
         postępu dla każdego przesyłanego pliku; 
-        <code class="code-inline">-z</code> włączająca kompresje. Jeśli
+        <code class="code-inline">-z</code> włączająca kompresje. 
+      </p>
+      <p>
+        Jeśli
         jeszcze raz spróbujemy pobrać te plik. Nic tak nie zostanie przesłane,
         ponieważ pliki nie uległy zmianie.
       </p>
@@ -14356,7 +14389,7 @@ total size is 7,276  speedup is 29.22
         oznaczonych jako <em>server10</em> oraz <em>server20</em> utworz
         nowego użytkownika <em>user20</em> oraz przypisz mu hasło. Następnie
         na <em>server10</em>, przełącz się na tego użytkownika oraz wygeneruj
-        klucze <em>SSH</em> bez hasła. Zainstaluj klucze na <em>server20</em>
+        klucze <em>SSH</em> bez hasła. Zainstaluj klucz na <em>server20</em>
         na koncie użytkowika <em>user20</em> i spróbuj się na niego zalogować.
       </p>
       <h3 id="exec19.2">Ćwiczenie 2: Działanie dyrektywy PermitRootLogin</h3>
@@ -14365,7 +14398,7 @@ total size is 7,276  speedup is 29.22
         oznaczonej jako <em>server20</em>. Ustaw wartość dyrektywy
         <em>PermitRootLogin</em> serwera <em>OpenSSH</em> na <em>no</em>.
         Następnie z poziomu <em>server10</em> spróbuj się zalogować przez
-        <em>SSH</em> jako <em>root</em>. Następnie zmień wartość te dyrektywy
+        <em>SSH</em> jako <em>root</em>. Następnie zmień wartość tej dyrektywy
         na <em>yes</em> i spróbuj ponownie.
       </p>
       <h2 id="ch19summary">Podsumowanie</h2>

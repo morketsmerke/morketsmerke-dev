@@ -13866,6 +13866,519 @@ Address: 34.235.198.240
         zajmiemy się obsługą bezpiecznego zdalnego logowania do powłoki -
         usługą <em>SSH</em>.
       </p>
+      <h1 id="19.ssh">19. Usługa bezpiecznej połoki</h1>
+      <p>
+        Usługa bezpiecznej powłoki, jest w obecnych czas jedną z podstawowych
+        rzeczy bez których nie wyobrażamy sobie pracy z jakimi kolwiek
+        odległymi maszynami. Bezpieczna powłoka czyli <strong>SSH</strong>
+        pozwala na bezpieczne zarządzania maszynami oraz przesyłanie informacji
+        między nimi przez nie zabezpieczone sieci takie jak internet. 
+        <em>SSH</em> pozwala na uwierzytelnienie użytkownika na zdalnym
+        serwerze. Dba ona również o intergralność danych przesyłanych jej
+        kanałami. Ta usługa dostarcza do systemów Uniksowych wielu narzędzi,
+        które wyparły odpowiedniki korzystające ze zwykłych nie zabezpieczonych
+        kanałów.
+      </p>
+      <h2 id="19.1.sshtheory">19.1. Podstawy teoretyczne na temat SSH</h2>
+      <p>
+        W wielu Uniksach (w tym i dystrybucjach Linuksa) stosowana jest
+        darmowa oraz wolna wersja protkołu <em>SSH</em> - 
+        <strong>OpenSSH</strong>, jest ona odpowiednikiem własnościowej wersji
+        <em>SSH</em>. Obecnie najczęściej stoswany jest protokół 
+        <em>SSH</em> w wersji drugiej.
+      </p>
+      <h3 id="19.1.1.sshcryptography">19.1.1. Kryptografia SSH</h3>
+      <p>
+        OpenSSH do zabezpiecznia transmisji danych wykorzystuje metody
+        kryptograficzne zwane <strong>algorytmami</strong>. Są to serie
+        rownań matematycznych mających za zadanie jak najbardziej zamaskować
+        jawne dane aby nie mogły być one odczytane przez osoby nie znające
+        <strong>klucza</strong>, czyli hasła bądź pliku, który za pomocą
+        tych samych algorytmów pozwoli na odczytanie danych przeznaczonych dla
+        ich odbiorców. Wśród metod szyfrowwania możemy wymienić:
+      </p>
+      <ul>
+        <li><strong>Algorytmy symetryczne</strong> - w których do szyfrowania
+          i odszyfrowyania danych używa się tego samego klucza ustalanego
+          podczas pierwszego połączenia między maszynami.</li>
+        <li><strong>Algorytmów asymetrycznych</strong> - metody te są nazwane
+          również <strong>algorytmami klucza publicznego</strong>. Każdy z
+          hostów przed transmisją generuje klucz prywatny. Następnie na
+          podstawie tego klucza generowany jest klucz publiczny, który możebyć
+          jawnie przesyłany przez internet, ponieważ służy on do identyfikacji
+          użytkownika oraz szyfrowania danych. Dane w przypadku tego typu
+          algorytmów mogą być odczytane tylko za pomocą klucza prywatne.
+          Algorytmy asymetryczne są wykorzystywane do zabezpieczania
+          transmisji oraz uwierzytelniania użytkowników.</li>
+      </ul>
+      <p>
+        <em>OpenSSH</em> wykorzystuje głównie algorytm <strong>RSA</strong>, 
+        ponieważ może za jego pomocą szyfrować dane oraz uwierzytelniać 
+        użytkownika. Do uwierzytleniania możemy wykorzystać takie algorytmy
+        jak <em>DSA</em> oraz <em>ECDSA</em> jednak służą one tylko temu
+        celowi.
+      </p>
+      <h3 id="19.1.2.sshauthmethod">19.1.2. Metody uwierzytelniania OpenSSH</h3>
+      <p>
+        Aby użytkownik mógł pracować pracować na zdalnym serwerze za pomocą
+        <em>SSH</em> musi się uwierzytelnić. Uwierzytelniania możemy dokonać
+        na kilka różnych sposobów, a wsród nich możemy wyróżnić oparte na:
+      </p>
+      <ul>
+        <li><strong>GSSAPI</strong></li>
+        <li><strong>Hoście</strong></li>
+        <li><strong>Kluczu publicznym</strong></li>
+        <li><strong>Haśle</strong></li>
+        <li><strong>metodzie Challenge-response</strong></li>
+      </ul>
+      <p>
+        W tym materiale jednak skupimy się wyłącznie na domyślnej metodzie ją
+        jest ta oparta na haśle oraz tej opartej o klucz publiczny.
+      </p>
+      <h3 id="19.1.3.sshprograms">19.1.3. Oprogramowanie OpenSSH</h3>
+      <p>
+        W <em>RHEL</em> usługa <em>SSH</em> w implementacji <em>OpenSSH</em>
+        jest podzielona na trzy pakiety: <strong>openssh</strong> -
+        dostarczający niezbędne biblioteki oraz polecenie 
+        <strong>ssh-keygen</strong>; <strong>openssh-client</strong> -
+        dostarczający takie polecenia jak: <strong>ssh</strong>,
+        <strong>scp</strong> czy <strong>sftp</strong>. Ostatnim pakietem jest
+        <strong>openssh-server</strong> dostarczający demona 
+        <strong>sshd</strong>.
+      </p>
+      <p>
+        Polecenie <em>ssh</em> zastępuje stare polecenia <em>telnet</em> czy
+        <em>rlogin</em>. Z poleceniem <em>telnet</em> możemy się jeszcze
+        kiedyś spotkać. Polecenia <em>scp</em> zastępują kolejno <em>rcp</em>
+        oraz <em>ftp</em>. Mimo to <em>ftp</em> jest dalej stosowany, aby
+        umożliwić publiczny dostęp na przykład do repozytoriów oprogramowania.
+      </p>
+      <h2 id="19.2.sshd">19.2. Serwer OpenSSH - sshd</h2>
+      <p>
+        Serwerem <em>OpenSSH</em> jest program <em>sshd</em>. Jego konfiguracja
+        znajduje się w pliku <em>/etc/ssh/sshd_config</em>. Poniżej znajduje
+        się jej fragment:
+      </p>
+<pre class="code-block">
+#Port 22
+#AddressFamily any
+#ListenAddress 0.0.0.0
+#ListenAddress ::
+#HostKey /etc/ssh/ssh_host_rsa_key
+#HostKey /etc/ssh/ssh_host_ecdsa_key
+#HostKey /etc/ssh/ssh_host_ed25519_key
+# Ciphers and keying
+#RekeyLimit default none
+# Logging
+#SyslogFacility AUTH
+#LogLevel INFO
+# Authentication:
+#LoginGraceTime 2m
+#PermitRootLogin prohibit-password
+#StrictModes yes
+#MaxAuthTries 6
+#MaxSessions 10
+#PubkeyAuthentication yes
+# The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
+# but this is overridden so installations will only check .ssh/authorized_keys
+AuthorizedKeysFile	.ssh/authorized_keys
+</pre>
+      <p>
+        Zwróćmy uwagę na to, że prawie wszystkie dyrektywy są ujęte w komentarz
+        po za jedną, która wskazuje gdzie należy złożyć wszystkie otrzymane
+        klucz publiczne w celach uwierzytelniania. Demon <em>OpenSSH</em> jest
+        domyślnie dostoswany do największej ilości przypadków jego użycia,
+        więc plików konfiguracyjnych najczęściej używa się w specyficznych
+        przypadkach.
+      </p>
+      <p>
+        Nazwa jednostki w <em>RHEL</em> nosi nazwę <em>sshd.service</em>.
+        Każdą zmianę w tym pliku należy potwierdzić restartując demona. Opisy
+        tych dyrektyw znajdują się na stronie podręcznika.
+      </p>
+      <h2 id="19.3.sshclientconfig">19.3. Konfiguracja klienta - ssh</h2>
+      <p>
+        Na każdej maszynie, na której znajduje się polecenie <em>ssh</em>
+        znajduje się polecenie <strong>ssh</strong> znajduje się także
+        plik konfiguracyjny <em>/etc/ssh/ssh_config</em>, który reguluje jego
+        zachowanie posiada on też kilka dyrektyw sugerujących pewne domyślne
+        ustawienia. Poniżej znajduje się jego fragment pobrany z jednej z
+        moich maszyn.
+      </p>
+<pre class="code-block">
+# Host *
+#   ForwardAgent no
+#   ForwardX11 no
+#   PasswordAuthentication yes
+#   HostbasedAuthentication no
+#   GSSAPIAuthentication no
+#   GSSAPIDelegateCredentials no
+#   GSSAPIKeyExchange no
+#   GSSAPITrustDNS no
+#   BatchMode no
+#   CheckHostIP yes
+#   AddressFamily any
+#   ConnectTimeout 0
+#   StrictHostKeyChecking ask
+#   IdentityFile ~/.ssh/id_rsa
+#   IdentityFile ~/.ssh/id_dsa
+#   IdentityFile ~/.ssh/id_ecdsa
+#   IdentityFile ~/.ssh/id_ed25519
+#   Port 22
+...
+</pre>
+      <p>
+        Konfiguracja klienta została ujęta w ten sam sposób jak w przypadku
+        serwera. Konfiguracja klienta również jest przygotowana do użycia we
+        większości przypadków, dlatego też zmiany w konfiguracją będą wymagane
+        tylko w specyficznych przypadkach.
+      </p>
+      <h2 id="19.4.sshusage">19.4. Obsługa połączeń zdalnych - programy OpenSSH</h2>
+      <p>
+        Na początku tego rozdziału wspomnieliśmy o ilości programów
+        dostarczanych wraz z pakietem <em>OpenSSH</em>. Teraz sobie je
+        przetestujemy. Ten podrozdział został również rozszerzony o jeden
+        program, który korzysta z <em>SSH</em> do przesyłania danych.
+      </p>
+      <h3 id="19.4.1.ssh">19.4. Połączenie ze zdalnym serwerem z pomocą ssh</h3>
+      <p>
+        Połączenie ze zdalnym serwerem wymaga wydania pojedyńczego polecenia
+        w którym podajemy adres serwera, wówczas polecenie spróbuje zalować 
+        na użytkownika z tą samą nazwą z jakiej korzystamy w lokalnym systemie.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ ssh server20
+The authenticity of host 'server20 (192.168.122.7)' can't be established.
+ED25519 key fingerprint is SHA256:ZWgY+ro8oMwFh7vq56bS/Zk9CGpUe2sCrmxaukixr8M.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'server20' (ED25519) to the list of known hosts.
+user@server20's password: 
+Activate the web console with: systemctl enable --now cockpit.socket
+
+Register this system with Red Hat Insights: insights-client --register
+Create an account or view all your systems at https://red.ht/insights-dashboard
+Last login: Wed Aug  3 10:59:57 2022 from 192.168.122.6
+[user@server20 ~]$ 
+</pre>
+      <p>
+        Po wydaniu polecenia nastepuje połączenie. Klient nie może zweryfikować
+        autentyczności serwera przedstawiającego się podanym
+        <strong>odciskiem klucza</strong>. Tak dzieje się gdy podłączamy się
+        do serwera poraz pierwszy. Polecenie zapyta nas czy chcemy kontynuować
+        połączenie, wybierając <code class="code-inline">Yes</code> odcisk
+        klucza wraz z adresem serwera zostaną złożone w pliku
+        <em>~/.ssh/known_hosts</em>. Następnie zostaniemy zapytani o hasło.
+        Po jego podaniu jesteśmy podłączeni do serwera.
+      </p>
+      <p>
+        Chcąc podać innego użytkownika podczas połączenia <em>SSH</em> możemy
+        to zrobić na dwa sposób. Na przykład:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ ssh -l user server20
+#lub:
+[user@server10 ~]$ ssh user@server20
+</pre>
+      <h3 id="19.4.2.sshpubkeys">19.4.2. Generowanie, dystrybucja oraz logowanie się za pomocą klucza publicznego</h3>
+      <p>
+        Inną metodą uwierzytelniania stosowaną obok haseł jest uwierzytelnianie
+        za pomocą klucza publicznego. Ma ono klika zalet, otóż możemy logować
+        się bez podawania hasła, wówczas musimy pamiętać aby zabezpieczyć w
+        inny sposób plik klucza. Możemy również nadać jedno hasło -
+        <strong>hasło klucza</strong> i używać jednego hasła do wielu serwerów.
+        W tym materiale zajmiemy się wyłącznie kluczami bez haseł.
+      </p>
+      <p>
+        Na początek zajmiemy się wygenerowaniem klucza. Dokonujemy tego za
+        pomocą polecenia <strong>ssh-keygen</strong> podając kolejno opcję
+        <strong>-N</strong>, przyczym należy pamiętać, że aby nadać puste
+        hasło należy podać puste podwójne apostrofy (<strong>""</strong>) jako
+        wartość tej opcji. Do generowania kluczy użyjemy także opcji
+        <em>-q</em>, która powoduje nie wyświetlanie komunikatów podczas
+        generowania klucza.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ ssh-keygen -N "" -q
+Enter file in which to save the key (/home/user/.ssh/id_rsa): 
+</pre>
+      <p>
+        Polecenie zapyta o ścieżkę oraz nazwę pliku klucza. Tę wartość
+        pozostawiam domyślnie.
+      </p>
+      <p>
+        Następnym etapem będzie przesłanie oraz instalacja klucza na zdalnym
+        serwerze. Wykonamy tę czynność przy użyciu polecenia
+        <strong>ssh-copy-id</strong>, przyjmuje on takie same argumenty jak
+        polecenie <em>ssh</em>, więc żeby zainstalować klucz na serwerze
+        należy wydać poniższe polecenie. Polecenie to w ramach potwierdzania
+        naszej tożsamości zarząda hasła do połączenia się ze zdalnym
+        użytkownikiem na serwerze.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ ssh-copy-id user@server20
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/user/.ssh/id_rsa.pub"
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+user@server20's password: 
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'user@server20'"
+and check to make sure that only the key(s) you wanted were added.
+</pre>
+      <p>
+        Teraz kiedy klucz jest zainstalowany możemy bezprzeszkód logować się
+        na serwer. 
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ ssh user@server20
+Activate the web console with: systemctl enable --now cockpit.socket
+
+Register this system with Red Hat Insights: insights-client --register
+Create an account or view all your systems at https://red.ht/insights-dashboard
+Last login: Wed Aug  3 11:39:18 2022 from 192.168.122.6
+[user@server20 ~]$ 
+</pre>
+      <h3 id="19.4.3.sshexecutioncommand">19.4.3. Wykonywanie pojedyńczych poleceń na zdalnym serwerze</h3>
+      <p>
+        Za pomocą <em>SSH</em> możemy również wykonywać zdalnie pojedyńcze
+        polecenia, jeśli nie potrzebujemy dla jednej informacji zestawiać
+        interaktywnej powłoki. Polecenie do wykonania na zdalnym serwerze
+        podajemy po adresie serwera.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ ssh user@server20 "whoami; hostname; pwd"
+user
+server20.example.com
+/home/user
+</pre>
+      <p>
+        Najlepiej, jeśli ujmiemy polecenie w podwójne apostrofy. Wówczas mamy
+        pewność, że zostanie ono w pełni przekazane do zdalnego systemu.
+      </p>
+      <h3 id="19.4.4.scp">19.4.4. Bezpieczne kopiowanie plików</h3>
+      <p>
+        Za pomocą polecenia <strong>scp</strong>, możemy kopiować pliki z
+        wykorzystaniem protokłu <em>SSH</em> w obu kierunkach. Tutaj dodatkową
+        rolę odgrywa zainstalowanie certyfikatów bez hasła. Jeśli to zrobimy
+        wówczas będziemy mogli rozwiajać scieżki ze zdalnego systemu za pomocą
+        klawisza <em>Tab</em>. Na poniższym przykładzie skopiuje plik
+        <em>/etc/chrony.conf</em> do katalogu <em>/tmp</em>. 
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ scp server20:/etc/chrony.conf /tmp
+chrony.conf                                   100% 1369     1.5MB/s   00:00    
+[user@server10 ~]$ ls -l /tmp/chrony.conf 
+-rw-r--r--. 1 user user 1369 08-03 11:58 /tmp/chrony.conf
+</pre>
+      <p>
+        Za pomocą opcji <em>-r</em> jesteśmy w stanie skopiować do całe
+        katalogi.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ scp -r /home/user server20:/tmp/test/
+.bash_logout                                  100%   18    40.4KB/s   00:00    
+.bash_profile                                 100%  141   386.3KB/s   00:00    
+.bashrc                                       100%  492     1.2MB/s   00:00    
+.bash_history                                 100% 9742    17.0MB/s   00:00    
+.lesshst                                      100%   93   182.5KB/s   00:00    
+known_hosts                                   100%  822     1.6MB/s   00:00    
+known_hosts.old                               100%   90   154.6KB/s   00:00    
+id_rsa                                        100% 2610     6.2MB/s   00:00    
+id_rsa.pub                                    100%  579     1.4MB/s   00:00    
+gzip                                          100%   94KB  37.9MB/s   00:00    
+.viminfo                                      100%   10KB  13.7MB/s   00:00    
+
+[user@server10 ~]$ ssh user@server20 "ls -al /tmp/test/user"
+razem 136
+drwx------. 3 user user   139 08-03 12:00 .
+drwxrwxr-x. 3 user user    18 08-03 12:00 ..
+-rw-------. 1 user user  9742 08-03 12:00 .bash_history
+-rw-r--r--. 1 user user    18 08-03 12:00 .bash_logout
+-rw-r--r--. 1 user user   141 08-03 12:00 .bash_profile
+-rw-r--r--. 1 user user   492 08-03 12:00 .bashrc
+-rwxr-xr-x. 1 user user 95872 08-03 12:00 gzip
+-rw-------. 1 user user    93 08-03 12:00 .lesshst
+drwx------. 2 user user    80 08-03 12:00 .ssh
+-rw-------. 1 user user 10036 08-03 12:00 .viminfo
+</pre>
+      <h3 id="19.4.5.sftp">19.4.5. Przesyłanie plików za pomocą polecenia sftp</h3>
+      <p>
+        Polecenie <strong>sftp</strong> działa na takiej samej zasadzie co
+        polecenie <em>ftp</em>, jednak wykorzystuje do tego protokół
+        <em>SSH</em> przy tym rozszerzając oraz usprawniając działanie
+        przesyłanie plików.  
+      </p>
+      <p>
+        Polecenie to przyjmuje takie same argumenty jak <em>ssh</em>. Przy
+        czym to polecenie jest interaktywne, jak klasyczne <em>ftp</em> za
+        pomocą znaku zapytania (<strong>?</strong>). 
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sftp user@server20
+Connected to server20.
+sftp&gt; ?
+Available commands:
+bye                                Quit sftp
+cd path                            Change remote directory to 'path'
+chgrp [-h] grp path                Change group of file 'path' to 'grp'
+chmod [-h] mode path               Change permissions of file 'path' to 'mode'
+chown [-h] own path                Change owner of file 'path' to 'own'
+df [-hi] [path]                    Display statistics for current directory or
+                                   filesystem containing 'path'
+exit                               Quit sftp
+get [-afpR] remote [local]         Download file
+help                               Display this help text
+lcd path                           Change local directory to 'path'
+lls [ls-options [path]]            Display local directory listing
+lmkdir path                        Create local directory
+ln [-s] oldpath newpath            Link remote file (-s for symlink)
+lpwd                               Print local working directory
+ls [-1afhlnrSt] [path]             Display remote directory listing
+lumask umask                       Set local umask to 'umask'
+mkdir path                         Create remote directory
+progress                           Toggle display of progress meter
+put [-afpR] local [remote]         Upload file
+pwd                                Display remote working directory
+quit                               Quit sftp
+reget [-fpR] remote [local]        Resume download file
+rename oldpath newpath             Rename remote file
+reput [-fpR] local [remote]        Resume upload file
+rm path                            Delete remote file
+rmdir path                         Remove remote directory
+symlink oldpath newpath            Symlink remote file
+version                            Show SFTP version
+!command                           Execute 'command' in local shell
+!                                  Escape to local shell
+?                                  Synonym for help
+</pre>
+      <p>
+        Zwróćmy uwagę to, iż wiele poleceń występuję podwójnie poprzedzonych
+        literą <em>l</em>. Aby lepiej zarządzać transferem plików posiadmy
+        polecenia, które odwołują się czynności wykonywanych na lokalnym
+        hoście, dzięku czemu nie musimy się rozłączać aby stworzyć katalog
+        specjalnie na dane pobrane z serwera. Pobierzemy teraz plik
+        /etc/fstab do katalogu <em>/tmp</em>.
+      </p>
+<pre class="code-block">
+sftp&gt; lcd /tmp
+sftp&gt;  get /etc/fstab 
+Fetching /etc/fstab to fstab
+fstab                                        100%  608   709.3KB/s   00:00    
+</pre>
+      <p>
+        Za pomocą opcji <em>-r</em> takich poleceń <em>get</em> lub <em>put</em>
+        możemy pobierać oraz przesyłać całe sturktury katalogów:
+      </p>
+<pre class="code-block">
+sftp&gt; cd /tmp/dir_user/
+sftp&gt; put -r /tmp/user/.??*
+Uploading /tmp/user/.bash_history to /tmp/dir_user/.bash_history
+.bash_history                                100% 9742    13.7MB/s   00:00    
+Uploading /tmp/user/.bash_logout to /tmp/dir_user/.bash_logout
+.bash_logout                                 100%   18    54.6KB/s   00:00    
+Uploading /tmp/user/.bash_profile to /tmp/dir_user/.bash_profile
+.bash_profile                                100%  141   443.4KB/s   00:00    
+Uploading /tmp/user/.bashrc to /tmp/dir_user/.bashrc
+.bashrc                                      100%  492     1.7MB/s   00:00    
+Uploading /tmp/user/.lesshst to /tmp/dir_user/.lesshst
+.lesshst                                     100%   93   325.6KB/s   00:00    
+Uploading /tmp/user/.ssh/ to /tmp/dir_user/.ssh
+Entering /tmp/user/.ssh/
+known_hosts                                  100%  822     3.3MB/s   00:00    
+known_hosts.old                              100%   90   351.5KB/s   00:00    
+id_rsa                                       100% 2610     8.2MB/s   00:00    
+id_rsa.pub                                   100%  579     1.9MB/s   00:00    
+Uploading /tmp/user/.viminfo to /tmp/dir_user/.viminfo
+.viminfo                                     100%   10KB  23.3MB/s   00:00    
+</pre>
+      <p>
+        Jak możemy zauważyć na powyższym przykładzie w <em>sftp</em> możemy
+        używać nazw wieloznacznych.
+      </p>
+      <h3 id="19.4.6.rsync">19.4.6. Synchronizacja danych ze zdalnym serwerem</h3>
+      <p>
+        Jednym z programów wykorzystujących protokół <em>SSH</em> jest 
+        <strong>rsync</strong>, służy on do synchronizacji plików. Taka
+        synchronizacja polega na skopiowaniu wszelkich danych znajdujących
+        się na zdalnym serwerze do lokalnego katalogu lub odwrotnie i przy
+        następnych synchronizacjach będą kopiowane tylko te pliku, które
+        uległy zmianie. Na przykład skopiuje katalog domowy jednego z
+        użytkowników na zdalnym serwerze.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ rsync -avrPz server20:/home/user/.??* /tmp/user_server20/
+receiving incremental file list
+.bash_history
+          3,763 100%    3.59MB/s    0:00:00 (xfr#1, to-chk=7/8)
+.bash_logout
+             18 100%   17.58kB/s    0:00:00 (xfr#2, to-chk=6/8)
+.bash_profile
+            141 100%  137.70kB/s    0:00:00 (xfr#3, to-chk=5/8)
+.bashrc
+            492 100%  480.47kB/s    0:00:00 (xfr#4, to-chk=4/8)
+.lesshst
+             20 100%    9.77kB/s    0:00:00 (xfr#5, to-chk=3/8)
+.viminfo
+          2,263 100%    1.08MB/s    0:00:00 (xfr#6, to-chk=2/8)
+.ssh/
+.ssh/authorized_keys
+            579 100%  188.48kB/s    0:00:00 (xfr#7, to-chk=0/8)
+
+sent 165 bytes  received 3,064 bytes  2,152.67 bytes/sec
+total size is 7,276  speedup is 2.25
+</pre>
+      <p>
+        Aby taka synchronizacja miała sens potrzebne jest kilka przełączników
+        takich jak <code class="code-inline">-a</code>, powodujący włączenie
+        trybu archiwalnego, przez co pliki zostaną skopiowane wraz ze
+        wszystkimi atrybutami; <code class="code-inline">-v</code> włączająca
+        wyświetlanie komunikatów diagnostycznych; 
+        <code class="code-inline">-r</code> włączająca rekurencje, zostaną
+        skopiowane katalogi wraz z podkatalogami; 
+        <code class="code-inline">-P</code> włączająca zwrócenie statystyk
+        postępu dla każdego przesyłanego pliku; 
+        <code class="code-inline">-z</code> włączająca kompresje. Jeśli
+        jeszcze raz spróbujemy pobrać te plik. Nic tak nie zostanie przesłane,
+        ponieważ pliki nie uległy zmianie.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ rsync -avrPz server20:/home/user/.??* /tmp/user_server20/
+receiving incremental file list
+
+sent 21 bytes  received 228 bytes  498.00 bytes/sec
+total size is 7,276  speedup is 29.22
+</pre>
+      <h3 id="exec19.1">Ćwiczenie 1: Logowanie przez SSH z użyciem klucza</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień na maszynach
+        oznaczonych jako <em>server10</em> oraz <em>server20</em> utworz
+        nowego użytkownika <em>user20</em> oraz przypisz mu hasło. Następnie
+        na <em>server10</em>, przełącz się na tego użytkownika oraz wygeneruj
+        klucze <em>SSH</em> bez hasła. Zainstaluj klucze na <em>server20</em>
+        na koncie użytkowika <em>user20</em> i spróbuj się na niego zalogować.
+      </p>
+      <h3 id="exec19.2">Ćwiczenie 2: Działanie dyrektywy PermitRootLogin</h3>
+      <p>
+        Jako użytkownika z możliwością podniesienia uprawnień na maszynie
+        oznaczonej jako <em>server20</em>. Ustaw wartość dyrektywy
+        <em>PermitRootLogin</em> serwera <em>OpenSSH</em> na <em>no</em>.
+        Następnie z poziomu <em>server10</em> spróbuj się zalogować przez
+        <em>SSH</em> jako <em>root</em>. Następnie zmień wartość te dyrektywy
+        na <em>yes</em> i spróbuj ponownie.
+      </p>
+      <h2 id="ch19summary">Podsumowanie</h2>
+      <p>
+        W tym rodziale poruszyliśmy temat bezpieczengo zdalnego dostępu do
+        odległych maszyny. Jest on realizowany za pomocą protokołu 
+        <em>SSH</em>, z którego teoretycznymi podstawami zapoznaliśmy się na
+        początku tego rozdziału. Poruszyliśmy także temat plików
+        konfiguracyjnych serwera jak i klienta <em>SSH</em>. Na koniec
+        dowiedzieliśmy się jak korzystać z poleceń dostarczanych wraz z
+        pakietem <em>OpenSSH</em>. W następnym rozdziale poznamy zaporę
+        sieciową w systemie <em>RHEL</em> 9.
+      </p>
     </div>
     <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

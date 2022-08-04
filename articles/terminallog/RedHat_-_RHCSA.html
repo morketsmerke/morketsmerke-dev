@@ -14412,6 +14412,427 @@ total size is 7,276  speedup is 29.22
         pakietem <em>OpenSSH</em>. W następnym rozdziale poznamy zaporę
         sieciową w systemie <em>RHEL</em> 9.
       </p>
+      <h1 id="20.firewall">20. Zapora sieciowa w RHEL 9</h1>
+      <p>
+        Sieci komputerowe pozwalają na swobodną komunikację między komputerami,
+        co w pewnych przypadkach jest niewskazne, ponieważ nie zawsze pożądane
+        jest aby dowolny użytkownik internetu mógł połączyć się z naszym
+        komputerem i wysyłać lub pobierać z niego dane. Swobodę ruchą
+        kontrolują <strong>zapory sieciowe</strong>, które mogą być albo
+        fizycznymi urządzeniam wpiętymi w wyższe segmenty sieci lub
+        oprogramowaniem zainstalowanym na naszym komputerze czuwającym nad
+        ruchem sieciowym skierowanym do naszego komputera.
+      </p>
+      <p>
+        Zapora sieciowa ma za zadanie monitorować oraz kontrolować ruch
+        sieciowy. Jest realizowane przez przeglądanie nagłówków pakietów
+        przesyłanych przez sieć oraz analiza źródłowych adresów <em>IP</em>
+        używanych protokołów czy portów. W tym materiale skupimy się tylko
+        i wyłącznie na oprogramowaniu <em>firewall</em>-a dostarczonym do 
+        Red Hat Enterprise Linux 9.
+      </p>
+      <h2 id="20.1.firwalldtheory">20.1. Teoria firewalld</h2>
+      <p>
+        Pakiet zapory sieciowej dostarczony do <em>RHEL</em> to 
+        <strong>firewalld</strong>. Zapory dostępne w dystrybucjach
+        Linuks opierają swoją zasadę działą o dwa składniki: moduł jądra
+        <em>netfilter</em> oraz <em>framework</em> służący do klasyfikacji
+        oraz filtrowania pakietów - <em>nftables</em>. Dzięki czemu poza
+        zwykłymi <strong>zasadami</strong> (za pomocą zasad organizuje się 
+        ruch wychodzący oraz przychodzący w systemie) możemy realizwować
+        bardziej zaawansowane funkcje takie jak translacja adresów
+        (NAT) umożliwiająca połączenie sieci lokalnej z internetem czy 
+        przekierowanie portów pozwalające na kontrolowaną komunikację między
+        użytkownikami internetu a serwerem wewnątrz sieci lokalnej.
+      </p>
+      <p>
+        <em>Firewalld</em> pozwala na kontrolowanie ruchu sieciowego bez 
+        wpływu na nawiązane już połączenia oraz bez potrzeby restartu żadnych
+        usług. Możemy dodawać, usuwać i modyfikować zasady za pomocą albo
+        specjalnego polecenia, albo za pomocą panelu sterowania <em>RHEL</em>,
+        który jest możliwy włączenia za poprzez aktywacje jednostki 
+        <em>cockpit.service</em>.
+      </p>
+      <p>
+        Zasada działania <em>firewalld</em> opiera się na strefach co pozwala
+        na łatwiejsze oraz transparentne utrzymanie ruchu. 
+        <strong>Strefa</strong> określa poziom zaufania połączeń
+        sieciowych oraz adresów źródłowych. W konfiguracji strefy znajdują się
+        przypisane do nich połączenia sieciowe, przy czym jedno połączenie
+        może być przypisane do jednej strefy, ale jedna strefa może mieć wiele
+        połączeń oraz zasady pozwalające lub zabraniajace na połączenia w
+        wybraną usługą czy portem. Strefy definiują także domyślne zachowanie
+        zapory. Kiedy pakiet trafia do zapory, sprawdza ona jego
+        adres źródłowy czy nie występuje w którejś ze stref, jeśli nie ma
+        przypasowania, ten sam pakiet konfrontowany jest podstawie innych
+        kryteriów z regułami zapisanymi w strefie przypisanej do interfejsu
+        sieciowego z którego ten pakiet przybył, jeśli dalej nie ma 
+        przypasowania, wówczas jest ono szukane w domyślnej strefie.
+        W systemie możemy spotkać się z kilkoma predefiniowanym
+        strefami, wypisanymi na poniższej liście: 
+      </p>
+      <ul>
+        <li><strong>trusted</strong> - zezwól na wszystkie połączenia</li>
+        <li><strong>internal</strong> - Ruch przychodzący jest odrzucamy, poza
+          jawnie wskazanym. Ta strefa stosowana jest w sieciach wewnętrznych.</li>
+        <li><strong>home</strong> - Ruch przychodzący jest odrzuczany, poza
+          jawnie wskazanym. Ta strefa stosowana jest w sieciach domowych.</li>
+        <li><strong>work</strong> - Ruch przychodzący jest odrzucany, poza
+          jawnie wskazanym. Ta strefa jest stoswana w miejscu pracy.<li>
+        <li><strong>dmz</strong> - Ruch przychodzący jest odrzucany, poza
+          jawnie wskazanym. Ta strefa jest stosowana w strefie
+          zdemilitaryzowanej (nie ma ograniczeń pomiędzy połączaniami miedzy
+          hostami w tej sieci. Hosty są osiągalne z poziomu internetu, ale 
+          nie mogą nawiązywać połączeń z innymi komputerami w sieci lokalnej
+          poza strefą).</li>
+        <li><strong>external</strong> - Ruch przychodzą jest odrzuczamy, poza
+          jawnie wskazanym. W ruchu wychodzącym tej strefy dokonywana jest
+          translacja adresów IP (NAT).</li>
+        <li><strong>public</strong> - Ruch przychodzący jest odrzuczany, poza
+          jawnie wskazanym. Ta strefa jest stosowana w miejscah publicznych.
+          Każdy nowy interfejs jest przypisywany do tej strefy.</li>
+        <li><strong>block</strong> - Ruch przychodzący jest odrzucany z
+          ze specjalną wiadmością zwrotną protokołu <em>ICMP</em>.</li>
+        <li><strong>drop</strong> - Ruch przychodzacy jest odrzucany bez żadnej
+          wiadomości zwrotnej.</li>
+      </ul>
+      <p>
+        Strefy na powyższej liście zostały uszeregowane od najbardzej zaufanej
+        do najmniej. Domyślną strefą stosowaną w <em>RHEL</em> jest
+        <em>public</em>. Ostatnie strefy są skierowane do środowisk o
+        podwyższonym poziomie zabezpieczeń.
+      </p>
+      <p>
+        Strefy z poziomu systemu operacyjnego, to zwykłe pliki tekstowe
+        przechowywane w dwóch lokacjach. Pierwszą z nich jest katalog
+        <em>/usr/lib/firewalld/zones</em>, w którym to są przechowywane
+        systemowe pliki stref. Drugim katalogiem jest 
+        <em>/etc/firewalld/zones</em> gdzie przchowywane są pliki stref
+        użytkowników. Jeśli zechcemy zmienić jeden z plików strefy np.
+        za pomocą polecenia, to automatycznie zostanie otworzona jego kopia
+        w katalogu <em>/etc/firewalld/zones</em> i to na niej zostaną
+        zatwierdzone nasze zmiany. Każda ze stref może zostać przez nas 
+        zmieniona. Poniżej znajduje się lista dostępnych
+        stref systemowych:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ ls -l /usr/lib/firewalld/zones
+razem 40
+-rw-r--r--. 1 root root 312 2021-11-23  block.xml
+-rw-r--r--. 1 root root 306 2021-11-23  dmz.xml
+-rw-r--r--. 1 root root 304 2021-11-23  drop.xml
+-rw-r--r--. 1 root root 317 2021-11-23  external.xml
+-rw-r--r--. 1 root root 410 2021-11-23  home.xml
+-rw-r--r--. 1 root root 425 2021-11-23  internal.xml
+-rw-r--r--. 1 root root 729 2022-01-14  nm-shared.xml
+-rw-r--r--. 1 root root 356 2021-11-23  public.xml
+-rw-r--r--. 1 root root 175 2021-11-23  trusted.xml
+-rw-r--r--. 1 root root 352 2021-11-23  work.xml
+</pre>
+      <p>
+        Zawartość takie pliku strefy prezentuje się w następujący sposób:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ cat /usr/lib/firewalld/zones/public.xml
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;zone&gt;
+  &lt;short&gt;Public&lt;/short&gt;
+  &lt;description&gt;For use in public areas. You do not trust the other 
+computers on networks to not harm your computer. Only selected incoming 
+connections are accepted.&lt;/description&gt;
+  &lt;service name="ssh"/&gt;
+  &lt;service name="dhcpv6-client"/&gt;
+  &lt;service name="cockpit"/&gt;
+  &lt;forward/&gt;
+&lt;/zone&gt;
+</pre>
+      <p>
+        Każde z plików zawiera krótką nazwę, opis oraz deklaracje wskazujące
+        otwarcie ruchu dla wskazanych w dyrektywach
+        <code class="code-inline">services</code> usług. Usługi też w
+        <em>firewalld</em> mają swoje pliki, w których deklarowany są używane
+        przez nie porty oraz protokoły. Lista plików usług znajduje się w
+        katalogu <em>/usr/lib/firewalld/services</em>. Poniżej znajduje się
+        jej fragment. W przypadku usług panuje taka sama zasada jak w przypadku
+        stref.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ ls -l /usr/lib/firewalld/services/
+razem 728
+-rw-r--r--. 1 root root  399 2021-11-23  amanda-client.xml
+-rw-r--r--. 1 root root  427 2021-11-23  amanda-k5-client.xml
+-rw-r--r--. 1 root root  283 2021-11-23  amqps.xml
+-rw-r--r--. 1 root root  273 2021-11-23  amqp.xml
+-rw-r--r--. 1 root root  285 2021-11-23  apcupsd.xml
+-rw-r--r--. 1 root root  301 2021-11-23  audit.xml
+-rw-r--r--. 1 root root  320 2021-11-23  bacula-client.xml
+-rw-r--r--. 1 root root  346 2021-11-23  bacula.xml
+-rw-r--r--. 1 root root  429 2021-11-23  bb.xml
+-rw-r--r--. 1 root root  339 2021-11-23  bgp.xml
+-rw-r--r--. 1 root root  275 2021-11-23  bitcoin-rpc.xml
+-rw-r--r--. 1 root root  307 2021-11-23  bitcoin-testnet-rpc.xml
+-rw-r--r--. 1 root root  281 2021-11-23  bitcoin-testnet.xml
+-rw-r--r--. 1 root root  244 2021-11-23  bitcoin.xml
+-rw-r--r--. 1 root root  410 2021-11-23  bittorrent-lsd.xml
+-rw-r--r--. 1 root root  294 2021-11-23  ceph-mon.xml
+-rw-r--r--. 1 root root  329 2021-11-23  ceph.xml
+-rw-r--r--. 1 root root  168 2021-11-23  cfengine.xml
+</pre>
+      <p>
+        Poniżej znajduje się zawartość przykładowego pliku usługi:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ cat /usr/lib/firewalld/services/nfs.xml
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;service&gt;
+  &lt;short&gt;NFS4&lt;/short&gt;
+  &lt;description&gt;The NFS4 protocol is used to share files via TCP 
+networking. You will need to have the NFS tools installed and properly 
+configure your NFS server for this option to be useful.&lt;/description&gt;
+  &lt;port protocol="tcp" port="2049"/&gt;
+&lt;/service&gt;
+</pre>
+      <h2 id="20.2.firewallmanagement">20.2. Zarządzanie ruchem sieciowym w firewalld</h2>
+      <p>
+        Do zarządzania ruchem sieciowym posłużymy się poleceniem
+        <strong>firewall-cmd</strong>. Wymagana ono uprawnień superużytkownika
+        aby móc coś zmienić na zaporze. To polecenie posiada dużą ilość różnych
+        opcji, jednak nie ma sensu ich tu przytaczać. Poznamy je w trakcie
+        wykonywania przykładów z tego podrozdziału.
+      </p>
+      <h3 id="20.2.1.firewalldstatus">20.2.1. Sprawdzenie status zapory sieciowej</h3>
+      <p>
+        Sprawdzenia statusu zapory sieciowej możemy dokonać na dwa sposóby:
+        mozemy wydać polecenie <em>firewall-cmd</em> z odpowiednią opcją lub
+        sprawdzić status jednostki systemd <em>firewalld.service</em>. Poniżej
+        znajdują się wyniki działania obu tych poleceń:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo systemctl status firewalld.service 
+[sudo] hasło użytkownika user: 
+● firewalld.service - firewalld - dynamic firewall daemon
+     Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2022-08-04 08:47:25 CEST; 2h 55min ago
+       Docs: man:firewalld(1)
+   Main PID: 720 (firewalld)
+      Tasks: 4 (limit: 5891)
+     Memory: 46.3M
+        CPU: 7.278s
+     CGroup: /system.slice/firewalld.service
+             └─720 /usr/bin/python3 -s /usr/sbin/firewalld --nofork --nopid
+
+sie 04 08:47:24 server10.example.com systemd[1]: Starting firewalld - dynamic firewall daemon...
+sie 04 08:47:25 server10.example.com systemd[1]: Started firewalld - dynamic firewall daemon.
+
+[user@server10 ~]$ sudo firewall-cmd --state
+running
+</pre>
+      <h3 id="20.2.2.firewalladd">20.2.2. Dodowanie usług, protów oraz zarządzanie strefami</h3>
+      <p>
+        Zanim jednak zaczniemy dodwać usługi i porty wyświetlimy sobie domyślną
+        strefę, a do tego posłuży opcja <em>--get-default-zone</em> polecenia
+        <em>firewall-cmd</em>:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo firewall-cmd --get-default-zone 
+[sudo] hasło użytkownika user: 
+public
+</pre>
+      <p>
+        Aby zmiany dokonane w zaporze zostały na stałe, należy każdą zmianę
+        poprzedzić opcją <strong>--permanent</strong>. Usługi możemy dodwać
+        za pomocą opcji <em>--add-service</em>. Podczas zapisywania opcji
+        polecenia <em>firewall-cmd</em> możemy posłużyć się klawiszem <em>Tab</em>
+        w celu autouzupełnienia. W ramach przykładu dodałem usługę <em>http</em>
+        do domyślniej strefy.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo firewall-cmd --permanent --add-service=http
+success
+</pre>
+      <p>
+        Aby ta reguła zadziałała <em>firewalld</em> musi ponownie wczytać plik
+        strefy, aby to wymusić wydajemy polecenie <em>firewall-cmd</em> wraz
+        opcją <em>--reload</em>.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo firewall-cmd --reload
+[sudo] hasło użytkownika user: 
+success
+</pre>
+      <p>
+        Za pomocą opcji <em>--list-services</em>, możemy wyświetlić reguły
+        skonfigurowane do wskazanych powłok:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo firewall-cmd --list-services
+cockpit dhcpv6-client http ssh
+</pre>
+      <p>
+        Jak możemy zauważyć dodana usługa znajduje się na liście reguł.
+      </p>
+      <p>
+        Dodowania portów wygląda podobnie dodawania usług jednak używa się
+        opcji <em>--add-port=</em>. Po podaniu portu należy również wskazać
+        po ukośniku (<strong>/</strong>) protokół <em>TCP</em> czy 
+        <em>UDP</em>. Opcja ta pozwala również na podanie zakresu portów.
+        Za pomocą poniższego polecenia dodałem porty <em>TCP</em> od 
+        5901 do 5910 do strefy (<em>--zone=</em>) <em>internal</em>.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo firewall-cmd --permanent --add-port=5901-5910/tcp --zone=internal
+[sudo] hasło użytkownika user: 
+success
+</pre>
+      <p>
+        Za pomocą opcji <em>--list-ports</em>, możemy wyswietlić zasady
+        skonfigurowane pod konkretne porty. Natomiast za pomocą opcji
+        <em>--zone</em> mogę zarządzać innymi strefami.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo firewall-cmd --list-ports --zone=internal
+5901-5910/tcp
+</pre>
+      <p>
+        Za pomocą opcji <em>--set-default-zone=</em> możemy ustawić dowolną
+        strefę jako tę domyślną dla naszego systemu:
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo firewall-cmd --set-default-zone=internal
+[sudo] hasło użytkownika user: 
+success
+</pre>
+      <p>
+        Pamiętaj, aby zatwierdzić zmiany należy opcji <em>--reload</em>, a do
+        trwałych zmian wykorzystuje się opcje <em>--permanent</em>.
+      </p>
+      <h3 id="20.2.3.firewallremove">20.2.3. Usuwanie portów oraz usług</h3>
+      <p>
+        Aby wycofać wcześniej wykonywane zmiany należy użyć opcji
+        <em>--remove-service=</em> lub <em>--remove-port=</em>. Usunę
+        na początku regułę odpowiedzialną za otworzenie zakresu portów z
+        poprzedniego przykładu.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo firewall-cmd --permanent --remove-port=5901-5910/tcp 
+success
+[user@server10 ~]$ sudo firewall-cmd --reload 
+success
+[user@server10 ~]$ sudo firewall-cmd --list-ports
+</pre>
+      <p>
+        Opcja <em>--remove-port</em> również pozwala na podanie zakresu.
+        Podanie protokółu również jest wymagane podczas usuwania portów.
+      </p>
+      <p>
+        Teraz usunę również usługę <em>HTTP</em>, którą dodałem na początku,
+        pamiętając o tym, że <em>public</em> to nie jest już moja domyślna
+        strefa.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo firewall-cmd --permanent --remove-service=http --zone=public
+success
+[user@server10 ~]$ sudo firewall-cmd --reload 
+success
+[user@server10 ~]$ sudo firewall-cmd --list-services --zone=public
+cockpit dhcpv6-client ssh
+</pre>
+     <p>
+        Na koniec przywrócę moją domyślną strefę.
+     </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo firewall-cmd --set-default-zone=public
+success
+[user@server10 ~]$ sudo firewall-cmd --get-default-zone 
+public
+</pre>
+      <h3 id="20.2.4.firewalleffective">20.2.4. Efektywność zapory firewalld</h3>
+      <p>
+        W tym przykładzie sprawdzimy sobie w jaki sposób zapora działa w
+        praktyce. A przetestujemy to sobie usuwając regułę pozwalającą na
+        połączenie się przez SSH z jedną z maszyn.
+      </p>
+      <p>
+        Czynności rozpoczynamy od ustalenia domyślnej strefy oraz czy występuje
+        w niej usługa <em>SSH</em>.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo firewall-cmd --get-default-zone 
+public
+[user@server10 ~]$ sudo firewall-cmd --list-services 
+cockpit dhcpv6-client ssh
+</pre>
+      <p>
+        Jak widzimy reguła <em>SSH</em> znajduje się na liście usług. Za pomocą
+        opcji <em>--remove-service=</em> możemy usunąć tą regułę.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo firewall-cmd --permanent --remove-service=ssh
+[sudo] hasło użytkownika user: 
+success
+[user@server10 ~]$ sudo firewall-cmd --reload
+success
+[user@server10 ~]$ sudo firewall-cmd --list-services 
+cockpit dhcpv6-client
+</pre>
+      <p>
+        Próba połączenia z tą maszyną z innej nie dochodzi do skutku.
+      </p>
+<pre class="code-block">
+[user@server20 ~]$ ssh server10
+ssh: connect to host server10 port 22: No route to host
+</pre>
+      <p>
+        Aby zakończyć to ćwiczenie, ten przykład dodajmy z powrotem regułę
+        <em>SSH</em> do domyślnej strefy i spróbujmy się połączyć ponownie.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo firewall-cmd --permanent --add-service=ssh
+success
+[user@server10 ~]$ sudo firewall-cmd --reload
+success
+[user@server10 ~]$ sudo firewall-cmd --list-services 
+cockpit dhcpv6-client ssh
+</pre>
+      <p>
+        Tym razem próba kończy się powodzeniem.
+      </p>
+<pre class="code-block">
+[user@server20 ~]$ ssh server10
+user@server10's password: 
+Activate the web console with: systemctl enable --now cockpit.socket
+
+Register this system with Red Hat Insights: insights-client --register
+Create an account or view all your systems at https://red.ht/insights-dashboard
+Last login: Thu Aug  4 09:03:57 2022 from 192.168.122.7
+[user@server10 ~]$ 
+</pre>
+      <h3 id="exec20.1">Ćwiczenie 1: Dodawanie usługi to zapory</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień, na maszynie
+        oznaczonej jako <em>server10</em>, dodaj na stałe regułę dla 
+        usługi <em>HTTPS</em> i aktywujmy ją (<em>--reload</em>). Potwierdź
+        wykonanie zadania wyświetlając plik strefy oraz za pomocą odpowiedniej
+        opcji polecenia <em>firewall-cmd</em>.
+      </p>
+      <h3 id="exec20.2">Ćwiczenie 2: Dodawnie zakresu portów do zapory</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień, na maszynie
+        oznaczonej jako <em>server10</em>, dodaj zakres portów 8000-8005 
+        <em>UDP</em> do strefy <em>trusted</em> i aktywujmy go 
+        (<em>--reload</em>). Potwierdź
+        wykonanie zadania wyświetlając plik strefy oraz za pomocą odpowiedniej
+        opcji polecenia <em>firewall-cmd</em>.
+      </p> 
+      <h2 id="ch20summary">Podsumowanie</h2>
+      <p>
+        W tym rodziale poruszyliśmy temat zapory sieciowej. Dowiedzieliśmy się
+        jak ona działa oraz co realizuje jej funkcję w <em>RHEL</em> 9.
+        Poznaliśmy podstawy teoretyczne oprogramowania <em>firewalld</em> oraz
+        poznaliśmy najczęściej stosowane polecenia za pomocą pokazanych w tym
+        rozdziale przykładów. W następnym rozdziale zapoznamy się mechanizmem
+        <em>SELinux</em>.
+      </p>
     </div>
     <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

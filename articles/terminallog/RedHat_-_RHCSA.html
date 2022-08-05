@@ -14853,6 +14853,81 @@ Last login: Thu Aug  4 09:03:57 2022 from 192.168.122.7
         rozdziale przykładów. W następnym rozdziale zapoznamy się mechanizmem
         <em>SELinux</em>.
       </p>
+      <h1 id="21.selinux">21. Security Enchanced Linux</h1>
+      <p>
+        <strong>Security Enchanced Linux (SELinux)</strong> decyduje o tym co
+        kto może zrobić w systemie. Ten mechanizm tworzy kolejną warstwę
+        bezpieczeństwa w systemie ponad klasycznymi zabezpieczeniami jakie
+        poznaliśmy do tej pory. Podstawowym celem <em>SELinux</em> jest
+        możliwe jak największe zmniejszenie wpływy na system w momencie
+        wystąpienia w nim nieuprawnionego dostępu.
+      </p>
+      <h2 id="21.1.theoryofselinux">21. Podstawy teoretyczne SELinux</h2>
+      <p>
+        <em>SELinux</em> jest implementacją mechanizmu <strong>MAC</strong>
+        (<em>Mandatory Access Control</em>), który jest zintegrowany z jądrem
+        Linuksa. <em>MAC</em> ogranicza możliwości dostępu 
+        <strong>podmiotu</strong> (użytkownik lub proces) do
+        <strong>obiektu</strong> (pliki, katalogi, systemu plików, urządzenia,
+        połączenia/interfejsy sieciowe, porty, potoki oraz gniazda). Dlatego
+        też w przypadku wykorzystania podatności na przykład na serwerze WWW,
+        atakujący będzie mieć wpływ tylko na pliki, do których miał dostęp ten
+        proces.
+      </p>
+      <p>
+        Do zapewnienia kontroli mechanizm <em>MAC</em> wykorzystuje zbiory
+        zasad autoryzacyjnych zwanych <strong>polityką</strong> do sprawdzenia
+        atrybutów podmiotu kiedy stara się on o dostęp do obiektu i decyduje
+        czy udzielić tego dostępu. Atrybutu są zapisane w postaci 
+        <strong>kontekstu</strong> lub (<strong>etykiet</strong>) i dotyczą
+        zarówno podmiotów jak i obiektów. Decyzje dokonane przez 
+        <em>SELinux</em> są zapiswane w specjalny rodzaju pamięci podręcznej
+        nazwanej <strong>AVC</strong> (<em>Access Vector Control</em>). W
+        momencie gdy dochodzić do decyzji <em>SELinux</em> sprawdza tę pamięć
+        podręczną czy nie udzielał już temu podmiotowi dostępu do tego obiektu.
+        Jeśli tak obecną decyzje bazuje na tej podjętej wcześniej przez co nie
+        musi on rozważać wszystkich możliwych zasad polityki wobec tej próby
+        dostępu. 
+      </p>
+      <h3 id="21.1.1.terminology">21.1.1. Pojęcia związane z SELinux</h3>
+      <p>
+        Aby obeznać się chociaż w podstawowym stopniu z <em>SELinux</em>
+        należy poznać kilka pojęcie, które będą używane podczas przestawiania
+        teorii tego mechanizmu ale również przykładów oraz ćwiczeń.
+      </p>
+      <ul>
+        <li><strong>Podmiot</strong> - każdy proces oraz użytkownik, który jest
+          w stanie uzyskać dostęp do obiektu. Na przykład 
+          <strong>system_u</strong> - użytkownik systemu <em>SELinux</em> czy
+          <strong>unconfined_u</strong> stosowany dla podmiotów, które nie są
+          związane z polityką <em>SELinux</em>. Podmiot <em>SELinux</em>
+          znajduje się w pierwszym polu kontekstu.</li>
+        <li><strong>Objekt</strong> - zasób systemowy, od plików po gniazda.
+          Obiekty mogą zostać przestawione jako <strong>object_r</strong> -
+          obiekt ogólny, <strong>system_r</strong> - obiekt systemowy albo
+          <strong>unconfined_r</strong> - obiekt niezwiązny z <em>SELinux</em>.
+        </li>
+        <li><strong>Dostęp</strong> - akcja dokonywana przez podmiot na
+          obiekcie. W ramach dostępu możemy wyróżnić tworzenie, odczyt,
+          modyfikację pliku, wyświetlenie zawartości katalogu czy próba
+          dostępu do portu albo gniazda.</li>
+        <li><strong>Polityka</strong> - Zbiór zasad mający wpływ na cały
+          system. Polityka wykorzystywana do analizy atrybutów podmiotów oraz
+          obiektów. Na podstawie polityki <em>SELinux</em> dokonuje decyzji
+          czy pozwolić podmiotowi na dostęp lub interakcje z obiektem. Jeśli
+          brakuje pasującej zasady, wówczas domyślną decyzją jest odmowa.
+          <em>SELinux</em> dostarczany jest wraz z dwoma standardowymi
+          preconfigurowanymi politykami <strong>targeted</strong> oraz
+          <strong>MLS</strong>, gdzie <em>targeted</em> wskazuje, że każdy
+          ukierunkowany proces uruchamiany jest w ograniczonej
+          <strong>domenie</strong> oraz każdy nieukierunkowany proces
+          uruchomiony jest w nieograniczonej domenie. Na przykład 
+          <em>SELinux</em> umieszcza zalogowanego użytkownika w 
+          nieograniczonej domenie, a proces serwera WWW domyślnie w domenie
+          ograniczonej. Każdy podmiot działający w domenie nieograniczonej
+          jest bardziej podatny niż ten, który działa w domenie ograniczonej.
+        </li>
+      </ul>
     </div>
     <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

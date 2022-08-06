@@ -580,6 +580,41 @@
             <li><a href="#ch20summary">Podsumowanie</a></li>
           </ul>
         </li>
+        <li><a href="#21.selinux">21. Security Enchanced Linux</a>
+          <ul class="toc">
+            <li><a href="#21.1.theoryofselinux">21. Podstawy teoretyczne SELinux</a>
+              <ul class="toc">
+                <li><a href="#21.1.1.terminology">21.1.1. Pojęcia związane z SELinux</a></li>
+                <li><a href="#21.1.2.contextofusers">21.1.2. Kontekst SELinux użytkowników</a></li>
+                <li><a href="#21.1.3.contextofprocess">21.1.3. Kontekst procesów</a></li>
+                <li><a href="#21.1.4.contextoffile">21.1.4. Kontekst SELinux plików</a></li>
+                <li><a href="#21.1.5.savethecontext">21.1.5. Zachowanie kontekstu SELinux podczas zarządzania plikami</a></li>
+                <li><a href="#21.1.6.contextofports">21.1.6. Kontekst SELinux portów sieciowych</a></li>
+                <li><a href="#21.1.7.domaintransitioning">21.1.7. Zmiana domeny SELinux</a></li>
+                <li><a href="#21.1.8.selinuxbooleans">21.1.8. Wartości logiczne SELinux</a></li>
+              </ul>
+            </li>
+            <li><a href="#21.2.selinuxadministration">21.2. Zarządzanie SELinux</a>
+              <ul class="toc">
+                <li><a href="#21.2.1.managingcommands">21.2.1. Polecenia zarządzające</a></li>
+                <li><a href="#21.2.2.operationalstate">21.2.2. Zmiana stanu operacyjnego SELinux</a></li>
+                <li><a href="#21.2.3.querying">21.2.3. Sprawdzanie stanu SELinux</a></li>
+                <li><a href="#21.2.4.modifyselinuxcontent">21.2.4. Modyfikowanie kontekstu SELinux plików</a></li>
+                <li><a href="#21.2.5.addandapplyfilecontext">21.2.5. Dodwanie oraz zatwierdzanie kontekstu plików SELinux</a></li>
+                <li><a href="#21.2.6.addanddeletenetworkport">21.2.6. Dodawanie i usuwanie portów sieciowych w ujęciu SELinux</a></li>
+                <li><a href="#21.2.7.preservingcontext">21.2.7. Zachowanie kontekstu SELinux podczas kopiowania</a></li>
+                <li><a href="#21.2.8.changebooleans">21.2.8. Zmiana wartości logicznych SELinux</a></li>
+                <li><a href="#21.2.9.selinuxmonitoring">21.2.9. Monitorowanie naruszeń SELinux</a></li>
+              </ul>
+            </li>
+            <li><a href="#exec21.1">Ćwiczenie 1: Zmiana trybu operacyjnego SELinux</a></li>
+            <li><a href="#exec21.2">Ćwiczenie 2: Modyfikacja kontekstu plików</a></li>
+            <li><a href="#exec21.3">Ćwiczenie 3: Dodawanie portów</a></li>
+            <li><a href="#exec21.4">Ćwiczenie 4: Kopiowanie plików z zachowaniem kontekstu</a></li>
+            <li><a href="#exec21.5">Ćwiczenia 5: Zmiana stanu wartości logicznej SELinux</a></li>
+            <li><a href="#ch21summary">Podsumowanie</a></li>
+          </ul>
+        </li>
       </ul>
       <h1 id="1.introduction">1. Wstęp</h1>
       <p>
@@ -14859,7 +14894,7 @@ Last login: Thu Aug  4 09:03:57 2022 from 192.168.122.7
         kto może zrobić w systemie. Ten mechanizm tworzy kolejną warstwę
         bezpieczeństwa w systemie ponad klasycznymi zabezpieczeniami jakie
         poznaliśmy do tej pory. Podstawowym celem <em>SELinux</em> jest
-        możliwe jak największe zmniejszenie wpływy na system w momencie
+        możliwe jak największe zmniejszenie wpływu na system w momencie
         wystąpienia w nim nieuprawnionego dostępu.
       </p>
       <h2 id="21.1.theoryofselinux">21. Podstawy teoretyczne SELinux</h2>
@@ -14875,13 +14910,13 @@ Last login: Thu Aug  4 09:03:57 2022 from 192.168.122.7
         proces.
       </p>
       <p>
-        Do zapewnienia kontroli mechanizm <em>MAC</em> wykorzystuje zbiory
+        Do zapewnienia kontroli, mechanizm <em>MAC</em> wykorzystuje zbiory
         zasad autoryzacyjnych zwanych <strong>polityką</strong> do sprawdzenia
         atrybutów podmiotu kiedy stara się on o dostęp do obiektu i decyduje
         czy udzielić tego dostępu. Atrybutu są zapisane w postaci 
-        <strong>kontekstu</strong> lub (<strong>etykiet</strong>) i dotyczą
+        <strong>kontekstu</strong> (lub <strong>etykiet</strong>) i dotyczą
         zarówno podmiotów jak i obiektów. Decyzje dokonane przez 
-        <em>SELinux</em> są zapiswane w specjalny rodzaju pamięci podręcznej
+        <em>SELinux</em> są zapiswane w specjalnym rodzaju pamięci podręcznej
         nazwanej <strong>AVC</strong> (<em>Access Vector Control</em>). W
         momencie gdy dochodzić do decyzji <em>SELinux</em> sprawdza tę pamięć
         podręczną czy nie udzielał już temu podmiotowi dostępu do tego obiektu.
@@ -14912,7 +14947,8 @@ Last login: Thu Aug  4 09:03:57 2022 from 192.168.122.7
           modyfikację pliku, wyświetlenie zawartości katalogu czy próba
           dostępu do portu albo gniazda.</li>
         <li><strong>Polityka</strong> - Zbiór zasad mający wpływ na cały
-          system. Polityka wykorzystywana do analizy atrybutów podmiotów oraz
+          system. Polityka jest wykorzystywana do analizy atrybutów podmiotów 
+          oraz
           obiektów. Na podstawie polityki <em>SELinux</em> dokonuje decyzji
           czy pozwolić podmiotowi na dostęp lub interakcje z obiektem. Jeśli
           brakuje pasującej zasady, wówczas domyślną decyzją jest odmowa.
@@ -14933,16 +14969,17 @@ Last login: Thu Aug  4 09:03:57 2022 from 192.168.122.7
           <em>SELinux</em>, roli, domeny (czy też typu) oraz poziomu.
           <em>SELinux</em>, korzysta z konktekstu podczas podejmowania decyzji
           o przydzieleniu dostępu.
-        <li>
+        </li>
         <li><strong>Etykietowanie</strong> - mapowanie plików wraz z 
           kontekstem.</li>
         <li><strong>Użytkownik SELinux</strong> - predefiniowany w polityce
           użytkownik <em>SELinux</em> autoryzowany do określonego zbioru reguł.
           W polityce znajdują się mapowania użytkowników systemu na
           użytkowników <em>SELinux</em>, aby ograniczać możliwości użytkowników.
-          Użytkownik określa jakie role oraz domeny oraz typy mogą zostać 
+          Użytkownik określa jakie role oraz domeny lub typy mogą zostać 
           przypisane
-          do procesu. Jeśli użytkownik systemu będzie mieć przypisanego
+          do procesu lub pliku . Jeśli użytkownik systemu będzie mieć 
+          przypisanego
           użytkownika <strong>user_u</strong>, nie będzie mógł wówczas
           uruchomić żadnego programu znajdującego się w swoim katalogu domowym
           oraz korzystać z takich poleceń jak <em>su</em> czy <em>sudo</em>.
@@ -14975,11 +15012,11 @@ Last login: Thu Aug  4 09:03:57 2022 from 192.168.122.7
           do jednej określonej domeny, przez co ich działania mogą zostać w
           niej ograniczone. Dla przykładu proces <em>systemd</em> działa w
           domenie <strong>unit_t</strong> a <em>firewalld</em> w
-          <strong>firwalld_t</strong>. Typ oraz domena znajdują się na trzecim
+          <strong>firewalld_t</strong>. Typ oraz domena znajdują się na trzecim
           polu kontekstu.
         </li>
         <li><strong>Poziom bezpieczeństwa</strong> - poziom bezpieczńswa może
-          być ujęty w dwóch rodzajach <strong>MLC</strong>
+          być ujęty w dwóch rodzajach <strong>MLS</strong>
           (<em>Multi-Level Security</em>) lub <strong>MCS</strong>
           (<em>Multi-Category Security</em>). Poziom ten składa się z dwóch
           czynników: <strong>wrażliwości</strong> oraz <strong>kategorii</strong>
@@ -14988,8 +15025,8 @@ Last login: Thu Aug  4 09:03:57 2022 from 192.168.122.7
           do <em>c4</em>. Od <em>RHEL</em> 8 w polityce ukierunkowanej wymusza
           użycie rodzaju <em>MCS</em>, który określa tylko jeden poziom
           wrażliwości jakim jest <strong>s0</strong> oraz 1024 kategorie od
-          <strong>0</strong> do <strong>1024</strong>.
-        <li>
+          <strong>0</strong> do <strong>1023</strong>.
+        </li>
       </ul>
       <h3 id="21.1.2.contextofusers">21.1.2. Kontekst SELinux użytkowników</h3> 
       <p>
@@ -15002,12 +15039,12 @@ unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
 </pre>
       <p>
         W polu użytkownika <em>SELinux</em> jego nazwa to
-        <code class="code-inline">unconfined</code> co oznacza, że ma
-        nieograniczone możliwości. Superużytkowników również przypisanego ma
+        <code class="code-inline">unconfined_u</code> co oznacza, że ma
+        nieograniczone możliwości. Superużytkownik również przypisanego ma
         tego samego użytkownika. Pomimo tego <em>SELinux</em> dostarcza
-        siedemiu użytkowników <em>SELinux</em> ograniczających wpływ
-        użytkowników na system. Aby wyświetlić ich nazwy musimy zainstalować
-        pakiet <em>setools-console</em>.
+        siedemiu użytkowników mechanizmu <em>SELinux</em> ograniczających wpływ
+        zwykłych użytkowników na system. Aby wyświetlić ich nazwy musimy 
+        zainstalować pakiet <em>setools-console</em>.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ sudo seinfo -u
@@ -15026,7 +15063,7 @@ Users: 8
       <p>
         Jak możemy zauwazyć <code class="code-inline">unconfined_u</code>
         również jest jednym z użytkowników <em>SELinux</em> dla tego też mówimy
-        o siedmiu. Przypisanie to go użytkownika użytkownikom systemu wynika
+        o siedmiu. Przypisanie go użytkownikom systemu wynika
         z mapowania w polityce, a te możemy podejrzeć za pomocą polecenia
         <strong>semanage</strong> wraz z pod poleceniem <em>login</em> oraz
         opcją <em>-l</em>.
@@ -15061,8 +15098,8 @@ system_u:system_r:init_t:s0           1 ?        00:00:01 systemd
         W polu <code class="code-inline">LABEL</code> znajduje się kontekst
         <em>SELinux</em>. Podmiotem w tym przypadku jest użytkownik
         <em>SELinux</em> <code class="code-inline">system_u</code>
-        (mapowany do superużytkownika), rolą, rola systemowa
-        (<code class="code-inline">system_r</code>) z typem ochrony nałożonym
+        (mapowany do superużytkownika), rolą, rola systemowa -
+        <code class="code-inline">system_r</code> z typem ochrony nałożonym
         przez domenę <code class="code-inline">init_t</code> i poziomem
         bepzieczeństwa wskazywanym przez <code class="code-inline">s0</code>.
       </p>
@@ -15070,12 +15107,12 @@ system_u:system_r:init_t:s0           1 ?        00:00:01 systemd
         Każdy niechroniony proces działa w domenie 
         <strong>unconfined_t</strong>.
       </p>
-      <h3 id="21.2.4.contextoffile">21.2.4. Kontekst SELinux plików</h3>
+      <h3 id="21.1.4.contextoffile">21.1.4. Kontekst SELinux plików</h3>
       <p>
         Pliki oraz katalogi to obiekty <em>SELinux</em> one również posiadają
         kontekst, który może zostać wyświetlony za pomocą opcji
         <strong>-Z</strong> polecenia <em>ls</em>. Poniżej znajdują się
-        atrybuty oraz kontekts dla pliku <em>/etc/passwd</em>.
+        atrybuty oraz kontekst dla pliku <em>/etc/passwd</em>.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ ls -lZ /etc/passwd
@@ -15083,9 +15120,9 @@ system_u:system_r:init_t:s0           1 ?        00:00:01 systemd
 </pre>
       <p>
         Ten plik posiada rolę przeznaczoną dla zwykłych obiektów
-        (<code class="code-block">object_r</code>) oraz typ o nazwie
-        <code class="code-block">passwd_file_t</code>. Kontekst wszystkich
-        plików systemie składowany jest dwóch plikach <em>file_context</em>
+        (<code class="code-inline">object_r</code>) oraz typ o nazwie
+        <code class="code-inline">passwd_file_t</code>. Kontekst wszystkich
+        plików w systemie składowany jest dwóch plikach <em>file_context</em>
         oraz <em>file_context.local</em> w katalogu
         <em>/etc/selinux/targeted/context/files</em>. Kontekst może zostać
         zmieniony za pomocą polecenia <em>semanage</em>.
@@ -15093,7 +15130,7 @@ system_u:system_r:init_t:s0           1 ?        00:00:01 systemd
       <h3 id="21.1.5.savethecontext">21.1.5. Zachowanie kontekstu SELinux podczas zarządzania plikami</h3>
       <p>
         Domyślnie kopiując pliki z jednego katalogu do drugiego kontekst
-        <em>SELinux</em>, zostanie odziedziczony od katalogu nadrzędnego,
+        <em>SELinux</em>, zostanie odziedziczony z katalogu nadrzędnego,
         taka sama zasada tyczy się nadpisywania plików, wówczas plik źródłowy
         otrzyma kontekst <em>SELinux</em> od pliku, który został nadpisany.
         Aby zachować kontekst <em>SELinux</em> należy użyć opcji
@@ -15113,7 +15150,7 @@ system_u:system_r:init_t:s0           1 ?        00:00:01 systemd
       <h3 id="21.1.6.contextofports">21.1.6. Kontekst SELinux portów sieciowych</h3>
       <p>
         <em>SELinux</em> definiuje atrybuty bezpieczeństwa dla każdego rozdzaju
-        obiektu, w tym i dla portów. Typy (w ujęciu <em>SELinux</em>) dla
+        obiektu w tym i dla portów. Typy (w ujęciu <em>SELinux</em>) dla
         portów możemy podejrzeć za pomocą polecenia <strong>semanage</strong>
         wraz z podpoleceniem <em>port</em> oraz opcją <em>-l</em>.
       </p>
@@ -15128,7 +15165,8 @@ ssh_port_t                     tcp      22
       <p>
         Wyjście prezentowane jest kolumnach, w przypadku portów spotykamy się
         z typem, tak jak w przypadku plików. Domyślnie <em>SELinux</em> 
-        pozwala na nasłuchiwanie usługom tylko na zarezerowanych portach.
+        pozwala na nasłuchiwanie usługom tylko na określonych przez typy
+        portach.
       </p>
       <h3 id="21.1.7.domaintransitioning">21.1.7. Zmiana domeny SELinux</h3>
       <p>
@@ -15182,20 +15220,22 @@ razem 0
 ...
 </pre>
       <p>
-        Nazwa kazdego pliku odpowiada nazwie wartości używanej do jej zmiany.
+        Nazwa kazdego pliku odpowiada nazwie wartości używanej do zmiany jej
+        stanu.
         Jeśli na podstawie nazwy nie możemy wywnioskować do czego służy podana
-        wartość, to możemy do instalować pakiet <em>selinux-policy-doc</em> i
+        wartość, to możemy zainstalować pakiet <em>selinux-policy-doc</em> i
         wyszukać odpowiednią stronę podręcznika podając nazwę wartości
         poleceniu <em>man</em> po opcji <em>-K</em>.
       </p>
       <p>
-        Możemy przeglądać wartości logiczne zmieniać je tym czasowo co nię
-        będzie miało wpływu na politykę lub permanentnie.
+        Możemy przeglądać wartości logiczne i zmieniać ich stan tymczasowo co 
+        nię będzie miało wpływu na politykę lub na stałe, wówczas te będzie
+        musiało mieć już swoje odzwierciedlenie w polityce.
       </p>
       <h2 id="21.2.selinuxadministration">21.2. Zarządzanie SELinux</h2>
       <p>
         Zarządzanie <em>SELinux</em> to wiele zadań obejmujących aktywację
-        mechnizmu, zmianę jego stanu operacyjnego, aktualizacje kontekstu
+        mechanizmu, zmianę jego stanu operacyjnego, aktualizacje kontekstu
         zarówno podmiotów jak i obiektów oraz przełączanie wartości logicznych.
         W tym celu w <em>RHEL</em> znajduje się wiele narzędzi, które możemy
         wykorzystać do tego celu.
@@ -15204,14 +15244,14 @@ razem 0
       <p>
         <em>RHEL</em> dostarcza wiele poleceń, dzięki którym możemy realizować
         nasze zadania związane z <em>SELinux</em>. Wiele z nich odpowiada za
-        konkretne czynności, jednak jego <strong>semanage</strong> pozwala na
+        konkretne czynności, jednak jedno <strong>semanage</strong> pozwala na
         zrealizowanie tych zadań dobierając odpowiednie podpolecenie.
         Innym poleceniem na które należy zwrócić uwagę jest 
         <strong>chcon</strong>, które pozwala na zmianę contekstu obiektu oraz
         <strong>restorcon</strong>, które przywraca kontekst z bazy (plików
         wymienionych w poprzednim podrozdziale, podczas omawiania kontektu
         plików). Poniżej znajdują się przykłady, dzięki którym poznamy
-        jak należy zarządzać <em>SELinux</em> w praktyce oraz niezbędne
+        jak należy zarządzać <em>SELinux</em> w praktyce oraz niezbędne do tego 
         polecenia.
       </p>
       <h3 id="21.2.2.operationalstate">21.2.2. Zmiana stanu operacyjnego SELinux</h3>
@@ -15269,7 +15309,7 @@ SELINUXTYPE=targeted
       </ul>
       <p>
         Inna wartością kontrolujcą ten mechanizm jest dyrektywa
-        <code class="code-inline">SELINUXTYPE</code> wymuszająca tym polityki.
+        <code class="code-inline">SELINUXTYPE</code> wymuszająca typ polityki.
         Domyślnie stosowaną jest polityka ukierunkowana
         (<code class="code-inline">targeted</code>). Pozostałe wartości 
         znajdują się w komentarzu nad dyrektywą.
@@ -15310,9 +15350,9 @@ Permissive
         operacyjnymi, aby na przykład rozwiązać problem z usługą.
         Po rozwiązaniu problemów, możemy powrócić do normalnego stanu.
       </p>
-      <h3 id="21.2.3.querying">21.2.3. Sprawdzanie stanu <em>SELinux</em></h3>
+      <h3 id="21.2.3.querying">21.2.3. Sprawdzanie stanu SELinux</h3>
       <p>
-        Z pomocą polecenia <strong>sestats</strong>, mozemyu sprawdzić stan
+        Z pomocą polecenia <strong>sestats</strong>, mozemy sprawdzić stan
         mechanizmu <em>SELinux</em> oraz wyświetlić kilka dodatkowych
         informacji na jego temat.
       </p>
@@ -15341,7 +15381,7 @@ Max kernel policy version:      33
       </p>
       <h3 id="21.2.4.modifyselinuxcontent">21.2.4. Modyfikowanie kontekstu SELinux plików</h3>
       <p>
-        Do modyfikowania contekstu słuzy polecenie <strong>chcon</strong>.
+        Do modyfikowania kontekstu słuzy polecenie <strong>chcon</strong>.
         Chcąc zmienić użytkownika <em>SELinux</em> używamy opcji 
         <em>-u</em>, do zmiany typu wykorzystujemy opcję <em>-t</em>. Jeśli
         zmiany mają być rekurencyjne wówczas należy uzyć opcji <em>-R</em>.
@@ -15366,7 +15406,7 @@ drwxr-xr-x. 2 user user user_u:object_r:public_content_t:s0 25 08-06 12:34 /tmp/
 -rw-r--r--. 1 user user user_u:object_r:public_content_t:s0 0 08-06 12:34 /tmp/testsedir1/testsefile2
 </pre>
       <p>
-        Jak możemy zauważyć na powyższym przykładzie zmienilimy typ oraz
+        Jak możemy zauważyć na powyższym przykładzie zmieniliśmy typ oraz
         użytkownika <em>SELinux</em>.
       </p>
       <h3 id="21.2.5.addandapplyfilecontext">21.2.5. Dodwanie oraz zatwierdzanie kontekstu plików SELinux</h3>
@@ -15374,10 +15414,10 @@ drwxr-xr-x. 2 user user user_u:object_r:public_content_t:s0 25 08-06 12:34 /tmp/
         Aby zatwierdzić zmieniony kontekst plików należy dodać do bazy
         kontekstów. Do tego posłużymy się poleceniem <strong>semanage</strong>
         wraz z podpoleceniem <em>fcontext</em>, za pomocą opcji <em>-a</em>
-        wskazujemy akcje dodanie nowego kontekstu, opcja <em>-s</em> wskazuje
+        wskazujemy akcje dodania nowego kontekstu, opcja <em>-s</em> wskazuje
         na użytkownika <em>SELinux</em>, opcja <em>-t</em> wskazuje na typ
         w tym przypadku. Na końcu podajemy ścieżkę do pliku lub katalogu.
-        Jeśli zmiany mają obejmować katalog wraz z jego zawrtością to wówczas
+        Jeśli zmiany mają obejmować katalog wraz z jego zawartością to wówczas
         należy użyć wyrażenia regularnego: <strong>(/.*)?</strong> w ścieżce
         katalogu. Teraz dodam zmiany z wcześniejszego podrozdziału do bazy.
       </p>
@@ -15393,10 +15433,10 @@ fcontext SELinuksa       typ                Kontekst
       <p>
         Za pomocą opcji <em>-Cl</em> wyświetliłem ostatnie zmiany w bazie 
         kontekstów plików <em>SELinux</em>. Teraz jeśli zmienimy kontekst
-        tego katalogu lub którego z zawartych w nim plików będziemy, to
-        wówczas będziemy mogli powrócić po przedniego stanu za pomocą
+        tego katalogu lub któregoś z zawartych w nim plików to będziemy mogli 
+        powrócić do poprzedniego stanu za pomocą
         polecenia <strong>restorecon</strong> bazując na wpisie w bazie
-        danych, który dodaliśmy we wcześniejszym ćwiczeniu. Aby to
+        danych, który dodaliśmy we wcześniejszym przykładzie. Aby to
         za prezentować zmienię teraz kontekst zarówno katalogu jak i jego
         zawartości.
       </p>
@@ -15436,20 +15476,21 @@ drwxr-xr-x. 2 user user user_u:object_r:public_content_t:s0 25 08-06 12:34 /tmp/
         będziemy mieć pewność że zmiany z pewnością przetrwają ponowne
         uruchomienie serwera.
       </p>
-      <h3 id="21.2.6.addanddeletenetworkport">21.2.6. Dodawanie i usuwanie portów sieciowych kontekście SELinux</h3>
+      <h3 id="21.2.6.addanddeletenetworkport">21.2.6. Dodawanie i usuwanie portów sieciowych w ujęciu SELinux</h3>
       <p>
         Jak mogliśmy się dowiedzieć domyślnie <em>SELinux</em> pozwala na
-        nasłuchiwanie tylko za zarezerowanych portach więc jeśli nasza usługa
-        musi nasłuchiwać na inny niż te zdeklarowane musimy dodać ten port do
-        typu usługi.
+        nasłuchiwanie tylko na określonych typami portach więc jeśli nasza 
+        usługa
+        musi nasłuchiwać na inny niż te w określonym type musimy dodać ten port
+        do mechanizmu <em>SELinux</em>.
       </p>
       <p>
         Dodawnie portów możemy zrealizować za pomocą polecnie <em>semanage</em>,
-        ale na początku określimy typ portu SELinux, pomocą podpolecenia
+        ale na początku określimy typ portu SELinux. Za pomocą podpolecenia
         <em>port</em> wraz z opcją <em>-l</em> mozemy wylistować wszystkie
-        porty wraz z protokołami oraz typami portów. Załóżmy, że chcem dodać
-        port do usługi <em>http</em>, wówczas możemy wszukać portów powiązanych
-        z tą usługą za pomocą polecenie <em>grep</em>.
+        porty wraz z protokołami oraz typami portów. Załóżmy, że chcę dodać
+        port do usługi <em>http</em>, wówczas możemy wyszukać portów 
+        powiązanych z tą usługą za pomocą polecenie <em>grep</em>.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ sudo semanage port -l | grep 'http'
@@ -15472,8 +15513,8 @@ http_port_t                    tcp      8010, 80, 81, 443, 488, 8008, 8009, 8443
       <p>
         Aby dodać port użyłem podpolecenia 
         <code class="code-inline">port</code> wraz z opcjami 
-        <code class="code-inline">-at</code>, która
-        sugeruje dodanie portu oraz wskaznie na typ portu <em>SELinux</em>.
+        <code class="code-inline">-at</code>, które
+        nakazują dodanie portu oraz wskaznie na typ portu <em>SELinux</em>.
         Następnie po opcji <em>-p</em> podałem protokół oraz numer portu.
         Na koniec wyświetliłem jeszce ten typ portu, aby sprawdzić czy zmiany
         zostały zatwierdzone. 
@@ -15481,7 +15522,7 @@ http_port_t                    tcp      8010, 80, 81, 443, 488, 8008, 8009, 8443
       <p>
         Jeśli port przestanie nam być potrzebny możemy go usunąć, za pomocą
         opcji <em>-d</em> oraz opcji <em>-p</em> po której podajemy protokół
-        i numer portu. Teraz usunę ten port który dodałem.
+        i numer portu. Teraz usunę ten port, który wcześniej dodałem.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ sudo semanage port -d -p tcp 8010
@@ -15501,7 +15542,7 @@ http_port_t                    tcp      80, 81, 443, 488, 8008, 8009, 8443, 9000
       <p>
         Aby zachować kontekst <em>SELinux</em> dla kopiowanych plików, należy
         użyć opcji <em>--preserve=context</em>  polecenia <em>cp</em>. W tym
-        podrozdziale sobie to zobrazujemy. Nasz katalog plik testowy w katalogu
+        podrozdziale sobie to zobrazujemy. Nasz plik testowy w katalogu
         <em>/tmp/testsedir1</em> prezentuje się z następującymi atrybutami:
       </p>
 <pre class="code-block">
@@ -15531,7 +15572,7 @@ http_port_t                    tcp      80, 81, 443, 488, 8008, 8009, 8443, 9000
 </pre>
       <p>
         Jak widzimy, w tym przypadku kontekst nie uległ zmianie. Ta opcja tyczy
-        się wyłącznie kopiowanie, ponieważ przenoszenie nie zmienia kontekstu.
+        się wyłącznie kopiowania, ponieważ przenoszenie nie zmienia kontekstu.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ sudo mv /tmp/testsedir1/testsefile2 /var/local/
@@ -15541,10 +15582,10 @@ http_port_t                    tcp      80, 81, 443, 488, 8008, 8009, 8443, 9000
       <h3 id="21.2.8.changebooleans">21.2.8. Zmiana wartości logicznych SELinux</h3>
       <p>
         Zabierając się za zmianę wartości logicznych <em>SELinux</em> warto,
-        na początku upewnić się jakie zmienne mają wartości. Możemy to zrobić
+        na początku upewnić się jaki stan mają wartości. Możemy to zrobić
         za pomocą trzech różnych narzędzi. Na potrzeby przykładu wybrałem 
         wartość <em>use_nfs_home_dirs</em>. Poniżej znajdują się trzy możliwe
-        sposoby na sprawdzenie wartości tej zmiennej.
+        sposoby na sprawdzenie stanu tej wartości.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ sudo semanage boolean -l | grep 'use_nfs_home_dirs'
@@ -15557,13 +15598,13 @@ use_nfs_home_dirs                           off
       <p>
         Najlepszym sposóbem wydaje mi się, że jest użycie pierwszego polecenia,
         gdyż domyślnie zwraca więcej danych. W nawiasie wyjścia tego polecenia
-        możemy zauważyć dwie wartości pierwsza z nich to wartość obecna,
-        natomiast druga to wartość z polityki.
+        możemy zauważyć dwa stany pierwszy z nich to stan obecny,
+        natomiast drugi to stan pobrany z polityki.
       </p>
       <p>
-        Aby zmienić wartość logiczną należy użyć polecenia
+        Aby zmienić stan wartości logiczną należy użyć polecenia
         <strong>setsebool</strong>, jako argument to polecenie przyjmuje
-        nazwę wartości oraz wartość, w tym przypadku 0 lub 1.
+        nazwę wartości oraz stan, w tym przypadku 0 lub 1.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ sudo setsebool use_nfs_home_dirs 1
@@ -15613,24 +15654,25 @@ found 0 alerts in /var/log/audit/audit.log
       <p>
         Jako użytkownik z możliwością podniesienia uprawnień na maszynie
         oznaczonej jako <em>server1</em> wyłącz <em>SELinux</em> z poziomu
-        pliku konfiguracyjnego, następnie uruchom ponowanie komputer i sprawdź
+        pliku konfiguracyjnego, następnie uruchom ponownie komputer i sprawdź
         stan operacyjny <em>SELinux</em>. Następnie przywróć go z powrotem do
-        trybu <em>enforcing</em> i ponownie uruchom komputer. Potwierdź 
+        trybu <em>enforcing</em> i znów uruchom ponownie komputer. Potwierdź 
         zmianę trybu za pomocą odpowiedniego polecenia.
       </p>
       <h3 id="exec21.2">Ćwiczenie 2: Modyfikacja kontekstu plików</h3>
       <p>
         Jako użytkownik z możliwością podniesienia uprawnień na maszynie
         oznaczonej jako <em>server1</em>. Utwórz w katalogu <em>/tmp</em>
-        katalog <em>d1</em> zawierający katalog <em>d2</em>. Następnie zmień
-        rekurencyjnie konteskt katalogu <em>/tmp/d1</em> ustawiając
+        katalog <em>d1</em> zawierający podkatalog <em>d2</em>. Następnie zmień
+        rekurencyjnie kontekst katalogu <em>/tmp/d1</em> ustawiając
         typ <em>SELinux</em> <em>etc_t</em>. Potwierdź to następnie dodaj
         zmiany bazy kontekstów.
       </p>
       <h3 id="exec21.3">Ćwiczenie 3: Dodawanie portów</h3>
       <p>
         Jako użytkownik z możliwością podniesienia uprawnień na maszynie
-        oznaczonej jako <em>server1</em>, dodaj port 8010 do użycia dla
+        oznaczonej jako <em>server1</em>, dodaj port 8010 do typu 
+        <em>SELinux</em> dla
         usługi <em>HTTP</em>. Potwierdź wykonanie tej czynności.
       </p>
       <h3 id="exec21.4">Ćwiczenie 4: Kopiowanie plików z zachowaniem kontekstu</h3>
@@ -15646,14 +15688,14 @@ found 0 alerts in /var/log/audit/audit.log
       <p>
         Jako użytkownik z możliwością podniesienia uprawnień na maszynie
         oznaczonej jako <em>server1</em>, wyświetl stan wartości logicznej
-        <em>ssh_use_tcpd</em> za pomocą polecenie <em>getsebool</em> oraz
+        <em>ssh_use_tcpd</em> za pomocą polecenia <em>getsebool</em> oraz
         <em>sestatus</em>. Użyj odpowiedniego polecenia aby zmienić jej stan.
         Potwierdź to, wyświetlając go na wszystkie trzy sposoby.
       </p>
       <h2 id="ch21summary">Podsumowanie</h2>
       <p>
         Ten rozdział został poswięcony w pełni podstawom znajomości oraz
-        obsługi mechanizm <em>SELinux</em>. Poznaliśmy podstawy teoretyczne
+        obsługi mechanizmu <em>SELinux</em>. Poznaliśmy podstawy teoretyczne
         łącznie wymaganą do rozeznania w temacie terminologią. W dalszej
         części rozdzialu zapoznaliśmy się w jaki sposób możemy manipulować
         elementami tego mechanizmu w praktyce. Na koniec poznaliśmy metodę na

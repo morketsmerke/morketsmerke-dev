@@ -15703,6 +15703,546 @@ found 0 alerts in /var/log/audit/audit.log
         W następnym rozdziale zapoznamy się z podstawmi tworzenia skryptów
         powłoki. 
       </p>
+      <h1 id="22.shellscripts">22. Skrypty powłoki</h1>
+      <p>
+        Skrypty powłoki są to zbiory poleceń zapisywanych w jednym pliku
+        tesktowym. Polecenia zapisane w skryptach są najzwyklejszymi 
+        poleceniami, tak jak byś chcieli wykonać je z poziomu wiersza polecenia.
+        Skrypt służą głównie automatyzacji nudnych oraz powtarzalnych zadań, 
+        na przykład w systemie należy utworzyć konta 100 użytkownikom.
+        Skrypty składają się z trzech głownych składników: poleceń/instrukcji,
+        konstrukcji kontroli (tj. wyrażeń warunkowych oraz pętli) i
+        komentarzy, które służą wyłącznie opisowi tego co się dzieje w skrypcie
+        i nie biorą udziału w interpretacji. Skrypt powłoki są 
+        <strong>interpretowane</strong> przez powłokę, która jest uruchamiana
+        wraz uruchomieniem skryptu. Rozwijane są użyte w skryptach wyrażania a
+        polecenia są uruchamiane po kolei. Jedno po drugim tak jak
+        wpisywalibyś my je ręczenie. W przypadku błędów powłoka zwróci
+        odpowiedni komunikat oraz numer linii w której ten błąd wystąpił. 
+      </p>
+      <h2 id="22.1.basicsofshellscripts">22.2. Podstawy skryptów powłoki</h2>
+      <p>
+        Jeśli spytamy się kogo kolwiek jak jest najlepsza metoda nauki jakiegoś
+        języka programowania, zapewne usłszymy kilka zdań, które można streścić
+        do: czytaj, zrozum, pisz, powtórz. Tak może być i w tym przypadku.
+        Obecnie skrypty powłoki <em>BASH</em> uznawana są branży <em>IT</em>
+        jako podstawowe narzędzie do automatyzacji i konstrukcje używane do
+        budowy skryptów uznaje się za język programowania. Zatem zaczniemy od
+        czegoś prostego, skryptu który wpisze nam podstawowe informacje o 
+        systemie.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ cat -n /usr/local/bin/sys_info.sh
+     1	#!/bin/bash
+     2	
+     3	# Ten skrypt ma nazwe sys_info.sh i został napisany przez xf0r3m 8 sierpnia 2022
+     4	# Ten skrypt powinien znajdować się w katalogu /usr/local/bin
+     5	# Ten skrypt wyświetla podstawowe informacje o systemie:
+     6	
+     7	echo "Podstawowe informacje o systemie:";
+     8	echo "================================";
+     9	echo;
+    10	echo "Nazwa komputera, informacje o sprzęcie oraz systemie operacyjnym:";
+    11	/usr/bin/hostnamectl;
+    12	echo;
+    13	echo "Obecnie w systemie zalogowani są następujący użytkownicy:";
+    14	/usr/bin/who;
+</pre>
+      <p>
+        Na początku każdego skryptu znajduje się nagłówek, w którym to znajduje
+        się ścieżka, wskazująca program interpretera zawartości skryptu.
+        Nagłówek zaczyna się od specjalnego typu kometarza jakim jest
+        <strong>shebang</strong> (<strong>#!</strong>). W tym przypadku jest
+        wskazanie na program <code class="code-inline">bash</code> w katalogu
+        <code class="code-inline">/bin</code>. W ten sposób wskazujemy, że
+        zawartością tego pliku będzie skrypt powłoki <em>BASH</em>. Kolejnymi
+        elementami skryptu są komentarze (zwykłe). Komentarz poprzedzony jest
+        tylko i wyłącznie krzyżykiem (<strong>#</strong>), w komentarzach
+        najczęściej umieszczane są wyjaśnienia bardziej skomplikowanych 
+        konstrukcji lub toku myślenia programisty. Na początku skryptku
+        umieszcza się bardziej informacyjne treści jak nazwę skryptu, imię,
+        nazwisko, bądź pseudomnim autora; date jego wytworzenia; domyślną
+        lokalizacje; krótki opis co on robi oraz przykłady użycia. W dalszej
+        części przykładu znajdują się już właściwe polecenia. Polecenie
+        <code class="code-inline">echo</code> służy do wypisywania na
+        <em>stdout</em> tego co zostanie podane jako argument polecenia. W
+        skryptach to polecenie służy do wyświetlania informacji w terminalu.
+        Później występują już właściwe polecenia, zwrócimy uwagę na to, że
+        są one zapisane w postaci plików, które rzeczywiście z tego polecenia
+        są odpowiedzialne. Ten zapis zapewnia, że napewno zostanie uruchmiony
+        ten program, a nie np. jakiś alias. 
+      </p>
+      <p>
+        <code class="code-inline">hostnamectl</code> uruchomiony bez żadnych
+        argumentów, zwróci podsumowanie na temat używanego sprzętu oraz
+        systemu operacyjnego. Natomiast polecenie
+        <code class="code-inline">who</code> wyświetla zalogowanych 
+        użytkowników.
+      </p>
+      <p>
+        Dobrym miejscem na nasze skrypt jest katalog <em>/usr/local/bin</em>.
+        Prze co będzie nam łatwiej je uruchamiać, ponieważ ten katalog znajduje
+        się w ścieżce wyszukiwania poleceń każde użytkownika.
+        Po zapisaniu takie skryptu jeśli zwrócimy uwagę na jego atrybuty, to
+        brakuje w nich bitu wykonania a on jest niezbędny aby można było taki
+        program uruchomić.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ ls -l /usr/local/bin/sys_info.sh
+-rw-r--r--. 1 root root 494 08-08 08:38 /usr/local/bin/sys_info.sh
+</pre>
+      <p>
+        Bit nadamy każdej z grupie, żebyśmy mogli uruchomić go jako zwykły
+        użytkownik. Do nadania bitu użyjemy polecenie <em>chmod</em>.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sudo chmod +x /usr/local/bin/sys_info.sh
+[user@server10 ~]$ ls -l /usr/local/bin/sys_info.sh
+-rwxr-xr-x. 1 root root 494 08-08 08:38 /usr/local/bin/sys_info.sh
+</pre>
+      <p>
+        Teraz wszyscy mogą uruchomić ten plik, a z racji tego iż znajduje się
+        on na ścieżce wyszukiwania poleceń wystarczy, że podamy w wierszu
+        polecenia nazwę pliku.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ sys_info.sh 
+Podstawowe informacje o systemie:
+================================
+
+Nazwa komputera, informacje o sprzęcie oraz systemie operacyjnym:
+ Static hostname: server10.example.com
+       Icon name: computer-vm
+         Chassis: vm 🖴
+      Machine ID: 301347671a7c47a5934351c451479d32
+         Boot ID: bb68cbe389874bebaa4cf60693187c89
+  Virtualization: kvm
+Operating System: Red Hat Enterprise Linux 9.0 (Plow)     
+     CPE OS Name: cpe:/o:redhat:enterprise_linux:9::baseos
+          Kernel: Linux 5.14.0-70.13.1.el9_0.x86_64
+    Architecture: x86-64
+ Hardware Vendor: Red Hat
+  Hardware Model: KVM
+
+Obecnie w systemie zalogowani są następujący użytkownicy:
+user     pts/0        2022-08-08 08:28 (192.168.122.1)
+</pre>
+      <h3 id="22.1.1.scriptdebuging">22.1.1. Debugowanie skryptu</h3>
+      <p>
+        Jeśli w skrypcie występuje jakiś problem możemy uruchomić go w trybie
+        debugowania. Taki tryb dostępny jest albo poprzez dodanie do nagłówka
+        skryptu opcji <em>-x</em> lub uruchomienia skryptu za pomocą polecenia
+        <strong>bash</strong> wraz z opcją <em>-x</em>. W tym trybie będą 
+        wyświetlane wykonywane koleno polecenia wraz z rozwinięciami wyrażeń,
+        przypisywane wartości zmienny. Osobiście jako, że <em>BASH</em> jest
+        moim podstawowym językiem to uważam, że ta opcja jest szczególnie
+        przydatna oczywiście w bardziej rozległych skryptach. Poniżej
+        znajduje się wcześniej analizowany skrypt uruchomiony w trybie
+        debugowania.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ bash -x /usr/local/bin/sys_info.sh
++ echo 'Podstawowe informacje o systemie:'
+Podstawowe informacje o systemie:
++ echo ================================
+================================
++ echo
+
++ echo 'Nazwa komputera, informacje o sprzęcie oraz systemie operacyjnym:'
+Nazwa komputera, informacje o sprzęcie oraz systemie operacyjnym:
++ /usr/bin/hostnamectl
+ Static hostname: server10.example.com
+       Icon name: computer-vm
+         Chassis: vm 🖴
+      Machine ID: 301347671a7c47a5934351c451479d32
+         Boot ID: bb68cbe389874bebaa4cf60693187c89
+  Virtualization: kvm
+Operating System: Red Hat Enterprise Linux 9.0 (Plow)     
+     CPE OS Name: cpe:/o:redhat:enterprise_linux:9::baseos
+          Kernel: Linux 5.14.0-70.13.1.el9_0.x86_64
+    Architecture: x86-64
+ Hardware Vendor: Red Hat
+  Hardware Model: KVM
++ echo
+
++ echo 'Obecnie w systemie zalogowani są następujący użytkownicy:'
+Obecnie w systemie zalogowani są następujący użytkownicy:
++ /usr/bin/who
+user     pts/0        2022-08-08 08:28 (192.168.122.1)
+</pre>
+      <p>
+        Linie oznaczone plusem, są poleceniami zapisanymi w skrypcie. Pod nimi
+        znajduje się wynik działania tego polecenia.
+      </p>
+      <h3 id="22.1.3.scriptsvariables">22.1.3. Zmienne</h3>
+      <p>
+        Jak pamiętam albo nie z rozdziału o powłoce <em>BASH</em>, dostępne są
+        dwa rodzaje zmiennych. Zmienne powłoki są tak naprawdę zmiennymi 
+        prywatnymi lub lokalnymi i mogą być wykorzystywane w skryptach a nie
+        tylko w obsłudze wiersza polecenia. W skryptach może również uzyskać
+        dostęp do zmiennych środowiskowych.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ cat -n /usr/local/bin/use_var.sh
+     1	#!/bin/bash
+     2	
+     3	echo "Ustawienie zmiennej powłoki";
+     4	echo "===========================";
+     5	SYSNAME="server10.example.com";
+     6	echo "Nazwa komputera tej maszyny to: $SYSNAME";
+</pre>
+      <p>
+        W powyższym skrypcie utworzyłem jedną zmienną której nadałem
+        przedstawioną wartość a następnie odwołałem się do niej w poleceniu
+        <em>echo</em>. Warto tutaj też wspomnieć o tym, że każdy skrypt
+        uruchamiany jest jako oddzielny proces powłoki <em>BASH</em> -
+        uruchamiany jest w podpowłoce. Zmienne zdeklarowane w skrypcie nie
+        będą dostępne, kiedy skończy on swoje działanie.
+      </p>
+      <p>
+        Dostęp do zmiennych środowiskowych wymaga jedynie odwołnia się do niej.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ cat -n /usr/local/bin/pre_env.sh 
+     1	#!/bin/bash
+     2	
+     3	echo "Lokalizacja mojej powłoki znajduje się: ";
+     4	echo $SHELL;
+     5	echo "Jestem zalogowany w systemie jako: $LOGNAME";
+</pre>
+      <p>
+        W bardziej zaawansowanych skryptach pożądane jest aby przechować wynik
+        działania jakiegoś polecenia lub polecenia potokowego w zmiennej, żeby
+        można było go użyć do różnych celów. Wynik działania tego polecenia
+        może trafić do zmiennej za sprawą podstawienia polecenia. Poniżej
+        znajduje się skrypt, w którym pokazano dwa sposoby na podstawienie
+        polecenia do zmiennej.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ cat -n /usr/local/bin/cmd_out.sh 
+     1	#!/bin/bash
+     2	
+     3	SYSNAME=$(hostname);
+     4	KERNVER=`uname -r`;
+     5	
+     6	echo "Nazwa komputera to: $SYSNAME";
+     7	echo "Wersja jądra to: $KERNVER";
+</pre>
+      <p>
+        Jak widzimy podstawienia poleceń możemy dokonać na dwa sposób
+        za pomocą nawiasów poprzedzonych znakiem dolara (<strong>$()</strong>)
+        lub za pomocą ukośnego apostrofu (<strong>``</strong>).  Ten skrypt
+        przechowuje w nazwę komputera w zmiennej
+        <code class="code-inline">SYSNAME</code> oraz wersję jądra w zmiennej
+        <code class="code-inline">KERNVER</code>. Te informacje zostały
+        zdefiniowane w zmiennych za pomocą mecanizmu podstawienia polecenia,
+        następnie zostały on wyświetlone przy użyciu polecenia <em>echo</em>.
+      </p>
+      <h3 id="22.1.4.shellparameters">22.1.4. Parametry powłoki</h3>
+      <p>
+        Chcąc przekazać jakieś informacje do skryptu z zewnątrz, możemy
+        wykorzystać mechanizm parametrów powłoki. Wywołując jakieś polecenie
+        w wierszu polecenia, zazwyczaj zapisujemy jego nazwę. To jest parametr
+        powłoki. Wśrod parametrów powłoki możemy wyróżnić takie rzeczy jak
+        zmienne, parametry specjalne oraz parametry pozycjne. Na potrzeby tego
+        materiału zajmiemy się tylko parametrami pozycjnymi oraz obsługjącymi
+        je parametrami specjalnymi. Nazwa polecenia lub skryptu jest parametrem
+        powłoki. Jest 0 parametrem pozycyjnym. Każdy kolejny argument zapisany
+        po nazwie powłoki to parametr pozycyjny. Do parametrów pozycyjnych
+        możemy odwołać się podając po znaku dolara jego numer. Parametrów
+        pozycyjnych może być wiele przyczym, aby odwołać się do paramteru
+        powyżej 9 należy umieść numer parametru w nawiasach klamrowych np.
+        (<strong>${11}</strong>). Poniżej znajduje się skrypt oraz jego
+        wywołanie, który obrazuje przekazanie parametrów do skryptu.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ cat -n /usr/local/bin/cmd_line_arg.sh 
+     1	#!/bin/bash
+     2	
+     3	echo "Do skryptu wprowadzono $# argumenty pozycyjne";
+     4	echo "Są nimi kolejno: $*";
+     5	echo "Pierwszym argument jest: $1";
+     6	echo "Identyfikator powłoki uruchamiającej ten skrypt to: $$";
+
+[user@server10 ~]$ /usr/local/bin/cmd_line_arg.sh test test2 test3 1 2 3 4 5 6 7 8 9 0
+Do skryptu wprowadzono 13 argumenty pozycyjne
+Są nimi kolejno: test test2 test3 1 2 3 4 5 6 7 8 9 0
+Pierwszym argument jest: test
+Identyfikator powłoki uruchamiającej ten skrypt to: 1874
+</pre>
+      <p>
+        W skrypcie odwołano się do drugiego parametru pozycjnego, czyli do
+        pierwszego argumentu przekaznego do skryptu (linia: 5). W skrypcie
+        użyto parametrów specjalnych takich jak: liczba przekazanych argumentów
+        pozycyjnych - (<strong>$#</strong>); wszystkie przekazane argumenty -
+        (<strong>$*</strong>) oraz numer <em>PID</em> podpowłoki, która
+        jest odpowiedzialna za wykonanie tego skryptu - (<strong>$$</strong>).
+      </p>
+      <p>
+        Chcąc używać po kolei parametrów pozycyjnych, musimy zapisać je w
+        skrypcie po kolei, a co jeśli ilość tych zmiennych nie będzie nam
+        znana. W tym przypadku wówczas możemy przesuwać wszyskie parametry
+        o jeden w lewo. Jeśli użyjemy wartość drugiego parametru pozycjnego
+        (<em>$1</em>) i nie będzie nam już ona potrzebna, możemy użyć
+        polecenia <strong>shift</strong>, które przesunie wszystkie parametry
+        o jeden (domyślnie, ponieważ polecenie to przyjmuje argument w postaci
+        liczby, o ile wartości przesunąć parametry) w lewo, przez co wartość
+        trzeciego parametru przejdzie na drugą pozycję, czwartego na trzecią
+        itd. Po użyciu tego polecenia oryginalna wartość drugie parametru
+        zostanie utracona. Poniżej znajduje się skrypt, w którym zobrazowano
+        działanie tego polecenia.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ cat -n /usr/local/bin/cmd_line_arg_shift.sh
+     1	#!/bin/bash
+     2	
+     3	echo "Do skryptu wprowadzono $# argumenty pozycyjne";
+     4	echo "Są nimi kolejno: $*";
+     5	echo "Pierwszym argument jest: $1";
+     6	echo "Identyfikator powłoki uruchamiającej ten skrypt to: $$";
+     7	shift;
+     8	echo "Nowym pierszym argumentem po pierwszym przesunięciu jest: $1";
+     9	shift;
+    10	echo "Nowym pierwszy argumentem po drugim przesunięciu jest: $1";
+</pre>
+      <p>
+        Jak widzimy przy użyciu polecenia <code class="code-inline">shift</code>
+        nie musimy używać innych numerów parametrów poza drugim.
+      </p>
+      <h2 id="22.2.logicalconstructs">22.2. Konstrukcje logiczne w skryptach powłoki</h2>
+      <p>
+        Konstrukcje logiczne nie tylko w skryptach powłoki mają za zadanie
+        warunkować na podstawie wyrażeń logicznych wykonanie pewnych bloków
+        kodu. Konstrukcje logiczne kontolują przepływ wykonania poleceń w
+        skryptach. W <em>BASH</em> możemy spotkać z dwa kontrukcjami
+        logicznymi: konstrukcją <strong>if-then-fi</strong> oraz konstrukcją
+        <em>case</em>. Omawianie konstrukcji <em>case</em> wychodzi poza ramy
+        tego materiału, wiec skupimy się tylko <strong>if-then-fi</strong> i
+        jej rozszerzeniach, ale najpierw zaczniemy od przedstawienia czym są
+        <strong>kody wyjściowe</strong> oraz <strong>wyrażenia warunkowe</strong>.
+      </p>
+      <h3 id="22.2.1.exitcodes">22.2.1. Kody wyjściowe</h3>
+      <p>
+        Każde polecenie uruchomione w powłoce po zakończeniu pracy, nie ważne
+        czy pomyślnie czy nie zwraca do powłoki tzw. <strong>exit code</strong>.
+        - Kod wyjściowy. Możemy użyć tych kodów w wyrażeniach warunkowych aby
+        mieć pewność, że działanie polecenia uruchomionego w poprzedniej linii
+        zakończyło się sukcesem i można kontynuować wykonywanie przez skrypt
+        kolejnych zadań. Kod wyjściowy poprzedniego polecenia znajduje się 
+        w specjalnym paramentrze powłoki <strong>$?</strong>.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ pwd
+/home/user
+[user@server10 ~]$ echo $?
+0
+[user@server10 ~]$ man
+Jakiej strony podręcznika potrzebujesz?
+For example, try 'man man'.
+[user@server10 ~]$ echo $?
+1
+</pre>
+      <p>
+        Pierwsze polecenie, którego wykonanie zakończyło sie sukcesem zwróciło
+        kod wyjściowy <code class="code-inline">0</code>. Natomiast w przypadku
+        polecenia <code class="code-inline">man</code> przy którym zapomniałem
+        o podaniu argumentu zwróciło wartość <code class="code-inline">1</code>.
+        W przypadku błędów zwracanym kodem wyjściowym jest najczęściej
+        wartość niezerowa.
+      </p>
+      <p>
+        Dlaczego mówie o kodach wyjściowych w przypadku konstrukcji logicznych,
+        otóż powody są dwa. Można użyć kodów wyjściowych do budowania
+        warunków, oraz konstrukcja <em>if-then-fi</em> podejmuje decyzje na
+        podstawie kodu wyjściowego wyrażenia warunkowego. Zatem jeśli wyrażenie
+        zwróci 0, to wówczas wykona się blok kodu zapisany po instrukcji
+        <em>then</em>.
+      </p>
+      <h3 id="22.2.2.conditionalexpressions">22.2.2. Wyrażenia warunkowe</h3>
+      <p>
+        Zadaniem wyrażenia warunkowego jest obliczenie równania logicznego.
+        Na przykład czy: 3 &lt; 4. Wynikiem takiego równia jest 1, czyli 
+        <strong>prawda</strong>, jeśli odwrócimy operandy równiania wówczas
+        wówczas otrzymamy 0 czyli <strong>fałsz</strong>. Kiedy wyrażenie
+        warunkowe obliczy prawdę wówczas zwraca kod wyjścia równy 0, a w
+        przeciwnym wypadku jest 1. Elementami powłoki odpowiedzialnymi za 
+        wyrażenia warukowe jest polecenie <em>test</em> oraz rozszerzenie
+        nawiasu kwadratowego (<strong>[]</strong>) i to z tego rozszerzenia
+        będziemy korzystać podczas korzystania z konstrukcji warunkowej. 
+        Na stronie podręcznika polecenia <em>BASH</em> w sekcji
+        <em>Conditions</em> znajdują się wszystkie dostępne operatory wyrażeń
+        warunkowych jakie możemy użyć w skryptach. 
+      </p>
+      <h3 id="22.2.3.ifthenfi">22.2.3. Konstrukcja if-then-fi</h3>
+      <p>
+        Za pomocą konstrukcji <strong>if-then-fi</strong> możemy warunkować
+        na podstawie kodu wyjściowego wykonanie poleceń zapisanych w
+        konstrukcji. Poniżej znajduje się przykładowy skrypt zawierający
+        tę konstrukcję.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ cat -n /usr/local/bin/if_then_fi.sh
+     1	#!/bin/bash
+     2	
+     3	if [ $# -ne 2 ]; then 
+     4		echo "Błąd. Nie poprawna liczba podanych argumentów";
+     5		echo "Użycie $0 plik_zrodlowy plik docelowy";
+     6		exit 2;
+     7	fi
+     8	echo "Skrypt zakończył swoje działanie";
+</pre>
+      <p>
+        Konstrukcję rozpocznamy od słowa kluczowego <strong>if</strong>
+        następnie podajemy polecenie lub wyrażenie warunkowego, którego kod
+        wyjściowyt będzie decydować czy wykonać polecenia zawarte po słowie
+        klczowym <strong>then</strong> na przykładzie są to linie od 4 do 6.
+        Konstrukcja kończy się słowem kluczowym <strong>fi</strong>, które
+        musi być zawarte inaczej próba uruchomienia takiego skryptu zakończy 
+        się błędem i jego wykonanie może niedojść w ogóle do skutku. Jako 
+        ciekawostkę podam, że blok zawarty po słowie <em>then</em> konczy się
+        poleceniem <strong>exit</strong>, dzięki któremu możemy zakończenie
+        działania skryptu z określonym kodem wyjściowym.
+      </p>
+      <p>
+        Na zamieszczonym przykładzie użyłem do przedstawienia warunku 
+        rozszerzenia nawiasu kwadratowego, w ktorym sprawdzam czy podano
+        dokładnie dwa paramentry pozycjne, operator które użyłem
+        <code class="code-inline">-ne</code>, który sprawdza czy lewy operand
+        jest nierówny prawemy. Jeśli tak jest to kod wyjściowy warunku będzie
+        równy 0 i dojdzie do wykonania poleceń, co tym przypadku oznacz że
+        podamy jeden lub więcej niż dwa parametry pozycyjne podczas
+        uruchamiania tego skryptu.
+      </p>
+      <h3 id="22.2.4.ifthenelsefi">22.2.4. Konstrukcja if-then-else-fi</h3>
+      <p>
+        Ta konstrukcja jest rozszerzeniem standardowej konstrukcji <em>if</em>.
+        Zawiera ona dodatkowy blok <strong>else</strong>, który będzie
+        wykonywany w momencie gdy
+        kod wyjściowy warunku/polecenia będzie niezerowy.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ cat -n /usr/local/bin/if_then_else_fi.sh
+     1	#!/bin/bash
+     2	
+     3	if [ $1 -gt 0 ]; then
+     4		echo "$1 jest wartością dodatnią";
+     5	else
+     6		echo "$1 jest wartością ujemną";
+     7	fi
+</pre>
+      <p>
+        W tym przypadku warunek w postaci rozszrzenie nawiasów kwadartowych
+        (najpopularniejsza forma warunków w skryptach powłoki) sprawdza czy
+        wartość podana jako drugi parametr pozycyjny jest większa od 0. Jeśli
+        tak, to wykonane zostanie poleceni znajdujące się w po słowie
+        <code class="code-inline">then</code> a jeśli nie to polecenie po
+        słowie kluczowym <code class="code-inline">else</code>.
+      </p>
+      <h3 id="22.2.5.iftheneliffi">22.2.5. Konstrukcja if-then-elif-fi</h3>
+      <p>
+        Rozszerzenie konstrukcji <em>if</em> o słowo kluczowe 
+        <strong>elif</strong> pozwala zdefiniowane kolejnego warunku. W
+        przypadku konstrukcji <strong>if-then-elif-fi</strong>, warunków
+        możebyć nieskończenie wiele przez co możemy zakończyć jeszcze całą
+        konstrukcję blokiem <em>else</em>.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ cat -n /usr/local/bin/if_then_elif_fi.sh 
+     1	#!/bin/bash
+     2	
+     3	if [ $1 -gt 0 ]; then
+     4		echo "$1 jest dodatnią wartością.";
+     5	elif [ $1 -lt 0 ]; then
+     6		echo "$1 jest ujemną wartością.";
+     7	elif [ $1 -eq 0 ]; then
+     8		echo "Podana wartość to 0.";
+     9	else
+    10		echo "Podano wartość, która nie jest cyfrą";
+    11	fi
+</pre>
+      <p>
+        Na powyższym przykładzie drugi parametr pozycyjny poddawany jest wielu
+        warunkom. Początkowy warunek sprawdza czy jest on większy od 0 
+        (operator <strong>-gt</strong>), następnie czy może jest mniejszy od
+        0 (operator <strong>-lt</strong>) lub równy 0
+        (operator <strong>-eq</strong>). W bloku <em>else</em> znajduje się
+        komunikat mówiący, że podana wartość nie jest liczbą. 
+        Podczas uruchomienia tego skryptu wraz z literowym argumentem możemy
+        zauważyć błąd. Ten błąd jest generowany, z tego względu iż wymienione
+        wyżej operatory są przeznaczone dla liczb całkowitych, a litera jest
+        znakiem. Mogli byśmy wszystko potraktować jako znak i użyć innych 
+        operatorów. Znajdują się one na stronie podręcznika powłoki 
+        <em>BASH</em> w sekcji <em>Conditions</em>.
+      </p>
+      <h2 id="22.3.loop">22.3. Konstrukcje pętli</h2>.
+      <p>
+        Za pomocą konstrukcji pętli możemy wykonywać ten sam blok poleceń dla
+        określonych, zmienianych w trakcie działania bloku pętli zmiennych.
+        Zmienne w trakcie działania pętli najczęsiej są 
+        <strong>iterowane</strong> - ich wartość zmienia się o jeden lub o
+        jakąś stałą określoną wartość. W <em>BASH</em>-u dostępne są trzy
+        rodzaje pętli: <strong>for-do-done</strong>, <em>while-do-done</em> 
+        oraz <em>until-do-done</em>. W tym materiale skupimy się tylko na
+        pętli <em>for-do-done</em>.
+      </p>
+      <h3 id="22.3.1.forloop">22.3.1. Konstrukcja pętli for-do-done</h3>
+      <p>
+        Pętla <em>for</em> jest inną pętlą niż te dwie pozostałe, gdyż działa
+        ona na określonej liście wartości, które są kolejno przypisywane
+        zmiennej pętli. Pętla działa do momentu, aż wyczerpią się wszystkie
+        elementy na liście. Poniżej znajduje się przykład skryptu w którym
+        użyłem pętli <em>for</em>.
+      </p>
+<pre class="code-block">
+[user@server10 ~]$ cat -n /usr/local/bin/for_do_done.sh 
+     1	#!/bin/bash
+     2	
+     3	count=0;
+     4	for LETTER in {A..Z}; do
+     5		count=$((count + 1));
+     6		echo "$count literą alfabetu jest [${LETTER}]";
+     7	done
+</pre>
+      <p>
+        Pętla zaczyna się od słowa kluczowego 
+        <code class="code-inline">for</code> następnie zapisywana jest zmienna
+        pętli (<code class="code-inline">LETTER</code>) po słowie kluczowym
+        <code class="code-inline">in</code> występuje lista elementów, na
+        której operuje pętla (<code class="code-inline">{A..Z}</code>) zwróćmy
+        uwagę na to, iż możemy definiować tutaj zakresyu co pokazano na
+        przykładzie. Dla celów tego skryptu jeszcze przed pętlą utworono
+        zmienną, która jest w tym przypadku jej licznikiem. Jest ona bowiem
+        iterowana na początku bloku pętli, za pomocą wyrażenia arytmetycznego
+        (<strong>$(())</strong>), w tym wyrażeniu nie odwołujemy się do
+        zmiennej tylko podajemy jej nazwę. Odwołanie nastąpi automatycznie
+        podczas interpretacji tego wyrażenia. Następnie wyświetlany jest
+        komunikat, zawierający licznik oraz zmienną pętli. Pętla wypisze
+        wszystkie litery alfabetu łacińskiego, poprzedzając je numerem w
+        kolejności.
+      </p>
+      <p>
+        Aby lepiej zobrazować sobie działanie pętli możemy uruchomić ten
+        skrypt w trybie debugowania.
+      </p>
+      <h3 id="exec22.1">Ćwiczenie 1. Poprawienie skryptu</h3>
+      <p>
+        Jako użytkownik z możliwością podniesienia uprawnień na maszynie
+        oznaczonej jako <em>server10</em>. Popraw skrypt z podrozdziału
+        o konstrukcji <em>if-then-elif-fi</em>, tak aby nie wyświetlał błędu.
+        Możesz posłużyć się stroną podręcznika powłoki <em>BASH</em> oraz
+        trybem debugowania.
+      </p>
+      <h2 id="ch22summary">Podsumowanie</h2>
+      <p>
+        W tym rozdziale poznaliśmy podstawy tworzenie skryptów powłoki.
+        Dowiedziliśmy się jaką budowę ma skrypt powłoki oraz poznaliśmy ich
+        podstawowe elementy. Poznaliśmy konstrukcje warunkowe oraz prostą
+        konstrukcję pętli jąką jest pętla <em>for</em>. Jeśli domyślnie nie
+        korzystamy z powłoki <em>BASH</em> przestawione tutaj przykłady po
+        drobnych przeróbkach będą działać na pozostałych powłokach Uniksa.
+        W następny już ostatnim rozdziale zapoznamy się z mechanizmem
+        konteneryzacji dostępnym w <em>RHEL</em>.
+      </p>
     </div>
     <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

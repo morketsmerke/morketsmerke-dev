@@ -16282,6 +16282,107 @@ For example, try 'man man'.
         W następnym już ostatnim rozdziale zapoznamy się z mechanizmem
         konteneryzacji dostępnym w <em>RHEL</em>.
       </p>
+      <h1 id="23.containers">23. Kontenery</h1>
+      <p>
+        <strong>Konterner</strong> to sposób na uruchomienie aplikacji w
+        odrębnym środowisku dzięki czemu, może ona działa i wykonywać swoje
+        zadania bez wpływu na inne aplikacje przy zachowaniu jak największej
+        oszczędności zasobów systemu. Kontenery dostarczają do systemu
+        właściwą aplikację wraz cały środowiskiem niezbędnym do jej działania,
+        wygląda ono tak samo jakby było zainstalowane na fizycznym serwerze.
+        Aplikacja uruchamiana w kontenerze nazywana jest
+        <strong>aplikacją konteneryzowaną</strong>.
+      </p>
+      <p>
+        Kontenery do swojego działania wykorzystują kilka funkcji jądra Linux.
+        Takie jak <strong>grupy kontrolne</strong> (przydzielanie zasobów
+        procesów), <strong>przestrzeń nazw</strong> (udostępniają zasoby
+        systemowe takiej jak interfejsy sieciowe) oraz moduł
+        <strong>seccomp</strong> i <strong>SELinux</strong>, który odpowiadają
+        kontrolowanie dostępu procesów. Wykorzystując te kompnenty kontenery 
+        zapewniają w pełni kontrolowane oraz wysoce zabezpieczone środowisko.
+      </p>
+      <p>
+        Korzystanie z kontenerów przynosi ze sobą wiele korzyści takich jak
+        izolacja aplikacji w kontenerach, małe powiązanie z system w którym
+        kontener działa, każdy kontener jest zarządzany indywidualnie czy
+        mniejsze obciążenie systemu. Korzyści jest na prawdę bardzo dużo,
+        dlatego też konterneryzacja wypiera wirtualizację, ale oczywiście to
+        wszystko zależy od konkretnego przypadku.
+      </p>
+      <p>
+        Przy wyborze miejsca docelowego dla konternerów możemy zastanawiać się
+        nad fizycznym serwerem, albo maszyną wirtualna. Korzystanie z maszyn
+        wirtualnych wprowadza dodatkową wartwę <em>hipernadzorcy</em>, który
+        je kontroluje. W przypadku jeśli kontenery mają swiadczyć usługi, mogą
+        on spokojnie rezydować na fizycznym serwerze, bez dodatkowych
+        komplikacji. Więc wybór wydaje się dość łatwy.
+      </p>
+      <p>
+        Kontenery są rozprowadzane na zasadzie <strong>obrazów</strong>
+        (ang. <em>images</em>) zawierających całe środowisko określonej
+        aplikacji, dzięki czemu może poprawnie pracować w izolacji jaką
+        zapewniają kontenery. Mechnizmy kontenerów dostarczanych w raz z
+        <em>RHEL</em>, przestrzegają zasad <em>Inicjatywy Otwartych
+        Kontenerów - OCI</em>, dzięki czemu użytkownicy mogą tworzyć obrazy o
+        przemysłowych standardach. Do zarządzania obrazami <em>OCI</em>
+        wykorzystywane są takie narzędzia <em>Docker</em> oraz dostarczany
+        wraz z <em>Red Hat</em> <strong>podman</strong>. Obrazy <em>OCI</em>
+        korzystają z kontroli wersji, tak więc możemy skorzystać z
+        niekoniecznie najnowszej wersji, a pobrany obraz może być
+        wykorzystywany w więcej niż jednym kontenerze.
+      </p>
+      <p>
+        Obrazy konternerów przechowywane są w <strong>rejestrach</strong>.
+        Rejestry mogą być <strong>prywatne</strong> i aby pobrać obraz należy 
+        się zalgować lub mogą być ogólno dostępne, <strong>publiczne</strong>
+        i każdy może z nich pobierać obrazy. W internecie dostępnych jest kilka
+        rejestrów, z czego tylko trzy z nich wykorzystuje się w 
+        <em>RHEL</em>: <em>Red Hat Container Catalog</em>, <em>Red Hat Quay</em>
+        oraz <em>Docker Hub</em>. Obrazy posiadają swoje nazewnictwo, nazwane
+        <strong>FQIN</strong> (ang. <em>Full Qualified Image Name</em>). Ta
+        nazwa składa się czterech części:
+      </p>
+      <ol>
+        <li><strong>Nazwy rejestru</strong></li>
+        <li><strong>Nazwy właściciela/Nazwy organizacji</strong></li>
+        <li><strong>Nazwy repozytorium</strong></li>
+        <li><strong>Wersji</strong> (opcjonalnie)</li>
+      </ol>
+      <p>
+        Po złożeniu tych elementów ścieżka może wyglądać w następujący sposób:
+        <em>nazwa_rejestru/nazwa_organizacji/nazwa_repozytorium:wersja</em>.
+      </p>
+      <p>
+        Kontenery mogą być uruchamiane za równo przez superużytkownika - 
+        mowimy wtedy o kontenerach <strong>uprzywilejowanych</strong> oraz 
+        przez zwykłych użytkowników - wówczas mówi o kontenerach
+        <strong>nieuprzywilejowanych</strong>. Główną różnicą jest brak
+        możlwości z mapowania portów (przekierowania) poniżej portu
+        <strong>1024</strong>. Warto dodać, że uruchamianie kontenerów 
+        uprzywilejowanych może powodować problemy z bezpieczeństwem.
+        Kontenery nieuprzywilejowanene dają możliwość interakcji z nimi z
+        poziomu superużytkownika i jeśli nie będzie takiej potrzeby lepiej
+        korzystać z tego rodzaju kontenerów.
+      </p>
+      <h2 id="23.1.workwithimagesandcontainers">23.1. Praca z obrazami oraz kontenerami</h2>
+      <p>
+        Do pracy z kontenerami <em>RHEL</em> dostarcza dwóch narzędzi 
+        wspomniany już wcześniej <strong>podman</strong> oraz
+        <strong>skopeo</strong>. Przyczym wszystkie czynności będą operać się
+        na wykorzystaniu polecenia <em>podman</em>. Polecenie <em>skopeo</em>
+        posłuży nam tylko do pobrania więcej informacji na temat dostępnego
+        w rejestrze obrazu. W tym ostatnim rodziale skupimy się na praktyce.
+        Jeśli będzie trzeba coś dopowiedzieć, zostanie to dopisane podczas
+        omawiania danej kwesti. Do rozpoczęcia pracy z konterami, potrzebujemy
+        oprogramowania oraz dostępu do rejestrów <em>Red Hat</em>. Najlepiej
+        więc zarejestrować maszynę na koncie firmy <em>Red Hat</em>, wtedy
+        bez problemu będziemy mogli zaktualizować system a następnie
+        zainstalować oprogramowanie.
+     </p>
+     <h3 id="23.1.1.registeringredhatsystem">23.1.1. Rejestrowanie systemu Red Hat</h3>
+     <p>
+     </p>
     </div>
     <p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

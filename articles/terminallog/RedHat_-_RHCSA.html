@@ -642,6 +642,43 @@
             <li><a href="#ch22summary">Podsumowanie</a></li>
           </ul>
         </li>
+        <li><a href="#23.containers">23. Kontenery</a>
+          <ul class="toc">
+            <li><a href="#23.1.workwithimagesandcontainers">23.1. Praca z obrazami oraz kontenerami</a>
+              <ul class="toc">
+                <li><a href="#23.1.1.registeringredhatsystem">23.1.1. Rejestrowanie systemu Red Hat</a></li>
+                <li><a href="#23.1.2.contsoftwareinstallation">23.1.2. Instalacja oprogramowania kontenerów</a></li>
+                <li><a href="#23.1.3.podmancommand">23.1.3. Polecenie podman</a></li>
+                <li><a href="#23.1.4.skopeocommand">23.1.4. Polecenie skopeo</a></li>
+                <li><a href="#23.1.5.registries.conf">23.1.5. Plik registries.conf</a></li>
+                <li><a href="#23.1.6.podmaninfo">23.1.6. Informacje nt. konfiguracji kontenerów w systemie</a></li>
+              </ul>
+            </li>
+            <li><a href="#23.2.imagesmgmt">23.2. Zarządzanie obrazami</a></li>
+            <li><a href="#23.3.basicscontainermgmt">23.3. Podstawy zarządzania kontenerami</a>
+              <ul class="toc">
+                <li><a href="#23.3.1.namedcontainer">23.3.1. Zarządzanie konterami nazwanymi</a></li>
+                <li><a href="#23.3.2.namelesscontainers">23.3.2. Zarządzanie kontenerami bez nazw</a></li>
+              </ul>
+            </li>
+            <li><a href="#23.4.advcontainermgmt">23.4. Zaawansowane zarządzanie kontenerami</a>
+              <ul class="toc">
+                <li><a href="#23.4.1.portmapping">23.4.1. Mapowanie portów hosta na porty kontenera</a></li>
+                <li><a href="#23.4.2.envtocontainers">23.4.2. Przekazywanie zmiennych środowiskowych do kontenerów</a></li>
+                <li><a href="#23.4.3.storageforcontainers">23.4.3. Konfigurowanie miejsca na dane dla kontenerów</a></li>
+                <li><a href="#23.4.4.controlingcontainersviasystemd">23.4.4. Kontrolowanie kontenerów przez systemd</a></li>
+              </ul>
+            </li>
+            <li><a href="#exec23.1">Ćwiczenie 1: Utwórzenie laboratorium kontenerów</a></li>
+            <li><a href="#exec23.2">Ćwiczenie 2: Nazwany kontener z mapowaniem portów</a></li>
+            <li><a href="#exec23.3">Ćwiczenie 3: Kontener bez nazwy z przekazanymi zmiennymi</a></li>
+            <li><a href="#exec23.4">Ćwiczenie 4: Kontener ze stałym miejscem przechowywania</a></li>
+            <li><a href="#exec23.5">Ćwiczenie 5: Kontener z przekazywaniem portów, zmiennymi oraz stałym miejscem przechowywania</a></li>
+            <li><a href="#exec23.6">Ćwiczenie 6: Konfigracja kontroli systemd nad kontenerami uprzywilejowanymi</a></li>
+            <li><a href="#exec23.7">Ćwiczenie 7: Konfigracja kontroli systemd nad kontenerami nieuprzywilejowanymi</a></li>
+            <li><a href="#ch23summary">Podsumowanie</a></li>
+          </ul>
+        </li>
       </ul>
       <h1 id="1.introduction">1. Wstęp</h1>
       <p>
@@ -16284,9 +16321,9 @@ For example, try 'man man'.
       </p>
       <h1 id="23.containers">23. Kontenery</h1>
       <p>
-        <strong>Konterner</strong> to sposób na uruchomienie aplikacji w
-        odrębnym środowisku dzięki czemu, może ona działa i wykonywać swoje
-        zadania bez wpływu na inne aplikacje przy zachowaniu jak największej
+        <strong>Kontener</strong> to sposób na uruchomienie aplikacji w
+        odrębnym środowisku dzięki czemu, może ona działać i wykonywać swoje
+        zadania bez wpływu na inne procesy przy zachowaniu jak największej
         oszczędności zasobów systemu. Kontenery dostarczają do systemu
         właściwą aplikację wraz cały środowiskiem niezbędnym do jej działania,
         wygląda ono tak samo jakby było zainstalowane na fizycznym serwerze.
@@ -16294,26 +16331,28 @@ For example, try 'man man'.
         <strong>aplikacją konteneryzowaną</strong>.
       </p>
       <p>
-        Kontenery do swojego działania wykorzystują kilka funkcji jądra Linux.
-        Takie jak <strong>grupy kontrolne</strong> (przydzielanie zasobów
-        procesów), <strong>przestrzeń nazw</strong> (udostępniają zasoby
+        Kontenery do swojego działania wykorzystują funkcje jądra Linux,
+        takie jak <strong>grupy kontrolne</strong> (przydzielanie zasobów
+        procesom), <strong>przestrzeń nazw</strong> (udostępniają zasoby
         systemowe takiej jak interfejsy sieciowe) oraz moduł
-        <strong>seccomp</strong> i <strong>SELinux</strong>, który odpowiadają
-        kontrolowanie dostępu procesów. Wykorzystując te kompnenty kontenery 
-        zapewniają w pełni kontrolowane oraz wysoce zabezpieczone środowisko.
+        <strong>seccomp</strong> i <strong>SELinux</strong>, które odpowiadają
+        za kontrolowanie dostępu procesów. Wykorzystując te komponenty 
+        kontenery 
+        zapewniają w pełni kontrolowane środowisko o wysokim stopniu
+        bezpieczeństwa.
       </p>
       <p>
         Korzystanie z kontenerów przynosi ze sobą wiele korzyści takich jak
         izolacja aplikacji w kontenerach, małe powiązanie z system w którym
         kontener działa, każdy kontener jest zarządzany indywidualnie czy
-        mniejsze obciążenie systemu. Korzyści jest na prawdę bardzo dużo,
+        mniejsze obciążenie systemu. Korzyści jest naprawdę bardzo dużo,
         dlatego też konterneryzacja wypiera wirtualizację, ale oczywiście to
         wszystko zależy od konkretnego przypadku.
       </p>
       <p>
         Przy wyborze miejsca docelowego dla konternerów możemy zastanawiać się
-        nad fizycznym serwerem, albo maszyną wirtualna. Korzystanie z maszyn
-        wirtualnych wprowadza dodatkową wartwę <em>hipernadzorcy</em>, który
+        nad fizycznym serwerem albo maszyną wirtualna. Korzystanie z maszyn
+        wirtualnych wprowadza dodatkową warstwę <em>hipernadzorcy</em>, który
         je kontroluje. W przypadku jeśli kontenery mają swiadczyć usługi, mogą
         on spokojnie rezydować na fizycznym serwerze, bez dodatkowych
         komplikacji. Więc wybór wydaje się dość łatwy.
@@ -16322,7 +16361,7 @@ For example, try 'man man'.
         Kontenery są rozprowadzane na zasadzie <strong>obrazów</strong>
         (ang. <em>images</em>) zawierających całe środowisko określonej
         aplikacji, dzięki czemu może poprawnie pracować w izolacji jaką
-        zapewniają kontenery. Mechnizmy kontenerów dostarczanych w raz z
+        zapewniają kontenery. Mechnizmy kontenerów dostarczanych wraz z
         <em>RHEL</em>, przestrzegają zasad <em>Inicjatywy Otwartych
         Kontenerów - OCI</em>, dzięki czemu użytkownicy mogą tworzyć obrazy o
         przemysłowych standardach. Do zarządzania obrazami <em>OCI</em>
@@ -16338,8 +16377,10 @@ For example, try 'man man'.
         się zalgować lub mogą być ogólno dostępne, <strong>publiczne</strong>
         i każdy może z nich pobierać obrazy. W internecie dostępnych jest kilka
         rejestrów, z czego tylko trzy z nich wykorzystuje się w 
-        <em>RHEL</em>: <em>Red Hat Container Catalog</em>, <em>Red Hat Quay</em>
-        oraz <em>Docker Hub</em>. Obrazy posiadają swoje nazewnictwo, nazwane
+        <em>RHEL</em>: <em>Red Hat Container Catalog</em> występujący w dwóch
+        różnych rejestrach
+        oraz <em>Docker Hub</em>. Przyczym tylko <em>Docker Hub</em> jest
+        rejestrem publicznym. Obrazy posiadają swoje nazewnictwo, nazwane
         <strong>FQIN</strong> (ang. <em>Full Qualified Image Name</em>). Ta
         nazwa składa się czterech części:
       </p>
@@ -16367,18 +16408,19 @@ For example, try 'man man'.
       </p>
       <h2 id="23.1.workwithimagesandcontainers">23.1. Praca z obrazami oraz kontenerami</h2>
       <p>
-        Do pracy z kontenerami <em>RHEL</em> dostarcza dwóch narzędzi 
+        Do pracy z kontenerami <em>RHEL</em> dostarcza dwa narzędzia:
         wspomniany już wcześniej <strong>podman</strong> oraz
         <strong>skopeo</strong>. Przyczym wszystkie czynności będą operać się
         na wykorzystaniu polecenia <em>podman</em>. Polecenie <em>skopeo</em>
-        posłuży nam tylko do pobrania więcej informacji na temat dostępnego
+        posłuży nam tylko do pobrania bardziej szczegółowych informacji na 
+        temat dostępnego
         w rejestrze obrazu. W tym ostatnim rodziale skupimy się na praktyce.
         Jeśli będzie trzeba coś dopowiedzieć, zostanie to dopisane podczas
-        omawiania danej kwesti. Do rozpoczęcia pracy z konterami, potrzebujemy
+        omawiania danej kwestii. Do rozpoczęcia pracy z konterami, potrzebujemy
         oprogramowania oraz dostępu do rejestrów <em>Red Hat</em>. Najlepiej
         więc zarejestrować maszynę na koncie firmy <em>Red Hat</em>, wtedy
         bez problemu będziemy mogli zaktualizować system a następnie
-        zainstalować oprogramowanie.
+        zainstalować potrzebne oprogramowanie.
       </p>
       <h3 id="23.1.1.registeringredhatsystem">23.1.1. Rejestrowanie systemu Red Hat</h3>
       <p>
@@ -16387,7 +16429,7 @@ For example, try 'man man'.
         <strong>subscription-manager</strong> wraz z podpoleceniem 
         <em>register</em>. Polecenie to wydajmy z
         podniesieniem uprawnień. Do rejestracji potrzebna jest nazwa
-        użytkownika (login) podawany podczas logowania do sieci <em>Red Hat</em>,
+        użytkownika (login) podawany podczas logowania do <em>Red Hat</em>,
         podajemy ją po opcji <em>--username</em>. Na poniższym przykładzie
         przedstawiam składnie polecenia oraz zwracane przez nie informacje
       </p>
@@ -16401,7 +16443,7 @@ The registered system name is: primeb450.morketsmerke.net
       <p>
         Moja nazwa użytkownika została ocenzurowana na tym przykładzie, także
         po opcji <code class="code-inline">--username</code> znajduje się
-        <em>login</em> do sieci <em>Red Hat</em>. Po zarejestrowanie, niezbędne
+        <em>login</em> do sieci <em>Red Hat</em>. Po zarejestrowaniu, niezbędne
         jest podłączenie serwera pod subskrypcje, za pomocą podpolecenia
         <em>attach</em>. Poniżej pokazałem jak to wygląda w przypadku mojego
         serwera.
@@ -16433,7 +16475,7 @@ Dependencies resolved.
       <p>
         Moduły <em>RHEL</em> 9 nie są jeszcze dostępne. Pojawią się dopiero w
         kolejnym mniejszym wydaniu (9.1), ale w repozytoriach znajduje się
-        pakiet, który wraz z zależnościami odpowiadają za obsługę kontenerów 
+        pakiet, który wraz z zależnościami odpowiada za obsługę kontenerów 
         w tej wersji systemu <em>Red Hat</em>. Tym pakietem jest
         <strong>container-tools</strong>. 
       </p>
@@ -16444,9 +16486,9 @@ Updating Subscription Management repositories.
 Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)                                        8.2 kB/s | 4.1 kB     00:00    
 Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)                                      10 kB/s | 4.1 kB     00:00    
 Dependencies resolved.
-===============================================================================================================================
+============================================================================================================================
  Package                Architecture       Version                        Repository                                    Size
-===============================================================================================================================
+============================================================================================================================
 Installing:
  container-tools        noarch             1-10.el9                       rhel-9-for-x86_64-appstream-rpms             8.7 k
 Installing dependencies:
@@ -16460,7 +16502,7 @@ Installing dependencies:
  udica                  noarch             0.2.6-4.el9                    rhel-9-for-x86_64-appstream-rpms              54 k
 
 Transaction Summary
-===============================================================================================================================
+============================================================================================================================
 Install  9 Packages
 
 Total download size: 17 M
@@ -16484,7 +16526,7 @@ Is this ok [y/N]:
         <li><strong>rmi</strong> - usuwa wskazany obraz.</li>
         <li><strong>search</strong> - poszukuje obrazów pasujących do podanego
           słowa kluczowego.</li>
-        <li><strong>attach</strong> - połącza powłokę pod uruchomiony kontener.</li>
+        <li><strong>attach</strong> - podłącza powłokę pod uruchomiony kontener.</li>
         <li><strong>exec</strong> - wykonuje polecenie na uruchomionym
           kontenerze.</li>
         <li><strong>generate</strong> - generuje plik, np. programu typu
@@ -16497,14 +16539,14 @@ Is this ok [y/N]:
         <li><strong>run</strong> - uruchamiana (instaluje) kontenery, jesli 
           obraz
           kontenera nie istnieje na dysku zostanie pobrany z rejestru. To
-          podpolecenie posiada kilka opcji, które będzie poznawać podczas
+          podpolecenie posiada kilka opcji, które będziemy poznawać podczas
           omawiania konkretnych przypadków uruchamiania kontenerów.</li>
         <li><strong>start/stop/restart</strong> - podstawowe czynności
           wykonywane na konternerach, takie uruchomienie, zatrzymanie czy
           ponowne uruchomienie.</li>
       </ul>
       <p class="exam_tip">
-        Zrozumienie przedstawionych wyżej podpolecenie oraz swobodne używanie
+        Zrozumienie przedstawionych wyżej podpoleceń oraz swobodne używanie
         polecenia <em>podman</em> jest kluczowe do wykonania zadań związanych
         z kontenerami.
       </p>
@@ -16521,9 +16563,10 @@ Is this ok [y/N]:
       <p>
         W pliku <em>registries.conf</em> przechowywane są adresy rejestrów,
         z których możemy pobierać obrazy kontenerów. Plik znajduje się w 
-        katalogu <em>/etc/containers</em> jest plikem globalnym, a każdy z 
+        katalogu <em>/etc/containers</em> jest on plikem globalnym, a każdy z 
         użytkowników może przychować swoją kopie pliku w katalogu
-        <em>~/.config/containers</em>, ustawienia zawarte w tym pliku nadpisują
+        <em>~/.config/containers</em>, ustawienia zawarte plikach użytkowników
+        nadpisują
         te wartości z pliku globalnego, co może być przydatne w przypadku
         kontenerów nieuprzywilejowanych. Poniżej znajduje się zawartości tego
         pliku:
@@ -16536,7 +16579,7 @@ unqualified-search-registries = ["registry.access.redhat.com", "registry.redhat.
 short-name-mode = "enforcing"
 </pre>
       <p>
-        Pliki zawiera masę komentarzy wyjaśniających wiele rzeczy. Nas jednak
+        Plik zawiera masę komentarzy wyjaśniających wiele rzeczy. Nas jednak
         będzie interesować wyłącznie pierwsza linia zawierająca adresy
         rejestrów. W momencie poszukiwania obrazu polecenie <em>podman</em>
         odpytuje rejestry w zapisanej kolejności. Oczywiście jeśli jest taka
@@ -16583,8 +16626,9 @@ host:
         Polecenie to zwraca masę informacji od architektury przez informacje
         o zużyciu procesora, informacje o dystrybucji po informacje na temat 
         pakietów odpowiedzialnych za kontenery w systemie oraz miejsce
-        składowania obrazów w systemie. Warto wspomnieć że te informację
-        mogą się różnić kiedy wydamy polecenie z <em>sudo</em>, to informacje
+        składowania obrazów. Warto wspomnieć że te informację
+        mogą się różnić kiedy wydamy to polecenie z <em>sudo</em>, wówczas te
+        informacje
         będą dotyczyć konfiguracji globalnej, przeznaczonej dla kontenerów
         uprzywilejowanych.
       </p>
@@ -16633,7 +16677,9 @@ registry.redhat.io/rhel9/mysql-80                     rhcc_registry.access.redha
       </p>
 <pre class="code-block">
 [xf0r3m@primeb450 ~]$ skopeo inspect docker://registry.redhat.io/rhel9/mysql-80
-FATA[0000] Error parsing image name "docker://registry.redhat.io/rhel9/mysql-80": unable to retrieve auth token: invalid username/password: unauthorized: Please login to the Red Hat Registry using your Customer Portal credentials. Further instructions can be found here: https://access.redhat.com/RegistryAuthentication 
+FATA[0000] Error parsing image name "docker://registry.redhat.io/rhel9/mysql-80": unable to retrieve auth token: invalid username/password: unauthorized: 
+Please login to the Red Hat Registry using your Customer Portal credentials. 
+Further instructions can be found here: https://access.redhat.com/RegistryAuthentication 
 </pre>
       <p>
         Jeśli rejestrowaliśmy system za pomocą polecenia 
@@ -16682,7 +16728,7 @@ Login Succeeded!
         Na przykładzie znajduje się tylko fragment, ale to polecenie zwraca
         bardzo dużo przydatnych informacji, na przykład przy kluczu
         <code class="code-inline">RepoTags</code> znajdują się dostępne wersje
-        tego obrazu jakie możemy pobrać podając je pod dwókropku na końcu
+        tego obrazu jakie możemy pobrać podając je pod dwukropku na końcu
         <em>FQIN</em>, domyślnie pobieraną wersją jest <strong>latest</strong>.
         Inną ciekawą wartością jest klucz <em>usage</em>, który zwraca nam
         całe polecenie, za pomocą którego możemy uruchomić ten kontener.
@@ -16803,7 +16849,7 @@ Storing signatures
         W przypadku innych kontenerów niż tez zbudowane na <em>UBI</em>
         nie zaleca się używania tej formy przekazywania nazw obrazów. Polecenie
         samo rozwiązało <em>FQIN</em> na podstawie informacji zawartych w
-        katalogu 
+        pliku 
         <code class="code-inline">/etc/containers/registries.conf.d/001-rhel-shortnames.conf</code>.
         Po pobraniu obrazu oraz uruchomieniu na jego podstawie kontenera,
         została na zwrócona powłoka wewnątrz kontenera. W celach testowych
@@ -16867,7 +16913,7 @@ baf4f328600d  registry.access.redhat.com/ubi9:latest  /bin/bash   16 minutes ago
       <p>
         Na kontenerach możemy wykonywać polecenia, bez podłączania się do ich
         powłoki, temu celowi służy podpolecenie <em>exec</em>. Wymaga ono
-        podania nazwy kontenera oraz polecenia.
+        podania nazwy uruchomionego kontenera oraz polecenia.
       </p>
 <pre class="code-block">
 [xf0r3m@primeb450 ~]$ podman exec rhel9-base-os cat /etc/redhat-release
@@ -16887,7 +16933,7 @@ baf4f328600d  registry.access.redhat.com/ubi9:latest  /bin/bash   18 minutes ago
 </pre>
       <p>
         Po opuszczeniu powłoki, kontener zostanie zatrzymany. Jeśli
-        nie potrzebujemy jakiś dostępnych w systemie kontenerów, możemy je
+        nie potrzebujemy już w systemie kontenerów, możemy je
         usunąć za pomocą podpolecenia <em>rm</em>, przy czym należy upewnić
         się, że kontener jest zatrzymany inaczej polecenie niepowiedzie się.
       </p>
@@ -16960,12 +17006,15 @@ CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES
         czy zarządania kontenerami z poziomu <em>systemd</em>.
       </p>
       <h3 id="23.4.1.portmapping">23.4.1. Mapowanie portów hosta na porty kontenera</h3>
-      <p>
+      <p class="exam_tip">
         Podczas wykonywania tej czynność, należy pamiętać o bardzo ważnej
         rzeczy. Mianowicie, kontenery nieuprzywilejowane nie mogą mapować
-        portów poniżej 1024 portu. <strong>Mapowanie portów</strong> spowoduje,
+        portów na porty <em>hosta</em> poniżej 1024 portu.
+      </p>
+      <p>
+        <strong>Mapowanie portów</strong> spowoduje,
         że jaki kolwiek ruch sieciowy, który będzie skierowany do określonego
-        portu <em>hosta</em> zostanie przekierowna do portu kontenera. Tą
+        portu <em>hosta</em> zostanie przekierowny do portu kontenera. Tą
         czynność wykonuje się poprzez użycie opcji <strong>-p</strong>
         podpolecenia <em>run</em>. Rozważmy poniższym przykład.
       </p>
@@ -16997,7 +17046,7 @@ cdb3fe727ec3  registry.redhat.io/rhel9/httpd-24:latest  /usr/bin/run-http...  3 
         Teraz ruch przychodzący na port <em>8080</em> <em>hosta</em> zostanie
         przekierowany do kontenera. Mapowania widać w kolumnie
         <code class="code-inline">PORTS</code>. Mapowania możemy zobrazować
-        lepiej za pomocą podpolecenia <em>port</em>,
+        lepiej za pomocą podpolecenia <em>port</em> polecenia <em>podman</em>,
         przy czym to podpolecenie wymaga podania nazwy kontenera.  
       </p>
 <pre class="code-block">
@@ -17018,9 +17067,14 @@ cdb3fe727ec39de7323da49bb230f2dc22bdc51da43bc48e9218d2eeb09b166b
         Nie które z konteneryzowanych aplikacji wymagają podania od użytkownika
         pewnych parametrów do uruchomienia aplikacji. Te parametry przekazuje
         się za pomocą zmiennych środowiskowych, a są one przezkazywane za
-        pomocą opcji <strong>-e</strong> podpolecenia <em>run</em>. Warto
-        dodać, że przekazanie każdej wartości do kontenera wymaga podania
-        tej opcji. Dobrze obrazuje to poniższy przykład.
+        pomocą opcji <strong>-e</strong> podpolecenia <em>run</em>.
+      </p>
+      <p class="exam_tip">
+        Warto dodać, że przekazanie każdej wartości do kontenera wymaga podania
+        opcji <em>-e</em>. 
+      </p>
+      <p>
+        Dobrze obrazuje to poniższy przykład.
       </p>
 <pre class="code-block">
 [xf0r3m@primeb450 ~]$ podman run -dt -e VAR1="test1" -e VAR2="test2" --name rhel9-cont-env ubi9
@@ -17037,12 +17091,12 @@ HOME=/root
         Za pomocą opcji <code class="code-inline">-dt</code> umożliwiłem
         działania powłoki w tle (głownym procesem obrazów <em>UBI</em> jest
         powłoka). Przy użyciu opcji <code class="code-inline">-e</code> 
-        przekazałem do kontenera przedstawione przykładzie zmienne 
+        przekazałem do kontenera przedstawione na przykładzie zmienne 
         środowiskowe. W drugim poleceniu używając podpolecenia
-        <code class="code-inline">exec</code> uruchomiłem na kontenerzez
+        <code class="code-inline">exec</code> uruchomiłem na kontenerze
         polecenie <code class="code-inline">env</code>, które zwraca zmienne
-        środowiskowe. Jak wskazuje wynik działa tego polecenia, przezkazne
-        przez nas wartości są obecne w środowisku kontenera jak zmienne
+        środowiskowe. Jak wskazuje wynik działa tego polecenia, przekazane
+        przez nas wartości są obecne w środowisku kontenera jako zmienne
         środowiskowe. Teraz możemy zatrzymać i usunąć ten kontener. 
       </p>
 <pre class="code-block">
@@ -17057,9 +17111,8 @@ rhel9-cont-env
         kończy swoje działanie, tak i kontener zostaje zatrzymany. Zatrzymanie
         albo restart kontenera powodują utratę wszystkich wytworzonych przez
         niego danych. Jeśli te dane mogą być potrzebne, to należy zaopatrzyć
-        kontenery w miejsce gdzie będą mogły odczytywać oraz składować 
-        wytworzone przez nie dane. Takim miejscem może katalog znajdujący się
-        gdzieś na hoście.
+        kontenery w miejsce gdzie będą mogły je składować.
+        Takim miejscem może być katalog znajdujący się gdzieś na hoście.
       </p>
       <p class="exam_tip">
         Konfigurując taki katalog należy pamiętać o trzech czynnościach jakie
@@ -17094,7 +17147,7 @@ rhel9-cont-env
 </pre>
       <p>
         Za pomocą opcji <code class="code-inline">-v</code> dokonujemy 
-        przezkaznia katalogu do kontenera. Zwróćmy uwagę na dodatkową opcję
+        przekazania katalogu do kontenera. Zwróćmy uwagę na dodatkową opcję
         <code class="code-inline">:Z</code>, powoduje ona dobranie 
         odpowiedniego kontekstu <em>SELinux</em>. Teraz podłącze się pod 
         kontener aby sprawdzić uprawnienia przekazanego katalogu, kontekst
@@ -17115,14 +17168,14 @@ drwxrwxrwx. 2 root root system_u:object_r:container_file_t:s0:c417,c733 27 Aug 1
 [root@96e45fa0558c container_dir]# ls -lZ /container_dir/
 total 4
 -rw-r--r--. 1 root root system_u:object_r:container_file_t:s0:c417,c733 24 Aug 11 11:55 test_file.txt
-<pre>
+</pre>
       <p>
         Jak możemy zauważyć na powyższym przykładzie katalog przekazny do
         kontenera znajduje się w katalogu głównym tak jak to zostało zapisane
         podczas jego utworzenia. Następnie sprawdziłem czy da się utworzyć
         jakiś plik z zawartością w tym katalogu. Po wydaniu polecenia 
         <code class="code-inline">echo</code> powłoka nie zwróciła żadnego
-        błędu więc można było przypuszczać że zapis do pliku powódł się.
+        błędu więc można było przypuszczać, że zapis do pliku powiódł się.
         Na koniec jeszcze sprawdziłem konteskt <em>SELinux</em>. Po zamknięciu
         powłoki, sprawdziłem czy utworzony plik znajduje się w katalogu 
         przeznaczonym dla kontenera oraz plik posiada wcześniej zapisaną
@@ -17189,7 +17242,8 @@ sudo podman generate systemd --new rhel9-cont-systemd | sudo tee /etc/systemd/sy
         tutaj również opcji <code class="code-inline">--new</code>, co powoduje
         za każdym startem utworzenie nowego kontenera. Wynik musiałem
         przepuścić przez polecenie <code class="code-inline">tee</code>,
-        ponieważ przy użyciu potoków nie damy rady zapisać nic w tej
+        ponieważ przy użyciu operatora przekierowania nie damy rady zapisać 
+        nic w tej
         lokalizacji. Po utworzeniu tego pliku możemy załadować plik jednostki
         i kontrolować kontener z poziomu <em>systemd</em>.
       </p>
@@ -17219,7 +17273,7 @@ fa9a83e06b6c  registry.access.redhat.com/ubi9:latest  /bin/bash   37 seconds ago
         Teraz możemy kontenery zatrzymywać oraz uruchamiać ponownie z poziomu
         polecenia <em>systemctl</em>. Zatrzymanie kontenera z tego poziomu 
         spowoduje jego usunięcie z systemu. Utworzony plik usługi można
-        traktować wówczas jako pliku szablonu dla kontenerów.
+        traktować wówczas jako pliki szablonu dla kontenerów.
       </p>
       <p>
         <strong>Kontenery nieuprzywilejowane</strong>:
@@ -17227,12 +17281,12 @@ fa9a83e06b6c  registry.access.redhat.com/ubi9:latest  /bin/bash   37 seconds ago
       <p>
         W przypadku tego rodzaju kontenerów sprawa się dodatkowo komplikuje
         z powodu tego, iż kontenery są zatrzymywane w momencie wylogowania się
-        użytkownika. Jednak w tym przypadku stosuje się stuczkę, która
+        użytkownika. Jednak w tym przypadku stosuje się sztuczkę, która
         powoduje pojawienia się użytkownika jeśli tylko jest potrzebny. Ta
         metoda nazywana jest <strong>lingering</strong>. Inną komplikacją jest
         fakt, że do obsługi <em>systemd</em> z poziomu zwykłego użytkownika,
-        musi być on zalogowany albo fizycznie, albo za pomocą SSH, nie możebyć
-        to przełączony użytkownik za pomocą poleceń <em>sudo</em>
+        musi być on zalogowany albo fizycznie, albo za pomocą SSH, nie może być
+        to przełączony użytkownik za pomocą poleceń <em>sudo</em> lub
         <em>su</em>.
       </p>
       <p>
@@ -17244,7 +17298,7 @@ fa9a83e06b6c  registry.access.redhat.com/ubi9:latest  /bin/bash   37 seconds ago
 [xf0r3m@primeb450 ~]$ loginctl enable-linger
 </pre>
       <p>
-        <em>Lingering</em> włącza się za pomocą pojedyńczego polecenia, wiec
+        <em>Lingering</em> włącza się za pomocą pojedynczego polecenia, wiec
         nie jest jakoś zbytnio skomplikowane, a naprawdę robi robotę. Teraz
         możemy przejść do utworzenia kontenera.
       </p>
@@ -17261,8 +17315,8 @@ podman generate systemd --new rhel9-unpriv-cont-systemd &gt; ~/.config/systemd/u
 </pre>
       <p>
         Teraz mogłem użyć przekierowania, ponieważ cały czas działam w obrębie
-        tych samych uprawnień. Teraz załaduje plik jednostki i uruchomie
-        nowy kontenere, tutaj też użyłem opcji 
+        tych samych uprawnień. Teraz załaduje plik jednostki i uruchomię
+        nowy kontener, tutaj też użyłem opcji 
         <code class="code-inline">--new</code>.
       </p>
 <pre class="code-block">
@@ -17305,7 +17359,7 @@ CONTAINER ID  IMAGE                                   COMMAND     CREATED       
         <code class="code-inline">podman ps</code> wskazuje, że za każdym
         ponownym aktywowaniem jednostki, tworzony jest nowy kontener. Po
         wylogowaniu i zalogowaniu się ponownie, kontener nadal działa, co 
-        oznacza, że <em>lingering</em> jest dobrz skonfigurowany.
+        oznacza, że <em>lingering</em> jest dobrze skonfigurowany.
       </p>
 <pre class="code-block">
 [xf0r3m@primeb450 ~]$ exit
@@ -17343,18 +17397,19 @@ CONTAINER ID  IMAGE                                   COMMAND     CREATED       
       <h3 id="exec23.3">Ćwiczenie 3: Kontener bez nazwy z przekazanymi zmiennymi</h3>
       <p>
         W laboratorium kontenerów, na podstawie <em>UBI</em> dla <em>RHEL</em> 
-        8 utworz nieuprzywilejowany kontener bez nazwy
-        z przekazniem dwóch zmienneych <em>VAR1="lab1"</em> oraz
-        <em>VAR2="lab2"</em>. Działanie kontenera powinno polecegać na 
-        wyświetleniu zmiennych środowiskowych oraz na usunięciu po skończeniu
-        zadania. Na koniec usuń także obraz <em>UBI</em> dla <em>RHEL</em> 8.
+        8 utwórz nieuprzywilejowany kontener bez nazwy
+        z przekazaniem dwóch zmiennych <em>VAR1="lab1"</em> oraz
+        <em>VAR2="lab2"</em>. Działanie kontenera powinno polegać na 
+        wyświetleniu zmiennych środowiskowych, a kontener powinien zostać
+        usunięty po skończeniu zadania. 
+        Na koniec usuń także obraz <em>UBI</em> dla <em>RHEL</em> 8.
       </p>
       <h3 id="exec23.4">Ćwiczenie 4: Kontener ze stałym miejscem przechowywania</h3>
       <p>
         W laboratorium kontenerów, utwórz katalog o nazwie <em>/host_perm1</em>
-        wraz z plikiem <em>str1</em> na stałe miejsce dla danych
+        wraz z plikiem <em>str1</em> przeznaczony na stałe miejsce dla danych
         kontenera uprzywilejowanego, następnie na podstawie <em>UBI</em> dla
-        <em>RHEL</em> 9 utworz kontener o nazwie <em>unpriv-cont-str</em> 
+        <em>RHEL</em> 9 utwórz kontener o nazwie <em>priv-cont-str</em> 
         przekazując do niego ten katalog pod punkt montowania
         <em>/cont_perm1</em>. 
         Przez powłokę kontenera sprawdź uprawnienia przekazanego katalogu oraz
@@ -17373,26 +17428,26 @@ CONTAINER ID  IMAGE                                   COMMAND     CREATED       
         port hosta 9000 na port 8080 kontenera, przekaż wcześniej utworzony
         katalog pod punkt montowania <em>/cont_perm2</em>, sprawdź zmienne 
         oraz punkt montowania, następie opuść powłokę i sprawdź czy mapowanie
-        było prawidłowe. Nie usuwaj tego kontenera jeszcze. 
+        portów było prawidłowe. Nie usuwaj tego kontenera jeszcze. 
       </p> 
       <h3 id="exec23.6">Ćwiczenie 6: Konfigracja kontroli systemd nad kontenerami uprzywilejowanymi</h3>
       <p>
-        Korzystając z kontenera z poprzednigo ćwiczenia, w laboratorium
+        Korzystając z kontenera z ćwiczenia drugiego, w laboratorium
         kontenerów skonfiguruj kontrolę tego kontenera przez <em>systemd</em>.
         Aby potwierdzić działanie konfiguracji zrestartuj system. 
       </p>
-      <h3 id="exec23.6">Ćwiczenie 6: Konfigracja kontroli systemd nad kontenerami nieuprzywilejowanymi</h3>
+      <h3 id="exec23.7">Ćwiczenie 7: Konfigracja kontroli systemd nad kontenerami nieuprzywilejowanymi</h3>
       <p>
-        Korzystając z kontenera z ćwiczenia drugiego, w labolatorum 
+        Korzystając z kontenera z ćwiczenia piątego, w laboratorum 
         kontenerów skonfiguruj kontrolę tego kontenera przez <em>systemd</em>,
         zwróć uwagę na to iż jest to kontener nieuprzywilejowany. Aby
         potwierdzić działanie konfiguracji zrestartuj system.
       </p>
-      <h3 id="ch23summary">Podsumowanie</h3>
+      <h2 id="ch23summary">Podsumowanie</h2>
       <p>
-        W tym ostatnim już rozdziale zapozanaliśmy się technikami
+        W tym ostatnim już rozdziale zapoznaliśmy się technikami
         kontenerów w <em>RHEL</em>. Poznalismy niezbędną wiedzę teoretyczną
-        oraz narzędzia niezbędne w praktyce. Poznaliśmy wiele przypadku
+        oraz narzędzia potrzebne w praktyce. Poznaliśmy wiele przypadków
         praktycznej obsługi kontenerów, od przekazywania portów do przekazania
         kontroli nad konterami do programu typu <em>init</em>, jakim jest
         <em>systemd</em> zapoznaliśmy się też z konfiguracją plików jednostek

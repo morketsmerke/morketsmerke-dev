@@ -689,17 +689,21 @@
         tu trzeba podłączyć rzutnik, szczerze to znudziła się praca tego 
         typu).  Dobrze czułem się pracując z
         Linuksem, to była moja pasja. Znałem dwa stanowiska na których 
-        mógłbym pracować: Linux System Administrator lub Linux System
-        Engineer. Teraz na rynku pracy jeśli chodzi o IT ważniejsze są 
-        uzyskane certyfikaty i odbyte kursy niż wykształcenie. Szukając 
-        certyfikatów,
+        mógłbym pracować: <em>Linux System Administrator</em> lub 
+        <em>Linux System Engineer</em>. 
+        Teraz na rynku pracy jeśli chodzi o IT ważniejsze są 
+        uzyskane certyfikaty i odbyte kursy niż wykształcenie akademickie. 
+        Szukając certyfikatów,
         które spowodują większe szanse na zatrudnienie, znalazłem dwa.
-        Linux Fundation oraz Red Hat. Po przeczytaniu postu a na Reddit
+        <em>Linux Fundation</em> oraz <em>Red Hat</em>. Po przeczytaniu postu a
+        na <em>Reddit</em>
         doszedłem do wniosku, że lepszym wyborem będzie Red Hat. Jeśli
-        chodzi o produkcyjne wykorzystanie Linuksa to prym wśród firm
-        wiedzie Red Hat lub jego darmowy odpowiednik. Kiedyś CentOS ale
-        obecnie może być to zarówno Rocky Linux lub Alma Linux, oba są
-        pochodnymi Red Hat. Szukając jakiś materiałów w internecie, które
+        chodzi o produkcyjne wykorzystanie Linuksa to większość używa
+        <strong>Red Hat Enterprise Linux</strong> lub jego darmowego 
+        odpowiednika. Kiedyś <em>CentOS</em> ale
+        obecnie może być to zarówno <em>Rocky</em> lub <em>Alma Linux</em>, 
+        oba są oparte na tym
+        systemie. Szukając jakiś materiałów w internecie, które
         pomogły by mi się przygotować natrafiłem na Amazonie na książke
         Asghara Ghori pt. <em>RHCSA Red Hat Enterprise Linux 8 (UPDATED): 
         Training and Exam Preparation Guide (EX200), Second Edition</em>
@@ -709,108 +713,120 @@
       <h2 id="1.1.exam">1.1. Egzamin</h2>
       <p>
         Egzamin EX200 dający uprawnienia Red Hat Certified System
-        Administrator jest egzamin praktycznym sprawdzającym umiejętność
+        Administrator jest egzaminem praktycznym sprawdzającym umiejętność
         instalacji, konfiguracji oraz rozwiązywania podstawowych problemów
         administracyjnych na dystrybucji Red Hat. Egzamin będzie odbywać
         się w postaci elektronicznej i zdający będzie mięć do dyspozycji
         dwie maszyny wirtualne do wykonania zadań egzaminacyjnych. Takie
         też środowisko przygotujemy sobie do nauki. Na dzień 11 listopada
-        2020 (tak jak podaje książka) egzamin obejmować 69 zagadnień jednak
-        ta liczba, ze względu na rozwój technologii jak i samego Red Hata
-        mogła ulec już zmianie.
+        2020 (tak jak podaje książka) egzamin obejmuje 69 zagadnień jednak
+        ta liczba, ze względu na rozwój technologii jak i samego 
+        <em>RHEL</em>-a mogła ulec już zmianie.
       </p>
       <h2 id="1.2.examobjectives">1.2. Zagadnienia</h2>
       <p>
         Zagadnienia używane na egzaminie mogą cały czas ewoluować. Odnośnik
-        obok przedstawia aktualne zagadnienia egzaminacyjne.
+        obok przedstawia aktualne zagadnienia egzaminacyjne:
         <a href="http://www.redhat.com/training/courses/ex200/examobjective">http://www.redhat.com/training/courses/ex200/examobjective</a>. Obecnie egzamin zadawany jest na
-        RHEL 9, wydany 17 maja 2022. Dość istotną zmianą w produkcji tego
-        systemu jest zmiana <em>upstreamu</em>. Ta wersja Red Hat nie jest
-        już oparta na Fedorze tak jak wszystkie do tej pory, ale na CentOS
-        Stream (nowa wersja non-stream tej dystrybucji nie jest już dostępna 
-        stąd
+        <em>RHEL</em> 9, wydanym 17 maja 2022. Dość istotną zmianą w produkcji 
+        tego
+        systemu jest zmiana <em>upstreamu</em>. Ta wersja <em>Red Hat</em> nie 
+        jest
+        już oparta na dystrybucji <em>Fedora</em> tak jak wszystkie do tej 
+        pory, ale na <em>CentOS Stream</em> (nowa wersja non-stream tej 
+        dystrybucji nie jest już dostępna stąd
         rozbicie społeczonościowych dystrybucji do zastosowań produkcyjnych na
-        Rocky oraz Alma Linux) i tej wersji będziemy użwać na maszynach
-        wirtualnych.
+        <em>Rocky</em> oraz <em>Alma Linux</em>) i tej wersji będziemy używać 
+        na maszynach wirtualnych.
       </p>
       <h2 id="1.3.exampreparation">1.3. Przygotowania</h2>
       <p>
-        Kiedy uznałem, że chce zdobyć RHCSA, uzyskałem Red Hat na zasadzie
+        Kiedy uznałem, że chce zdobyć <em>RHCSA</em>, uzyskałem 
+        <em>Red Hat</em> na zasadzie
         <em>Non-cost RHEL Individual Developer Subscription</em>, gdzie
-        istotne informacje znajdują się w odnośniku obok.
-        <a href="https://developers.redhat.com/articles/faqs-no-cost-red-hat-enterprise-linux">https://developers.redhat.com/articles/faqs-no-cost-red-hat-enterprise-linux</a>
+        istotne informacje znajdują się w odnośniku obok: 
+        <a href="https://developers.redhat.com/articles/faqs-no-cost-red-hat-enterprise-linux">https://developers.redhat.com/articles/faqs-no-cost-red-hat-enterprise-linux</a>.
         Przy użyciu tej subskrypcji uzyskamy dostęp do Red Hat przez rok na
         16 instalacji (bez znaczenia czy to fizyczny komputer, czy maszyna
         wirtualna). Po tym czasie należy zalogować się ponownie, zakceptować
-        warunki umowy i po 15 do 30 minut powinnimy uzyskać ponowny rok
+        warunki umowy i do około 30 minut powinnimy uzyskać ponowny rok
         subskrypcji i tak co roku. Wszystko jest opisane na powyższej stronie.
-        System w wersji 8.6 (ponieważ na wersję 9.0, moim zdaniem jest
-        za wcześnie, kiedyś zainstalowałem RHEL 8 na laptopie to non stop
-        otrzymywałem jakieś raporty o błedach) zainstalowałem na komputerze
-        codziennego użytku w pracownii. Najlepszym sposobem na nauczenie się
-        administracji systemu jest jego używanie, a że jest entuzajstą a nie
+        System w wersji 9 zainstalowałem na komputerze przeznaczony do 
+        codziennego użytku. Najlepszym sposobem na nauczenie się
+        administracji systemem jest jego używanie na co dzień, a że jest 
+        entuzajstą a nie
         profesjonalistą, mój kontakt z systemami tego typu jest raczej dość
-        mocno ograniczony. Dlatego też przesiadłem się na RHEL, póki co ten
-        system poprostu działa, wcześniej korzystałem z Fedory 35 oraz
-        Debiana 11. Do celów dydaktycznych potrzebujemy peceta lub laptopa
-        z min. dwurdzeniowym procesorem, 8GB pamięci operacyjnej oraz 27GB
+        mocno ograniczony. Dlatego też przesiadłem się na <em>RHEL</em>, póki 
+        co to ten
+        system poprostu działa, wcześniej korzystałem z <em>Fedory</em> 35 oraz
+        <em>Debiana</em> 11. Do celów dydaktycznych potrzebujemy peceta lub laptopa
+        z min. dwurdzeniowym procesorem z możliwością wirtualizacji 64-bitowych
+        systemów, 8GB pamięci operacyjnej oraz min. 40GB
         wolnej przestrzeni na dysku na potrzeby utworzenia maszyn wirtualnych
-        z wymagną przez ćwiczenia przestrzenią dyskową oraz możliwością
-        wirtualizacji 64-bitowych systemów. Do tego celu 
-        użyjemy oprogramowania Oracle VirtualBox, dającego najprostszy
+        z wymagną przez ćwiczenia przestrzenią dyskową. Do tego celu możemy 
+        użyć dowolnego środowiska wirtualizacji, które znamym. Jeśli nie
+        mieliśmy wcześniej żadnego kontatku z tego typu oprogramowaniem, to
+        najlepiej jest użyć oprogramowania <em>Oracle VirtualBox</em>, 
+        dającego najprostszy
         interfejs do interakcji z maszynami, gdyż przy późniejszych
         zagadnieniach będziemy musieli zmienić jej ustawienia lub dodać kilka
-        urządzeń, oczywiście jeśli ktoś czuje się mocny w innych środowiskach
-        może użyć swojego ulubionego, nie mniej jednak w trakcie nauki będzie
-        trzeba dokonać kilku zmian w na tych maszynach, a opisy zamieszczone
-        tutaj będą dotyczyć głównie VirtualBox. Czy ktoś zainstaluje na swoim 
-        komputerze RHEL czy nie to,
+        urządzeń. Czy ktoś zainstaluje na swoim 
+        komputerze <em>RHEL</em> czy nie to,
         już indywidualna sprawa i nie wypłynie ona wykonanie ćwiczeń. Nie
         mniej jednak, w podpunkcie odnośnie maszyn wirtualnych tego rodziału
         przedstawie skrypt powłoki, który po uruchomieniu utworzy
         automatycznie maszyny wymagane do wykonania ćwiczeń. Ale póki co 
-        przedstawie teraz instalacje Oracle VirtualBox na RHEL 8.6.
+        przedstawie teraz instalacje <em>Oracle VirtualBox</em> na
+        <em>RHEL</em> 9.
       </p>
       <h3 id="1.3.1.vboxinstallationonrhel">1.3.1. Instalacja Oracle VirtualBox 
-        na RHEL 8.6</h3>
+        na RHEL 9.0</h3>
       <p>
         Pierwszą czynnością jest uruchomienie przeglądarki i przejście pod
         adres: <a href="https://www.virtualbox.org/wiki/Linux_Downloads">https://www.virtualbox.org/wiki/Linux_Downloads</a>, na samym dole strony znajdują się pliki repozytorium
-        dla kilku dystrybucji Linuksa. Pobieramy ten przeznaczony dla RHEL
-        następnie przenosimy go do wskazanego na stronie katalogu. Następnie
-        możemy wydać polecenie:
+        dla kilku dystrybucji Linuksa. Kopiujemy adres odnośnika do pliku
+        konfiguracyjnego repozytorium. Następnie możemy wydać polecenia:
       </p>
 <pre class="code-block">
-$ sudo yum install VirtualBox
+[xf0r3m@primeb450 ~]$ sudo wget https://download.virtualbox.org/virtualbox/rpm/el/virtualbox.repo -O /etc/yum.repos.d/virtualbox.repo
+[xf0r3m@primeb450 ~]$ sudo dnf update
+Updating Subscription Management repositories.
+Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)        6.3 kB/s | 4.1 kB     00:00    
+Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)            10 kB/s | 4.1 kB     00:00    
+Oracle Linux / RHEL / CentOS-9 / x86_64 - VirtualBox             99  B/s | 181  B     00:01    
+Oracle Linux / RHEL / CentOS-9 / x86_64 - VirtualBox            1.9 kB/s | 1.7 kB     00:00    
+Importowanie klucza GPG 0x98AB5139:
+ Identyfikator użytkownika: „Oracle Corporation (VirtualBox archive signing key) &lt;info@virtualbox.org&gt;”
+ Odcisk                   : 7B0F AB3A 13B9 0743 5925 D9C9 5442 2A4B 98AB 5139
+ Z                        : https://www.virtualbox.org/download/oracle_vbox.asc
+W porządku? [t/N]: t
+Oracle Linux / RHEL / CentOS-9 / x86_64 - VirtualBox                    8.6 kB/s | 7.8 kB     00:00    
+Rozwiązano zależności.
+Nie ma nic do zrobienia.
+Ukończono.
+[xf0r3m@primeb450 ~]$ sudo dnf install VirtualBox-6.1 kernel-devel
+Updating Subscription Management repositories.
+Ostatnio sprawdzono ważność metadanych: 0:04:10 temu w dniu sob, 13 sie 2022, 10:12:38.
+Rozwiązano zależności.
+...
 </pre>
       <p>
-        Po instalacji, przełączamy się w terminalu na użytkownika <em>root</em>.
-        Następnie wydajemy poniższe polecenia:
+        Po instalacji restartujemy komputer.
       </p>
 <pre class="code-block">
-$ sudo su
-# akmods
-Checking kmods exist for 4.18.0-372.9.1.el8.x86_64         [  OK  ]
-# systemctl restart vboxdrv.service
+[xf0r3m@primeb450 ~]$ sudo reboot
 </pre>
       <p>
         Teraz Oracle VirtualBox jest gotów do działania.
       </p>
       <p>
-        W przypadku RHEL 9, jeśli ktoś używa, to instalacja wydaje się jeszcze
-        prostsza, gdyż do instalacji możemy użyć <strong>RPMFusion</strong>. Po 
+        Jeśli chcemy możemy użyć <strong>RPMFusion</strong>. Po 
         załadowaniu tych repozytoriów do swojego systemu możemy od razu wydać
         polecenie:
       </p>
 <pre class="code-block">
-$ sudo yum install VirtualBox
+$ sudo dnf install VirtualBox
 </pre>
-      <p>
-        W wersji 8.6, zapewne również możemy skorzystać z <em>RPMFusion</em>.
-        Ja zanim się dowiedziałem że VirtualBox jest dostępny w tych
-        repozytoriach, instalowałem go za pomocą instrukcji zawartej na stronie
-        Virtualbox, do której link znajduje się powyżej.
-      </p>
       <h3 id="1.3.2.gettingrheliso">1.3.2. Pozyskanie obrazu ISO z Red Hat 
         Enterprise Linux 9</h3>
       <p>

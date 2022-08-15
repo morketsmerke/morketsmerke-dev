@@ -53,13 +53,14 @@
             <li><a href="#1.2.examobjectives">1.2. Zagadnienia</a></li>
             <li><a href="#1.3.exampreparation">1.3. Przygotowania</a>
               <ul class="toc">
-                <li><a href="#1.3.1.vboxinstallationonrhel">1.3.1. Instalacja Oracle VirtualBox na RHEL 8.6.</a></li>
-                <li><a href="#1.3.2.gettingrheliso">1.3.2. Pozyskiwanie obrazu ISO z Red Hat Enterprise Linux 9</a></li>
-                <li><a href="#1.3.3.createvmwithrhel">1.3.3. Tworzenie maszyn wirtualnych VirtualBox z RHEL</a></li>
+                <li><a href="#1.3.1.vboxinstallationonrhel">1.3.1. Instalacja Oracle VirtualBox na RHEL 9.0</a></li>
+                <li><a href="#1.3.2.gettingrheliso">1.3.2. Pozyskanie obrazu ISO z Red Hat Enterprise Linux 9</a></li>
+                <li><a href="#1.3.3.createvmwithrhel">1.3.3. Tworzenie maszyn wirtualnych z RHEL</a></li>
                 <li><a href="#1.3.4.rhelinstallation">1.3.4. Instalacja Red Hat Enterprise Linux 9.0</a></li>
-              </ul> 
-            <li><a href="#exec1.1">Ćwiczenie: 1-1</a></li>
-            <li><a href="#exec1.2">Ćwiczenie: 1-2</a></li>
+              </ul>
+            </li>
+            <li><a href="#exec1.1">Ćwiczenie 1: Instalacja Red Hat Enterprise Linux 9</a></li>
+            <li><a href="#exec1.2">Ćwiczenie 2: Logowanie zdalne do RHEL</a></li>
             <li><a href="#ch1summary">Podsumowanie</a></li>
           </ul>
         </li>
@@ -779,8 +780,7 @@
         przedstawie teraz instalacje <em>Oracle VirtualBox</em> na
         <em>RHEL</em> 9.
       </p>
-      <h3 id="1.3.1.vboxinstallationonrhel">1.3.1. Instalacja Oracle VirtualBox 
-        na RHEL 9.0</h3>
+      <h3 id="1.3.1.vboxinstallationonrhel">1.3.1. Instalacja Oracle VirtualBox na RHEL 9.0</h3>
       <p>
         Pierwszą czynnością jest uruchomienie przeglądarki i przejście pod
         adres: <a href="https://www.virtualbox.org/wiki/Linux_Downloads">https://www.virtualbox.org/wiki/Linux_Downloads</a>, na samym dole strony znajdują się pliki repozytorium
@@ -825,26 +825,41 @@ Rozwiązano zależności.
         polecenie:
       </p>
 <pre class="code-block">
-$ sudo dnf install VirtualBox
+[user@centos9 ~]$ sudo dnf install VirtualBox kernel-devel
+...
+[user@centos9 ~]$ sudo su
+[root@centos9 user]# akmods
+Checking kmods exist for 5.14.0-142.el9.x86_64 [  OK  ]
+[root@centos9 user]# sudo systemctl restart vboxdrv.service
+[root@centos9 user]# sudo systemctl status vboxdrv.service
+● vboxdrv.service - Linux kernel module init script
+     Loaded: loaded (/usr/lib/systemd/system/vboxdrv.service; enabled; vendor preset: enabled)
+     Active: active (exited) since Mon 2022-08-15 16:13:27 CEST; 6s ago
+    Process: 62653 ExecStart=/sbin/modprobe vboxdrv (code=exited, status=0/SUCCESS)
+    Process: 62657 ExecStart=/sbin/modprobe vboxnetflt (code=exited, status=0/SUCCESS)
+    Process: 62658 ExecStart=/sbin/modprobe vboxnetadp (code=exited, status=0/SUCCESS)
+   Main PID: 62658 (code=exited, status=0/SUCCESS)
+        CPU: 133ms
+...
 </pre>
-      <h3 id="1.3.2.gettingrheliso">1.3.2. Pozyskanie obrazu ISO z Red Hat 
-        Enterprise Linux 9</h3>
+      <h3 id="1.3.2.gettingrheliso">1.3.2. Pozyskanie obrazu ISO z Red Hat Enterprise Linux 9</h3>
       <p>
-        Aby uzyskać takowy obraz musimy zarejestrować się w subskrypcji dla
+        Aby pobrać potrzebny nam obraz musimy zarejestrować się w subskrypcji 
+        dla
         indywidualnych deweloperów. Przechodzimy na stronę <a href="https://developers.redhat.com/register">https://developers.redhat.com/register</a> i rejestrujemy się. Następnie
         logujemy i po zalogowaniu przechodzimy na stronę: <a href="https://developers.redhat.com/products/rhel/download">https://developers.redhat.com/products/rhel/download</a>.
         w sekcji <em>All Downloads</em> znajdują się wszystkie dostępne wersje
-        Red Hat objęte jeszcze wsparciem. Nas będzie interesować wyłącznie
+        <em>RHEL</em> objęte jeszcze wsparciem. Nas będzie interesować 
+        wyłącznie
         wersja 9 i tą też pobieramy, oczywiście dla architektury <em>x86_64</em>
         w wersji DVD.
       </p>
-      <h3 id="1.3.3.createvmwithrhel">1.3.3. Tworzenie maszyn wirtualnych 
-        VirtualBox z RHEL</h3>
+      <h3 id="1.3.3.createvmwithrhel">1.3.3. Tworzenie maszyn wirtualnych z RHEL</h3>
       <p>
-        Tworzenie maszyn wirtualnych VirtualBox, nie jest zaganieniem
+        Tworzenie maszyn wirtualnych, nie jest zaganieniem
         egzaminacyjnym. Na egzaminie dostaniemy dostęp do dwóch zdalnych
         maszyn. Teoretycznie można by użyć fizycznych maszyn o ile ktoś ma
-        do takowych dostęp, jednak do drugiej maszyny trzeba dodać aż 7 dysków,
+        do takowych dostęp, jednak do drugiej maszyny trzeba dodać aż 8 dysków,
         więc użycie wirtualnej maszyny, to chyba jedyne efektywne rozwiązanie. 
         Poniżej znajdują się wymagania jakie powinna spełniać każda z nich:
       </p>
@@ -866,17 +881,18 @@ $ sudo dnf install VirtualBox
             <li>2048 MB pamięci operacyjnej</li>
             <li>10 GB dysk twardy, na instalacje systemu</li>
             <li>4 x 250 MB dysk twardy, dla ćwiczeń z LVM</li>
-            <li>1 x 4 GB dysk twardy, dla ćwiczeń z VDO</li>
+            <li>2 x 10 GB dysk twardy, dla ćwiczeń z VDO</li>
             <li>1 x 1 GB dysk twardy, dla ćwiczeń ze Stratis</li>
             <li>Nazwa hosta ustawiona na server2.example.com</li>
             <li>Stały adres IP, pozwalający na swobodną komunikację w sieci</li>
           </ul></li>
       </ul>
       <p>
-        Maszyny możemy utworzyć ręcznie, podążając za wskazówkami przewodnika,
-        w przypadku drugiej maszyny dodatkowe dyski trzeba będzie dodać z
-        poziomu ustawień maszyny. Drugą możliwością jest skorzystanie z dwóch
-        poniższych skryptów kolejno dla
+        Maszyny możemy utworzyć ręcznie, zgodnie z wtycznymi dla używanego
+        przez nas środowiska wirtualizacji. Jeśli jednak korzystamy z 
+        <em>VirtualBox</em> możemy wykorzystać poniższe skrypty.
+        W przypadku drugiej maszyny dodatkowe dyski trzeba będzie dodać z
+        poziomu ustawień maszyny.
       </p>
       <ul>
         <li><strong>RHEL9-VM1</strong>:
@@ -885,7 +901,7 @@ $ sudo dnf install VirtualBox
 
 vboxmanage=$(which vboxmanage);
 vmname="RHEL9-VM1";
-bridged_if="wlp1s0";
+bridged_if="";
 
 $vboxmanage createvm --name $vmname --ostype RedHat_64 --register;
 
@@ -910,14 +926,17 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 1 --type dvddrive \
 
 vboxmanage=$(which vboxmanage);
 vmname="RHEL9-VM2";
-bridged_if="wlp1s0";
+bridged_if="";
 
 $vboxmanage createvm --name $vmname --ostype RedHat_64 --register;
 $vboxmanage createhd --filename "$HOME/VirtualBox VMs/${vmname}/OS.vdi" --size \
 10240 --format VDI --variant Standard;
 
-$vboxmanage createhd --filename "$HOME/VirtualBox VMs/${vmname}/VDO.vdi" --size \
-4096 --format VDI --variant Standard;
+$vboxmanage createhd --filename "$HOME/VirtualBox VMs/${vmname}/VDO1.vdi" --size \
+10240 --format VDI --variant Standard;
+$vboxmanage createhd --filename "$HOME/VirtualBox VMs/${vmname}/VDO2.vdi" --size \
+10240 --format VDI --variant Standard;
+
 $vboxmanage createhd --filename "$HOME/VirtualBox VMs/${vmname}/Stratis.vdi" \
 --size 1024 --format VDI --variant Standard;
 
@@ -943,8 +962,11 @@ while [ $i -le 5 ]; do
 done
 
 $vboxmanage storageattach $vmname --storagectl SATA0 --port 6 --type hdd --medium \
-"$HOME/VirtualBox VMs/${vmname}/VDO.vdi";
+"$HOME/VirtualBox VMs/${vmname}/VDO1.vdi";
 $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type hdd --medium \
+"$HOME/VirtualBox VMs/${vmname}/VDO2.vdi";
+
+$vboxmanage storageattach $vmname --storagectl SATA0 --port 8 --type hdd --medium \
 "$HOME/VirtualBox VMs/${vmname}/Stratis.vdi";
 </pre>
         </li>
@@ -965,8 +987,7 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type hdd --mediu
       <p>
         Po utworzeniu maszyn przyszedł czas na instalację.
       </p>
-      <h3 id="1.3.4.rhelinstallation">1.3.4. Instalacja Red Hat Enterprise 
-        Linux 9.0</h3>
+      <h3 id="1.3.4.rhelinstallation">1.3.4. Instalacja Red Hat Enterprise Linux 9.0</h3>
       <p>
         Zaraz po uruchomieniu maszyny rozpocznie się proces ładowania
         zawartości płyty. Menu bootowania płyty zawiera trzy opcje. 
@@ -979,7 +1000,7 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type hdd --mediu
       <p>
         Domyślnie zaznaczoną jest opcja numer 2. Mamy minutę na zmianę
         decyzji. Naciśnięcie dowolnego klawisza zatrzymuje odliczanie. Dając
-        nam czas do namysłu, jednak na ten moment nie co za bardzo rozmyślać
+        nam czas do namysłu, jednak na ten moment nie ma co za bardzo rozmyślać
         dlatego też wybieramy opcję numer 1. Po wybraniu tej opcji nastąpi
         uruchomienie systemu oraz instalatora. Instalator używany przez RHEL 
         oraz dystrybucje z nim związane
@@ -993,11 +1014,11 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type hdd --mediu
         multipekser terminala, który do momentu uruchomienia właściwego 
         instalatora (w wersji graficznej) był główną konsolą. W multiplekserze
         będzie my mieć dostęp do komunikatów diagnostyczny, które w wersji 8
-        RHEL był wyświetlane na oddzielnych konsolach; kilka powłok z
+        <em>RHEL</em> był wyświetlane na oddzielnych konsolach; kilka powłok z
         uprawnieniami superużytkownika (uruchomione na konsolach 2, 3 i 5) 
         oraz konsolę z komunikatami przechwytywanymi przez główny 
-        rejestrator systemu <em>syslog</em>. Udostępnienie tych funkcjonalności
-        podczas instalacji systemu, może pomóc w ewentualnym namierzeniu i
+        rejestrator systemu <em>rsyslog</em>. Udostępnienie tych funkcjonalności
+        podczas instalacji systemu, może pomóc w ewentualnym diagnozowaniu i
         naprawie problemów z instalacją.
         Pliki z komunikatami na czas instalacji przechowywane są w katalogu 
         <em>/tmp</em>, po instalacji zostaną one przeniesione do katalogu
@@ -1022,7 +1043,8 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type hdd --mediu
         posługiwać się językiem angielskim i to technicznym. Systemy z którymi
         zderzmy się w potencjalnej pracy raczej będą systemami o zasięgu
         międzynarodowym, prawdopodobnie już o tym wspominałem ale egzamin
-        pozwalający uzyskać certyfikacje RHCSA również będzie po angielsku.
+        pozwalający uzyskać certyfikacje <em>RHCSA</em> również będzie po 
+        angielsku.
         Dlatego też instalować jak i korzystać z systemu będziemy w języku
         angielskim, na pierwszym ekranie wybieramy <em>English</em>
         pozostawiając wariant <em>English (United States)</em>. Następnym
@@ -1042,7 +1064,8 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type hdd --mediu
       <p>
         W sekcji lokalizacyjnej do ustawienia są takie opcje, układ klawiatury,
         język, oraz data i czas. Podczas ładowania pierwszego okna (moment 
-        wybrania języka instalacji), instalator na podstawie informacji GeoIP
+        wybrania języka instalacji), instalator na podstawie informacji 
+        <em>GeoIP</em>
         postara się określić naszą przybliżoną lokalizację, o ile posiada on
         na tym momencie połączenie z internetem. Dlatego też możemy
         spotkać się z samoinstnie wybranym języku instalacji ustawionym na
@@ -1052,7 +1075,8 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type hdd --mediu
       </p>
       <p>
         Kolejną sekcja dotyczy oprogramowania, tutaj konfigurowane będzie
-        na przykład połączenie z firmą Red Hat. RHEL jest system 
+        na przykład połączenie z firmą <em>Red Hat</em>. <em>RHEL</em> jest 
+        system 
         licencjonowanym i jeśli chcemy skorzystać z oficjalnych repozytoriów
         należy "podłączyć" system do naszego konta założonego w celu
         pozyskania obrazu płyty. Jednak na razie nie trzeba tego, będzie to
@@ -1070,7 +1094,8 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type hdd --mediu
         się tym zajmować. Ostanią opcją z tej sekcji jest <em>Software
         selection</em>, ta opcja daje nam możliwość, wyboru rodzaju instalacji.
         Na potrzeby nauki, wybierzemy opcję <em>Server with GUI</em>, jeśli
-        będziemy instalować RHEL na naszym komputerze do codziennego użytku
+        będziemy instalować <em>RHEL</em> na naszym komputerze do codziennego 
+        użytku
         możemy wybrać <em>Workstation</em>. Wybierając rodzaj instalacji po
         lewej stronie, po prawej wyświetają się dodatkowe pakiety lub
         warianty do zainstalowania.
@@ -1079,12 +1104,12 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type hdd --mediu
         Sekcja <em>System</em>, służy głównie do wyboru docelowego miejsca dla
         instalacji. W opcji <em>Instalation Destination</em>,
         wskazujemy docelowy dysk do instalacji, możemy go spartycjonować 
-        ręcznie lub automatycznie możemy również zaszyfrować instalacje,
+        ręcznie lub automatycznie możemy również zaszyfrować partycje,
         jeśli jest taka potrzeba. W przypadku szyfrowania danych 
         bardzo ważny jest układ klawiatury. Innymi opcjami
         póki co dla nas ważnymi jest <em>Network &amp; Host name</em>, w
         założeniach zadania, może być wymagane ustawienie odpowiedniego adresu
-        oraz nazwy dla maszyny. Tak jest w naszym przypadku, to te opcje
+        oraz nazwy dla maszyny, to te opcje
         ustawiamy właśnie tam. Pozostałe opcje tej sekcji, poki co nie są
         dla nas istotne.
       </p>
@@ -1093,20 +1118,23 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type hdd --mediu
         dla pierwszego użytkownika. Nie musi on posiadać uprawnień
         administratora i nie będzie ich miał. Opcja utworzenia użytkownika
         może się nie mieścić na ekranie, podczas instalacji systemu maszynie
-        witualnej, dlatego nie należy przejmować, że jej nie ma.
+        witualnej, dlatego nie należy przejmować, że jej nie ma. Wystarczy
+        przewinąć wyświetlany oraz paskiem przewiajania po prawej stronie.
       </p>
       <p>
-        Teraz kiedy wszyskie (te istotne dla instalacji) zostały opisane możemy
+        Teraz kiedy wszyskie (te istotne dla instalacji) opcje zostały opisane 
+        możemy
         zainstalować system zgodnie założeniami pierwsze maszyny i powtorzyć
         to na drugiej. I to jest pierwsze ćwiczenie.
       </p>
       <h3 id="exec1.1">Ćwiczenie 1: Instalacja Red Hat Enterprise Linux 9</h3>
       <p>
-        Zainstaluj zgodnie założeniami podanymi w podrozdziale 
-        <em>Tworzenie maszyn wirtualnych VirtualBox z RHEL</em> oraz sugestiami
-        podanymi podczas opisu procesu instalacji. Red Hat
-        Enterprise Linux 9 na maszynie wirtualnej <em>RHEL-VM1</em>. Następnie
-        powtórz tę czynność drugiej maszynie przeznaczonej do laboratorium.
+        Stwórz zgodnie założeniami podanymi w podrozdziale 
+        <em>Tworzenie maszyn wirtualnych z RHEL</em> maszynę <em>RHEL-VM1</em>.
+        Następnie korzystając z sugestii
+        podanych podczas opisu procesu instalacji zainstaluj na niej Red Hat
+        Enterprise Linux 9.
+        Powtórz tę czynność na drugiej maszynie przeznaczonej do laboratorium.
         Pamiętaj, że założenia dla drugiej maszyny różnią się.
       </p>
       <h3 id="exec1.2">Ćwiczenie 2: Logowanie zdalne do RHEL</h3>
@@ -1114,16 +1142,18 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 7 --type hdd --mediu
         Wykorzystując program do obsługi protokołu SSH dla twoje systemu
         operacyjnego zaloguj się na superużytkownika. Pamiętaj o tym, że
         bezpośrednie logowanie na superużytkownika wymagało zaznaczenia opcji
-        podczas ustawiania hasła dla niego.
+        w trakcie ustawiania hasła dla niego podczas instalacji.
       </p>
       <h2 id="ch1summary">Podsumowanie</h2>
       <p>
-        W tym rozdziale przezszliśmy przez proces instalacji RHEL.
-        Dowiedzielśmy się, że możliwe jest instalacja w trybie tekstowym oraz
-        oraz, że nienależy ona do najtrudniejszych. Warto zwrócić uwagę na to
+        W tym rozdziale przeszliśmy przez proces instalacji <em>RHEL</em>.
+        Dowiedzielśmy się, że możliwa jest instalacja w trybie tekstowym oraz
+        oraz, że nie należy ona do najtrudniejszych. Warto zwrócić uwagę na to
         iż jeśli do tej pory korzystaliśmy z jakiś materiałów to dotyczą one
-        wersji 8 RHEL, my będziemy korzystać z wersji 9, bo to na niej w 2022
-        roku będziemy zdawać egzamin, a między tymi wersjami jest kilka zmian.
+        wersji 8 <em>RHEL</em>, my będziemy korzystać z wersji 9, bo to na niej
+        w 2022
+        roku będziemy przeprowadzany egzamin, a między tymi wersjami jest kilka
+        zmian.
         W następnym rozdziale zapoznamy się z środowiskiem graficznym,
         strukturą katalogów oraz podstawowym narzędziami do pracy w powłoce.
       </p>

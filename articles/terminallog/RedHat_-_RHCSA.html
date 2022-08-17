@@ -64,21 +64,21 @@
             <li><a href="#ch1summary">Podsumowanie</a></li>
           </ul>
         </li>
-        <li><a href="#2.firststepsinRHEL9">2. Poruszanie się po systemie RHEL 9</a>
+        <li><a href="#2.firststepsinRHEL9">2. Poruszenia się po systemie RHEL 9</a> 
           <ul class="toc">
             <li><a href="#2.1.serverwithgui">2.1. Środowisko graficzne RHEL 9</a></li>
             <li><a href="#2.2.hfs">2.2. Struktura katalogowa w Uniksach</a></li>
-            <li><a href="#2.3.usingcli">2.3. Obsługa wiersza poleceń i najprostsze polecenia</a>
+            <li><a href="#2.3.usingcli">2.3. Obsługa wiersza poleceń i najprostsze
               <ul class="toc">
                 <li><a href="#2.3.1.ls">2.3.1. Listowanie zawartości katalogu</a></li>
-                <li><a href="#2.3.2.pwd">2.3.2. Wyświetlanie bierzącego katalogu</a></li>
-                <li><a href="#2.3.3.cd">2.3.3. Poruszanie się wśród katalogów</a></li>
+                <li><a href="#2.3.2.pwd">2.3.2. Wyświetlenie bieżącego katalogu roboczego</a></li>
+                <li><a href="#2.3.3.cd">2.3.3. Poruszanie się wśrod katalogów</a></li>
                 <li><a href="#2.3.4.tty">2.3.4. Identyfikacja urządzenia terminala</a></li>
                 <li><a href="#2.3.5.uptime">2.3.5. Czas systemowy oraz załadowanie procesora</a></li>
                 <li><a href="#2.3.6.clear">2.3.6. Czyszczenie ekranu powłoki</a></li>
                 <li><a href="#2.3.7.which">2.3.7. Określanie ścieżki polecenia</a></li>
                 <li><a href="#2.3.8.uname">2.3.8. Wyświetlenie informacji o systemie</a></li>
-                <li><a href="#2.3.9.lscpu">2.3.9. Wyświetlenie informacji o procesorze</a></li>
+                <li><a href="#2.3.9.lscpu">2.3.9. Wyświetlanie informacji o procesorze</a></li>
               </ul>
             </li>
             <li><a href="#2.4.gettinghelp">2.4. Uzyskiwanie pomocy</a>
@@ -90,10 +90,10 @@
                 <li><a href="#2.4.5.rhdocs">2.4.5. Dokumentacja Red Hat Enterprise Linux</a></li>
               </ul>
             </li>
-            <li><a href="#exec2.1">Ćwiczenie: 2-1</a></li>
-            <li><a href="#exec2.2">Ćwiczenie: 2-2</a></li>
-            <li><a href="#exec2.3">Ćwiczenie: 2-3</a></li>
-            <li><a href="#exec2.4">Ćwiczenie: 2-4</a></li>
+            <li><a href="#exec2.1">Ćwiczenie 1: Nawigacja pośród katalogów Linuksa</a></li>
+            <li><a href="#exec2.2">Ćwiczenie 2: Rożne zadania</a></li>
+            <li><a href="#exec2.3">Ćwiczenie 3: Informacje o systemie</a></li>
+            <li><a href="#exec2.4">Ćwiczenie 4: Używanie pomocy</a></li>
             <li><a href="#ch2summary">Podsumowanie</a></li>
           </ul>
         </li>
@@ -1160,22 +1160,28 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 8 --type hdd --mediu
       <h1 id="2.firststepsinRHEL9">2. Poruszenia się po systemie RHEL 9</h1> 
       <p>
         Wykonując ćwiczenia z pierwszego rozdziału, zainstalowaliśmy sobie
-        Red Hat w wersji 9 na maszynie wirtualnej. Jako wariant wyboru
+        <em>Red Hat</em> w wersji 9 na maszynie wirtualnej. Jako wariant wyboru
         oprogramowania wybraliśmy <em>Server with GUI</em> i od drobnego
         omówienia środowiska graficznego rozpocznę ten rodział.
       </p>
       <h2 id="2.1.serverwithgui">2.1. Środowisko graficzne RHEL 9</h2>
       <p>
-        Red Hat jest dystrybucją Linuksa przeznaczoną do zastosowań
+        <em>Red Hat</em> jest dystrybucją Linuksa przeznaczoną do zastosowań
         produkcyjnych, więc system tego typu musi wykazywać się dużą
         stabilnością. Znaczące zmiany są wprowadzane raczej w dużych wydania
-        jak RHEL 9, takim znaczącym przeskokiem jest zmiana linii jądra z
-        4.18 (w przypadku RHEL 8) na 5.14 (w przypadku RHEL 9) oraz zastąpienie
-        klasycznego serwera X Window protokołem Wayland, to jednak nastąpiło z
-        wydaniem RHEL 8. Zmiany w RHEL 9, odnośnie środowiska graficznego
-        to przejście z Gnome 3.38 na Gnome 40, ta zmiana przyniosła również
+        jak <em>RHEL</em> 9, takim znaczącym przeskokiem jest zmiana linii 
+        jądra z
+        4.18 (w przypadku <em>RHEL</em> 8) na 5.14 (w przypadku <em>RHEL</em> 
+        9) oraz zastąpienie
+        klasycznego serwera <em>X Window</em> protokołem <em>Wayland</em>, to 
+        jednak nastąpiło z
+        wydaniem <em>RHEL</em> 8. Zmiany w <em>RHEL</em> 9, odnośnie środowiska
+         graficznego
+        to przejście z <em>Gnome</em> 3.38 na <em>Gnome</em> 40, ta zmiana 
+        przyniosła również
         odświerzenie menedżera wyświetlania lub menedżera logowania czym w
-        przypadku środowiska Gnome jest GDM. Większość elementów pozostała
+        przypadku środowiska <em>Gnome</em> jest <em>GDM</em>. Większość 
+        elementów pozostała
         taka sama na górnej belce mamy datę oraz czas w prawyn górnym rogu
         do wyboru opcje ułatwień dostępu, wskaźnik połączenia sieciowego oraz
         porozwinięciu możliwość regulacji głośności i jasności ekranu oraz 
@@ -1184,25 +1190,30 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 8 --type hdd --mediu
         bezprzewodwą. Zmianie uległ również sposób prezentacji kont użytkownika.
         Z racji tego iż <em>root</em> nie jest zwykłym użytkownikiem nie będzie
         pojawiać się na liscie, ale zalogowanie na niego jest możliwe za pomocą
-        kliknięcia w "Not Listed?" pod listą użytkowników, wówczas będzie mogli
+        kliknięcia w <em>Not Listed?</em> pod listą użytkowników, wówczas 
+        będzie mogli
         ręcznie podać nazwę użytkownika oraz hasło. Ekranem startowym po
         zalogowaniu jest ekran <em>Activities</em>, który pozwala na podgląd
-        wykonywanych czynności, rozpoczęcie nowych (wybierają aplikacje z 
-        z doka lub z pełnej listy aplikacji, która jest dostępna po kliknięciu
+        wykonywanych czynności, rozpoczęcie nowych (wybierając aplikacje z 
+        doka lub z pełnej listy aplikacji, która jest dostępna po kliknięciu
         na ikonę 9 kropek w doku) oraz przełacznie się między obszarami
-        roboczymi. Domyślnie GNOME daje dostęp do dwóch przestrzeni roboczych,
-        gdy tylko przeniesiemy aplikację do na nowy obszar, GNOME udostępni
+        roboczymi. Domyślnie <em>GNOME</em> daje dostęp do dwóch przestrzeni 
+        roboczych,
+        gdy tylko przeniesiemy aplikację do na nowy obszar, <em>GNOME</em> 
+        udostępni
         nam kolejny i tak dalej. Wyszukiwarka nad podgląd obszaru roboczego
         daje możliwość wyszukiwania nie tylko aplikacji ale także ustawień co
-        jest normą w GNOME od wersji 3. Na doku znajdują się ulubione
+        jest normą w <em>GNOME</em> od wersji 3. Na doku znajdują się ulubione
         aplikacje, które możemy usuwać i dodawać za pomocą PPM i następnie
         wybierając dodaj lub usuń z ulubionych.
       </p>
       <h2 id="2.2.hfs">2.2. Struktura katalogowa w Uniksach</h2>
       <p>
         Zanim jednak przejedziemy do obsługi wiersza poleceń omówimy sobie
-        hierachiczną strukturę katalogów, która występuje nie tylko w RHEL ale
-        i w innych Uniksach, ponieważ HFS (<em>ang. Hierarchy File System</em>)
+        hierachiczną strukturę katalogów, która występuje nie tylko w 
+        <em>RHEL</em> ale
+        i w innych Uniksach, ponieważ <em>HFS</em> 
+        (ang. <em>Hierarchy File System</em>)
         jest ogólnym standardem. Na Uniksach możemy spotkać się z trzema typami
         systemów plików.
       </p>
@@ -1215,36 +1226,36 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 8 --type hdd --mediu
           ale na innych komputerach.</li>
         <li><strong><em>Memory-based</em> - wirtualne</strong> - te systemy
           plików są tworzone przez procesy na potrzeby działania systemu, takim
-          systemem może być katalog <em>/dev</em> lub <em>/tmp</em>. Ich
+          systemem może być katalog <em>/dev</em> lub <em>/proc</em>. Ich
           trwałość często zależy od tego jak długo system pozostaje włączony
           lub od wewnętrznych ustaleń samego systemu.</li>
       </ul>
       <p>
         Struktura plików i katalogów na Uniksach ma postać odwróconego drzewa.
-        Korzeń (katalog główny) znajduje się na szczycie struktury i odniego
+        Korzeń (katalog główny) znajduje się na szczycie struktury i od niego
         rozchodzą się poszczególne gałęzie (podkatalogi), gałęzię mogą zawierać
-        kolejne rozgałezienia i tworzyć całe struktury, na gałęziach
+        kolejne rozgałezienia, tworząc całe struktury. Na gałęziach
         znajdują się również liscie czyli pliki i na liściach struktura się
         kończy.
       </p>
       <p>
         Dostęp do konkretnych plików i katalogów w strukturze określany jest
         za pomocą ścieżek. Scieżki określają położenie plików i katalogów
-        wewnątrz HFS.
+        wewnątrz <em>HFS</em>.
         Separatorem elementów ścieżki (posczególnych podkatalogów), jest
         ukośnik, slash (<strong>/</strong>).
       </p>
       <p>
         Podczas pracy z elementami jak foldery oraz pliki możemy używać
-        <strong>scieżęk bezwzględnych</strong> zaczynające się od
+        <strong>scieżek bezwzględnych</strong> zaczynające się od
         katalogu głównego, lub <strong>ścieżek względnych</strong>
         zaczynających
         się od elementu znajdującego w obecnym katalogu robocznym
         (tym katalogu, w którym się obecnie znajdujemy).
       </p>
       <p>
-        Katalog główny jest miejscem do przechwywania wszystkich plików, jakie
-        znajdują się w systemie, jest pierwszy element znajdujący się na
+        Katalog główny jest miejscem do przechowywania wszystkich plików, jakie
+        znajdują się w systemie, jest pierwszym element znajdujący się na
         ścieżce (bezwzględnej) i oznaczny jest on poprostu ukośnikiem
         (<strong>/</strong>), od tego katalogu zaczyna się cała struktura.
         Poniżej znajduje się lista najważniejszych podkatalogów katalogu
@@ -1255,12 +1266,12 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 8 --type hdd --mediu
             przechowuje jądro, <em>initramfs</em> oraz konfiguracje programu
             rozruchowego.</li>
         <li><strong>/dev</strong> (<em>memory-based</em>) - katalog ten
-            przechowuje pliki urządzeń służące do odwoływania się do
-            rzeczywistego sprzętu podczas komunikacji. Pliki te są tworzone
+            przechowuje pliki urządzeń służące do komunikacji z sprzętowymi
+            komponentami komputera. Pliki te są tworzone
             przez usługę <em>udevd</em> podczas podłączania urządzenia oraz
             rozruchu systemu.</li>
         <li><strong>/etc</strong> (<em>disk-based</em>) - skrót <em>etc</em>
-            możemy rozwinąć do <em>ang. etcetera</em> lub <em>ang. extended
+            możemy rozwinąć do ang. <em>etcetera</em> lub ang. <em>extended
             text configration</em>. Jest to miejsce do przechowywania plików
             konfiguracyjnych różnych programów.</li>
         <li><strong>/home</strong> (<em>disk-based</em>) - ten katalog
@@ -1273,20 +1284,20 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 8 --type hdd --mediu
         <li><strong>/run</strong> (<em>memory-based</em>) - katalog
             przechowywujący pliki wykorzystywane przez procesy podczas
             wykonywania ich czynności. W tym katalogu znajduje się również
-            podkatalog <em>media</em> zawierący punkt monotowania automatycznie
-            montowanych w systemie dysków wymiennych.</li>
+            podkatalog <em>media</em> zawierący punkty montowania podłączanych
+            do systemu dysków wymiennych.</li>
         <li><strong>/sys</strong> (<em>memory-based</em>) - katalog
             przechowuje informacje o urządzeniach, sterownikach. Pewne
-            funkcjonalności jądra również są zawarte w tym katalogu. Informacje
+            funkcjonalności jądra również są zawarte w tym katalogu. Dane
             z tego katalogu są używane przez jądro do obsługi urządzeń.</li>
         <li><strong>/tmp</strong> (<em>disk-based</em>) - miejsce 
-            przechowywania plików tymczasowych, plik złożone w tym katalogu
+            przechowywania plików tymczasowych, pliki złożone w tym katalogu
             przetrwają ponowne uruchomienie komputera. Okres przechowywania 
             tych plików to 10 dni.</li>
         <li><strong>/usr</strong> (<em>disk-based</em>) - skrót <em>usr</em>,
             należy rozwinąć jako <em>ang. UNIX System Resources</em>. Ten
             katalog jest kolejną dużą strukturą katalogów w systemie. W tym
-            katalog przechowywane są wszystkie programy, więc wiekszość 
+            katalogu przechowywane są wszystkie programy, więc wiekszość 
             systemu. Na poniższej liście znajdują się rozpisane podkatalogi
             tego katalogu:
             <ul>
@@ -1298,7 +1309,7 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 8 --type hdd --mediu
                   programami. Ten katalog często nie jest ujęty podczas 
                   wyszukiwania poleceń.</li>
               <li><strong>/usr/lib</strong>, <strong>/usr/lib64</strong> - 
-                  biblioteki współdzielone oraz pliki statyczne, nie których
+                  biblioteki współdzielone oraz pliki statyczne, niektórych
                   programów typu init.</li>
               <li><strong>/usr/include</strong> - pliki nagłówkowe języka C</li>
               <li><strong>/usr/local</strong> - miejsce przechowywania
@@ -1312,7 +1323,7 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 8 --type hdd --mediu
         </li>
         <li><strong>/var</strong> (<em>disk-based</em>) - katalog na zmienne
             dane, katalog podobnie do <em>/usr</em> ma wewnątrz wiele znaczący
-            podkatalogów, których opis znajduje się poniżej:
+            podkatalogów, takich jak:
             <ul>
               <li><strong>/var/log</strong> - katalog na pliki dzienników,
                 zbierane nie tylko z głównego rejestratora, ale i funkcji
@@ -1320,28 +1331,34 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 8 --type hdd --mediu
               <li><strong>/var/opt</strong> - katalog na zmienne dane
                 oprogramowania instalowanego w katalogu <em>/opt</em></li>
               <li><strong>/var/spool</strong> - katalog ten przechowuje dane
-                zanim zostaną przekazane lub pobrane przez właściwe komponenty.</li>
+                zanim zostaną przekazane lub pobrane przez właściwe komponenty,
+                na przykład poczta elektronicza w przypadku serwerów
+                pocztowych.</li>
               <li><strong>/var/tmp</strong> - katalog przechowuje duże pliki
-                tymczasowe. Pliki przeżywają uruchomienie ponowne systemu.
-                Czas ich istnienia w tym katalog to 30 dni.</li>
+                tymczasowe. Pliki złożone w tym katalogu przetrwają
+                ponowne uruchomienie systemu. Czas ich istnienia w tym katalog 
+                to 30 dni.</li>
             </ul>
         </li>
       </ul>
       <p>
         Za pomocą polecenia <strong>tree</strong>, możemy wyświetlić strukturę
         katalogą w postaci drzewa, jednak najpierw nauczymy się korzystać z
-        poleceń w RHEL.
+        poleceń w <em>RHEL</em>.
       </p>
       <h2 id="2.3.usingcli">2.3. Obsługa wiersza poleceń i najprostsze 
       polecenia</h2>
       <p>
         Obsługa wiersza poleceń zależy w znacznym stopniu od powłoki, ponieważ
-        to ona zajmuj się jego interpretacją i koniec końców wykonaniem
-        programu, którego nazwę podaliśmy chcą wykonać polecenie. Aby móc
-        skorzystać w RHEL z wiersza poleceń musimy albo uruchomić w środowisku
+        to ona zajmuje się jego interpretacją i koniec końców wykonaniem
+        programu, którego nazwę podaliśmy chcąc wykonać polecenie. Aby móc
+        skorzystać w <em>RHEL</em> z wiersza poleceń musimy albo uruchomić w 
+        środowisku
         graficznym aplikację <strong>Terminal</strong>, lub zalogować się
-        zdalnie za pomocą protokołu SSH. Uruchomienie terminala lub zalogowanie
-        się przez SSH uruchomi powłokę, która swoją gotowość na otrzymywanie
+        zdalnie za pomocą protokołu <em>SSH</em>. Uruchomienie terminala lub 
+        zalogowanie
+        się przez <em>SSH</em> uruchomi powłokę, która swoją gotowość na 
+        otrzymywanie
         poleceń obwieści wyświetleniem <strong>znaku zachęty</strong>.
       </p> 
       <p>
@@ -1413,7 +1430,7 @@ $ nazwa_polecenia [opcje] [argumenty]
             człowieka.</li>
         <li><strong>-lt</strong> - wyświetli szczegółową listę elementów
             posortową względem czasu modyfikacji od najnowszego pliku.</li>
-        <li><strong>-ltr</strong> - działanie podobne to <em>-lt</em>, ale
+        <li><strong>-ltr</strong> - działanie podobne do <em>-lt</em>, ale
             odwrócone, elementy zostaną wyświetlone od najstarszego.</li>
         <li><strong>-R</strong> - wyświetlenie elementów w sposób 
             rekurencyjny. Polecenie z tą opcją wyświetli zawartość katalogów
@@ -1471,14 +1488,15 @@ drwxr-xr-x.  2 root root       6 Jun 13 10:55 Videos
         <em>ls</em> również możemy użyć długich opcji np. zamiast
         <em>-a</em> możemy użyć <em>--all</em>.
       </p>
-      <h3 id="2.3.2.pwd">2.3.2. Wyświetlenie bierzącego katalogu roboczego</h3>
+      <h3 id="2.3.2.pwd">2.3.2. Wyświetlenie bieżącego katalogu roboczego</h3>
       <p>
         Na pierwszy rzut oka mogłoby się wydawać po co nam to polecenie,
-        skoro w znaku zachęty na RHEL jest wyświetlona nazwa bierzącego
+        skoro w znaku zachęty na <em>RHEL</em> jest wyświetlona nazwa 
+        bieżącego
         katalogu. Polecenie <strong>pwd</strong> wyświetla ścieżkę bezwzględną 
-        do bierzącego katalogu, a po drugie to polecenie ma bardzo ważną cechę
+        do bieżącego katalogu, a po drugie to polecenie ma bardzo ważną cechę
         związaną z dowiązaniami, ale o tym będzie przy dowiązaniach. Do
-        normalnych zastosować <em>pwd</em> nie potrzebuje żadnej opcji, ani
+        normalnych zastosowań <em>pwd</em> nie potrzebuje żadnej opcji, ani
         żadnego argumentu.
       </p>
 <pre class="code-block">
@@ -1487,18 +1505,18 @@ drwxr-xr-x.  2 root root       6 Jun 13 10:55 Videos
 </pre>
       <h3 id="2.3.3.cd">2.3.3. Poruszanie się wśrod katalogów</h3>
       <p>
-        Generalnie do zmiany bierzącego katalogu, czy przejścia z/do 
-        innego katalogu służy polecenie <strong>cd</strong>. Pozwala on na
+        Generalnie, do zmiany bierzącego katalogu czy przejścia z/do 
+        innego katalogu służy polecenie <strong>cd</strong>. Pozwala ono na
         kilka sztuczek.
       </p>
       <ul>
         <li>Powrót do katalogu domowowego nie wymaga przy tym poleceniu żadnego
           argumentu ani opcji, wystarczy wydać polecenie <em>cd</em>.</li>
         <li>Polecenie zapamiętuje poprzedni katalog roboczy i powrót do niego
-          wymaga podania polceniu <em>cd</em> myślnika (<strong>-</strong>)
+          wymaga podania po poleceniu <em>cd</em> myślnika (<strong>-</strong>)
           jako argumentu</li>
-        <li>W ścieżka chcąć skrócić sobie pisanie, możemy użyć tyldy
-          (<strong>~</strong>) jako przedstawienia katalogu domowego.</li>
+        <li>W ścieżkach chcąć skrócić sobie pisanie, możemy użyć tyldy
+          (<strong>~</strong>) jako zamiennika katalogu domowego.</li>
         <li>Chcąc przenieść się do katalogu nadrzędnego względem bierzącego
           nie musimy znać jego nazyw wystarczy że poleceniu <em>cd</em> podamy
           dwie kropki (<strong>..</strong>)</li>
@@ -1518,9 +1536,9 @@ drwxr-xr-x.  2 root root       6 Jun 13 10:55 Videos
         terminalowego służy do tego polecenie <strong>tty</strong>. Jeśli 
         wynikiem działania tego polecenie będzie <em>/dev/pts*</em> oznacza to,
         że korzystamy z emulatora terminala np. programu Terminal w środowisku
-        GNOME lub połączenia zdalnego za pomocą protokołu SSH. 
+        GNOME lub połączenia zdalnego za pomocą protokołu <em>SSH</em>. 
         Jeśli naszę urządzenie to <em>/dev/tty*</em> oznacza to, że
-        korzystamy z jednej wirtualnych konsol dostępnych na komputerze.
+        korzystamy z jednej wirtualnych konsol dostępnych w systemie.
       </p>
 <pre class="code-block">
 [root@server1 ~]# tty
@@ -1528,7 +1546,7 @@ drwxr-xr-x.  2 root root       6 Jun 13 10:55 Videos
 </pre>
       <h3 id="2.3.5.uptime">2.3.5. Czas systemowy oraz załadowanie procesora</h3>
       <p>
-        W większości dostępnych Uniksów zapewne dostępne będzie polecenie 
+        Większości dostępnych Uniksów zapewne zawierać będzie polecenie 
         <strong>uptime</strong>. To niepozorne polecenie zawraca dużą ilość
         informacji.
       </p>
@@ -1543,7 +1561,7 @@ drwxr-xr-x.  2 root root       6 Jun 13 10:55 Videos
             w 50% otrzymamy wynik 0.50. Jeśli posiadamy procesor wielordzeniowy, 
             ten wskaźnik może
             wskazywać wartości powyżej 1, oznacza to że procesy wykorzystują
-            już więcej niż jeden wątęk/rdzeń.</li>.
+            już więcej niż jeden wątęk/rdzeń.</li>
       </ul>
 <pre class="code-block">
 [root@server1 ~]# uptime
@@ -1551,8 +1569,8 @@ drwxr-xr-x.  2 root root       6 Jun 13 10:55 Videos
 </pre>
       <h3 id="2.3.6.clear">2.3.6. Czyszczenie ekranu powłoki</h3>
       <p>
-        Do czyszczenia terminala ze zbędnego wyjścia poleceń służy polcenie
-        <strong>clear</strong> lub kombinacja klawiszy <em>CTRL+l</em>.
+        Do czyszczenia terminala ze zbędnego wyjścia poleceń służy polecenie
+        <strong>clear</strong> lub kombinacja klawiszy <em>Ctrl+l</em>.
       </p>
 <pre class="code-block">
 [root@server1 ~]# clear
@@ -1561,19 +1579,18 @@ drwxr-xr-x.  2 root root       6 Jun 13 10:55 Videos
       <p>
         Czasami w pewnych konfiguracjach lub też w skryptach powłoki niezbędne
         będzie podanie ścieżki do konkretnego programu kryjącego się za nazwą
-        polecenia, w RHEL możemy zrobić to na trzy sposoby wykorzystując do
+        polecenia, w <em>RHEL</em> możemy zrobić to na trzy sposoby 
+        wykorzystując do
         tego różne polecenia. Polecenia podałem w przykładzie w raz z
         informacją zwracaną przez polecenie.
       </p>
 <pre class="code-block">
-$ which ls
+[user@rhel90 ~]$ which ls
 alias ls='ls --color=auto'
 	/usr/bin/ls
-
-$ whereis ls
+[user@rhel90 ~]$ whereis ls
 ls: /usr/bin/ls /usr/share/man/man1/ls.1.gz /usr/share/man/man1p/ls.1p.gz
-
-$ type ls
+[user@rhel90 ~]$ type ls
 ls jest aliasem do ls --color=auto'
 </pre>
       <p>
@@ -1583,22 +1600,22 @@ ls jest aliasem do ls --color=auto'
       </p>
       <h3 id="2.3.8.uname">2.3.8. Wyświetlenie informacji o systemie</h3>
       <p>
-        Polecenie <strong>uname</strong>, należy do poleceń, które są dość
+        Polecenie <strong>uname</strong> należy do poleceń, które są dość
         niepozorne, ale za pomocą jego opcji możemy otrzymać wersję użytego
-        jądra, archtekturę systemu i tym podobne informacje. Polecenie bez 
+        jądra, architekturę systemu i tym podobne informacje. Polecenie bez 
         podania
         żadnej z opcji zwraca wyłącznie nazwę systemu i jest to <em>Linux</em>.
         Aby otrzymać wszelkie zwracane przez to polecenie informacje możemy 
         użyć opcji <em>-a</em>. Resztę opcji znajdziemy na stronach
-        podręcznika (o tym będzie w dalszej częście materiału).
+        podręcznika (o tym będzie w dalszej części materiału).
       </p>
 <pre class="code-block">
-$ uname -a 
+[user@rhel90 ~]$ uname -a
 Linux latitude-e5270 5.14.0-70.13.1.el9_0.x86_64 #1 SMP PREEMPT Thu Apr 14 12:42:38 EDT 2022 x86_64 x86_64 x86_64 GNU/Linux
 </pre>
       <h3 id="2.3.9.lscpu">2.3.9. Wyświetlanie informacji o procesorze</h3>
       <p>
-        W RHEL możemy łatwo sprawdzić informacje na temat zainstalowanego w
+        W <em>RHEL</em> możemy łatwo sprawdzić informacje na temat zainstalowanego w
         naszym komputerze procesora w przystępny sposób. Do dyspozycji mamy
         bowiem polecenie <strong>lscpu</strong>. Wyświetla ono wszystkie
         dostępne informacje jakie może znaleźć w systemie na temat tego
@@ -1652,29 +1669,30 @@ Vulnerabilities:
       <h2 id="2.4.gettinghelp">2.4. Uzyskiwanie pomocy</h2>
       <h3 id="2.4.1.manpages">2.4.1. Strony podręcznika</h3>
       <p>
-        W dystrybucjach Linuksa nie tylko w RHEL możemy znaleźć duża bazę
+        W dystrybucjach Linuksa nie tylko w <em>RHEL</em> możemy znaleźć duża 
+        bazę
         zawierającą opisy poleceń, plików konfiguracyjnych oraz innych
         komponentów takich jak biblioteki. Służą temu strony podręcznika. Aby
         uzyskać do nich dostęp wystarczy wydać polecenie <strong>man</strong>
-        podając jako argument interesujący na komponent. Nie zawsze musi być
+        podając jako argument interesujący nas komponent. Nie zawsze musi być
         to polecenie. Strony podręcznika są podzielone na rozdziały czy też
-        sekcje ich opisy oraz numery sa zawarte w na (o ironio) stronie
-        podręcznika polecenia <em>man</em>. Wydaj poniższe polecenie aby
+        sekcje ich opisy oraz numery sa zawarte na (o ironio) stronie
+        podręcznika polecenia <em>man</em>. Wydajmy poniższe polecenie aby
         zapoznać się z nim oraz z ich organizacją.
       </p>
 <pre class="code-block">
-$ man man
+[xf0r3m@hp-z600 ~]$ man man
 </pre>
       <p>
         Różne komponenty na Linuksie mogą mieć takie same nazwy. Polecenie
         <em>man</em> zwraca pierwsze znalezione wystąpienie, jeśli wpiszemy
         polecenie <code class="code-inline">man passwd</code> to otrzymamy
         informacje na temat polecenia, ale jeśli interesowałoby nas poznanie
-        szczegółów pliku <em>/etc/passwd</em> musimy podać przed nazwą, numer
-        sekcji odpowiedzialny za pliki konfiguracyjne.
+        szczegółów pliku <em>/etc/passwd</em> musimy podać przed jego nazwą, 
+        numer rozdziału odpowiedzialny za pliki konfiguracyjne.
       </p>
 <pre class="code-block">
-$ man 5 passwd
+[xf0r3m@hp-z600 ~]$ man 5 passwd
 </pre>
       <p>
         Strony podręcznika, możemy przeszukiwać pod kątem występowania słów
@@ -1684,29 +1702,29 @@ $ man 5 passwd
         działania tych programów jest taki sam.
       </p>
 <pre class="code-block">
-$ apropos dos
-dos2unix (1)         - konwerter formatu plików tekstowych między systemami DOS/Mac a Uniksem
-mac2unix (1)         - konwerter formatu plików tekstowych między systemami DOS/Mac a Uniksem
-unix2dos (1)         - konwerter formatu plików tekstowych między systemami DOS/Mac a Uniksem
-unix2mac (1)         - konwerter formatu plików tekstowych między systemami DOS/Mac a Uniksem
+[user@rhel90 ~]$ apropos dos
+dos2unix (1)         - DOS/Mac to Unix and vice versa text file format converter
 dosfsck (8)          - check and repair MS-DOS FAT filesystems
 dosfslabel (8)       - set or get MS-DOS filesystem label or volume ID
 fatlabel (8)         - set or get MS-DOS filesystem label or volume ID
-filesystems (5)      - Linux filesystem types: ext, ext2, ext3, ext4, hpfs, iso9660, JFS, minix, msdo...
-fs (5)               - Linux filesystem types: ext, ext2, ext3, ext4, hpfs, iso9660, JFS, minix, msdo...
+filesystems (5)      - Linux filesystem types: ext, ext2, ext3, ext4, hpfs, iso9660, JFS, minix, msdos, ncpfs nfs, ntfs, proc, Reiserfs, smb, sysv, umsdos, vfat, XFS, xiafs
+fs (5)               - Linux filesystem types: ext, ext2, ext3, ext4, hpfs, iso9660, JFS, minix, msdos, ncpfs nfs, ntfs, proc, Reiserfs, smb, sysv, umsdos, vfat, XFS, xiafs
 fsck.fat (8)         - check and repair MS-DOS FAT filesystems
 fsck.msdos (8)       - check and repair MS-DOS FAT filesystems
 fsck.vfat (8)        - check and repair MS-DOS FAT filesystems
+mac2unix (1)         - DOS/Mac to Unix and vice versa text file format converter
 mkdosfs (8)          - create an MS-DOS FAT filesystem
 mkfs.fat (8)         - create an MS-DOS FAT filesystem
 mkfs.msdos (8)       - create an MS-DOS FAT filesystem
 mkfs.vfat (8)        - create an MS-DOS FAT filesystem
+unix2dos (1)         - DOS/Mac to Unix and vice versa text file format converter
+unix2mac (1)         - DOS/Mac to Unix and vice versa text file format converter
 vdosetuuid (8)       - sets a new uuid for the vdo volume stored on a backing store
 vdostats (8)         - Display configuration and statistics of VDO volumes
 </pre>
       <p>
-        W pierwszej kolumnie znajduje się nazwa komponentu, w drugiej numer
-        sekcji a następnie krótki opis.
+        W pierwszej kolumnie znajduje się nazwa komponentu, w drugiej
+        (w nawiasie) numer rozdziału a następnie krótki opis.
       </p>
       <p>
         Szukając opisu polecenia możemy posiłkować się poleceniem 
@@ -1714,7 +1732,7 @@ vdostats (8)         - Display configuration and statistics of VDO volumes
         na stronach podręcznika, a nie słowa kluczowego.
       </p>
 <pre class="code-block">
-$ whatis xdg-open 
+[user@rhel90 ~]$ whatis xdg-open 
 xdg-open (1)         - opens a file or URL in the user's preferred application
 </pre>
       <p>
@@ -1724,11 +1742,11 @@ xdg-open (1)         - opens a file or URL in the user's preferred application
       <h3 id="2.4.2.helpincommand">2.4.2. Pomoc w samym poleceniu</h3>
       <p>
         Inny sposobem niż wertowanie stron podręcznika w celu znalezienia
-        odpowiedniej opcji jest po prostu wywołanie polecenie a opcją
+        odpowiedniej opcji jest po prostu wywołanie polecenia a opcją
         <strong>--help</strong>.
       </p>
 <pre class="code-block">
-$ ranger --help
+[user@rhel90 ~]$ ranger --help
 Usage: ranger [options] [path]
 
 Options:
@@ -1775,7 +1793,8 @@ Options:
       </p>
       <h3 id="2.4.3.texinfo">2.4.3. Dokumentacja texinfo</h3>
       <p>
-        Projekt GNU, zaproponował zmianę formatu dokumentacji programów, z
+        Projekt <em>GNU</em>, zaproponował zmianę formatu dokumentacji 
+        programów, z
         suchych stron podręcznika do dokumentów przypominających ksiązkę lub
         inne dokumenty. Strony podręcznika nadal są podstawowym i wybudowanym
         (w większość dystrybcji) źródłem  wiedzy na temat systemu i jego 
@@ -1793,7 +1812,7 @@ Options:
         Innym miejscem przechowującym jakieś informacje na temat poleceń czy
         też programów może być katalog <em>/usr/share/doc</em>. Możemy w nim
         znaleźć na przykład domyślne plik konfiguracyjne wielu usług 
-        (oczywiście zależy to czy zostaną one dodany do paczek z 
+        (oczywiście zależy to czy zostaną one dodane do paczek z 
         oprogramowaniem). Nie należy jednak
         od razu skreślać tego katalogu, często mogą znajdować się tam
         informacje, których nie znajdziemy na stronach podręcznika czy w
@@ -1802,7 +1821,8 @@ Options:
       <h3 id="2.4.5.rhdocs">2.4.5. Dokumentacja Red Hat Enterprise Linux</h3>
       <p>
         Innym źródłem informacji na temat obsługi systemu jest dokumentacja
-        Red Hat dostępna w internecie (dla RHEL 9) pod tym adresem:
+        <em>Red Hat</em> dostępna w internecie (dla <em>RHEL</em> 9) pod tym 
+        adresem:
         <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9</a>
       </p>
       <p>
@@ -1857,7 +1877,7 @@ Options:
         W tym rozdziale skupiliśmy się na podstawach obsługi systemu,
         poznaliśmy środowisko graficzne. Odświerzyliśmy sobie informacje na
         temat hierachicznego systemu plików wykorzystywanego w Uniksach.
-        Zapoznaliśmy się z terminalem i podstawowymi polecenia. Na koniec
+        Zapoznaliśmy się z terminalem i podstawowymi poleceniami. Na koniec
         dowiedzieliśmy się gdzie możemy szukać pomocy na temat poleceń, plików
         konfiguracyjnych i tego typu rzeczy.
       </p>

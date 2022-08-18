@@ -2729,7 +2729,7 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
       </p>
       <h3 id="exec3.1">Ćwiczenie 1: Archiwa</h3>
       <p>
-        Na maszynie <em>server1</em> jako zwykły użytkownik, utwórz
+        Na maszynie <em>server1</em> jako superużytkownik, utwórz
         skompresowane za pomocą programu <em>gzip</em> archiwum z zawartością
         katalogu <em>/etc</em>. Powtórz czynność tym razem z użyciem programu
         <em>bzip2</em>. Porównaj wielkość tych archiwów. Na koniec rozpakuj
@@ -2770,7 +2770,7 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
         pliki w każdym systemie, niezależnie od tego czy nasz ulubiony edytor
         jest dostępny. Ciekawszą rzeczą w tym rodziale z pewnością były 
         dowiązania symboliczne. W następnym rodziale skupimy się na
-        uprawnieniach plików i katlogów, oraz przekonamy się jak potężnym
+        uprawnieniach plików i katalogów, oraz przekonamy się jak potężnym
         narzędziem jest polecenie <em>find</em>.
       </p>
       <h1 id="4.advancedfilemanagement">4. Zaawansowane zarządzanie plikami</h1> 
@@ -2788,7 +2788,7 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
         uprawnień jest również oznaczna jako uprawnienia publiczne.             
       </p>                                                                      
       <p>                                                                       
-        Każdej z tych klas możemy przypisać odpowiednie uprawniania takie jak:  
+        Każdej z tych klas możemy przypisać odpowiednie uprawnienia takie jak:  
         prawo do odczytu (<strong>r</strong>), prawo do zapisu                  
         (<strong>w</strong>) oraz prawo do wykonania (<strong>x</strong>).
       </p>
@@ -2802,11 +2802,11 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
 -rw-r--r--. 1 user user 0 Jun 21 14:21 file1
 </pre>
       <p>
-        Upraweniania znajdują się w pierwszej kolumnie:
+        Uprawnienia znajdują się w pierwszej kolumnie:
         <code class="code-inline">-rw-r--r--.</code>, łącznie 11 znaków, ale
         nas będzie interesować tylko 9 w środku. Pierwszy znak oznacza typ 
         pliku, natomiast kropka związana jest z kontekstem <em>SELinux</em>,
-        nie będziemt się teraz tym zajmować. Te dziewieć pól są to miejsca
+        nie będziemy się teraz tym zajmować. Te dziewięć pól są to miejsca
         przeznaczone na uprawnienia poszczególnych klas. Pierwsze trzy pola 
         z lewej to uprawnienia użytkownika (właściciela), kolejne trzy pola
         to uprawnienia grupy do której należy ten plik natomiast pozostałe 
@@ -2826,7 +2826,8 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
         użytkownik mógł przejść do niego (za pomocą polecenia <em>cd</em>).
       </p>
       <p>
-        Zatem w przypadku tego pliku, właściciel może czytać i pisać, a grupa
+        Zatem w przypadku pliku z powyższego przykładu, właściciel może czytać 
+        i pisać, a grupa
         oraz wszyscy inni mogą tylko czytać, dla nich wówczas ten plik jest
         plikiem tylko do odczytu.
       </p>
@@ -2863,7 +2864,7 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
 -rwxrwx---. 1 user user 0 Jun 21 14:21 file1
 </pre>
       <p>
-        Zapis uprawnień w tej postacji, który swoją drogą nazwa sie zapisem
+        Zapis uprawnień w tej postaci, który swoją drogą nazwa się zapisem
         symbolicznym, wymaga dużo pisania. Uprawnienia można zmieniać łatwiej
         jednak wymagać to będzie więcej myślenia. 
       </p>
@@ -2871,7 +2872,7 @@ lrwxrwxrwx. 1 user user 7 Jun 20 19:28 symlink1 -&gt; symfile
         Każde z omówionych wcześniej praw posiada swoją wagę, te wagi sumują
         się dając uprawnienia dla konkretnej klasy. A więc: prawo do odczytu
         (<strong>r</strong>) posiada wagę <strong>4</strong>, prawo do zapisu
-        (<strong>w</strong> posiada wagę <strong>2</strong> a prawo do 
+        (<strong>w</strong>) posiada wagę <strong>2</strong> a prawo do 
         wykonania (<strong>x</strong>) posiada wagę
         <strong>1</strong>. Brak prawa (<strong>-</strong>) ma wagę 
         <strong>0</strong>. Tak złożone razem sumy tych wag dają uprawnienia
@@ -2889,7 +2890,7 @@ o = r-- = 4 + 0 + 0 = 4
 ugo = 644
 </pre>
       <p>
-        Natomiast uprawnienia po zmianie katalogo bedą wynosić:
+        Natomiast uprawnienia po zmianie bedą wynosić:
       </p>
 <pre class="code-block">
 [user@server1 ~]$ ls -l file1
@@ -2913,8 +2914,8 @@ mode of 'file1' changed from 0644 (rw-r--r--) to 0770 (rwxrwx---)
 </pre>
       <p>
         Na powyższym przykładzie zastosowałem opcję <em>-v</em>, która
-        wyświetla jak zmieniają się uprawnienia oraz postać symboliczną
-        uprawnienień. W przypadku wyświetlonej wartości liczbowej, pierwsze
+        wyświetla jak zmieniają się uprawnienia oraz przedstawia je w obu
+        formach. W przypadku wyświetlonej wartości liczbowej, pierwsze
         zero z lewej strony jest miejscem na uprawnienia specjalne o których
         będzie za chwilę, w przypadku standardowych uprawnienień nie ma ono
         znaczenia.
@@ -2939,7 +2940,8 @@ mode of 'file1' changed from 0770 (rwxrwx---) to 0644 (rw-r--r--)
         czytelniejszy oraz szybszy do zapisania.
       </p>
       <p>
-        Na koniec jako ciekawostke podam iż istnieje czwarta dodatkowa klasa -
+        Na koniec jako ciekawostke podam iż istnieje czwarta dodatkowa klasa
+        oznaczająca 
         wszystkie klasy (<strong>a</strong>), za jej pomocą można nadawać,
         odbierać i przypisywać takie same uprawnienia dla wszystkich klas.
       </p>
@@ -2967,7 +2969,8 @@ mode of 'file1' changed from 0644 (rw-r--r--) to 0777 (rwxrwxrwx)
 0022
 </pre>
       <p>
-        Maska w przypadku RHEL 9 wygląda tak jak na powyszym przykładzie. Ta
+        Maska w przypadku <em>RHEL</em> 9 wygląda tak jak na powyszym 
+        przykładzie. Ta
         wartość usunie z klasy grupy oraz z klasy pozostałych użytkowników
         prawo do zapisu. Rachunek uprawnień jest bardzo prosty.
       </p>
@@ -2997,7 +3000,8 @@ mode of 'file1' changed from 0644 (rw-r--r--) to 0777 (rwxrwxrwx)
       <p>
         Tak zdefiniowana maska usunie tylko prawo do zapisu w klasie
         pozostałych użytkowników dla każdego nowego pliku i katalogu. Maska
-        o tej wartości była domyślną maską dla zwykłych użytkowników w RHEL 8.
+        o tej wartości była domyślną maską dla zwykłych użytkowników w 
+        <em>RHEL</em> 8.
         Wartość maski zdefiniowanej z poziomu wiersza poleceń, utrzyma się
         tylko przez czas trwania otwartej sesji terminala. Po jego zamknięciu 
         lub
@@ -3061,7 +3065,8 @@ Password:
 su: Authentication failure
 </pre>
       <p>
-        Jak widać przełączanie na użytkownika user100 nie powiodło się
+        Jak widać przełączanie na użytkownika 
+        <code class="code-inline">user100</code> nie powiodło się
         mimo iż polecenie zapytało o hasło (polecenie <em>su</em> nie pyta o
         hasło tylko superużytkownika). Zwróćmy również uwagę na to jak wygląda
         bit <em>setuid</em> w oktalnym zapisie uprawnień. Do wskazywania 
@@ -3127,7 +3132,7 @@ drwxrwsr-x. 2 user2000 sgrp2 6 Jun 21 17:30 user2000dir
       </p>
       <p>
         Innym przykładem jest wykorzystanie pliku wykonywalnego z ustawionym
-        bitem <em>setgid</em>. Weźmy pod lupe taki taki plik jak program
+        bitem <em>setgid</em>. Weźmy pod lupe taki plik jak program
         <strong>write</strong>, ten program służy do przesyłania wiadomości
         między użytkownikami (między terminalami).
       </p>
@@ -3155,7 +3160,7 @@ crw--w----. 1 user tty 136, 0 Jun 21 17:51 /dev/pts/0
 </pre>
       <p>
         Tutaj grupa również posiada prawo zapisu. Usuwanie i przypisywanie
-        tego bitu ponownie jest analogiczne to bitu <em>setuid</em>, wymaga
+        tego bitu jest analogiczne do bitu <em>setuid</em>, wymaga
         tylko zmiany kilku wartości
       </p>
 <pre class="code-block">
@@ -3190,7 +3195,7 @@ mode of '/sdir' changed from 3770 (rwxrws--T) to 2770 (rwxrws---)
 mode of '/sdir' changed from 2770 (rwxrws---) to 3770 (rwxrws--T)
 </pre>
       <p>
-        Tutaj zwróćmy uwagę na to iż bit <em>sticky</em> jest zapisany wielką
+        Tutaj zwróćmy uwagę na to, iż bit <em>sticky</em> jest zapisany wielką
         literą, otóż działanie tego bitu się nie zmienia, jest jedynie 
         informacja, że klasie publicznej brakuje prawa do wykonania
         (<em>x</em>). Wszystkie bity specjalne umieszczane w poszczególnych
@@ -3199,7 +3204,7 @@ mode of '/sdir' changed from 2770 (rwxrws---) to 3770 (rwxrws--T)
       <h2 id="4.3.find">4.3. Polecenie find</h2>
       <p>
         Polecenie <strong>find</strong>, jak sama nazwa wskazuje służy do
-        wyszukiwania plikówi i katalogów. Najczęściej jest ono wykorzystywane 
+        wyszukiwania plików i katalogów. Najczęściej jest ono wykorzystywane 
         przez
         użytkowników w podstawowym zakresie, zwracając gigantyczną ilość danych.
         Często korzystając z tego narzędzia nie wykorzystuje się w pełni jego
@@ -3230,7 +3235,7 @@ mode of '/sdir' changed from 2770 (rwxrws---) to 3770 (rwxrws--T)
         tysięcy.
       </p>
       <p>
-        Poniżej zamiesczam najważniejsze opcje służące do bardziej
+        Poniżej zamieszczam najważniejsze opcje służące do bardziej
         szczegółowego wyszukiwania plików.
       </p>
       <ul>
@@ -3302,7 +3307,7 @@ mode of '/sdir' changed from 2770 (rwxrws---) to 3770 (rwxrws--T)
 </pre>
           Zwróćmy uwagę na to, iż te opcje są opcjami globalnymi, nie mają
           bezpośredniego wpływu na wyszukiwanie, dlatego też należy je
-          umieszczać przed opcjami mający zawęzić kryteria.
+          umieszczać przed opcjami mającymi zawęzić kryteria.
         </li>
         <li><strong>-type</strong> - wyszukiwanie na podstawie typu
           plików. Poniższy przykład pokazuje również jak zapisać różne
@@ -3320,7 +3325,7 @@ prw-------. 1 root root 0 Jun 22  2022 /run/initctl
 prw-------. 1 root root 0 Jun 22  2022 /run/dmeventd-client
 prw-------. 1 root root 0 Jun 22  2022 /run/dmeventd-server
 </pre>
-        Polecenie wyszukuje w systemie wszyskie gniazda i nazwane potoki
+        Polecenie wyszukuje w systemie wszystkie gniazda i nazwane potoki
         (typy plików, nieomawiane w tym materiale). Jak widać inną wartość dla
         tej opcji należy podać po przecinku.
       </li>
@@ -3431,7 +3436,7 @@ crw-r--r--. 1 root root 10, 235 Jun 22 17:30 /dev/autofs
       <h3 id="4.3.1.actionoptions">4.3.1. Opcje akcji polecenia find</h3>
       <p>
         Na powyższych przykładach stosowałem wielkrotnie dodatkową opcję
-        <code class="code-inline">-exec</code>. Jest to opcja akcji
+        <strong>-exec</strong>. Jest to opcja akcji
         podejmowana na pliku gdy tylko zostanie znaleziony. Składania opcji
         <em>-exec</em> może wyglądać następująco:
       </p>
@@ -3445,9 +3450,9 @@ $ find ... -exec ls -ld {} \;
         <code class="code-inline">{}</code> każde polecenie wydawane za pomocą
         opcji <em>-exec</em> czy innej musi zostać za terminowane
         zacytowanym średnikiem (<strong>\;</strong>), ponieważ jest koniec
-        polecenia wprowadzonego to tej opcji, a nie koniec polecenia
+        polecenia wprowadzonego do tej opcji, a nie koniec polecenia
         <em>find</em>. Wynik działania przykładowego użycia opcji 
-        <em>-exec</em> znajduje sie w przykładach na początku tego 
+        <em>-exec</em> znajduje się w przykładach na początku tego 
         podrozdziału.
       </p>
       <p>
@@ -3457,6 +3462,7 @@ $ find ... -exec ls -ld {} \;
         wykonać podane polecenie na pliku.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Polecenie <em>find</em>, wydaje się bardzo pomocne, posiada masę opcji
         część znich znajduje się tutaj, pozostałe są rozpisane na stronach
         podręcznika. Powinniśmy umieć się posługiwać tym narzędziem, zarówno
@@ -3466,11 +3472,12 @@ $ find ... -exec ls -ld {} \;
       <h2 id="4.4.acl">4.4. Lista kontroli dostępu</h2>
       <p>
         Oprócz klasycznego zestawu uprawnień w Uniksach oraz określenia
-        właściciela i grupy do której należy plik bądź katalog, w RHEL możemy
+        właściciela i grupy do której należy plik bądź katalog, w <em>RHEL</em>
+        możemy
         dodatkowo wskazać innych użytkowników oraz grupy i przypisać im 
         uprawnienia
         nieżależne od tych klasycznych (<strong>standardu ugo/rwx</strong>).
-        Temu właśnie służy <strong>Lista kontroli dostępu</strong>. Ten
+        Temu właśnie służy <strong>lista kontroli dostępu</strong>. Ten
         mechanizm obsługiwany jest za pomocą dwóch poleceń, pierwszym z nich
         jest <strong>getfacl</strong> i służy ono do wypisania listy kontroli
         dostępu. Stwórzmy w katalogu <em>/tmp</em> plik o nazwie 
@@ -3498,7 +3505,8 @@ other::r--
         do której należy ten plik oraz pozostałych użytkowników.
         Listy kontroli dostępu możemy modyfikować 
         za pomocą polecenia <strong>setfacl</strong>. Zanim jednak poznamy
-        jak należy modyfikować ACL, poniżej znajduje się lista najważniejszych
+        jak należy modyfikować <em>ACL</em>, poniżej znajduje się lista 
+        najważniejszych
         opcji tego polecenia. Są one dość istotne, ponieważ pozwalają na 
         manipulowanie listami elementu.
       </p>
@@ -3545,7 +3553,7 @@ other::r--
         Wyświetliłem szczegóły pliku. Zwróćmy uwagę na to, iż kropka na końcu
         uprawnień została zastąpiona plusem (<strong>+</strong>), taki zapis
         informuje użytkowników, że uprawnienia tego pliku są rozszerzone za
-        pomocą ACL. Teraz przyjrzymy sie jak wygląda taka lista w ujęciu ACL:
+        pomocą <em>ACL</em>. Teraz przyjrzymy sie jak wyglądają listy pliku:
       </p>
 <pre class="code-block">
 [user@server1 tmp]$ getfacl -c acluser
@@ -3599,6 +3607,9 @@ mask::r--
 other::r--
 </pre>
       <p>
+        Na powyższym przykładzie za pomocą selektora (<em>u: - user</em>, itd.)
+        <code class="code-inline">m:</code> wskazuje uprawnienia dla maski
+        <em>ACL</em>.
         Teraz przy zdefiniowanych przez nas listach użytkowników, pojawił się
         komentarz <code class="code-inline">#effective:r--</code>. Oznacza to,
         iż uprawnienia zostały zmniejszone ponieważ, przekraczają nałożoną na 

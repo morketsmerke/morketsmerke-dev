@@ -249,8 +249,8 @@
                 <li><a href="#7.2.2.usersfiles">7.2.2. Pliki startowe powłoki użytkownika</a></li>
               </ul>
             </li>
-            <li><a href="#exec7.1">Ćwiczenie 1</a></li>
-            <li><a href="#exec7.2">Ćwiczenie 2</a></li>
+            <li><a href="#exec7.1">Ćwiczenie 1: Zmiana symbolu zachęty</a></li>
+            <li><a href="#exec7.2">Ćwiczenie 2: Przkierowanie strumieni</a></li>
             <li><a href="#ch7summary">Podsumowanie</a></li>
           </ul>
         </li>
@@ -3777,7 +3777,8 @@ default:other::r-x
         Zapoznając się ze zwykłymi listami dostępu po zdefiniowaniu list o 
         uprawnieniach
         dających pełne prawa jednemu z użytkowników nie mogłem
-        (jako on) zapisać nic do pliku za pomocą jakiego kolwiek edytora. Dane 
+        (jako on) zapisać nic do pliku znajdującego się w katalogu 
+        <em>/tmp</em> za pomocą jakiego kolwiek edytora. Dane 
         mogłem zapisać natomiast przekierowując strumień na przykład z 
         polecenia <em>echo</em>. Ten problem zauważyłem w <em>RHEL</em> 9, w 
         wersji 8.6 
@@ -5085,14 +5086,14 @@ PKGADM ALL = PKGCMD
       </p>
       <h3 id="7.1.1.variables">7.1.1. Zmienne</h3>
       <p>
-        Korzystając z powłoki możemy używać zmiennych, czyli opisanych miesc
+        Korzystając z powłoki możemy używać zmiennych, czyli opisanych miejsc
         alokowanych w pamięci do przechowywania dowolnych wartości. Do
         dyspozycji mamy dwa rodzaje zmiennych - zmienne <strong>lokalne</strong>
         oraz zmienne <strong>środowiskowe</strong>.
       </p>
       <p>
-        Zmienne lokalne są do naszej dyspozycji w obecnej sesji powłoki.
-        Tego typu zmienne nie są dostępne dla
+        Zmienne lokalne są dostępne tylko w obecnej sesji powłoki.
+        Tego typu zmienne nie będą widoczne dla
         uruchomionych w tej sesji skryptów czy programów, gdyż są
         przechowywane tylko i wyłącznie w obszarze pamięci należącym do tego
         procesu powłoki. Taka zmienną możemy zdefiniować podając w wierszu
@@ -5119,28 +5120,29 @@ PKGADM ALL = PKGCMD
         Polecenie <code class="code-inline">echo</code> wypisuje wszystko co
         do zostanie mu podane jako argument na standardowe wyjście (o tym
         będzie w dalszej częsci materiału). Jak widzimy polecenie wypisało
-        również zawartość zmiennej.
+        zawartość zmiennej.
       </p>
       <p>
-        Innego rodzaju zmiennymi są zmienne środowiskowe przechowują one
+        Innymi zmiennymi są zmienne środowiskowe przechowują one
         różnego rodzaju wartość, które mogą wpływać na działanie programów.
-        Każdy program uruchomiony na Linuksie dostaje obszar
-        pamięci zmiennych środowiskowych i może z nich korzystać. Definicja
-        takich zmiennych, różni się tym iż wykorzystuje się do tego celu
-        polecenie <strong>export</strong>, które zadaniem jest przeniesienie
-        zmiennej lokalnej do pamięci zmiennych środowiskowych. Jako argument
-        polecenia podajemy definicję zmiennej.
+        Każdy program uruchomiony na Linuksie dostaje od procesu nadrzędnego 
+        obszar
+        pamięci zmiennych środowiskowych, które może wykorzystywać do sobie
+        tylko znanych celów. Definicja
+        takich zmiennych, różni się tym, że poprzedza się ją
+        poleceniem <strong>export</strong>, którego zadaniem jest przeniesienie
+        zmiennej lokalnej do pamięci zmiennych środowiskowych.
       </p>
 <pre class="code-block">
 [user@server1 ~]$ export ZMIENNA=2137
 </pre>
       <p>
         Nazwy zmiennych środowiskowych zapisujemy za pomocą wielkich liter aby
-        odróżnić je od zmiennych lokalnych. Działanie takiej zmiennej
-        zobaczymy, kiedy uruchomimy jakiś program w tej powłoce, aby otrzymał
-        on od połoki, w której został uruchomiony (procesu nadrzędnego) obszar 
+        odróżnić je od zmiennych lokalnych. Dostęp do takiej zmiennej możemy
+        uzyskać, kiedy uruchomimy jakiś program w tej powłoce, aby otrzymał
+        on od powłoki, w której został uruchomiony (procesu nadrzędnego) obszar 
         zmiennych środowiskowych. Najlepiej by było aby takim programem była 
-        kolejna połowka (podpowłoka).
+        kolejna powłoka (podpowłoka).
       </p>
 <pre class="code-block">
 [user@server1 ~]$ bash
@@ -5153,7 +5155,7 @@ PKGADM ALL = PKGCMD
         poprzednim przykładzie.
       </p>
       <p>
-        Wszystkie zmienne środowiskowe systemie możemy wypisać za pomocą
+        Wszystkie zmienne środowiskowe w systemie możemy wypisać za pomocą
         polecenia <strong>env</strong> lub polecenia <strong>printenv</strong>.
         Oto fragment listingu zmiennych środowiskowych z mojego systemu:
       </p>
@@ -5237,7 +5239,7 @@ zmienna1=2137
         przez podpowłokę polecenia ujętego albo w okrągły nawias poprzedzony
         znakiem dolara (<strong>$()</strong>) albo w ukośny cudzysłów
         (<strong>``</strong>). Informacja zwracana przez polecenie trafia albo
-        do zmiennej albo bezpośrednio jak argument polecenia.
+        do zmiennej albo bezpośrednio jako argument polecenia.
       </p>
 <pre class="code-block">
 [user@server1 ~]$ export KERNEL_VERSION=$(uname -r)
@@ -5258,8 +5260,9 @@ zmienna1=2137
 /usr/share/doc/kernel-keys/5.14.0-70.13.1.el9_0.x86_64
 </pre>
       <p>
-        Gwiazdka w tym przypadku oraz <code class="code-inline">2&gt;</code>,
-        również są elementami połoki, które sobie omówimy.
+        Gwiazdka (<strong>*</strong>) w tym przypadku oraz 
+        <code class="code-inline">2&gt;</code>, również są elementami połoki, 
+        które sobie omówimy.
       </p>
       <h3 id="7.1.3.streamredirections">7.1.3. Przekierowanie strumieni</h3>
       <p>
@@ -5320,7 +5323,7 @@ drwxr-xr-x.  3 root root        65 Jun 26 13:54 alsa
       </p>
       <p>
         Chcąc dopisać do zawartości pliku, zawartość strumienia możemy użyć
-        podwójnego znaku większości. Na przykład:
+        podwójnego znaku większości (<strong>>></strong>). Na przykład:
       </p>
 <pre class="code-block">
 [user@server1 ~]$ ls -l /var &gt;&gt; ls.out
@@ -5344,7 +5347,8 @@ drwxr-xr-x.  2 root root    6 Aug 10  2021 empty
 ...
 </pre>
       <p>
-        Z racji tego iż znak większości służy do przekierowania jedynie wyjścia
+        Z racji tego, iż znak większości służy do przekierowania jedynie 
+        wyjścia
         to aby przekierować strumień błedów, należy podać przez znakiem jego
         identyfikator. 
       </p>
@@ -5380,6 +5384,7 @@ drwxr-xr-x. 2 user200  dba        6 Jun 26 15:33 dir10
         lepsza musimy zdecydować sami.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Jednym z zadań egzaminacyjnych może być wykonanie polecenia z 
         przekierowaniem wyjścia lub/i strumienia błędów do pliku.
       </p>
@@ -5410,7 +5415,7 @@ drwxr-xr-x. 132 user     user    8192 Jun 30 09:38 etc
       <p>
         Dość istotną funkcją powłoki <em>BASH</em> jest historia poleceń.
         Pozwala ona zaoszczędzić pisania w szczególności długich poleceń czy
-        potoków poleceń (ang. <em>pipelines</em>). Posiada ona funkcję
+        poleceń potokowych (ang. <em>pipelines</em>). Posiada ona funkcję
         wyszukiwania oraz swobodny dostęp do poleceń umieszczonych w historii.
       </p>
       <p>
@@ -5495,8 +5500,8 @@ drwxr-xr-x. 132 user     user    8192 Jun 30 09:38 etc
       <p>
         Wśród poleceń w historii możemy poruszać się za pomocą strzełek w górę 
         oraz w dół lub kombinacji klawiszy (co jest bardziej zalecene)
-        <em>Ctrl+p</em>(poprzednie polecenie) oraz <em>Ctrl+n</em> (następne
-         polecenie). Możemy je również wszukiwać za
+        <em>Ctrl+p</em> (poprzednie polecenie) oraz <em>Ctrl+n</em> (następne
+         polecenie). Możemy je również wyszukiwać po
         przez wciśnięcie kombinacji klawiszy <em>Ctrl+r</em> i podanie 
         fragmentu polecenia. Czasmi wyszukiwanie może nie przynieść skutku,
         wówczas należy nacisnać <em>Ctrl+c</em> i spróbować ponownie.
@@ -5513,7 +5518,7 @@ touch file1
 touch: cannot touch 'file1': Permission denied
 </pre>
       <p>
-        Możemy podać litery rozpoczynające polecenie na przykład:
+        Możemy również podać litery rozpoczynające polecenie na przykład:
       </p>
 <pre class="code-block">
 [user@server1 ~]$ !tou
@@ -5584,8 +5589,8 @@ Jun 26 14:12:08 server1 polkitd[725]: Acquired the name org.freedesktop.PolicyKi
       </p>
       <h3 id="7.1.6.commandcompletion">7.1.6. Uzupełnianie poleceń</h3>
       <p>
-        Chcąc przyspieszyć pisanie poleceń możemy wykorzystać uzpełnianie
-        poleceń. Wierszu polecenia zapisujemy fragment polecenia lub ścieżki
+        Chcąc przyspieszyć pisanie poleceń możemy wykorzystać uzupełnianie
+        poleceń. W wierszu polecenia zapisujemy fragment polecenia lub ścieżki
         następnie naciskamy klawisz <strong>Tab</strong>. Powłoka uzupełni
         nasz zapis do wspólnej części z na przykład nazwami plików, katalogów
         czy poleceń. Po następnym naciśnięciu tego klawisza, powłoka zwróci 
@@ -5611,7 +5616,7 @@ debugfs          debuginfod-find
         Tylda w powłoce oznacza jedno - katalog domowy użytkownika. Za jej
         pomocą możemy w prosty sposób odwoływać się do elementów w katalogu
         domowym użytkownika ale i nie tylko. Poniżej przedstawiłem trzy
-        zastosowania tego podstawienia.
+        zastosowania podstawienia tyldy.
       </p>
       <ul>
         <li><strong>~/Dokumenty</strong> - odwołanie się do elementu 
@@ -5797,7 +5802,7 @@ drwxr-xr-x.  2 root root      4096 Jun 26 13:58 alternatives
         15 lini zawartości katalogu <em>/etc</em>. Polecenia 
         <code class="code-inline">sed</code> oraz 
         <code class="code-inline">awk</code> znajdują się poza zakresem
-        merytrorycznym tego materiału.
+        merytorycznym tego materiału.
       </p>
       <h3 id="7.1.11.quoting">7.1.11. Cytowanie</h3>
       <p>
@@ -5831,7 +5836,7 @@ $zmienna
 </pre>
       <p>
         Gdy odwołaliśmy się do zmiennej w pojedynczych cudzysłowach, znak
-        dolara został potraktowany domyślnie, więc polecenie
+        dolara został potraktowany dosłownie, więc polecenie
         <code class="code-inline">echo</code> wypisało ciąg znaków
         <code class="code-inline">$zmienna</code>. Ostatnim rodzajem cytowania
         podobnym do pojedynczego apostrofu jest podwójny apostrof. Zauważalną
@@ -5847,7 +5852,7 @@ Pierwszym literami alfabetu są litery abc
 </pre>
       <h3 id="7.1.12.regex">7.1.12. Wyrażenia regularne</h3>
       <p>
-        Wyrażenia regularne służą wyszukiwaniu wzorców w tekście. Wzroce
+        Wyrażenia regularne służą wyszukiwaniu wzorców w tekście. Wzorce
         składają się z ze znaków specjalnych oraz innych zwykłych znaków 
         mających przybliżyć odnalezienie wzorca. Wyrażenia regularne w powłoce
         możemy obsługiwać za pomocą polecenia <strong>grep</strong>. W tym
@@ -5959,6 +5964,7 @@ white
         zrozumieć przykład z początku tego podrozdziału.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Polecenie <em>grep</em> jest poręcznym narzędziem stosowany do 
         wyłuskiwania informacji z pliku lub wyjścia polecenia. Wybrane
         informacje mogą zostać przekierowane do pliku, pozostawiając dane
@@ -5966,12 +5972,12 @@ white
       </p>
       <h3 id="7.1.13.jobmanaging">7.1.13. Zarządzanie zadaniami</h3>
       <p>
-        Uruchmiając jakiś program w terminalu, możemy go odłączyć od niego i
+        Uruchamiając jakiś program w terminalu, możemy go odłączyć od niego i
         przekazać jego wykonanie do tła. Wówczas taki program staje się
         <strong>zadaniem</strong>. Program kontynuje swoje wykonanie w tle, 
         ale jest kontrolowany przez terminal, w którym został uruchomiony.
-        W pod powłoce uruchomiłem plik test, który jest mały skryptem, który
-        tak naprawdę nic nie robi.
+        W podpowłoce uruchomiłem plik <em>test</em>, który jest mały skryptem, 
+        który tak naprawdę nic nie robi.
       </p>
 <pre class="code-block">
 [user@server1 ~]$ bash test
@@ -6019,7 +6025,7 @@ bash test
 ^C
 </pre>
       <p>
-        W ten sposób zarządza się zadaniami za pomocą mechanizmów powłoki,
+        W ten sposób zarządza się zadaniami za pomocą mechanizmów powłoki.
         Zadań przekazanych do tła systemu, może być wiele. Zadania nie zostaną
         zakończone w momencie wylogowania się z systemu. Dlatego jeśli
         wykonanie jakiego zadania, będzie wymagać czasu mozemy przenieść je
@@ -6031,7 +6037,7 @@ bash test
       <p>
         Chcąc uruchomić jakieś zadanie w tle odrazu, możemy pominąć tą całą
         zabawę w jego zatrzymywanie i przekazywanie do tła. Możemy uruchomić je
-        odrazu kończąc polecenie znakiem ampersendu (<strong>&amp;</strong>).
+        od razu kończąc polecenie znakiem ampersendu (<strong>&amp;</strong>).
       </p>
 <pre class="code-block">
 [user@server1 ~]$ bash test &amp;
@@ -6066,7 +6072,7 @@ bash test
         </li>
         <li><strong>/etc/profile</strong> - plik zawiera definicje części
           zmiennych środowiskowych, dopisuje pewne katalogi do zmiennej
-          <em>PATH</em></li>
+          <em>PATH</em>.</li>
         <li><strong>/etc/profile.d</strong> - katalog zawiera skrypt
           rozszerzające konfiguracje zawarte w powyższych plikach, te skrypt
           są uruchamiane przez oba z nich.</li>
@@ -6120,6 +6126,7 @@ Lokalny ~/.bash_profile
         wykonywane podczas wylogowywania użytkownika.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Jeśli jedno z zadań będzie dotyczyć dodania aliasu lub zmiennej
         środowiskowej, to należy wiedzieć w jakich plikach je umieścić.
       </p>
@@ -6139,7 +6146,7 @@ Lokalny ~/.bash_profile
         standardowe wyjście oraz strumień błędów do pliku <em>/tmp/ioerror</em>
         Sprawdź zawartość pliku.
       </p>
-      <h2 id="ch2summary">Podsumowanie</h2>
+      <h2 id="ch7summary">Podsumowanie</h2>
       <p>
         W tym rodziale zapoznaliśmy się z powłoką BASH. Nauczyliśmy się
         korzystać z jej mechanizów, poznaliśmy również podstawy wyrażeń
@@ -6163,7 +6170,7 @@ Lokalny ~/.bash_profile
         jądru do komunikacji z procesami. W systemie istnieje masa procesów,
         wśród nich możemy wyróżnić takie jak <strong>demony</strong>, które 
         świadczą usługi użytkownikom oraz innym procesom. Zwykle działają one 
-        w tle, oraz pozostają w stanie bezczynności oczekując na żadania od
+        w tle, oraz pozostają w stanie bezczynności oczekując na żądania od
         użytkownika lub od innego procesu.
       </p>
       <p>
@@ -6196,7 +6203,7 @@ Lokalny ~/.bash_profile
       <p>
         Polecenie <strong>ps</strong>, służy do wyświetlania procesesów w 
         tabeli.
-        Domyślnie to polecnie bez żadnych opcji wyświetli procesy uruchomione
+        Domyślnie to polecenie bez żadnych opcji wyświetli procesy uruchomione
         w tym oknie terminala.
       </p>
 <pre class="code-block">
@@ -6218,8 +6225,8 @@ Lokalny ~/.bash_profile
         dodać do tego polecenia kilka opcji.
       </p>
       <p>
-        Jedną z nich może opcja <em>-e</em>, która zwraca każdy występujący w
-        systemie proces, następną jak warto dodać jest opcja <em>-f</em>,
+        Jedną z nich może być opcja <em>-e</em>, która zwraca każdy występujący 
+        w systemie proces, następną jak warto dodać jest opcja <em>-f</em>,
         zwracająca wiecej szczegółów nt. procesu, jednak ta opcja nie jest dla
         nas wystarczająca, ponieważ do zarządzania procesami potrzebujemy
         jeszcze kilku informacji, które jest w stanie zwrócić nam opcja
@@ -6262,12 +6269,12 @@ F S UID          PID    PPID  C PRI  NI ADDR SZ WCHAN  STIME TTY          TIME C
       </ul>
       <p>
         Jako ciekawostkę podam, iż procesy, które w kolumnie 
-        <code class="code-block">TTY</code> posiadają znak zapytania
+        <code class="code-inline">TTY</code> posiadają znak zapytania
         (<strong>?</strong>) pochodzą prawdopodbnie od któregoś z demonów.
       </p>
       <p>
         Polecenie <em>ps</em> daje możliwość wyświetlenia
-        tylko tych informacji które potrzebujemy dzięki opcji <em>-o</em>.
+        tylko tych informacji, które potrzebujemy dzięki opcji <em>-o</em>.
         Możemy użyć polecenia poniżej:
       </p>
 <pre class="code-block">
@@ -6305,7 +6312,7 @@ user     S    2103 sshd: user@pts/1
       <h3 id="8.1.2.polecenietop">8.1.2. Polecenie top</h3>
       <p>
         Polecenie z poprzednie podrozdziału służyło do wyświetlania procesów.
-        Za pomocą tego przedstawionego tutaj możemy je monitorować w
+        Za pomocą tego przedstawionego tutaj możemy je monitorować 
         w czasie rzeczywistym. Polecenie <strong>top</strong>, może posłużyć
         do sprawdzenia czy system nie jest przeciążony.
       </p>
@@ -6378,7 +6385,8 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.    335.9 avail Mem
         zmienić wartość priorytetu, ustala wartość <em>nice</em> dla procesu
         a ona jest do niego dodawana. Wartość <em>nice</em>, może być w zakresie
         od -20 do 19. Jeśli chcemy aby proces posiadał w momencie uruchomienia
-        inny priorytet zmieniamy go za pomocą polecenia <strong>nice</strong>. 
+        inny priorytet uruchamiamy go za pomocą polecenia 
+        <strong>nice</strong>. 
       </p>
 <pre class="code-block">
 [user@server1 ~]$ ps -efl | grep $(pidof top)
@@ -6399,7 +6407,7 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.    335.9 avail Mem
         priorytet, za pomocą polecenie <strong>renice</strong>, jednak
         najpierw poznamy dwa polecenia, które ułatwią nam pracę z poleceniem
         <em>renice</em> oraz każdym innym, które potrzebuje identyfikatora
-        procesu. Tymi polecaniami są polecenia <strong>pidof</strong> oraz
+        procesu. Tymi poleceniami są polecenia <strong>pidof</strong> oraz
         <strong>pgrep</strong>.
       </p>
 <pre class="code-block">
@@ -6503,12 +6511,14 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.    335.9 avail Mem
         Linuksie zadania z harmonogramu moga być uruchomione raz w określonym
         czasie lub wykonywane cyklicznie co jakiś okres czasu. Narzędziami
         odpowiedzialnymi za obsługę funkcji harmonogramu zadań na Linuksie 
-        są <strong>at</strong> oraz <strong>cron</strong>. W RHEL możemy
+        są <strong>at</strong> oraz <strong>cron</strong>. W <em>RHEL</em> 
+        możemy
         również spotkać się z mechanizmem kontroli dostępu do tych programów.
       </p>
       <h3 id="8.2.1.scheduleaccesscontrol">8.2.1. Kontrola dostępu do harmongramu</h3>
       <p>
-        W RHEL stosowany jest mechanizm kontroli dostępu do haromonogramu
+        W <em>RHEL</em> stosowany jest mechanizm kontroli dostępu do 
+        harmonogramu
         zdań zarówno dla obu narzędzi. Ten mechanizm składa się z dwóch
         plików, jeden z rozszerzeniem <em>*.allow</em> oraz jeden z
         rozszerzeniem <em>*.deny</em>. W tych plikach umieszczamy
@@ -6559,11 +6569,13 @@ MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.    335.9 avail Mem
       </table>
       <p>
         Powyższe zasady nie obowiązują oczywiście superużytkownika, nawet mimo
-        umieszczenia jego nazwy w plik <em>*.deny</em>. Domyślnie w RHEL
+        umieszczenia jego nazwy w plik <em>*.deny</em>. Domyślnie w 
+        <em>RHEL</em>
         plik <em>*.allow</em> nie istnieje, natomiast plik <em>*.deny</em>
         istnieje, ale jest pusty.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Definiując wpisy w tych plikach, należy pamiętać o tym aby jedna linia
         zwierała jednego użytkownika. To jedyna poprawna metoda.
       </p>
@@ -6602,7 +6614,7 @@ See crontab(1) for more information
         <li><strong>at now + 5 hours</strong> - polecenie zostanie uruchonione
           za 5 godzin,</li>
         <li><strong>at 3:00 10/12/2022</strong> - polecenie zostanie
-          uruchomione o 3 w nocy 12 października 2022 roku (w anglosaskim
+          uruchomione o 3 w nocy 12 października 2022 roku (w amerykańskim
           zapisie daty na początku podaje się miesiąc następnie dzień
           miesiąca).</li>
       </ul>
@@ -6684,7 +6696,7 @@ marcinDELIMITER29478f5e
 </pre>
       <p>
         Do usunięcia potrzebny jest numer zadania, który znajduje się
-        pierwszej kolunie listy zadań wyświetlonej za pomocą polecenia
+        pierwszej kolumnie listy zadań wyświetlonej za pomocą polecenia
         <code class="code-inline">at -l</code>. Obie przestawione powyżej
         opcje są aliasami do poleceń <em>atq</em> oraz <em>atrm</em>.
       </p>
@@ -6776,6 +6788,7 @@ Jul  5 10:01:01 server1 CROND[1940]: (root) CMDEND (run-parts /etc/cron.hourly)
         zwraca istotne dane wyjściowe to najlepiej jest je przekierować.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzamin:</strong><br />
         Wykonując zadania administracyjne, powinniśmy mieć opanowaną składnie
         wpisów zadań oraz rozumienie jej poszczególnych części.
       </p>
@@ -6810,7 +6823,7 @@ no crontab for user
         Za tem cześć zadań zdefiniowana w systemowym harmonogramie w plikach
         <em>/etc/cron.*</em> nie jest wykonywana. Pliki te dotyczą czynność 
         systemowych zdefiniowanych co godzinę, dzień, tydzień czy miesiąc.
-        Ta przypadłość najczęściej dotyczy komputery osobiste.
+        Ta przypadłość najczęściej dotyczy komputerów osobistych.
         Dlatego też, aby uruchomić te zdania używa się demona
         <strong>anacron</strong>. Aby demon rozpoczął uruchmianie niewykonanych
         zadań muszą zostać w systemie spełnione trzy czynniki. Pliki tablicy
@@ -6879,12 +6892,13 @@ START_HOURS_RANGE=3-22
       <p>
         W tym rodziale zapoznaliśmy się z procesami, wyświetaliśmy ich listę
         korzystaliśmy z polecenia <em>top</em>, zmienialiśmy ich priorytet
-        oraz zarządzaliśmy nimi za pomocą sygnałów. W drugiej części zajeliśmy
+        oraz zarządzaliśmy nimi za pomocą sygnałów. W drugiej części zajęliśmy
         się narzędziami harmonogramu zadań. Nauczyliśmy się korzystać z takich
         programów jak <em>at</em> czy <em>cron</em>. Na koniec poznaliśmy
-        specyficzny dla rodziny RHEL demon <em>Anacron</em>. W następnym
+        specyficzny dla dystrybucji klasy <em>enterprise</em> demon 
+        <em>Anacron</em>. W następnym
         rozdziale zapoznamy się podstawami zarządzania pakietami oprogramowania
-        na RHEL.
+        na <em>RHEL</em>.
       </p>
       <h1 id="9.rpmbasics">9. Podstawy zarządzania pakietami oprogramowania</h1>
       <p>

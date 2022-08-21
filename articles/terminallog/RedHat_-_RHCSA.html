@@ -6906,8 +6906,8 @@ START_HOURS_RANGE=3-22
         to archiwa przechowywujące zazwyczaj skompilowane oprogramowanie
         przeznaczone dla systemu, który używamy. Wewnątrz pakietów znajduje się
         cała strukturktura katalogowa z plikami pakietu, tak by podczas
-        instalacji wystarczyło je tylko rozpakować; znajdują się również
-        metadane zawierające informacje o pakiecie. 
+        instalacji wystarczyło je tylko rozpakować. Wewnątrz znajdują się 
+        również metadane zawierające informacje o pakiecie. 
       </p>
       <p>
         Większość pakietów posiada długie nazwy, które nie są dokońca
@@ -6919,14 +6919,17 @@ openssl-1.1.1-8.el8.x86_64.rpm
       </p>
       <ul>
         <li>Jednoznaczną nazwę oprogramowania pozwalającą, zidentyfikować
-          co to za program.</li>
-        <li>Numer wersji oprogramowania.</li>
-        <li>Numer wydania.</li>
+          co to za program (<code class="code-inline">openssl</code>).</li>
+        <li>Numer wersji oprogramowania
+          (<code class="code-inline">1.1.1</code>).</li>
+        <li>Numer wydania (<code class="code-inline">8</code>).</li>
         <li>Nazwę dystrybucji, rodziny dystrybucji itp. Ten element nie jest
-          obligatoryjny. Nie które dystrybucje włączają go do numeru wydania.
+          obligatoryjny. Nie które dystrybucje włączają go do numeru wydania
+          (<code class="code-inline">el8</code>).
         </li>
-        <li>Nazwa architektury dla jakiej zostało skompilowane oprogramowanie.</li> 
-        <li>Rozszerzenie w tym przypadku jest <em>RPM</em>.</li>
+        <li>Nazwa architektury dla jakiej zostało skompilowane oprogramowanie
+          (<code class="code-inline">x86-64</code>).</li> 
+        <li>Rozszerzenie (<code class="code-inline">.rpm</code>).</li>
       </ul>
       <p>
         Kompilacja programów ze źródeł wymaga odpowiedniego środowiska (w ten
@@ -6940,15 +6943,16 @@ openssl-1.1.1-8.el8.x86_64.rpm
         pakietu.
       </p>
       <p>
-        Systemy, których dystrybucja oprogramowania jest oparta o pakiety musi
+        Systemy, w których dystrybucja oprogramowania jest oparta o pakiety 
+        musi
         posiadać bazę danych pakietów. W przypadku <em>RHEL</em> znajduje się
         ona w katalogu <em>/var/lib/rpm</em>. Na podstawie danych umieszczonych
         w tym katalogu oprogramowanie do zarządzania pakietami pobiera
-        informacje o zainstalowanym w systemie oprogramowniu. 
+        informacje o zainstalowanych w systemie pakietach. 
       </p>
       <p>
-        Aby móc zarządzać pakietami potrzebne jest do tego odpowiednie
-        programy. Red Hat posiada takie polecenie jak 
+        Aby móc zarządzać pakietami potrzebne są do tego odpowiednie
+        programy. <em>Red Hat</em> posiada takie polecenie jak 
         <strong>rpm</strong> (ang. <em>Red Hat Packet Manager</em>) i jest to
         podstawowe narzędzie do instalacji, aktualizacji, wyszukiwania
         informacji czy usuwania oprogramowania z systemu. <em>Rpm</em> jest
@@ -7005,9 +7009,9 @@ bash-5.1.8-4.el9.x86_64
 /etc/skel/.bashrc
 </pre>
       <p>
-        Wszysktie pliki pakietu możemy wyświetlić za pomocą opcji <em>-ql</em>.
+        Wszystkie pliki pakietu możemy wyświetlić za pomocą opcji <em>-ql</em>.
         Generalnie opcja <em>-q</em>, jest modyfikatorem odpowiedzialnym za
-        pobieranie danych z bazy danych lub z samego pliku pakietu.
+        pobieranie danych z bazy lub z samego pliku pakietu.
       </p>
 <pre class="code-block">
 [user@server1 ~]$ rpm -ql bash
@@ -7063,8 +7067,8 @@ setup files, such as passwd, group, and profile.
         Przed przejściem do kolejnego zaganienia musimy umieścić płytę
         instalacjyną z <em>RHEL</em> w napędzie maszyny. Z niej będziemy
         pobierać pakiety do dalszych ćwiczeń, gdyż nasze maszyny nie są
-        podłączone do sieci Red Hat. Po włożeniu płyty do napędu dodajmy 
-        poniższy wpis do
+        podłączone do sieci <em>Red Hat</em>. Po włożeniu płyty do napędu 
+        dodajmy poniższy wpis do
         pliku <em>/etc/fstab</em>, aby płyta posiadała prosty i stały punkt
         montowania. Na płycie znajdują się dwa katalogi <em>BaseOS/Packages</em>
         oraz <em>AppStream/Packages</em>, gdzie znajdują się pakiety.
@@ -7103,7 +7107,7 @@ bash-completion is a collection of shell functions that take advantage
 of the programmable completion feature of bash.
 </pre>
       <p>
-        Polecenie zwraca taką są ilość informacji jak polecenie <em>rpm</em>
+        Polecenie zwraca taką samą ilość informacji jak polecenie <em>rpm</em>
         wraz z opcją <em>-qi</em>.
       </p>
       <h3 id="9.1.2.checkingpkgs">9.1.2. Sprawdzanie pakietów</h3>
@@ -7125,14 +7129,15 @@ of the programmable completion feature of bash.
 /mnt/BaseOS/Packages/zsh-5.8-9.el9.x86_64.rpm: digests OK
 </pre>
       <p>
-        Drugim krytetium jest wiarygodność. Każdy pakiet zawiera podpis
+        Drugim kryterium jest wiarygodność. Każdy pakiet zawiera podpis
         twórcy/dostawcy, w naszym przypadku jest to dostawca którym jest firma
-        Red Hat, ten podpis dokonywany jest za pomoca klucza kryptograficznego.
+        <em>Red Hat</em>, ten podpis dokonywany jest za pomoca klucza 
+        kryptograficznego.
         Część tego klucza odpowiedzialna za szyfrowanie danych jest instalowana
         w naszym systemie i pozostaje do naszej dyspozycji. Poza omówią funkcją
         ta część klucza może również pomoć nam sprawdzić czy pakiet który
         pobraliśmy z internetu rzeczywiście został stworzony przez firmę
-        Red Hat, za nim zaczniemy używać klucza musimy go na początku
+        <em>Red Hat</em>, za nim zaczniemy używać klucza musimy go na początku
         zaimportować, importu dokonujemy za pomocą polecenia poniżej, ścieżka
         do klucza również znajduje się na przykładzie.
       </p>
@@ -7153,8 +7158,8 @@ of the programmable completion feature of bash.
         (<code class="code-inline">signatures</code>).
       </p>
       <p>
-        Za pomocą polecenia <em>rpm</em> możemy pakiety 
-        zainstalowane już w systemie
+        Za pomocą polecenia <em>rpm</em> możemy sprawdzić
+        zainstalowane już pakiety
         pod kątem zmian względem plików znajdujących w oryginalnym pakiecie.
         Służy temu opcja <em>-V</em>, jeśli nie ma żadnych zmian to polecenie
         nic nie zwróci. Możemy oczywiście zwiększyć ilość komunikatów
@@ -7171,8 +7176,8 @@ of the programmable completion feature of bash.
         pierwszej kolumnie znajdują się flagi, które mowią nam co uległo 
         zmianie, każda z 9-ciu kropek to jedna flaga, w drugiej kolumnie 
         znajdują się rodzaj pliku w tym przypadku 
-        <code class="code-inline">c</code>. Ostatnia kolumna zawiera ścieżke
-        bezwzględną do pliku. Poniżej znajdują sie listy z flagami oraz typami
+        <code class="code-inline">c</code>. Ostatnia kolumna zawiera ścieżkę
+        bezwzględną do pliku. Poniżej znajdują się listy z flagami oraz typami
         plików. Kolejność na liście z flagami oznacza konkretną kropkę.
       </p> 
       <ol>
@@ -7209,7 +7214,7 @@ of the programmable completion feature of bash.
         podajemy ścieżkę do pliku pakietu. Uwaga, tutaj pojawia się omawiana
         wcześniej wada: brak rozwiązywania zależność, jeśli spróbujemy 
         zainstalować jakiś pakiet, które zależności nie są rozwiązane
-        (spełnione), <em>rpm</em> nie podejmie w ogóle instalacji, zwracają
+        (spełnione), <em>rpm</em> nie podejmie w ogóle instalacji, zwraca
         błąd o niespełnionych zależnościach. Na przykładzie poniżej znajduje
         się instalacja powłoki <em>zsh</em>.
       </p>
@@ -7289,7 +7294,7 @@ package zsh is not installed
 </pre>
       <p>
         Na podstawie informacji zwracanej przez ostatnie polecenie możemy
-        wywnioskować iż pakiet został usunięty.
+        wywnioskować, iż pakiet został usunięty.
       </p>
       <h3 id="9.1.6.miscs">9.1.6. Pozostałe czynności wykonywane na pakietach.</h3>
       <p>
@@ -7310,7 +7315,7 @@ Updating / installing...
         Wynik działania nadpisania jest identyczny jak w przypadku instalacji.
       </p>
       <p>
-        Czasami może się zdarzyć taka potrzeba aby wyodrębnić jeden z plików
+        Czasami może się zdarzyć taka potrzeba, aby wyodrębnić jeden z plików
         znajdujących wewnątrz pakietu, możemy wówczas taki pakiet rozpakować
         do katalogu, a następnie przekopiować interesujące nas pliki.
         Załóżmy że potrzebujemy pliku <em>/etc/bashrc</em>. Za pomocą opcji
@@ -7323,11 +7328,11 @@ setup-2.13.7-6.el9.noarch
       <p>
         Pobieramy plik z internetu lub możemy załadować go z płyty. Do 
         polecenia
-        <strong>rpm2cpio</strong> podajemy ścieżkę do pliku, następnie wyście 
+        <strong>rpm2cpio</strong> podajemy ścieżkę do pliku, następnie wyjście 
         polecenia przekierowujemy
         za pomocą potoku do polecenia <strong>cpio</strong> z następującymi
         opcjami <em>-i</em> (wypakuj), <em>-m</em> (zachowaj oryginalny
-        czas modyfikacji plików), <em>-d</em> (utwórz katalogi przedzające
+        czas modyfikacji plików), <em>-d</em> (utwórz katalogi poprzedzające
         pliki). Takie wypakowanie nalepiej jest zrobić w odrębnym katalogu
         na przykład w <em>/tmp</em>.
       </p>
@@ -7366,7 +7371,7 @@ etc  run  usr
       <h2 id="ch9summary">Podsumowanie</h2>
       <p>
         W tym rozdziale zapoznaliśmy się z pojęciem pakietu oprogramowania oraz
-        z podstawowymi metodami na zarządzanie nim w RHEL w praktyce.
+        z podstawowymi metodami na zarządzanie nim w <em>RHEL</em> w praktyce.
         Dowiedzieliśmy się jak instalować, usuwać oraz wydobywać informacje o
         i z pakietów. W następnym rodziale zajmiemy się bardziej zaawansowanym
         zarządzeniem pakietami przy użyciu polecenia <strong>dnf</strong>.
@@ -7377,9 +7382,11 @@ etc  run  usr
         jaka nie wątpliwie jest program <em>rpm</em>. Jego główną wadą jest to,
         iż nie rozwiązuje on zależności instalowanych pakietów. Z tego powodu
         potrzebne było lepsze narzędzie do obsługi oprogramowania w systemie,
-        dlatego też twórcy RHEL wdrożyli program <em>yum</em>, który przez
-        lata sprawdzał się postaci menedżera pakietów, a od wersji 8 Red Hat
-        Enterprise Linux został on zastąpiony programem <strong>dnf</strong>,
+        dlatego też twórcy <em>RHEL</em> wdrożyli program <em>yum</em>, który 
+        przez
+        lata sprawdzał się postaci menedżera pakietów, a od wersji 8 
+        <em>Red Hat Enterprise Linux</em> został on zastąpiony programem 
+        <strong>dnf</strong>,
         który ma nieco większe możliwości. Zanim przejdziemy do zarządzania
         pakietami, trochę teorii.
       </p>
@@ -7395,8 +7402,8 @@ etc  run  usr
         Wraz z <em>dnf</em> pojawiają się takie pojęcia jak
         <strong>moduł aplikacji</strong> oraz <strong>strumień aplikacji</strong>.
         Moduł aplikacji, to podobnie do grupy jest zbiór pakietów, ale
-        opowiedzialnych za jedną aplikację. W module zawarte są wszystkie
-        pakiety odpowiedzialne za działanie aplikacji poza zależnościami mogą
+        odpowiedzialnych za jedną aplikację. W module zawarte są wszystkie
+        pakiety odpowiedzialne za działanie aplikacji, poza zależnościami mogą
         znajdować się tam także biblioteki, generalnie całe środowisko. Moduły
         posiadają swoje strumienie, czyli konkretne wersje pakietów aplikacji, 
         które dostarczają. W systemie może być zainstalowany tylko jeden
@@ -7425,24 +7432,28 @@ etc  run  usr
       <p>
         Kolejną rzeczą wartą wspomnienia są repozytoria. Nasze systemy, których
         używamy do wypróbowywania przykładów oraz do rozwiązywania ćwiczeń, nie
-        są zarejestrowane na naszych kontach Red Hat. Rejestracja systemu daje
+        są zarejestrowane na naszych kontach <em>Red Hat</em>. Rejestracja 
+        systemu daje
         możliwość aktualizacji pakietów zawartych na płytach oraz instalowania
         ich bezpośrednio z sieci. Oprócz repozytoriów firmy Red Hat mamy
         rownież inne repozytoria dostępne w sieci. Takie jak na przykład
-        <em>RPM Fusion</em>. Bez tych repozytoriów korzystanie z RHEL 9 w
+        <em>RPM Fusion</em>. Bez tych repozytoriów korzystanie z 
+        <em>RHEL</em> 9 w
         codziennym użyciu na desktopie nie miało by sensu. Przynajmniej w moim
-        wypadku ;). Konfigurację repozytriów przezprowadza się zapisując je
+        wypadku ;). Konfigurację repozytoriów przeprowadza się zapisując je
         w pliku w katalogu <em>/etc/yum.repos.d</em>, w jednym pliku może
         znajdować się kilka repozytoriów, sposób organizacji zależy od nas.
       </p>
       <p>
-        Na koniec, kilka spraw organizacyjnych. W RHEL 9 poki co brakuje
+        Na koniec, kilka spraw organizacyjnych. W <em>RHEL</em> 9 poki co 
+        brakuje
         modułów. W tym odnośniku znajduje się dowód, że na moduły przyjdzie na
         poczekać do wersji 9.1. <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/managing_software_with_the_dnf_tool/index#con_modules_assembly_distribution-of-content-in-rhel-9">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/managing_software_with_the_dnf_tool/index#con_modules_assembly_distribution-of-content-in-rhel-9</a>
         Tak więc wszystkie przykłady jakie będę wykonywać w tym rodziale będą
-        realizowane za pomocą Red Hat Enterprise Linux w wersji 8.6. Po
-        zarejestrowaniu się możemy pobrać RHEL aż do wersji 8.0. Także możemy
-        stworzyć środowisko maszyny <em>server1</em> na podstawie RHEL 8.
+        realizowane za pomocą <em>Red Hat Enterprise Linux</em> w wersji 8.6. Po
+        zarejestrowaniu się możemy pobrać <em>RHEL</em> aż do wersji 8.0. Także możemy
+        stworzyć środowisko maszyny <em>server1</em> na podstawie 
+        <em>RHEL</em> 8.
       </p>
       <h2 id="10.1.repoconfig">10.1. Konfiguracja repozytorium dnf</h2>
       <p>
@@ -7454,10 +7465,10 @@ etc  run  usr
         <em>/mnt</em>. Jak pamiętamy z poprzedniego rozdziału na płycie
         znajdują się dwa katalogi z pakietami: <em>BaseOS/Packages</em> oraz
         <em>AppStream/Packages</em>. W konfiguracji podajemy tylko te pierwsze
-        człony tych ścieżek, ponieważ w niej konfigurujemy katalog bazowy.
+        człony tych ścieżek, ponieważ w niej wskazujemy katalog bazowy.
         Konfiguracja każdego z repozytorium wymaga minimum 4 wierszy. Poniższy
         przykład przedstawia zawartość pliku konfiguracjynego repozytoriów z
-        płyty instalacjynej RHEL 8.
+        płyty instalacjynej <em>RHEL</em> 8.
       </p>
 <pre class="code-block">
 [BaseOS]
@@ -7488,6 +7499,7 @@ gpgcheck=0
         (w tym przypadku) bezwzględna ścieżka do katalogu.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Umiejętnośc konfigurowania repozytoriów <em>yum</em>/<em>dnf</em> z
         wykorzystaniem <em>URL</em> może być istotna do wykonania pewnych
         zadań egzaminacyjnych. Konstruując <em>URL</em> możemy użyć takich
@@ -7498,7 +7510,7 @@ gpgcheck=0
       <p>
         Po zdefiniowaniu repozytoriów zapisujemy zmiany w pliku. Aby
         zweryfikować poprawność konfiguracji wydajemy polecenie, które
-        odświerza pamięc podręczną pakietów.
+        odświerza pamięć podręczną pakietów.
       </p>
 <pre class="code-block">
 [user@rhel8-vm1 ~]$ sudo dnf makecache
@@ -7560,7 +7572,7 @@ Razem pakietów: 8 323
       <p>
         Z pomocą
         poniższego polecenia możemy wyświetlić listę wszystkich pakietów.
-        Domyślnie lista pakietów jes podzielona na dwie części: zainstalowane
+        Domyślnie lista pakietów jest podzielona na dwie części: zainstalowane
         oraz dostępne pakiety.
       </p>
 <pre class="code-block">
@@ -7699,7 +7711,7 @@ zsh-0:5.5.1-9.el8.x86_64
         Podpolecenie <em>repoquery</em> posiada całą masę modyfikatorów dzięki
         nim możemy na przykład sprawdzić zależności pakietów. Aby ujawnić 
         listę modyfikatorów możemy użyć podpolecenia <em>repoquery</em> wraz z
-        z <em>--help</em>.
+        <em>--help</em>.
       </p>
 <pre class="code-block">
 [user@rhel8-vm1 ~]$ sudo dnf repoquery --help
@@ -7787,9 +7799,9 @@ W porządku? [t/N]:
 ...
 </pre> 
       <p>
-        Program wyświetli w tabeli wszyskie instalowane pakiety, 
-        następnie wielkość 
-        pakietu oraz ilość miejsca na dysku zabranego na potrzeby instalacji.
+        Program wyświetli w tabeli wszystkie instalowane pakiety, 
+        następnie całkowity rozmiar pobieranych pakietów 
+        oraz ilość miejsca na dysku zabranego na potrzeby instalacji.
         Po zapoznaniu
         się z tym możemy potwierdzić za pomocą <em>t</em> (w polskiej wersji
         językowej) lub <em>y</em> lub przerwać na przykład naciskając Enter,
@@ -8079,7 +8091,7 @@ Dostępne grupy:
         <em>--available</em>
       </p>
       <p>
-        Po za taką długą lisą możemy wyświetlić podsumowanie, które zwróci
+        Po za taką długą listą możemy wyświetlić podsumowanie, które zwróci
         informacje o ilości dostępnych oraz zainstalowanych grup.
       </p>
 <pre class="code-block">
@@ -8191,7 +8203,7 @@ Zainstalowano:
 Ukończono.
 </pre>
       <p>
-        <em>Dnf</em> zainstalował w moim przypadku grupę pakietów
+        Za pomocą <em>dnf</em> zainstalowałem w  grupę pakietów
         odpowiedzialną za obsługę kart inteligentych.
       </p>
       <h3 id="10.3.4.groupupdate">10.3.4. Aktualizacja grupy</h3>
@@ -8446,7 +8458,7 @@ Wskazówka: [d]omyślne, [e]włączone, [x]wyłączone, [i]zainstalowane
 </pre>
       <p>
         Na powyższym przykładzie możemy zobaczyć, że po zainstalowaniu
-        modułu <em>perl</em> z domyślnym strumienie oraz domyślnym profilem.
+        modułu <em>perl</em> z domyślnym strumieniem oraz domyślnym profilem.
         Strumień <code class="code-inline">5.26</code> został włączony a 
         profil <code class="code-inline">common</code> został zainstalowany. 
         Warto też dodać, że jeśli jakiś z komponentów był już zainstalowany to
@@ -8475,7 +8487,7 @@ Wskazówka: [d]omyślne, [e]włączone, [x]wyłączone, [i]zainstalowane
         Usuniemy teraz moduł <em>perl</em>.
       </p>
 <pre class="code-block">
-[user@rhel8-vm1 ~]$ sudo dnf module update perl -y
+[user@rhel8-vm1 ~]$ sudo dnf module remove perl -y
 </pre>
       <p>
         Wydałem powyższe polecenie a następnie sprawdziłem jak wygląda lista
@@ -8611,10 +8623,10 @@ Wskazówka: [d]omyślne, [e]włączone, [x]wyłączone, [i]zainstalowane
         Na maszynie z <strong>RHEL 8</strong> wykorzystując użytkownika z
         możliwością podniesienia uprawnień, użyj polecenia <em>dnf</em> do
         wyświetlenia oddzielnie pakietów możliwych do instalacji oraz 
-        pakietów zainstalowanych. Zainstaluj pakiet <em>httpd</em>, potwierdź
-        tę czynność wyświetlając plik dziennika <em>/var/log/dnf.log</em>.
-        Wyświetl informacje na temat pakietu <em>httpd</em>, pokaż jego
-        zależności, na koniec usuń go.
+        pakietów zainstalowanych. Wyświetl informacje na temat pakietu 
+        <em>httpd</em>, pokaż jego zależności, następnie zainstaluj go, 
+        potwierdź tę czynność wyświetlając plik dziennika <em>/var/log/dnf.log</em>.
+        na koniec usuń pakiet.
       </p>
       <h3 id="exec10.3">Ćwiczenie 3: Instalacja i zarządzanie grupami pakietów</h3>
       <p>

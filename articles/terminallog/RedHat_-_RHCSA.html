@@ -359,7 +359,7 @@
         </li>
         <li><a href="#12.sysinitlogsandtuned">12. Inicjalizacja systemu, pliki dziennika oraz dostarajanie systemu</a>
           <ul class="toc">
-            <li><a href="#12.1.systeminit">12. Inicjalizacja systemu - systemd</a>
+            <li><a href="#12.1.systeminit">12.1. Inicjalizacja systemu - systemd</a>
               <ul class="toc">
                 <li><a href="#12.1.1.units">12.1.1. Jednostki</a></li>
                 <li><a href="#12.1.2.target">12.1.2. Jednostki celu</a></li>
@@ -8669,20 +8669,21 @@ Wskazówka: [d]omyślne, [e]włączone, [x]wyłączone, [i]zainstalowane
         jest niezależna od stosowanego systemu operacyjnego. Jej zadaniem jest
         przeprowadzenie tzw. POST-u, czyli sprawdzenia wszystkich komponentów
         sprzętowych przed uruchomieniem komputera po to aby nadawał
-        się on do stablinej pracy. Faza pierwsza przeprowadzana jest 
+        się on do stablinej pracy. Faza pierwsza przeprowadzana jest przez 
         oprogramowanie układowe, które może występować dwóch postaciach:
-        <em>BIOS</em> oraz <em>UEFI</em>. UEFI jest oprogramowaniem
+        <strong>BIOS</strong> oraz <strong>UEFI</strong>. <em>UEFI</em> jest 
+        oprogramowaniem
         występującym w wszystkich nowszych komputerach, posiada ono znacznie
-        większe możliwości niż tradycyjny BIOS. Po teście następuję
+        większe możliwości niż tradycyjny <em>BIOS</em>. Po teście następuję
         poszukiwanie urządzenia pamięci masowej przechowywującego system
         operacyjny. Teraz przechodzimy do drugiej fazy rozruchu - fazy
         programu ładującego. Program ładujący rezyduje w pierwszym sektorze
         dysku jest on odpowiedzialny za odnalezienie jądra na dysku,
-        rozpakowanie, załadowanie do pamięci i uruchomienie. Programy
-        rozruchowe (a przynajmniej tez wykorzystywane z dystrybucjami Linux)
+        rozpakowanie go, załadowanie do pamięci i uruchomienie. Programy
+        rozruchowe (a przynajmniej te wykorzystywane z dystrybucjami Linuks)
         pozwalają użytkownikowi komputera na wybór jądra oraz zmianę domyślnych
         parametrów uruchomieniowych. Kiedy jądro jest uruchamiane wówczas
-        rozpoczyna się start systemu operacyjnego. Zadaniami jądra w
+        rozpoczyna się start systemu operacyjnego. Zadaniami jądra 
         w odniesieniu do procesu ładowania jest zainicjowanie wszystkich
         urządzeń oraz uruchomienie programu typu <em>init</em>, tym samym
         przechodząc do czwartej ostatniej fazy - fazy inicjalizacji w niej
@@ -8707,7 +8708,7 @@ Wskazówka: [d]omyślne, [e]włączone, [x]wyłączone, [i]zainstalowane
       </p>
       <p>
         Na obrazku możemy zobaczyć dwa wpisy i jeden jest zaznaczony na biało.
-        Jest domyślną opcja rozruchowa. Jeśli nie dokonamy żadnych zmian
+        Jest on domyślną opcją rozruchową. Jeśli nie dokonamy żadnych zmian
         po upływie czasu odmierzanego w ostatniej linii tekstu pod menu,
         zaznaczona opcja zostanie automatycznie zatwierdzona i rozpocznie
         się uruchamianie systemu. Po menu możemy poruszać się za pomocą
@@ -8783,7 +8784,8 @@ Wskazówka: [d]omyślne, [e]włączone, [x]wyłączone, [i]zainstalowane
       <p>
         W tym pliku możemy dokonywać zmian, jednak najpierw warto zaponać się
         bliżej z <em>GRUB</em>, rozszerzając wiedzę z tego rodziału o np.
-        dokumentację Red Hat, ostatni wpis jest dość specyficzyny, i używany
+        dokumentację <em>Red Hat</em>, ostatni wpis jest dość specyficzyny i 
+        używany
         w nowszych dystrybucjach klasy <em>enterprise</em>. Jeśli już dokonamy
         w nim zmian, zmiany te trzeba zatwierdzić po przez wygenerowanie nowego
         pliku <em>grub.cfg</em> a służy do tego polecenie
@@ -8845,7 +8847,7 @@ razem 96
         zamontować właściwy system plików z katalogiem głównym). Za pomocą
         takiego uruchomienia systemu możemy zmienić zapomniane hasło 
         superużytkownika. Aby zapoznać się z tym trybem przywrócimy utracone
-        hasło <em>root</em>. <strong>Do tego ćwiczenia potrzebne będzie RHEL 8,
+        hasło <em>root</em>. <strong>Do tego ćwiczenia potrzebny będzie RHEL 8,
         gdyż w RHEL 9 nie ważne jaki tryb uruchominy, nadal wymagane będzie
         hasło aby przejść do powłoki.</strong> Zatem jedyną opcją na odzyskanie
         dostępu w RHEL 9 jest podmontowanie systemu plików w środowisku 
@@ -8913,6 +8915,7 @@ switch_root:/# reboot
         możemy zalować się nowym hasłem na super użytkownika.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Musimy wiedzieć jak załadować system do określonego trybu z poziomu
         menu GRUB2, aby na przykład móc zmodyfikować plik <em>/etc/fstab</em>,
         lub zresetować hasło superużytkownika.
@@ -8924,9 +8927,11 @@ switch_root:/# reboot
         było by być systemami operacyjnymi. Jedną z takich funkcji jest
         zarządzanie urządzeniami. Do komunikacji z nimi jądro potrzebuje
         sterowników. Sterownik w odniesieniu do jądra nazywane są modułami
-        część modułów wymaganych przez jądro może być już wnie wbudowana a
-        część jest ładowana w razie potrzeby (do tego też służy <em>initrd</em>).
-        RHEL 8.6, którego używam również i w tym rozdziale jest dostarczany
+        część modułów wymaganych przez jądro może być już w nie wbudowana a
+        część jest ładowana w razie potrzeby (do tego też służy 
+        <em>initrd</em>).
+        <em>RHEL</em> 8.6, którego używam również i w tym rozdziale jest 
+        dostarczany
         z jądrem 4.18.0-372.9.1.el8.x86_64, tę informację można uzyskać za
         pomocą polecenia <code class="code-inline">uname -r</code>. I to jądro
         wystarcza dla potrzeb systemu operacyjnego.
@@ -8948,7 +8953,7 @@ switch_root:/# reboot
         nie jest jedym powodem do jego <em>przebudowania</em>, nie które
         aplikacje lub systemy bazodanowe mogą wymagać nowszej jego wersji, aby
         zapewnić maksimum wydajności. Tym zajmiemy się w tym podrozdziale:
-        <em>przebudową</em> jądra. Omówimy sobie również gdzie znajduje się
+        <em>przebudowa jądra</em>. Omówimy sobie również gdzie znajduje się
         jądro w systemie. 
       </p>
       <h3 id="11.2.1.kernelfiles">11.2.1. Pliki jądra w systemie</h3>
@@ -9145,7 +9150,7 @@ kernel-modules-4.18.0-372.9.1.el8.x86_64
       <p>
         Wersje jądra możemy sprawdzić za pomocą polecenia
         <code class="code-inline">uname -r</code>. Dzieli się ona na kilka
-        części które mogą pomóc nam w zidentyfikowaniu nowego jądra
+        części, które mogą pomóc nam w zidentyfikowaniu nowego jądra
         odpowiedniego dla naszego systemu:
       </p>
 <pre class="code-block">
@@ -9178,7 +9183,7 @@ kernel-modules-4.18.0-372.9.1.el8.x86_64
       <h3 id="11.2.4.rebuidkernel">11.2.4. Przebudowa jądra</h3>
       <p>
         Przebudowę jądra rozpoczniemy od ustalenia jego obecnej wersji oraz
-        wybrania odpowiedniej dla naszych rozwiązań. Z racji tego iż jest to
+        wybrania odpowiedniej dla naszych rozwiązań. Z racji tego, iż jest to
         tylko przykład wybierzemy kolejny <em>build</em> dystrybucji.
       </p>
 <pre class="code-block">
@@ -9189,15 +9194,19 @@ kernel-modules-4.18.0-372.9.1.el8.x86_64
         W wiec w naszym przypadku najlepiej będzie zainstalować wersje np.
         <em>373</em> lub inną podobną. Teraz musimy ustalić źródło, skąd
         pobierzemy pakiety potrzebne do zainstalowania nowego jądra. Opcje
-        mamy dwie: strona Red Hat (ponieważ nasze system nie są zarejestrowane
-        w sieci Red Hat, musimy pobrać pakiety logując się na stronie a
-        następnie wybrać z sekcji pobierania odpowiednie pakiety) lub strona
-        <em>rpmfind.net</em>, która jest wyszukiwarką pakietów wśród różnych
-        serwerów lustrzanych różnych dystrybucji dystrybucji klasy
+        mamy dwie: strona <em>Red Hat</em> (ponieważ nasze system nie są 
+        zarejestrowane
+        w sieci <em>Red Hat</em>, musimy pobrać pakiety logując się na stronie 
+        a następnie wybrać z sekcji pobierania odpowiednie pakiety) lub strona
+        <em>rpmfind.net</em>, która jest wyszukiwarką pakietów wśród wielu
+        serwerów lustrzanych różnych dystrybucji klasy
         <em>enterprise</em>. Skutkiem użycia pakietów ze strony <em>rpmfind</em>
         jest to, iż poźniej nasze jądro może widnieć jako np. <em>CentOS</em> w
-        menu <em>GRUB</em>, więc najlepszym rozwiazaniem jest pobranie pakietów
-        na swój komputer, następnie przesłanie zbiorczego archiwum do maszyny.
+        menu <em>GRUB</em>, więc najlepszym rozwiazaniem jest skorzystanie z
+        strony <em>Red Hat</em>. Pakiety możemy pobrać na maszynie za pomocą
+        zainstalowanej przeglądarki lub na komputerze który ją hostuje i
+        następnie przesłać zbiorcze archiwum za pomocą <em>sftp</em> (patrz:
+        rozdział 19).
         Listę pakietów niezbędnych do zainstalowania nowego jądra możemy
         wyświetlić za pomocą polecenia:
       </p>
@@ -9211,10 +9220,11 @@ kernel-modules-4.18.0-372.9.1.el8.x86_64
 </pre>
       <p>
         Na komputerze na którym hostuje maszynę wirtualną pobrałem z strony
-        Red Hat najnowsze pakiety jądra przeznaczone dla RHEL 8. Stworzyłem
+        <em>Red Hat</em> najnowsze pakiety jądra przeznaczone dla <em>RHEL</em>
+        8. Stworzyłem
         z nich archiwum nastepnie przesłałem do wcześniej utworzonego 
-        podkatalogu w katalogu <em>/tmp</em> na maszynie z RHEL 8. Poniżej
-        znajduje się lista pobranych pakietów:
+        podkatalogu w katalogu <em>/tmp</em> na maszynie z <em>RHEL</em> 8. 
+        Poniżej znajduje się lista pobranych pakietów:
       </p>
 <pre class="code-block">
 [user@rhel8-vm1 kernel]$ ls -l 
@@ -9268,11 +9278,12 @@ W porządku? [t/N]:
 4.18.0-372.16.1.el8_6.x86_64
 </pre>
       <p>
-        Jak możemy zauważyć to jądro różni się od porzedniego dorobnymi 
+        Jak możemy zauważyć to jądro różni się od porzedniego drobnymi 
         zmianami wprowadzonymi przez dystrybucję, gdyż zmianie uległ numer 
         rewizji w numerze <em>buildu</em>.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Zawsze należy instalować nowe jądro, a nie aktualizować stare.
         Aktualizacja usuwa każde istniejące jądro i zastępuje je nowym w
         przypadku problemów po instalacji z nowym jądrem nie będzie możliwości
@@ -9308,15 +9319,16 @@ W porządku? [t/N]:
       <h2 id="ch11summary">Podsumowanie</h2>
       <p>
         W tym rodziale zapoznaliśmy się z procesem ładowania systemu. Poznaliśmy
-        po krótce każdą z jego faz. Zapoznaliśmy się bliżej z program ładującym
-        <em>GRUB</em> jego plikami konfiguracyjnymi oraz narzędziem z nim
+        po krótce każdą z jego faz. Przyjrzeliśmy się bliżej z programowi 
+        ładującemu
+        <em>GRUB</em> jego plikom konfiguracyjnymi oraz narzędziom z nim
         związanym. Nauczyliśmy się uruchamiać system w trybie awaryjnym aby
         przywrócić hasło superużytkownika lub poprawić wpisy w pliku
         <em>/etc/fstab</em>. Na koniec poruszyliśmy temat jądra, dowiedzieliśmy
         sie gdzie znajdują się pliki jądra, jakie pakiety odpowiadają za nie
         w systemie oraz nauczyliśmy się poprawnie interpretować jego wersje
-        aby móc zainstalować nową jego wersję. Następnym rodziale przyjrzymy
-        się ostatniej fazie rozruchu.
+        jądra aby móc zainstalować nową jego wersję. Następnym rodziale 
+        przyjrzymy się ostatniej fazie rozruchu.
       </p>
       <h1 id="12.sysinitlogsandtuned">12. Inicjalizacja systemu, pliki dziennika oraz dostarajanie systemu</h1>
       <p>
@@ -9331,7 +9343,7 @@ W porządku? [t/N]:
         z programów typu <em>init</em> chce korzystać. W niektórych przypadkach
         decyzje podejmujemy sciągając odpowiedni obraz płyty, a w niektórych
         wyboru dokonujemy go podczas instalacji. Nie mniej jednak RHEL korzysta
-        z <em>systemd</em> to nim się zajmiemy, dlatego też odniesienia jako
+        z <em>systemd</em> i to nim się zajmiemy, dlatego też odniesienia jako
         programu lub procesu typu <em>init</em> będą odnośić się do <em>systemd</em>.
       </p>
       <p>
@@ -9349,7 +9361,7 @@ W porządku? [t/N]:
         bardziej energooszczędny, to bedziemy mogli zrealizować za pomocą 
         jednego z demonów, którego będzie trzeba zainstalować.
       </p>
-      <h2 id="12.1.systeminit">12. Inicjalizacja systemu - systemd</h2>
+      <h2 id="12.1.systeminit">12.1. Inicjalizacja systemu - systemd</h2>
       <p>
         W większości wiodących dystrybucji, wybiera <em>systemd</em> jak
         program typu <em>init</em> dla swoich systemów. Mimo sprzeciwu części
@@ -9375,7 +9387,7 @@ W porządku? [t/N]:
         zasobem są przekazywane do niego. Jest to kolejna cecha, która 
         przyspiesza ładowanie systemu. Kolejną cechą <em>systemd</em> jest
         zmiana administracji usług. Teraz nie są wymgane już skrypty wystarczy
-        krótki plik, kilka, kilkanaście linijek i usługą jest już zdefiniowana. 
+        krótki plik, kilka, kilkanaście linijek i usługa jest już zdefiniowana. 
       </p>
       <h3 id="12.1.1.units">12.1.1. Jednostki</h3>
       <p>
@@ -9412,16 +9424,16 @@ RestartSec=42s
 WantedBy=multi-user.target
 </pre>
       <p>
-        Ten plik przestawia jednostkę usługi, omawaianie dyretyw wykracza
-        poza ramy tego materiału. Dlatego nie będzie tutaj to realizowane
-        więcej wiedzy znajduje się na stronie podręcznika
+        Ten plik przestawia jednostkę usługi. Omawianie dyrektyw wykracza
+        poza ramy tego materiału, dlatego nie będzie tutaj to realizowane.
+        Więcej wiedzy znajduje się na stronie podręcznika
         <code class="code-inline">man systemd.unit</code>. Poniżej znajduje
         się lista typów jednostek oraz krótki opis za co odpowiadają w
         systemie.
       </p>
       <ul>
         <li><strong>.socket</strong> - Jednostki gniazd zazwyczaj są powiązane
-          z jednostkami usług, służą do przestawiania gniazd, które są
+          z jednostkami usług, służą do przedstawiania gniazd, które są
           wykorzystywane w komunikacji miedzyprocesowej lub sieciowej.</li>
         <li><strong>.device</strong> - Jednostka urządzenia, wystąpienie
           urządzenia w ujęciu <em>systemd</em>. Takie jednostki są
@@ -9436,7 +9448,7 @@ WantedBy=multi-user.target
         <li><strong>.target</strong> - Cel. Jednostka logiczna, zestaw plików
           jednostek.</li>
         <li><strong>.path</strong> - Jednostka ścieżki. Wykorzystywana do
-          aktywacji inne jednostki w momencie próby uzyskania dostępu do
+          aktywacji innej jednostki w momencie próby uzyskania dostępu do
           określonego pliku lub katalogu.</li>
         <li><strong>.timer</strong> - Jednostka służy do aktywacji innej
           jednostki na podstawie czasu w niej zdefiniowanego.</li>
@@ -9507,8 +9519,8 @@ systemd-journal-flush.service       loaded active exited    Flush Journal to Per
 ...
 </pre>
       <p>
-        Tego nie widać na przykładzie ale jeśli wywołamy w terminala polecenie,
-        możemy zobaczyć, że poszczególe typy jedenostek są oddzielone od siebie
+        Tego nie widać na przykładzie ale jeśli wywołamy w terminalu polecenie,
+        możemy zobaczyć, że poszczególne typy jednostek są oddzielone od siebie
         za pomocą poziomej linii. W drugiej kolumnie znajduje się stan
         jednostki. Ta kolumna podzielona jest na trzy mniejsze kolumny.
         Pierwsza określa czy jednostka jest załadowana, druga określa tzw.
@@ -9589,13 +9601,13 @@ tuned.service
       </p>
       <h3 id="12.1.4.managingunits">12.1.4. Zarządzanie jednostkami</h3>
       <p>
-        Poza podpolecaniami służacymi wyświetlaniu informacji o jednostkach
+        Poza podpolecaniami służacymi wyświetlaniu informacji o jednostkach,
         <em>systemctl</em> posiada dużą ilość podpoleceń związanych z
         zarządzaniem jednostkami. Jednostki możemy aktywować, dezaktywować,
         włączać, wyłączać, wyświetlić podsumowanie na ich temat czy zablokwać
         zmianę stanu. Pierwszą rzeczą jak zrobimy z będzie wyświetlenie
         informacji o jednostce, a służy do tego podpolecenie
-        <strong>status</strong>
+        <strong>status</strong>.
       </p>
 <pre class="code-block">
 [user@server1 ~]$ sudo systemctl status atd.service
@@ -9621,7 +9633,7 @@ Jul 17 07:40:58 server1.example.com systemd[1]: Started Deferred execution sched
         uprawnieniami administratora, wówczas na samym dole zostaną nam
         wyświetlone komunikaty diagnostyczne, pobrane z plików dziennika
         <em>systemd</em>, te komunikaty pomagają zlokalizować usterki, które
-        mogą być odpowiedzialne za problem z aktywacją jednostkki.
+        mogą być odpowiedzialne za problem z aktywacją jednostki.
       </p>
       <p>
         Jednostkę możemy zatrzymać oraz uruchomić za pomocą podpoleceń
@@ -9730,7 +9742,7 @@ Jul 17 09:41:38 server1.example.com systemd[1]: Started Deferred execution sched
         katalogu zależności celu, natomiast wyłączenie usuwa to dowiązanie.
       </p>
       <p>
-        Za pomocą podpoleceń <strong>>mask</strong> oraz 
+        Za pomocą podpoleceń <strong>mask</strong> oraz 
         <strong>unmask</strong> możemy zablokować włączenie oraz aktywację 
         jednostki. Użycie podpolecenia <em>mask</em> tworzy dowiązanie do pliku
         <em>/dev/null</em> i zaznacza w <em>systemd</em>, że jednostka jest
@@ -9774,13 +9786,13 @@ Jul 17 10:09:58 server1.example.com systemd[1]: atd.service: Current command van
       <h3 id="12.1.5.managingtargets">12.1.5. Zarządzanie jednostkami celów</h3>
       <p>
         Zarządzaniem jednostkami celów, różni się od zarządzania jednostkami
-        usług czy innych typów. Jednostki celów przestawiają różne stany
+        usług czy innych typów. Jednostki celów przedstawiają różne stany
         uruchomienia systemu operacyjnego, więc aby miało to jakiś sens
         zarządzanie nim sprowadza się głównie do dwóch czynności, jedną z nich
         jest określenie oraz ustawienie domyślnego stanu, w którym to system
         operacyjny jest zdatny do użycia. W tym przypadku określa to jednostka
         celu - <strong>default</strong>. Za pomocą podpoleceń możemy sprawdzić
-        jaka z dostarczonych z systemem jednostek jest wskazywana przez to
+        która z dostarczonych z systemem jednostek jest wskazywana przez to
         dowiązanie. Możemy to określić za pomocą podpolecenia
         <strong>get-default</strong>.
       </p> 
@@ -9790,11 +9802,11 @@ Jul 17 10:09:58 server1.example.com systemd[1]: atd.service: Current command van
 graphical.target
 </pre>
       <p>
-        Tę wartość możemy zmienić, wypływając również na sposób ładowania
+        Tę wartość możemy zmienić, wpływając również na sposób ładowania
         systemu. Jeśli zmienię domyślny cel z
         <code class="code-inline">graphical.target</code> na 
         <em>multi-user.target</em>, wówczas system zatrzyma ładowanie systemu
-        przez uruchomieniem środowiska graficznego. Zmianie domyślnego celu
+        przed uruchomieniem środowiska graficznego. Zmianie domyślnego celu
         służy podpolecenie <strong>set-default</strong>.
       </p>
 <pre class="code-block">
@@ -9810,6 +9822,7 @@ multi-user.target
         graficznego. 
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Może być tak, że na egzaminie będzie trzeba zmienić domyślny cel
         ładowanie systemu.
       </p>
@@ -9836,7 +9849,7 @@ multi-user.target
       </p>
       <h2 id="12.2.logging">12.2. Prowadzenie plików dzienników systemowych</h2>
       <p>
-        Zbieranie informacji o tym co się dzieje w systemie do bardzo ważna
+        Zbieranie informacji o tym co się dzieje w systemie to bardzo ważna
         czynność wykonywana przez systemy operacyjne. Nie które z komponentów
         instalowanych w nich zwracają bardzo ubogie w informacje komunikaty
         o błędach lub ostrzeżenia z których nic nie wynika. Najczęściej ma to
@@ -9889,7 +9902,7 @@ local7.*                                                /var/log/boot.log
         określający ważność komunikatu. Funkcję od priorytetu oddziela się
         kropką. Spis funkcji oraz priorytetów znajduje się na stronie
         podręcznika pliku <em>/etc/rsyslog.conf</em>. Gwiazdka to symbol
-        wieloznaczny wskazujący zarówno wszystkie priorytet jak i wszystkie
+        wieloznaczny wskazujący zarówno wszystkie priorytety jak i wszystkie
         funkcje w zależności gdzie został użyty. Priorytet
         <code class="code-inline">none</code> wskazuje aby nie przechwytywać
         komunikatów z tej funkcji. Jak możemy zobaczyć w pierwszej zasadzie
@@ -9903,12 +9916,14 @@ local7.*                                                /var/log/boot.log
       <p>
         Jak możemy zauważyć większość plików dzienników znajduje się w katalogu
         <em>/var/log</em>. A prawie wszystkie komunikaty diagostyczne trafiają
-        do jednego pliki <em>/var/log/messages</em>. Ten pliki jest głównym
+        do jednego pliku <em>/var/log/messages</em>. Ten plik jest głównym
         plikiem dziennika w systemie. Każda linia reprezentuje jeden z
-        komunikatów. Taki plik najlepiej wyświetlać za pomocą polecenia less
-        lub more.
+        komunikatów. Taki plik najlepiej wyświetlać za pomocą polecenia 
+        <em>less</em>
+        lub <em>more</em>.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Używanie polecenie <em>tail</em> wraz z opcją <em>-f</em> może okazać
         się przydatne podczas śledzenia komunikatów diagnostycznych w trakcie
         uruchamiania usług lub testowania, aby wychwycić wszysktie problemy.
@@ -9978,9 +9993,9 @@ total 56
 -rw-r--r--. 1 root root 145 Oct 14  2019 wtmp
 </pre>
       <p>
-        Zawartość tego pliku może zdradza, w jaki sposób <em>logrotate</em>
+        Zawartość takiego pliku może zdradzać, w jaki sposób <em>logrotate</em>
         zachowa się wobec takiego pliku, nadpisując tym samym konfigurację
-        z pliku z wcześniejszego przykładu (globalnego pliku konfiguracji).
+        z pliku, z wcześniejszego przykładu (globalnego pliku konfiguracji).
       </p>
       <h3 id="12.2.3.bootlog">12.2.3. Plik dziennika rozruchu</h3>
       <p>
@@ -10027,7 +10042,8 @@ Jul 17 13:03:42 server1 user[2706]: Hello, World! It's user
 </pre>
       <p>
         Te komunikaty są rozpoznawane przez <em>rsyslog</em> jako 
-        <em>user.notice</em>, jednak za pomocą opcji -p możemy podać swój
+        <em>user.notice</em>, jednak za pomocą opcji <em>-p</em> możemy podać 
+        swój
         selektor. Polecenie <em>logger</em> możemy być przydatne do testowania
         zmian w konfiguracji <em>rsyslog</em>. 
       </p>
@@ -10035,11 +10051,10 @@ Jul 17 13:03:42 server1 user[2706]: Hello, World! It's user
       <p>
         <em>Systemd</em> poza funkcjami omówionymi na początku tego rozdziału
         dostarcza wielu narzędzi, które czasami bywają irytujące, ale nie które
-        znich jak np. demon <strong>systemd-journald</strong> są całkiem 
-        przydatne, 
+        z nich jak np. demon <strong>systemd-journald</strong> są całkiem przydatne, 
         ponieważ to za jego zasługą dowiadujemy się dlaczego nasza usługa
         nie chce się uruchomić. Ten demon przechwytuje komunikaty z bardzo
-        wielu źródeł od jądro przez <em>ramdysk</em> do różnorakich usług.
+        wielu źródeł od jądra przez <em>ramdysk</em> do różnorakich usług.
         Swoje komunikaty przechowuje w pliku <em>/run/log/journal</em>, zatem
         w pliku, który nie jest trwały i zostanie zniszczony w momencie 
         zamknięcia systemu. Konfiguracja tego demona przechowywana jest w pliku
@@ -10051,7 +10066,7 @@ Jul 17 13:03:42 server1 user[2706]: Hello, World! It's user
         Do wyświetlenia informacji zebranych przez demona 
         <em>systemd-journald</em> mamy do dyspozycji takie polecenie jak 
         <strong>journalctl</strong>. Jesli wydamy to polecenie bez żadnych 
-        opcji to polecenie zróci ono treść podobną do zawartości
+        opcji to polecenie zwróci ono treść podobną do zawartości
         <em>/var/log/messages</em>.
       </p>
 <pre class="code-block">
@@ -10086,7 +10101,7 @@ Sat 2022-07-16 12:48:20.235840 CEST [s=5135ad3430d34e718c820bc5b157f883;i=1;b=9c
     _HOSTNAME=server1.example.com
 </pre>
       <p>
-        Polecenie ma masę opcji nie ma sensu ich tutaj wszsytkich przytaczać.
+        Polecenie ma masę opcji nie ma sensu ich tutaj wszystkich przytaczać.
         Znajdziemy je na stronie podręcznika 
         <code class="code-inline">man journalctl</code>.
       </p>
@@ -10097,7 +10112,7 @@ Sat 2022-07-16 12:48:20.235840 CEST [s=5135ad3430d34e718c820bc5b157f883;i=1;b=9c
       </p>
       <h3 id="12.3.2.storageforjournald">12.3.2. Konfiguracja miejsca do przechwywania dzienników systemd</h3>
       <p>
-        Jak wiem dziennik <em>systemd</em> nie jest przechowywany na stałe w
+        Jak wiemy dziennik <em>systemd</em> nie jest przechowywany na stałe w
         systemie. To możemy zmienić. W bardzo prosty sposób. Otóz, dyrektywa
         <em>Storage</em> w konfiguracji demona może mieć cztery wartości:
       </p> 
@@ -10105,7 +10120,7 @@ Sat 2022-07-16 12:48:20.235840 CEST [s=5135ad3430d34e718c820bc5b157f883;i=1;b=9c
           <li><em>volatile</em> - Przechowuje informacje tylko w pamięci</li>
           <li><em>persistent</em> - Przechowuje informacje w katalogu
             <em>/var/log/journal</em>, jeśli katalog nie istnieje zostanie
-            utworzony, chyba że jest tym jakiś problem to demon wraca do
+            utworzony, chyba że jest z tym jakiś problem to demon wraca do
             przechowywania komunikatów wyłącznie w pamięci.</li>
           <li><em>auto</em> - Podobnie do <em>presistent</em>, jednak nie
             tworzy ona katalogu.</li>
@@ -10173,7 +10188,7 @@ Complete!
         Uwaga, w <em>RHEL</em> 9 demon może wymagać ręcznej aktywacji
         jednostki za pomocą polecenia <em>systemctl</em>.
         Wraz z demonem zostanie nam dostarczone polecenie 
-        <strong>tuned-adm</strong> za pomocą, które będziemy mogli 
+        <strong>tuned-adm</strong> za pomocą, którego będziemy mogli 
         administrować wydajnością systemu dostosowywaną przez te profile.
         Za pomocą podpolecenia <em>list</em> możemy wyświetlić listę dostępnych
         profili.
@@ -10201,9 +10216,11 @@ Current active profile: virtual-guest
         działanie możemy otrzymać poprzez wydanie polecenia <em>tuned-adm</em>
         wraz z podpoleceniem <em>active</em>.
       </p>
+<pre class="code-block">
 [user@server1 ~]$ sudo tuned-adm active
 [sudo] password for user: 
 Current active profile: virtual-guest
+</pre>
       <p>
         Zmiany profilu dokonujemy za pomocą podpolecenia <em>profile</em> a
         następnie podajemy nazwę profilu.

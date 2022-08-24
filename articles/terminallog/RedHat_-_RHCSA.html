@@ -429,7 +429,7 @@
               <ul class="toc">
                 <li><a href="#14.3.1.createpool">14.3.1. Tworzenie puli Stratis</a></li>
                 <li><a href="#14.3.2.createfilesystem">14.3.2. Tworzenie systemu plików Stratis</a></li>
-                <li><a href="#14.3.3.expandandrenamestratis">14.3.3. Rozszerzenie oraz zmiana nazwy puli oraz systemu plików Stratis</a></li>
+                <li><a href="#14.3.3.expandandrenamestratis">14.3.3. Rozszerzenie puli oraz zmiana nazwy puli i systemu plików Stratis</a></li>
                 <li><a href="#14.3.4.destroy">14.3.4. Usuwanie elementów Stratis</a></li>
               </ul>
             </li>
@@ -10294,11 +10294,12 @@ No current active profile.
         Dane na których operują użytkownicy, wyniki ich pracy czy programy
         przez nich używane muszą być gdzieś składowane, aby co ponowne
         uruchomienie komputera nie trzeba było konfigurować naszego środowiska
-        na na nowo. Odziwo istnieją użytkownicy, który korzystają z dystrybucji
-        Linuksa w trybie <em>LiveCD</em> (system załadowanego z płyty). Aby
+        na nowo. Odziwo istnieją użytkownicy, który korzystają z dystrybucji
+        Linuksa w trybie <em>LiveCD</em> (systemu załadowanego z płyty do
+        pamięci komputera). Aby
         móc wykorzystać komputer do składowania danych potrzebujemy specjalnych
-        urządzeń - dysków, i to zarządzaniem dyskami zajmiemy się w tym 
-        rozdziale.
+        urządzeń - <strong>dysków</strong>, i to zarządzaniem dyskami zajmiemy 
+        się w tym rozdziale.
       </p>
       <p>
         W tym rozdziale powinna znaleźć się także obsługą dysków za pomocą
@@ -10319,8 +10320,8 @@ No current active profile.
         operacyjnych są podstawową jednoską związaną z zarządzaniem dyskami,
         więc aby uzyskać dostęp do przestrzenii znajdującej się na dysku,
         musimy utworzyć na nim partycję. Na tym polega zarządzanie dyskami,
-        na tworzeniu, zmienianiu i usuwaniu partycji. Informacje o partycjach
-        zwaną <strong>tablicą partycji</strong>
+        na tworzeniu, zmienianiu i usuwaniu partycji. Informacja o partycjach
+        zwana <strong>tablicą partycji</strong>
         znajdujących się na dysku znajduje się w pierwszym jego sektorze obok
         programu rozruchowego. Partycjami możemy zarządzać za pomocą dwóch
         schematów <strong>MBR</strong> oraz <strong>GPT</strong>.
@@ -10329,7 +10330,7 @@ No current active profile.
       <p>
         <em>MBR</em> jest jednym z pierwszych schematów partycjonowania,
         został on ustanowiony dawno temu, więc posiada pewne ograniczenia
-        względem stosowanych w obecnych komputerach pamięciach masowych.
+        względem dysków stosowanych w obecnych komputerach.
         Schemat ten jest domyślnym schematem wykorzystywanym przez komputery
         obsługiwane z pomocą <em>BIOS</em>-u. Pozwala on podzielenie dysku na
         maksymalnie 4 partycje podstawowe (służące do przechowywania danych).
@@ -10344,7 +10345,7 @@ No current active profile.
         Schemat ten ma jeszcze jedno ograniczenie otóż, nie może zaadresować
         przestrzenii większej niż 2TB ze względu na to iż jest to 
         <em>32-bitowy</em> schemat partycjonowania, jak wiemy obecne dostępne
-        dyski dysponują przestrzenią powyżej 10 TB. 
+        dyski dysponują przestrzenią powyżej 10TB. 
       </p>
       <h3 id="13.1.2.gpt">13.1.2. Schemat patycjonowania GPT (GUID Partition Table)</h3>
       <p>
@@ -10367,7 +10368,8 @@ No current active profile.
         za pomocą numeracji. W przypadku partycjonowania ze schematem <em>MBR</em>,
         partycje podstawowe otrzymują numery od 1 do 4, natomiast numeracja
         dysków logicznych rozpocznyna sie od 5. W przypadku schematu <em>GPT</em>
-        numeracja rozpoczynia się od 1. Za pomocą polecenia <em>lsblk</em>
+        numeracja rozpoczynia się od 1. Za pomocą polecenia 
+        <strong>lsblk</strong>
         możemy wświetlić dostępne w systemie urządzenia blokowe:
       </p>
 <pre class="code-block">
@@ -10392,10 +10394,11 @@ vdh           252:112  0    1G  0 disk
         gdzie <em>X</em> to litera porządkowa dysku zatem pierwszy dysk to
         <em>vda</em>, drugi <em>vdb</em> i tak dalej. Przy niektóych nazwach
         widnieją cyfry, te nazwy to nazwy partycji. W Twoim przypadku
-        oznaczenia dysku mogą być nieco inne, ponieważ ja zamiast VirtualBox
+        oznaczenia dysku mogą być nieco inne, ponieważ ja zamiast 
+        <em>VirtualBox</em>
         używam wirtualizacji <em>KVM</em> wraz ze innym sterownikiem
         odpowiedzialnym za obsługę pamięci masowych. Nie miej jednak polecenie
-        z przykładu zwraca nazwę urządzenie, przestawiając dysk w postaci
+        z przykładu zwraca nazwę urządzenia, przedstawiając dysk w postaci
         drzewa, zwraca rozmiar zarówno dysków jak i partycji, typ urządzenia
         oraz punkt montowania partycji w systemie.
         Typ <code class="code-inline">lvm</code> oznacza logiczne woluminy
@@ -10407,7 +10410,7 @@ vdh           252:112  0    1G  0 disk
         zarządzanie dyskami. Każda technologia wdrożona do systemu posiada
         swoje oprogramowanie. W tym rozdziale skupimy się wyłączenia na dwóch
         z nich. Na programie <strong>parted</strong> pozwalającym na obsługę
-        zarówno schematu <em>MBR</em> oraz 
+        schematu <em>MBR</em> oraz 
         <strong>gdisk</strong> obsługującym schemat <em>GPT</em>. Ze względu
         na to iż będzie pracować z urządzeniami komputera, do wykonywania
         czynności przy użyciu tych narzędzi będą potrzebne uprawnienia
@@ -10475,12 +10478,17 @@ Number  Start  End  Size  Type  File system  Flags
 </pre>
       <p>
         Teraz kiedy zdecydowaliśmy o schemacie partycjonowania, możemy utworzyć
-        partycję. Przy tworzeniu partycji jest pewien haczyk. Otóż partycje
-        w <em>parted</em> rozpoczynają się od 1 MB dysku, a my nie podajemy
-        jej wielkości tylko koniec. Zatem chcąc stworzyć partycję o wielości
-        100 MB podajemy <em>101M</em> stosując również skróty jednostek 
+        partycję. Przy tworzeniu partycji jest pewien haczyk. Otóż podczas
+        tworzenia partycji 
+        w <em>parted</em> należy podać początek oraz koniec.
+        Zatem chcąc stworzyć partycję o wielkości
+        100 MB podajemy początek 1 (co jest równe 1M, jest również pierwsza
+        partycja więc rozpoczyna się od pierwszego megabajta dysku) 
+        101M stosując również skróty jednostek 
         odnoszące się wyłacznie do wielkorotności jak <em>M</em> - megabajt,
-        <em>G</em> - gigabajt itd.
+        <em>G</em> - gigabajt itd. Następną partycję moglibyśmy zacząć od 101M
+        i ustawiając jej koniec, na koniec pozostałej wolnej części dysku za
+        pomocą takiego wyrażenia jak: <em>100%Free</em>.
       </p>
 <pre class="code-block">
 [user@server2 ~]$ sudo parted /dev/vdb mkpart primary 1 101M
@@ -10501,7 +10509,7 @@ Number  Start   End    Size    Type     File system  Flags
       <p>
         Po podpoleceniu podajemy rodzaj partycji w tym przypadku jest to
         <code class="code-inline">primary</code>, następnie podajemy jej
-        numer <code class="code-inline">1</code> oraz koniec
+        początek <code class="code-inline">1</code> oraz koniec
         <code class="code-inline">101M</code>. Tak utworzą partycję możemy
         teraz usunąć za pomocą podpolecenia <em>rm</em>, które przyjmuje
         numer jako argument.
@@ -10569,8 +10577,8 @@ Command (? for help):
         Polecenie na początku zwróci listę używanych na dysku schematów tablicy
         partycji. Następnie wydałem odpowiednie polecenie aby wyświetić listę
         dostępnych polecenień. Jak widać na dysku nie ma żadnej tablicy za
-        pomocą polecenia <em>o</em> na dysku zostanie stworzona nowa tablica
-        partycji (miejsce z informacjami o partycjach dysku) ze schematem 
+        pomocą polecenia <em>o</em> zostanie stworzona nowa tablica
+        partycji (miejsce z informacjami o partycjach dysku) w schemacie 
         <em>GPT</em>.
       </p>
 <pre class="code-block">
@@ -10692,6 +10700,7 @@ Number  Start (sector)    End (sector)  Size       Code  Name
         zmian na dysku.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Znajomość zarówno <em>parted</em> oraz <em>gdisk</em> jest
         wystarczająca, aby zrealizować proste zadania związane z zarządzaniem
         dyskami na egzaminie.
@@ -10740,11 +10749,11 @@ Number  Start (sector)    End (sector)  Size       Code  Name
         inaczej spojrzeć na dostępne w naszych komputerach dyski. Za pomocą
         tego narzędzia możemy zebrać wszystkie dostępne w systemie dyski
         zainicjować je, aby były gotowe do pracy z <em>LVM</em>, wówczas
-        dyski stają się <strong>wolumenami fizycznymi</strong>. Wolumeny
-        fizyczne łączy się w <strong>grupę wolumenów</strong>, która staje
+        dyski stają się <strong>woluminami fizycznymi</strong>. Woluminy
+        fizyczne łączy się w <strong>grupę woluminów</strong>, która staje
         się pulą to tworzenie nowych urządzeń dyskowych bazujących na miejscu
         dostępnym w grupie. Takie urządzenia noszą nazwę
-        <strong>wolumenów logicznych</strong>. W ujęciu <em>LVM</em>
+        <strong>woluminów logicznych</strong>. W ujęciu <em>LVM</em>
         najmiejszą logiczną jednostką alokacji przestrzeni dyskowej są 
         <strong>ekstenty</strong>. Ekstenty dzielą się na logiczne będące
         cząstkami woluminów logicznych oraz na fizyczne będące elementami
@@ -10772,7 +10781,7 @@ Number  Start (sector)    End (sector)  Size       Code  Name
         znaczenia czy jest schemat tablicy partycji GPT czy MBR, następnie
         partycji ustawiamy flagę <em>lvm</em>. Tak przygotowana partycja
         jest gotowa by użyć jej jako woluminu fizycznego. Poniżej znajduje się
-        przykład przestawiający jak to zrealizować.
+        przykład przedstawiający jak to zrealizować.
       </p>
 <pre class="code-block">
 [user@rhel90 ~]$ sudo gdisk /dev/vdb
@@ -10939,7 +10948,7 @@ The operation has completed successfully.
       <p>
         Polecenie to zwraca rozmiar fizycznych ekstentów, który w tym
         przypadku posiada wartość domyślną. Rozmiar ten możemy zmienić
-        podając opcje <em>-s</em> oraz wielkość fizycznych extentów jako
+        podając opcje <em>-s</em> oraz wielkość fizycznych ekstentów jako
         argument opcji podczas tworzenia grupy. Chcąc wydobyć konkretne
         informacje z tego polecenia możemy posłużyć się poleceniem 
         <em>grep</em>.
@@ -10957,8 +10966,10 @@ The operation has completed successfully.
         Do tworzenia woluminów logicznych służy polecenie 
         <strong>lvcreate</strong>. Wydając to polecenie wraz z opcją
         <em>--help</em>, zostaną nam zwrócone wszystkie możliwe rodzaje
+        segmentów
         woluminów logicznych. W tym materiale będą nas interesować tylko dwa
-        <em>linear</em> (liniowy, zwykły) oraz <em>VDO</em>. O VDO będzie w
+        <em>linear</em> (liniowy, zwykły) oraz <em>VDO</em>. O 
+        <em>VDO</em> będzie w
         następnym podrozdziale. Zatem do stworzenia liniowego woluminu
         logicznego potrzebujemy wielkości (opcja <em>-L</em>) oraz nazwy grupy 
         w której ma zostać stworzony. 
@@ -11028,7 +11039,8 @@ The operation has completed successfully.
       </p>
       <p>
         Tak utworzone woluminy są pełno prawnymi urządzeniami blokowymi
-        przypominającymi dyski. Mozemy zainstalować na nich odpowiedni system
+        przypominającymi partycję. Możemy zainstalować na nich odpowiedni 
+        system
         plików (będzie o tym w następnym rozdziale), zamontować je w systemie
         i wykorzystać do przechowywania danych.
       </p>
@@ -11183,7 +11195,7 @@ Do you really want to remove active logical volume rhcsa9/rhel9vol0? [y/n]: y
         technologia <em>thin provisioning</em> oraz unikanie tworzenia
         duplikatów plików. Kiedyś <em>VDO</em> było odrębną techniką tak jak
         <em>LVM</em> czy <em>Stratis</em>. Obecnie od <em>RHEL</em> 8.5
-        zostało z unifikowane wraz z <em>LVM</em> jako jeden z rodzajów 
+        zostało zunifikowane wraz z <em>LVM</em> jako jeden z rodzajów 
         logicznych woluminów. Tym zajmiemy się tym podrodziale otóż utworzymy
         logiczny volumin <em>VDO</em>.
       </p>
@@ -11354,7 +11366,8 @@ vg--vdo-vpool0-vpool     10.7G      4.3G      6.4G  40%            0%
       <h2 id="14.3.stratis">14.4. Zarządzanie pamięcią masową za pomocą Stratis</h2>
       <p>
         <strong>Stratis</strong> jest to technologia łącząca ze sobą trzy
-        kompnenty systemowe, pozwalając łączenie dysków w pule oraz tworzenie
+        kompnenty systemowe, pozwalając na łączenie dysków w pule oraz
+        tworzenie
         już gotowych do montowania systemów plików typu <strong>XFS</strong>.
         <em>Stratis</em> jest praktycznie rzecz biorąc bardzo podobny do
         <em>LVM</em> jednak nie tworzymy logicznych woluminów, a gotowe
@@ -11364,7 +11377,8 @@ vg--vdo-vpool0-vpool     10.7G      4.3G      6.4G  40%            0%
       </p>
       <p>
         Stratis nie jest natywnie dostępny w systemie i trzeba go zainstalować.
-        Pakiety znajdują się w repozytorium na płycie instalacyjnej z RHEL9.
+        Pakiety znajdują się w repozytorium na płycie instalacyjnej z 
+        <em>RHEL</em> 9.
         Aby zainstalować w <em>Stratis</em> za systemie wydajemy poniższe
         polecenie:
       </p>
@@ -11412,7 +11426,7 @@ lip 22 08:16:57 rhel90 stratisd[758]: [2022-07-22T06:16:57Z INFO  libstratis::st
 </pre>
       <h3 id="14.3.1.createpool">14.3.1. Tworzenie puli Stratis</h3>
       <p>
-        Teraz kiedy <em>Stratis</em> jest uruchomiony. Możemy przejsć do
+        Teraz kiedy <em>Stratis</em> jest uruchomiony. Możemy przejść do
         utworzenia puli. Do utworzenia puli użyjemy podpolecenia <em>pool</em>
         polecenia <em>stratis</em> oraz podpolecenia <em>create</em>
         podpolecenia <em>pool</em>. Jako argumenty podajemy nazwę puli oraz
@@ -11451,10 +11465,10 @@ rhcsa       rhcsafs0   546 MiB   Jul 22 2022 16:34   /dev/stratis/rhcsa/rhcsafs0
       <p>
         Zwróćmy uwagę na to, iż <em>Stratis</em> sam dobiera na podstawie
         wielkości puli wielkość systemu plików. Tak utworzony system jest
-        dostępny jako gotowy do montowania system plików pod ścieżką w kolumnie
-        <code class="code-inline">Device</code>.
+        dostępny pod ścieżką w kolumnie
+        <code class="code-inline">Device</code> i gotowy do montowania.
       </p>
-      <h3 id="14.3.3.expandandrenamestratis">14.3.3. Rozszerzenie oraz zmiana nazwy puli oraz systemu plików Stratis</h3>
+      <h3 id="14.3.3.expandandrenamestratis">14.3.3. Rozszerzenie puli oraz zmiana nazwy puli i systemu plików Stratis</h3>
       <p>
         Do rozszerzenia puli <em>Stratis</em> służy podpolecenie
         <em>add-data</em> podpolecenia <em>pool</em>. To podpolecenie oczekuje
@@ -11510,6 +11524,7 @@ rhcsa       /dev/vdh              1 GiB   Data
 Name   Total Physical   Properties   UUID
 </pre>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Nie musimy uczyć się na pamięć podpoleceń czy składni. Wiekszość
         informacji możemy uzyskać wydając polecenie z opcją <em>--help</em> lub
         wydać samo podpolecenie bez argumentów. Jedyne o czym należy pamiętać
@@ -11581,7 +11596,7 @@ Name   Total Physical   Properties   UUID
       <h2 id="ch14summary">Podsumowanie</h2>
       <p>
         W tym rozdziale poznaliśmy zaawansowane sposoby na zarządzanie
-        zainstalowanymi w naszych komputerach dyskami. Poznaliśmy wiele poleceń,
+        dyskami naszych komputerów. Poznaliśmy wiele poleceń,
         których składni nie trzeb się uczyć na pamięć. Trzeba się jednak
         orientować jakie polecenie jest do czego. Poznaliśmy zaległą
         technologię <em>VDO</em> oraz trochę uprzedzającą fakty zebrane w

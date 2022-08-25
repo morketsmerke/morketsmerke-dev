@@ -11631,8 +11631,8 @@ Name   Total Physical   Properties   UUID
       </p>
       <h2 id="15.1.filesystems">15.1 Systemy plików na RHEL 9</h2>
       <p>
-        Red Hat Enterprise Linux w wersji 9 natywnie obsługuje cztery systemy
-        plików są nim między innymi:
+        <em>Red Hat Enterprise Linux</em> w wersji 9 natywnie obsługuje cztery 
+        systemy plików są nim między innymi:
       </p>
       <ul>
         <li>Systemy plików <strong>EXT</strong> - jest domyślny system plików
@@ -11642,10 +11642,11 @@ Name   Total Physical   Properties   UUID
           zawiera ona najwięcej udogodnień oraz funkcji.</li>
         <li>Systemy plików <strong>XFS</strong> - jest to system plików
           stosowany w systemach klasy enterprise, choć obecnie powoli staje
-          się standarem jako podstawowy system plików dla dystrybucji Linuksa.
+          się standarem jako podstawowy system plików dla wielu dystrybucji 
+          Linuksa.
           Może on obsłużyć większe pliki niż <em>EXT4</em> oraz zaalokować
           przestrzenie dyskowe. Póki co nie ma narzędzia które pozwalało by na
-          zmniejszenie systemu plików.</li>
+          zmniejszenie systemu plików tego typu.</li>
         <li>System plików <strong>VFAT</strong> - system plików utrzymywany w
           dystrybucjach, aby można było zapewnić zgodność w przesyłaniu plików
           między Linuksem a systemami MS Windows. Najczęściej jest on stosowany
@@ -11699,7 +11700,7 @@ configfs on /sys/kernel/config type configfs (rw,nosuid,nodev,noexec,relatime)
 </pre>
       <p>
         Aby zamontować system plików należy podać po poleceniu <em>mount</em>,
-        nazwę urządzenie, punkt montowanie oraz ewentualnie opcje. 
+        nazwę urządzenia, punkt montowania oraz ewentualnie opcje. 
         <strong>Punkten montowania</strong> może być dowolny katalog znajdujący
         się w systemie. Najlepiej jakby był pusty, ponieważ pliki z
         zamontowanego katalogu przesłonią jego rzeczywistą zawartość.
@@ -11739,7 +11740,7 @@ configfs on /sys/kernel/config type configfs (rw,nosuid,nodev,noexec,relatime)
       </p>
       <h2 id="15.3.gettinguuid">15.3. Pozyskiwanie identyfikatora UUID systemu plików</h2>
       <p>
-        Podczas montowanie jednym z podawanych argumentów jest nazwa
+        Podczas montowania jednym z podawanych argumentów jest nazwa
         urządzenia. Sprawdza się to podczas szybkiego montowania w trakcie
         działania systemu. Nazwa urządzenia nie jest jedyną wartością jaką
         możemy podać poleceniu <em>mount</em> podczas montowania jako wartość
@@ -11750,7 +11751,7 @@ configfs on /sys/kernel/config type configfs (rw,nosuid,nodev,noexec,relatime)
       </p>
       <p>
         Identyfikator w przypadku systemów plików takich jak <em>EXT</em> oraz
-        <em>XFS</em> identyfikator ma długość <strong>128</strong> bitów
+        <em>XFS</em> ma długość <strong>128</strong> bitów
         natomiast w przypadku <em>VFAT</em> są to tylko <strong>32</strong>
         bity, 8 heksadecymalnych znaków. <em>UUID</em> możemy uzyskać za przy 
         użyciu specyficznego narzędzia dostarczanego wraz system plików lub
@@ -11771,12 +11772,13 @@ vda
   └─rhel-swap swap      1               be58cfe2-c3a6-4731-9b0b-f58604074bd8                 [SWAP]
 </pre>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Alternatywne nazwenictwo jest istotne gdy chcemy utworzyć wpisy
         automatycznego montowania podczas uruchamiania systemu. Klasyczne
         nazwy, którymi posługujemy się w systemie przy następnym uruchomieniu
         mogą już być zupełnie inne dla tych samych urządzeń, a <em>UUID</em> 
-        czy etykieta jest przypisana na stałe do systemu plików, dopiero 
-        ponowne sformatowanie partycji zmienia <em>UUID</em>.
+        czy etykieta jest przypisana na stałe do systemu plików, zostanie
+        zmieniona dopiero przez ponowne sformatowanie partycji.
       </p>
       <h2 id="15.4.labeling">15.4. Nadawanie etykiet systemom plików</h2>
       <p>
@@ -11838,7 +11840,7 @@ vda
       <p>
         Katalog główny możemy być rozbity na kilka różnych systemów plików.
         Plik zawarte w poszczególnych katalogach są potrzebne do rozruchu
-        systemu, dlatego też w systemie w katalogu <em>/etc</em> znajduje się
+        systemu, dlatego też w katalogu <em>/etc</em> znajduje się
         plik tekstowy <strong>fstab</strong>, w którym to przechowywane są
         wpisy systemów plików montowanych podczas uruchamiania systemu. Wpisy
         poza automatycznym montowaniem, skracają też potrzebę podawania
@@ -11873,7 +11875,7 @@ UUID=fb4c6cf9-8041-42ce-9e75-82026a4a0164 /boot                   xfs     defaul
           optyczny w systemie. Zatem jeśli w komputerze mamy tylko jeden napęd
           również możemy tak zapisać automatyczne montowanie</li>
         <li>Kolumna 2: <strong>punkt montowania</strong>. Ta kolumna wskazuje
-          nazwy katalogów do których należy podłączyć monotowane systemy plików.
+          nazwy katalogów do których należy podłączyć montowane systemy plików.
           Wyjątkiem jest tutaj przestrzeń wymiany, ponieważ w miejscu
           montowania wstawia się wartość <em>none</em> lub <em>swap</em>.</li>
         <li>Kolumna 3: <strong>typ systemu plików</strong></li>
@@ -11893,7 +11895,7 @@ UUID=fb4c6cf9-8041-42ce-9e75-82026a4a0164 /boot                   xfs     defaul
           to są one sprawdzane jeden po drugim.</li>
       </ul>
       <p>
-        Kolumn 5 oraz 6 nie mają zastosowania dla innych systemów plików niż
+        Kolumny 5 oraz 6 nie mają zastosowania dla innych systemów plików niż
         <em>EXT</em>, dlatego też przy wpisach innych systemów plików wpisuje
         się 0 (zero).
       </p>
@@ -11904,6 +11906,7 @@ UUID=fb4c6cf9-8041-42ce-9e75-82026a4a0164 /boot                   xfs     defaul
         w tym pliku.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Zgubiony lub niepoprawny wpis w pliku <em>/etc/fstab</em> może
         unieruchomić system. Aby to naprawić należy poprawić wpisy w trybie
         ratunkowy. Ze względu na to należy zwrócić szczególną uwagę na
@@ -11911,10 +11914,11 @@ UUID=fb4c6cf9-8041-42ce-9e75-82026a4a0164 /boot                   xfs     defaul
       </p>
       <h2 id="15.6.df">15.6. Monitorowanie zużycia miejsca w systemie plików</h2>
       <p>
-        Jednym z zadań administracyjnych serwerem jest monitorowanie zużycia
-        miejsca w systemie plików. Jednym z domyślnie dostępnych narzędzi jest
+        Jednym z zadań administracyjnych na serwerach jest monitorowanie 
+        zużycia
+        miejsca w systemie plików. Jednym z dostępnych narzędzi jest
         polecenie <strong>df</strong>, które domyślnie wyświetla urządzenie
-        jego rozmiar, ilość zuzytego miejsca, ilość dostępnego miejsca,
+        jego rozmiar, ilość zużytego miejsca, ilość dostępnego miejsca,
         procentowe zużycie miejsca na dysku oraz punkt montowania. Poniżej
         znajduje się przykład.
       </p>
@@ -11938,7 +11942,7 @@ tmpfs                  128M   36K  128M   1% /run/user/1000
         innych takich jak:
       </p>
       <ul>
-        <li><em>-T</em> - dodaje kolumne z rodzajem systemu plików.</li>
+        <li><em>-T</em> - dodaje kolumnę z rodzajem systemu plików.</li>
         <li><em>-x</em> - wyłącza wyświetlanie określonego systemu plików.</li>
         <li><em>-t</em> - wyświetla wyłącznie urządzenia sformatowane na
           określony typ plików.</li>
@@ -12003,7 +12007,7 @@ realtime =brak                   extsz=4096   blocks=0, rtextents=0
 </pre>
       <p>
         W przykładzie użyłem polecenia <strong>mkfs</strong> i za pomocą opcji 
-        <em>-t</em> podałem typ żadanego systemu plików. Równie dobrze możemy
+        <em>-t</em> podałem typ żądanego systemu plików. Równie dobrze możemy
         podać nazwę polecenia a następnie po kropce typ systemu plików
         (np. <em>mkfs.ext4</em>). Następnie podaje się urządzenie blokowe, 
         które ma zostać sformatowane.
@@ -12018,7 +12022,8 @@ realtime =brak                   extsz=4096   blocks=0, rtextents=0
       <h3 id="15.8.2.mountumount">15.8.2. Montowanie oraz odłączanie systemu plików</h3>
       <p>
         Za pomocą polecenia <em>mount</em> możemy podłączyć systemy plików z
-        poprzednie podrozdziału do naszego systemu. Polenie mount nie wymaga
+        poprzedniego podrozdziału do naszego systemu. Polecenie <em>mount</em> 
+        nie wymaga
         podania rodzaju systemu plików, potrafi ono samo to określić.
       </p>
 <pre class="code-block">
@@ -12030,7 +12035,7 @@ realtime =brak                   extsz=4096   blocks=0, rtextents=0
 /dev/vdb3 on /media type xfs (rw,relatime,seclabel,attr2,inode64,logbufs=8,logbsize=32k,noquota)
 </pre>
       <p>
-        Ostatni wiersz dotycz montowania ze wcześniejszego polecenia.
+        Ostatni wiersz dotyczy montowania ze wcześniejszego polecenia.
       </p>
       <p>
         Aby odmontować ten system plików należy wydać poniższe polecenie:
@@ -12095,19 +12100,22 @@ System plików         rozm. użyte dost. %uż. zamont. na
 </pre>
       <p>
         Na początku stworzyłem punkty montowania, trzy podkatalogi w katalogu
-        głównym. Następnie odszukałem w systemie identyfikatory <em>UUID</em>
-        ponieważ są to zwykłe partycje musiałem ich użyć. Następnie za pomocą
-        przekierowania wyjścia polecenia <em>echo</em> zapisałem odpowiednie
-        dla tych partycji wpisy, aby to potwierdzić użyłem polecenia
-        <em>mount</em> wraz z opcją <em>-a</em>, aby zamontować wszystkie wpisy 
-        w pliku, polecenie oczywiście te zamontowane pomija, wiec spokojnie
+        głównym. Następnie odszukałem w systemie identyfikatory <em>UUID</em>,
+        ponieważ są to zwykłe partycje musiałem ich użyć. Za pomocą
+        przekierowania wyjścia polecenia <em>echo</em> zapisałem wpisy 
+        odpowiednie
+        dla tych partycji, aby to potwierdzić użyłem polecenia
+        <em>mount</em> wraz z opcją <em>-a</em>, żeby zamontować wszystkie 
+        wpisy 
+        w pliku. Polecenie oczywiście te zamontowane pomija, więc spokojnie
         każdą zmianę w tym pliku możemy potwierdzać za pomocą tego polecenia.
         Na koniec wyświetliłem sprawdzenie stanu zużycia systemów plików, aby
         lepiej zaprezentować fakt, iż systemy wcześniej zapisane do pliku
         <em>/etc/fstab</em> zostały poprawnie podłączone.
       </p>
       <p>
-        Wpis do pliku dotyczący <em>LVM</em>, różniłby się tylko tym że zamiast
+        Wpis do pliku dotyczący <em>LVM</em>, różniłby się tylko tym, że 
+        zamiast
         <em>UUID</em> mogłaby być ścieżka do woluminu logicznego <em>LVM</em>.
         Jeśli chodzi o systemy plików tworzone przez <em>Stratis</em> można
         użyć <em>UUID</em> lub ścieżki urządzenia wyświetlanej na liście
@@ -12217,7 +12225,7 @@ NAME      TYPE      SIZE USED PRIO
       <p>
         Przestrzeń wymiany tak jak inne systemy plików może być włączana
         automatycznie podczas uruchamiania systemu operacyjnego. Poniżej
-        znajduje się przykład, który obrazuje dodawanie przestrzni wymiany do
+        znajduje się przykład, który obrazuje dodawanie przestrzeni wymiany do
         pliku <em>/etc/fstab</em> oraz jej automatyczne włączanie nie tylko
         poprzez ponowne uruchomienie systemu.
       </p>
@@ -12238,7 +12246,7 @@ NAME      TYPE      SIZE USED PRIO
       <h3 id="15.9.4.swapmonitoring">15.9.4. Monitorowanie zużycia przestrzeni wymiany</h3>
       <p>
         Do kontrolowania z użycia przestrzeni wymiany możemy wykorzystać
-        proste polecenie które zwraca nam informacje o ilości wykorzystywanej
+        proste polecenie, które zwraca nam informacje o ilości wykorzystywanej
         w systemie pamięci operacyjnej. Do tego służy polecenie
         <strong>free</strong>. Pod czas korzystania z tego narzędzia najlepiej
         od razu przeskalować jednostki za pomocą polecenia <em>-h</em>. 
@@ -12250,7 +12258,7 @@ Mem:           1,2Gi       930Mi       104Mi       8,0Mi       236Mi       179Mi
 Swap:          1,3Gi       6,0Mi       1,2Gi
 </pre>
       <p>
-        Druga linii zawiera informacje na temat przestrzeni wymiany. Prócz
+        Druga linia zawiera informacje na temat przestrzeni wymiany. Prócz
         tego polecenia możemy wykorzystać dowolne polecenie monitorujące
         zasoby komputera, np. <em>top</em>.
       </p>
@@ -12283,7 +12291,7 @@ Swap:          1,3Gi       6,0Mi       1,2Gi
         systemie. Dodaj drugi dysk
         do grupy, następnie rozszerz woluminy logiczne o 100MB przyczym użyj
         opcji <em>-r</em> podczas rozszerzenia woluminiu z <em>XFS</em>, a 
-        przy rozszerzaniu woluminu z <em>EXT4</em> pomiń tę opcje i ręczenie
+        przy rozszerzaniu woluminu z <em>EXT4</em> pomiń tę opcję i ręczenie
         rozszerz system plików. Zweryfikuj wykonane czynności.
       </p>
       <h3 id="exec15.4">Ćwiczenie 4: Montowanie automatyczne woluminu Stratis</h3>
@@ -12293,30 +12301,30 @@ Swap:          1,3Gi       6,0Mi       1,2Gi
         stworzenia systemu plików <em>Stratis</em>. Dodaj wpis z systemem do
         pliku <em>/etc/fstab</em>. Uruchom system ponownie. Sprawdź czy system
         plików został zamontowany za pomocą polecenia <em>df -h</em>. Co
-        mozemy zaobserować z wyników dziania tego polecenia? Jaką pojemność
-        ma zamontowany system plików <em>Stratis</em>.
+        mozemy zaobserować z wyników działania tego polecenia? Jaką pojemność
+        ma zamontowany system plików <em>Stratis</em>?
       </p>
       <h3 id="exec15.5">Ćwiczenie 5: Przestrzeń wymiany</h3>
       <p>
         Jako użytkownik z możliwością podniesienia uprawnień, na maszynie
         oznaczonej jako <em>server2</em>. Na pozostałych z trzeciego ćwiczenia 
         ekstentach, utwórz kolejny wolumin o nazwie <em>swap</em>. Stwórz z 
-        niego przestrzeń wymiany. Dodaj wpis tej przetrzeni do pliku
+        niego przestrzeń wymiany. Dodaj wpis tej przestrzeni do pliku
         <em>/etc/fstab</em>. Aktywują ją automatycznie, następnie wyświetl
         wszystkie dostępne przestrzenie wymiany w systemie oraz wyświetl 
         łaczną pojemność <em>swapu</em> w systemie.
       </p>
       <h2 id="ch15summary">Podsumowanie</h2>
       <p>
-        Tym rozdziałem zakończyliśmy naukę zarządzania pamieciami masowymi w
+        Tym rozdziałem zakończyliśmy naukę zarządzania pamięciami masowymi w
         <em>RHEL</em>.
         Poznaliśmy systemy plików oraz mechanizmy z nimi związane. Nauczyliśmy
         się instalować systemy plików na partycjach oraz woluminach logicznych.
-        Dowiedzieliśmy się w jaki sposób montowane są automatycznie dostępne w
+        Dowiedzieliśmy się w jaki sposób montowane są automatycznie dostępne
         w systemie operacyjnym systemy plików oraz w jaki sposób poprawnie
         utworzyć wpis do pliku <em>/etc/fstab</em>. Na koniec poznaliśmy w jaki
-        sposób zarządzać przestrzenią wymiany w RHEL. W następnym rozdziale
-        zajmiemy się już podstawowymi pojęciami związanymi z siecią.
+        sposób zarządzać przestrzenią wymiany w <em>RHEL</em>. W następnym 
+        rozdziale zajmiemy się już podstawowymi pojęciami związanymi z siecią.
       </p>
       <h1 id="16.networkfundamentals">16. Podstawy sieci w RHEL 9</h1>
       <p>
@@ -12325,7 +12333,8 @@ Swap:          1,3Gi       6,0Mi       1,2Gi
         składają się minimum dwa komputery, połączone ze sobą albo bezpośrednio
         albo za pomocą urządzenie pośredniczącego np. przełącznika. Aby
         komunikacja między nimi mogła być możliwa wbudowane w nie urządzenia
-        sieciowe muszą zostać odpowiednio skonfigurowane z użyciem
+        sieciowe (karty/adaptery sieciowe) muszą zostać odpowiednio 
+        skonfigurowane z użyciem
         podstawowej wiedzy na temat sieci IP. Poznaną tutaj wiedzę na temat
         sieci IP, wykorzystamy do tworzenia oraz konfigurowania nowych
         połączeń sieciowych w systemach klasy <em>enterprise</em>.
@@ -12364,7 +12373,7 @@ Swap:          1,3Gi       6,0Mi       1,2Gi
 </pre>
       <p>
         Polecenie to wyświetla informacje na temat dostępnych w systemie
-        <strong>Połączeń sieciowych</strong> (<em>interfejsów</em>). Jednym z
+        <strong>połączeń sieciowych</strong> (<em>interfejsów</em>). Jednym
         z nich jest połączenie o nazwie <code class="code-inline">enp1s0</code>
         posiadające adres <strong>192.168.122.6</strong>. Drugie połączenie
         sieciowe, to specjalny interfejs systemowy tzw.
@@ -12376,7 +12385,7 @@ Swap:          1,3Gi       6,0Mi       1,2Gi
         Komputery podłączone do tej samej sieci posiadają identyczne, niektóre
         z częsci adresu <em>IPv4</em>. Część wspólna nazywana jest częścią 
         sieciową, pozostała część (część hosta) jest ustatalna indywidualnie
-        dla każdego hosta i tylko jemu przypisywana. Które części adresu są
+        dla każdego hosta i tylko jemu przypisywana. Które części adresu
         są częścią hosta, a które są częscią sieci jest ustatalne w trakcie jej
         konfiguracji na podstawie <strong>klas adresowych</strong>. Klasy
         adresowe możemy podzielić na trzy klasy:
@@ -12406,7 +12415,7 @@ Swap:          1,3Gi       6,0Mi       1,2Gi
         takimi sieciami, zwiększyć ich wydajność oraz zapewnić oporność na
         na awarie czy odsepraować je od siebie. Po podziale każda z takich
         sieci posiada logicznie wytyczone granice. Te granice są wskazywane
-        przez <strong>maskę podsieci</strong>, której zadaniem zaznaczenie
+        przez <strong>maskę podsieci</strong>, której zadaniem jest zaznaczenie
         części sieciowej adresu <em>IPv4</em> oraz części przeznaczonej dla
         komputerów w sieci. Oktety maski podsieci mogą posiadać wartości takie
         jak <strong>255</strong>, <strong>0</strong> oraz inne przy czym
@@ -12418,7 +12427,8 @@ Swap:          1,3Gi       6,0Mi       1,2Gi
         najmniejsza ilość informacji, przestawia pojedyńczy stan 0 lub 1), 8
         zer lub jedynek. Na masce podsieci jedynki określają bity, które są
         częścią sieciową adresów, a zera tą część która pozostaje do
-        adresowania hostów. Poniżej znajduje się przykład. Mój serwer ma adres
+        adresowania hostów, dlatego też zera nie mogą występować między
+        jedynkami. Poniżej znajduje się przykład. Mój serwer ma adres
         <em>192.168.122.7</em> oraz maskę podsieci: <em>255.255.255.0</em>.
         Poniżej znajduje się zapis tych parametrów w postaci binarnej:
       </p>
@@ -12441,14 +12451,14 @@ Swap:          1,3Gi       6,0Mi       1,2Gi
         sieciowym.
       </p>
       <p>
-        Maska podsieci może mieć maksymalną wartość 32 bity, pozwalając na
+        Maska podsieci może mieć maksymalną wartość 32 bitów, pozwalając
         na istnienie jednego adresu w sieci (najczęciej jest wskazanie na
         konkretny adres) lub minimalną wartość jaką jest 0, alokując tym samym
         wszystkie możliwe adresy, ok. 4,3 miliarda.
       </p>
       <h3 id="16.1.2.privateaddreses">16.1.2. Adresy prywatne</h3>
       <p>
-        Upowszechnienie się łącz szerokopasmowych dał możliwość budowania w
+        Upowszechnienie się łącz szerokopasmowych dało możliwość budowania w
         sieci lokalnych, w których systemy są konfigurowane przez centralny
         serwer (<em>router</em> lub <em>bramę</em>). Tego typu sieci posługują
         się wenętrzną adresacją zawaną także 
@@ -12465,9 +12475,10 @@ Swap:          1,3Gi       6,0Mi       1,2Gi
       </ul>
       <p>
         Te klasy są ustalane w standardzie dotyczącym klas prywatnych, jednak
-        administratorzy wolą używać mniejszych klas. Dlatego też klasa A
-        pozostaje bez zmian, ale w klasie B używa się maski 16 bitowej, a 
-        w klasie C maski 24 bitowej.
+        administratorzy wolą używać mniejszych klas. Dlatego też klasa 
+        <em>A</em>
+        pozostaje bez zmian, ale w klasie <em>B</em> używa się maski 16 
+        bitowej, a w klasie <em>C</em> maski 24 bitowej.
       </p>
       <h3 id="16.1.3.protocols">16.1.3. Protokoły</h3>
       <p>
@@ -12475,7 +12486,7 @@ Swap:          1,3Gi       6,0Mi       1,2Gi
         wymianę informacji przez sieć. Protokoły działają na niższych
         warstwach niż usługi. Do protokołów możemy zaliczyć np. protokół
         <em>IP</em>, którego adresacji poświęciliśmy cały poprzedni
-        podrozdział. W RHEL oraz w innych dystrybucjach w katalogu 
+        podrozdział. W <em>RHEL</em> oraz w innych dystrybucjach w katalogu 
         <em>/etc</em> w pliku <em>protocols</em> znajduje się zestawienie
         protokółów. Poniżej znajduje się fragment tego pliku.
       </p>
@@ -12553,8 +12564,9 @@ time            37/tcp          timserver
         zadaniem jest sprawdzenie możliwości połaczenia z podanym komputerem.
         Narzędziem korzystającym z tego protokołu jest <strong>ping</strong>.
         Zadaniem tego narzędzia jest wysłanie do komputera pakietu i otrzymanie
-        odpowiedzi. Na podstawie otrzymanych (lub nie) danych polecenie pod
-        koniec działania wyświetla statystkę.
+        odpowiedzi. Na podstawie otrzymanych (lub nie) danych polecenie
+        rejestruje każdą odpowiedź lub jej brak oraz pod koniec działania 
+        wyświetla statystkę.
       </p> 
 <pre class="code-block">
 [user@server10 ~]$ ping -c4 192.168.122.7
@@ -12594,7 +12606,7 @@ rtt min/avg/max/mdev = 0.344/0.447/0.573/0.100 ms
       <p>
         Ze względu na dość szybką ekspansję internetu, okazało sie że pula
         adresów <em>IPv4</em> jest na wyczerpaniu. Czego się dziwić, jeśli
-        mamy 8 miliardów ludzi na świecie, a tylko 4.3 miliarda adresów. Nie
+        mamy 8 miliardów ludzi na świecie, a tylko 4,3 miliarda adresów. Nie
         pomogła również adresacja prywatna. Zatem była potrzeba nowego
         rozwiązania. I w ten sposób narodził się 
         <em>Protokół internetowy w wersji 6</em>. Jest on dostępny w 
@@ -12608,7 +12620,7 @@ rtt min/avg/max/mdev = 0.344/0.447/0.573/0.100 ms
         Protokół <em>IPv6</em>, korzysta z protokołu <em>NDP</em>
         (ang. <em>Neighbor Discover Protocol</em>), do przeszukiwania sieci
         i odnajwydwania innych urządzeń sieciowych skonfigurowanych za pomocą
-        tego protokołu. Ten protokół rozszerza również funkcjonalność
+        tego protokołu. Rozszerza on również funkcjonalność
         <em>IPv4</em> o diagnostykę problemów związanych z połączniem,
         powtarzalność adresów oraz routing. Za pomocą poniższego polecenia
         wyświetliłem adres <em>IPv6</em> interfejsu na swoim komputerze.
@@ -12677,7 +12689,7 @@ server10.example.com
         <strong>NetworkManager</strong>. Sens profili został w nowych plikach
         zachowany ponieważ koniec, końców chodzi o konfigurację sieciową
         interfejsu. Jako jedno z zalet plików <em>key-file</em> jest to iż są
-        prostsze i łatwiejsze do utworzenia, poniżej znajduje się pliki
+        prostsze i łatwiejsze do utworzenia. Poniżej znajduje się pliki
         <em>key-file</em> głównego połączenia sieciowego na mojej maszynie.
       </p>
 <pre class="code-block">
@@ -12747,7 +12759,7 @@ method=auto
         <code class="code-inline">[ipv4]</code>. Ten plik od pliku bazowego
         różni się również wartością w dyrektywie
         <code class="code-inline">uuid</code>, wartość UUID możemy uzyskać za
-        pomocą polecenia <code class="code-inline">uuidgen</code>, podając
+        pomocą polecenia <strong>uuidgen</strong>, podając
         jako argument nazwę interfejsu. Tak stworzony plik należy
         przenieść do katalogu <em>/etc/NetworkManager/system-connections</em>
         a następnie załadować za pomocą polecenia
@@ -12782,6 +12794,7 @@ method=auto
        valid_lft forever preferred_lft forever
 </pre>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Jak będziemy mogli zauważyć większość konfiguracji sieciowej obecnie
         w <em>RHEL</em> kręci się wokół podsystemu <em>NetworkManager</em>.
         Wystarczy, że będziemy znać jeden ze sposób na konfigurację połączenia
@@ -12790,8 +12803,8 @@ method=auto
       <h3 id="16.2.3.nmcli">16.2.3. Zarządzanie połączeniami sieciowym za pomocą podsystemu NetworkManager</h3>
       <p>
         Podsystem <strong>NetworkManager</strong>, to potężne narzędzie, które
-        potrafi ułatwić zarządzania połączeniami sieciowymi. Za pomocą
-        polecenia <em>nmtui</em>, może zarządzać połaczeniami za pomocą
+        potrafi ułatwić zarządzanie połączeniami sieciowymi. Za pomocą
+        polecenia <em>nmtui</em>, może zarządzać połączeniami za pomocą
         prostego interfejsu okien w trybie tekstowym (pakiety dialog, whiptail).
         Innym narzędziem jest polecenie <strong>nmcli</strong>, którego
         działanie opiera się na kategoriach objektów. W tym materiale skupimy
@@ -12891,7 +12904,7 @@ Pomyślnie dodano połączenie „enp8s0” (ff0d4164-b179-4d03-804d-ff08f8f4da3
         (<code class="code-inline">type Ethernet</code>), użyłem do tego
         interfejsu <em>enp8s0</em> 
         (<code class="code-inline">ifname enp8s0</code>). Nadałem nazwę
-        połączeniu od interfejsu - <em>enp8s0</em>
+        połączeniu od nazwy interfejsu - <em>enp8s0</em>
         (<code class="code-inline">con-name enp8s0</code>), na końcu ustawiłem
         adres <em>IPv4</em> z 24 bitową maską
         (<code class="code-inline">ip4 192.168.100.8/24</code>) oraz adres
@@ -12984,7 +12997,7 @@ rtt min/avg/max/mdev = 0.302/0.404/0.497/0.086 ms
       <p>
         Za pomocą poniższego polecenia wysłałem cztery pakiety diagnostyczne
         (<code class="code-inline">-c4</code>) przy użyciu sieci wewnętrznej
-        do drugiej maszyny w labolatorium.
+        do drugiej maszyny w laboratorium.
       </p>
       <h3 id="exec16.1">Ćwiczenie 1: Zmiana nazwy hosta</h3>
       <p>
@@ -13008,7 +13021,7 @@ rtt min/avg/max/mdev = 0.302/0.404/0.497/0.086 ms
       <p>
         W tym rozdziale zapoznaliśmy się z fundamentalnymi pojęciami 
         związanymi z siecią. Poznalimśmy adresy <em>IPv4</em>, klasy adresów,
-        adresy </em>IPv6</em> oraz kilka protokołów. Dowiedzieliśmy się jak
+        adresy <em>IPv6</em> oraz kilka protokołów. Dowiedzieliśmy się jak
         zarządzać połączeniami sieciowym w <em>RHEL</em> 9. Poznaliśmy
         prosty system, który umożliwi nam pisanie nazw hostów zamiast adresów
         <em>IP</em> oraz sposób na testowanie łączności. W następnym rozdziale

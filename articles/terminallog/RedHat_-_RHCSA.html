@@ -13004,11 +13004,6 @@ rtt min/avg/max/mdev = 0.302/0.404/0.497/0.086 ms
         Jako użytkownik z możliwością podniesienia uprawnień, na maszynie
         oznaczonej <em>server1</em> oraz <em>server2</em> zmień nazwę hosta
         z <em>server1</em> na <em>server10</em> oraz z <em>server2</em> na
-        <em>server20</em>. Wyloguj się i zaloguj ponownie aby potwierdzić
-        zmiany.
-      </p>
-      <h3 id="exec16.2">Ćwiczenie 2: Nowe połączenia sieciowe</h3>
-      <p>
         Przy użyciu wykorzystywanego przez ciebie sposóbu wirtualizacji,
         stwórz sieć wewnętrzną. Następnie dodaj do każdej z maszyn dodatkowy
         interfejs sieciowy. Jak użytkownik z możliwością podniesienia uprawnień
@@ -13029,23 +13024,25 @@ rtt min/avg/max/mdev = 0.302/0.404/0.497/0.086 ms
       </p>
       <h1 id="17.nfs">17. Network File System</h1>
       <p>
-        Niektóre z mechanizmów współdzielenia dostępnych na Red Hat
-        Enterprise Linux pozwalają na korzystanie z udostępnionych plików, tak
+        Niektóre z mechanizmów współdzielenia dostępnych na <em>Red Hat
+        Enterprise Linux</em> pozwalają na korzystanie z udostępnionych plików,
+        tak
         jakby były by one lokalnie dostępne. Jednym z takich mechanizmów jest
         <strong>NFS</strong>, jego obsługa na docelowym systemie sprowadza się
-        do wydania pojedyńczego polecenia <em>mount</em>, a z dodatkowym
+        do wydania pojedynczego polecenia <em>mount</em>, a z dodatkowym
         demonem <strong>AutoFS</strong> tak na prawdę wystarczy próba dostępu
         do katalogu w którym powinny znajdować się dane aby były one dostępne
-        na zdalnym komputerze.
+        na naszym komputerze.
       </p>
       <p>
         <em>NFS</em> czyli (ang. <em>Network File System</em>) sieciowy
-        system plików jest usługą sieciową pozwalającna na współdzielenie
-        zasobów plikowych. NFS działa w architekturze klient-serwer. Co oznacza
+        system plików jest usługą sieciową pozwalającą na współdzielenie
+        zasobów plikowych. <em>NFS</em> działa w architekturze klient-serwer. 
+        Co oznacza,
         że jeden z komputerów udostępnia pliki, na których drugi komputer 
         po podłączeniu jest w stanie pracować. <em>NFS</em> udostępnia
         foldery, a każdy taki folder nazwany jest <strong>udziałem</strong>.
-        Natomiast sam proces udostępniania folderu (udziału) nazwywany jest
+        Natomiast sam proces udostępniania folderu (udziału) nazywany
         jest <strong>eksportem</strong>. Przyczym eksport może być dokonany w
         kierunku <strong>okreslonego/określonych</strong> klienta/klientów.
         Klient chcąc skorzystać z udziału <em>NFS</em> dokonuje jego montowania
@@ -13063,7 +13060,8 @@ rtt min/avg/max/mdev = 0.302/0.404/0.497/0.086 ms
         Dostępnych jest wiele wersji <em>NFS</em>. W <em>RHEL</em> od wersji 8
         domyślną wersją <em>NFS</em> jest wersja 4.2, która daje możliwość
         wykorzystania wyłącznie protokołu <em>TCP</em> zapisu
-        asynchronicznego oraz obsługuje plik powyżej 2GB. Po za tym pozwala ona
+        asynchronicznego oraz obsługuje pliki powyżej 2GB. Po za tym pozwala 
+        ona
         na połączenia przez <em>firewall</em> oraz internet. Wersja ta
         usprawnia kilka zabezpieczeń, wspiera szyfrowanie transmisji oraz
         możliwość użycia <em>ACL</em>.
@@ -13093,7 +13091,7 @@ Nie ma nic do zrobienia.
 Ukończono.
 </pre>
       <p>
-        Następnie tworzymy katalog w który będzie udziałem. Nadajemy mu
+        Następnie tworzymy katalog który będzie udziałem. Nadajemy mu
         odpowiednie uprawnienia, aby każdy klient mógł zapisywać w nim swoje
         pliki.
       </p>
@@ -13112,8 +13110,8 @@ Ukończono.
 /nfstest server10(rw)
 </pre>
       <p>
-        Po zdefiniowaniu eksportu możemy przejść do uruchomienia eksportu.
-        Następnie otworzymy port na zaporze sieciowej na pozwalający na 
+        Po zdefiniowaniu eksportu możemy przejść do uruchomienia demona NFS.
+        Następnie otworzymy port na zaporze sieciowej pozwalający na 
         swobodną komunikację klienta z serwerem. 
       </p>
 <pre class="code-block">
@@ -13187,7 +13185,7 @@ server20:/nfstest /local nfs _netdev 0 0
         w momecie gdy jest on potrzebny. Na przykład gdy chcemy wyświetlić
         zawartość katalogu, w którym powinny znajdować się udostępnione przez
         niego pliki. Tym zajmuje się właśnie <strong>AutoFS</strong>. Ten
-        demon, nie tylko montuje na rządanie ale także odłącza go gdy nie ma
+        demon, nie tylko montuje na żądanie ale także odłącza go gdy nie ma
         prób uzyskania dostępu do niego przez okres 5 minut. Główny plik
         konfiguracyjny znajduje się w katalogu <em>/etc</em> pod nazwą
         <em>autofs.conf</em>. Poniżej znajduje się jego zawartość:
@@ -13228,8 +13226,9 @@ dismount_interval = 300
         Samych mapowań dokonuje się w plikach użytkowników składowanych w
         katalogu <em>/etc/auto.master.d</em>. W jednym z takich plików może
         znajdować się wiele punktów montowania. W pliku <em>/etc/auto.master</em>
-        najczęściej definiuje się co ma zostać
-        zamontowane i w jaki sposób. Przy czym to co ma zostać zamontowane
+        najczęściej definiuje się zbiorczy punkt montowania oraz rodzaj 
+        mapowania. Natomiast konkretne udziały z wyszczególnionymi punktami
+        montowania 
         zapisuje się właśnie w plikach użytkowników. Jedno z mapowań jest już 
         zapisane w pierwszej linii powyższego przykładu.
       </p>
@@ -13356,7 +13355,7 @@ addr=192.168.122.7)
         W pierszej linii znajduje się definicja katalogu nadrzędnego
         przygotowana przez <em>AutoFS</em>. W tej linii znajduje się także
         ścieżka do pliku, w którym należy zapisać definicje udziałów do
-        montowania pośredniego. Zapisujemy więc poniższą linię do pliku
+        mapowania pośredniego. Zapisujemy więc poniższą linię do pliku
         <code class="code-inline">/etc/auto.misc</code>.
       </p>
 <pre class="code-block">
@@ -13464,7 +13463,7 @@ exporting server10.example.com:/home
         montowania zapisujemy poniższą linię:
       </p>
 <pre class="code-block">
-* server20:/home/&amp;
+* -rw server20:/home/&amp;
 </pre>
       <p>
         W tym zapisie gwiazdka odnosi się dowolnej nazwy punktu montowania,
@@ -13516,13 +13515,14 @@ addr=192.168.122.7)
         i korzystać z niego na wielu komputerach.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Jednym z zdań egzaminacyjnych może być automatyczne montowanie zdalnych
         katalogów domowych z wykorzystaniem <em>NFS</em> oraz <em>AutoFS</em>.
       </p>
       <h3 id="exec17.1">Ćwiczenie 1: Tworzenie udziału NFS oraz mapowanie bezpośrednie</h3>
       <p>
         Jako użytkownik z możliwością podniesienia uprawnień na maszynie
-        oznczonej jako <em>server10</em> utwórz udział <em>NFS</em> z katalogu
+        oznaczonej jako <em>server10</em> utwórz udział <em>NFS</em> z katalogu
         <em>/sharenfs</em> i udostępnij go. Na maszynie <em>server20</em>
         zainstaluj usługę <em>AutoFS</em>, następnie skonfiguruj automatyczne
         montowanie wcześniej utworzonego udziału w sposób bezpośredni.
@@ -13601,7 +13601,7 @@ addr=192.168.122.7)
           uzyskanych z serwera <strong>różnic</strong>.</li>
       </ul>
       <p>
-        Sieć <em>NTP</em> ma hierachiczną budowę i opiera się ona poziomy
+        Sieć <em>NTP</em> ma hierachiczną budowę i opiera się ona o poziomy
         nazywane <strong>Stratum</strong>. Poziomy zaczynają się od poziomu 
         <strong>0</strong>
         na tym poziomie znajdują się głownie zegary atomowe lub inne wzorce
@@ -13609,18 +13609,18 @@ addr=192.168.122.7)
         Nie jest on podłączony do sieci. Drugim poziom - 
         poziom <strong>1</strong> - jest miejscem w hierarchii, który znajdują
         się głównie serwery podstawowe oraz <em>peer</em>-y.  Na kolejnych
-        poziomach znajdując się serwery podrzędne oraz <em>peer</em>-y tych
+        poziomach znajdują się serwery podrzędne oraz <em>peer</em>-y tych
         poziomów. Czas uzyskany z najwyższych poziomów można uznać za
         najbardziej dokładny i rzetelny. Wszystkich poziomów w hierarchi jest
         <strong>15</strong>.
       </p>
       <p>
-        Klienci wybierają serwer na podstawie czasu oczekiwania na odpowiedź,
+        Klient wybiera serwer na podstawie czasu oczekiwania na odpowiedź,
         im krótszym tym czas będzie bardziej dokładny.
       </p>
       <h3 id="18.1.1.chronyconfig">18.1.1. Konfiguracja demona Chrony</h3>
       <p>
-        <strong>Chrony</strong> jest najnowsza implementacja demona
+        <strong>Chrony</strong> jest najnowszą implementacją demona
         synchronizacji czasu. Działa on na porcie 123 protokołu UDP. Jego plik
         konfiguracjny znajduje się bezpośrednio w katalogu <em>/etc</em> pod
         nazwą <em>chrony.conf</em>. Poniżej znajduje się jego zawartość. 
@@ -13653,8 +13653,8 @@ logdir /var/log/chrony
       <p>
         Demon <em>chrony</em> dostarczany jest wraz z poleceniem
         <strong>chronyc</strong> za pomocą którego możemy sprawdzić wydajność
-        demona oraz kontrolować jego działanie. Informacje o NTP z demona 
-        możemy uzyskać za
+        demona oraz kontrolować jego działanie. Informacje o <em>NTP</em> z 
+        demona możemy uzyskać za
         pomocą podpoleceń takich jak <em>sources</em> oraz <em>tracking</em>.
       </p>
       <p>
@@ -13752,6 +13752,7 @@ Leap status     : Normal
         <code class="code-inline">System time</code>.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Podczas egzaminu maszyny egzaminacyjne nie będą mieć dostępu do
         internetu, więc podczas konfiguracji klienta NTP będzie trzeba 
         wskazać na serwer w sieci egzaminacyjnej. Ujmujemy w komentarz
@@ -13762,8 +13763,8 @@ Leap status     : Normal
       <h3 id="18.1.2.settingdateandtime">18.1.2. Ustawienia daty i czasu</h3>
       <p>
         Podczas omawiania synchronizacji czasu nie może zabraknąć ręcznych
-        ustawień daty oraz czasu. W przypadku <em>RHEL</em> można to
-        zrealizować na dwa sposób. Pierwszym z nich jest jest polecenie
+        ustawień. W przypadku <em>RHEL</em> można to
+        zrealizować na dwa sposóby. Pierwszym z nich jest jest polecenie
         <strong>timedatectl</strong> oraz <strong>date</strong>. Tak prezentują
         się informacje zwracane przez oba narzędzia uruchomione bez żadnych
         argumentów:
@@ -13784,7 +13785,7 @@ pon, 1 sie 2022, 15:34:55 CEST
       <p>
         Aby móc ustawić ręcznie datę oraz czas trzeba wyłączyć możliwość 
         ustawienia daty oraz czasu z protokołu <em>NTP</em>. Możemy to zrobić
-        za pomocą pomiższego polecenia:
+        za pomocą poniższego polecenia:
       </p>
 <pre class="code-block">
 [user@server10 ~]$ sudo timedatectl set-ntp false
@@ -13798,8 +13799,8 @@ System clock synchronized: yes
           RTC in local TZ: no
 </pre>
       <p>
-        Ustawienie daty oraz czasu następuje w przypadku <em>timedatectl</em>.
-        dokonujemy za pomocą podpolecnia <strong>set-time</strong> następnie
+        Ustawienie daty oraz czasu następuje w przypadku <em>timedatectl</em>,
+        dokonujemy za pomocą podpolecenia <strong>set-time</strong> następnie
         podajemy datę oraz godzinę.
       </p>
 <pre class="code-block">
@@ -13893,9 +13894,11 @@ System clock synchronized: yes
         węzeł zostaje pominięta, następnie szuka się serwera nazwy 
         obsługującego <code class="code-inline">github.io</code>. Następnie 
         otrzymuje się adres, który z hostów w sieci <em>github</em> to
-        <em>morketsmerke</em>. Ludzie za to wpisują adresy do aplikacji w
+        <em>morketsmerke</em> (oczywiście w dużym skrócie). Ludzie za to 
+        wpisują adresy do aplikacji w
         sposób odwrotny do hierarchi: <em>morketsmerke.github.io</em>. I w
-        momencie gdy takie zapytanie trafi do serwera system DNS zacznie
+        momencie gdy takie zapytanie trafi do serwera system <em>DNS</em> 
+        zacznie
         wysłać zapytania do innych serwerów odpowiedzialnych za utrzymanie 
         poszczególnych części nazwy.
       </p>
@@ -13906,7 +13909,7 @@ System clock synchronized: yes
         <em>DNS</em> nazywany jest <strong>rekordem</strong>. Serwery
         <em>DNS</em> dzieli się na <strong>serwery główne</strong> oraz
         <strong>podrzędne</strong>. Serwery podrzędne wykorzystuje się głównie
-        do równoważenia obciążenia oraz nadmiarowości. Ponieważ bazy są
+        do równoważenia obciążenia oraz nadmiarowości, ponieważ bazy są
         przesyłane na serwery podrzędne za każdą aktulizacją wprowadzą w 
         konfiguracji domeny. 
       </p>
@@ -13990,7 +13993,7 @@ hosts:      files [notfound=return] dns myhostname
         Jest ich kilka.        
       </p>
       <p>
-        Pierwszym z nich jest <strong>dig</strong>. Bardzo elestyczne i
+        Pierwszym z nich jest <strong>dig</strong>. Bardzo elastyczne i
         użyteczne narzędzie. Możemy wykorzystać je do wielu czynności. Plusem
         tego narzędzia jest domyślna ilość zwracanych informacji. Poniżej
         znajduje się rozwiązanie nazwy <em>redhat.com</em> za pomocą tego
@@ -14110,7 +14113,7 @@ Received 105 bytes from 192.168.122.1#53 in 50 ms
         Kolejnym poleceniem jest <strong>nslookup</strong>. Polecenie to jest
         interaktywne. Pozwala ono na zmianę serwera w bardzo prosty sposób,
         ponieważ jego adres możemy podać jako argument polecenia lub już
-        po jego uruchomieniu w po poleceniu <em>server</em>.
+        po jego uruchomieniu po poleceniu <em>server</em>.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ nslookup

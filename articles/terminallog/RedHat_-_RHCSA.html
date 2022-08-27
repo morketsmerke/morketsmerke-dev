@@ -509,7 +509,7 @@
           <ul class="toc">
             <li><a href="#17.1.nfsconfig">17.1. Konfiguracja serwera oraz klienta NFS</a>
               <ul class="toc">
-                <li><a href="#17.1.1.nfsserverconfig">17.1.1. Konfiguracja serwera <em>NFS</em></a></li>
+                <li><a href="#17.1.1.nfsserverconfig">17.1.1. Konfiguracja serwera NFS</a></li>
                 <li><a href="#17.1.2.nfsclientconfig">17.1.2. Konfiguracja klienta NFS</a></li>
               </ul>
             </li>
@@ -14191,13 +14191,13 @@ Address: 34.235.198.240
         Usługa bezpiecznej powłoki, jest w obecnych czasach jedną z 
         podstawowych
         rzeczy bez których nie wyobrażamy sobie pracy z jakimi kolwiek
-        odległymi maszynami. Bezpieczna powłoka czyli <strong>SSH</strong>
+        odległymi maszynami. <strong>SSH</strong>
         pozwala na bezpieczne zarządzania maszynami oraz przesyłanie informacji
-        między nimi przez nie zabezpieczone sieci takie jak internet. 
+        między nimi przez niezabezpieczone sieci takie jak internet. 
         <em>SSH</em> pozwala na uwierzytelnienie użytkownika na zdalnym
         serwerze. Dba ona również o intergralność danych przesyłanych jej
         kanałami. Ta usługa dostarcza do systemów Uniksowych wielu narzędzi,
-        które wyparły odpowiedniki korzystające ze zwykłych nie zabezpieczonych
+        które wyparły odpowiedniki korzystające ze zwykłych nieszyfrowanych
         kanałów.
       </p>
       <h2 id="19.1.sshtheory">19.1. Podstawy teoretyczne na temat SSH</h2>
@@ -14210,7 +14210,8 @@ Address: 34.235.198.240
       <h3 id="19.1.1.sshcryptography">19.1.1. Kryptografia SSH</h3>
       <p>
         OpenSSH do zabezpiecznia transmisji danych wykorzystuje metody
-        kryptograficzne zwane <strong>algorytmami</strong>. Są to serie
+        kryptograficzne zwane <strong>algorytmami</strong>.
+        Są to serie
         rownań matematycznych mających za zadanie jak najbardziej zamaskować
         jawne dane aby nie mogły być one odczytane przez osoby nie znające
         <strong>klucza</strong>, czyli hasła bądź pliku, który za pomocą
@@ -14220,14 +14221,14 @@ Address: 34.235.198.240
       <ul>
         <li><strong>Algorytmy symetryczne</strong> - w których do szyfrowania
           i odszyfrowyania danych używa się tego samego klucza ustalanego
-          podczas pierwszego połączenia między maszynami.</li>
+          podczas pierwszego połączenia między stronami transmisji.</li>
         <li><strong>Algorytmów asymetrycznych</strong> - metody te są nazwane
           również <strong>algorytmami klucza publicznego</strong>. Każdy z
-          hostów przed transmisją generuje klucz prywatny. Następnie na
+          hostów generuje klucz prywatny. Następnie na
           podstawie tego klucza generowany jest klucz publiczny, który może być
           jawnie przesyłany przez internet, ponieważ służy on do identyfikacji
           użytkownika oraz szyfrowania danych. Hosty przesyłają sobie klucze
-          prywatne i rozpoczyna się wymiana danych znanych tylko im. Dane w
+          publiczne i rozpoczyna się wymiana danych znanych tylko im. Dane w
           przypadku tego typu
           algorytmów mogą być odczytane tylko za pomocą klucza prywatnego.
           Algorytmy asymetryczne są wykorzystywane do zabezpieczania
@@ -14305,14 +14306,15 @@ Address: 34.235.198.240
 # The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
 # but this is overridden so installations will only check .ssh/authorized_keys
 AuthorizedKeysFile	.ssh/authorized_keys
+...
 </pre>
       <p>
         Zwróćmy uwagę na to, że prawie wszystkie dyrektywy są ujęte w komentarz
         po za jedną, która wskazuje gdzie należy złożyć wszystkie otrzymane
         klucz publiczne w celach uwierzytelniania. Demon <em>OpenSSH</em> jest
         domyślnie dostoswany do największej ilości przypadków jego użycia,
-        więc plików konfiguracyjnych najczęściej używa się w specyficznych
-        przypadkach.
+        więc zmian w plikach konfiguracyjnych najczęściej dokonuje się w 
+        specyficznych przypadkach.
       </p>
       <p>
         Nazwa jednostki w <em>RHEL</em> nosi nazwę <em>sshd.service</em>.
@@ -14324,7 +14326,7 @@ AuthorizedKeysFile	.ssh/authorized_keys
         Na każdej maszynie, na której znajduje się polecenie <em>ssh</em>
         znajduje się także
         plik konfiguracyjny <em>/etc/ssh/ssh_config</em>, który reguluje jego
-        zachowanie posiada on też kilka dyrektyw sugerujących pewne domyślne
+        zachowanie. Posiada on też kilka dyrektyw sugerujących pewne domyślne
         ustawienia. Poniżej znajduje się jego fragment pobrany z jednej z
         moich maszyn.
       </p>
@@ -14365,7 +14367,7 @@ AuthorizedKeysFile	.ssh/authorized_keys
       </p>
       <h3 id="19.4.1.ssh">19.4. Połączenie ze zdalnym serwerem z pomocą ssh</h3>
       <p>
-        Połączenie ze zdalnym serwerem wymaga wydania pojedyńczego polecenia
+        Połączenie ze zdalnym serwerem wymaga wydania pojedynczego polecenia,
         w którym podajemy adres serwera, wówczas polecenie spróbuje zalogować 
         na użytkownika z tą samą nazwą z jakiej korzystamy w lokalnym systemie.
       </p>
@@ -14387,8 +14389,8 @@ Last login: Wed Aug  3 10:59:57 2022 from 192.168.122.6
       <p>
         Po wydaniu polecenia nastepuje połączenie. Klient nie może zweryfikować
         autentyczności serwera przedstawiającego się podanym
-        <strong>odciskiem klucza</strong>. Tak dzieje się gdy podłączamy się
-        do serwera poraz pierwszy. Polecenie zapyta nas czy chcemy kontynuować
+        <strong>odciskiem klucza</strong>. Tak dzieje się gdy łączymy się
+        z serwerem po raz pierwszy. Polecenie zapyta nas czy chcemy kontynuować
         połączenie, wybierając <code class="code-inline">Yes</code> odcisk
         klucza wraz z adresem serwera zostanie złożony w pliku
         <em>~/.ssh/known_hosts</em>. Następnie zostaniemy zapytani o hasło.
@@ -14432,8 +14434,8 @@ Enter file in which to save the key (/home/user/.ssh/id_rsa):
       <p>
         Następnym etapem będzie przesłanie oraz instalacja klucza na zdalnym
         serwerze. Wykonamy tę czynność przy użyciu polecenia
-        <strong>ssh-copy-id</strong>, przyjmuje on takie same argumenty jak
-        polecenie <em>ssh</em>, więc żeby zainstalować klucz na serwerze
+        <strong>ssh-copy-id</strong>, przyjmuje ono takie same argumenty jak
+        polecenie <em>ssh</em>, zatem aby zainstalować klucz na serwerze
         należy wydać poniższe polecenie. Polecenie to w ramach potwierdzenia
         naszej tożsamości zażąda hasła do połączenia się ze zdalnym
         użytkownikiem na serwerze.
@@ -14465,7 +14467,7 @@ Last login: Wed Aug  3 11:39:18 2022 from 192.168.122.6
 </pre>
       <h3 id="19.4.3.sshexecutioncommand">19.4.3. Wykonywanie pojedyńczych poleceń na zdalnym serwerze</h3>
       <p>
-        Za pomocą <em>SSH</em> możemy również wykonywać zdalnie pojedyńcze
+        Za pomocą <em>SSH</em> możemy również wykonywać zdalnie pojedyncze
         polecenia, jeśli nie potrzebujemy dla jednej informacji zestawiać
         interaktywnej powłoki. Polecenie do wykonania na zdalnym serwerze
         podajemy po adresie serwera.
@@ -14536,7 +14538,8 @@ drwx------. 2 user user    80 08-03 12:00 .ssh
       <p>
         Polecenie to przyjmuje takie same argumenty jak <em>ssh</em>. Przy
         czym jest ono interaktywne, jak klasyczne <em>ftp</em> za
-        pomocą znaku zapytania (<strong>?</strong>). 
+        pomocą znaku zapytania (<strong>?</strong>) możemy wyświetlić listę
+        dostępnych poleceń. 
       </p>
 <pre class="code-block">
 [user@server10 ~]$ sftp user@server20
@@ -14581,9 +14584,10 @@ version                            Show SFTP version
         poprzedzonych
         literą <em>l</em>. Aby lepiej zarządzać transferem plików posiadmy
         polecenia, które odwołują się czynności wykonywanych na lokalnym
-        hoście, dzięki czemu nie musimy się rozłączać aby stworzyć katalog
+        hoście, dzięki czemu nie musimy się rozłączać aby na przykład stworzyć 
+        katalog
         specjalnie na dane pobrane z serwera. Pobierzemy teraz plik
-        /etc/fstab do katalogu <em>/tmp</em>.
+        <em>/etc/fstab</em> do katalogu <em>/tmp</em>.
       </p>
 <pre class="code-block">
 sftp&gt; lcd /tmp
@@ -14627,7 +14631,7 @@ Uploading /tmp/user/.viminfo to /tmp/dir_user/.viminfo
         <strong>rsync</strong>, służy on do synchronizacji plików. Taka
         synchronizacja polega na skopiowaniu wszelkich danych znajdujących
         się na zdalnym serwerze do lokalnego katalogu lub odwrotnie i przy
-        następnych synchronizacjach będą kopiowane tylko te pliku, które
+        następnych synchronizacjach będą kopiowane tylko te pliki, które
         uległy zmianie. Na przykład skopiuje katalog domowy jednego z
         użytkowników na zdalnym serwerze.
       </p>
@@ -14698,7 +14702,7 @@ total size is 7,276  speedup is 29.22
       <h2 id="ch19summary">Podsumowanie</h2>
       <p>
         W tym rodziale poruszyliśmy temat bezpieczengo zdalnego dostępu do
-        odległych maszyny. Jest on realizowany za pomocą protokołu 
+        odległych maszyn. Jest on realizowany za pomocą protokołu 
         <em>SSH</em>, z którego teoretycznymi podstawami zapoznaliśmy się na
         początku tego rozdziału. Poruszyliśmy także temat plików
         konfiguracyjnych serwera jak i klienta <em>SSH</em>. Na koniec
@@ -14715,7 +14719,7 @@ total size is 7,276  speedup is 29.22
         kontrolują <strong>zapory sieciowe</strong>, które mogą być albo
         fizycznymi urządzeniam wpiętymi w wyższe segmenty sieci lub
         oprogramowaniem zainstalowanym na naszym komputerze czuwającym nad
-        ruchem sieciowym skierowanym do naszego komputera.
+        ruchem sieciowym skierowanym do niego.
       </p>
       <p>
         Zapora sieciowa ma za zadanie monitorować oraz kontrolować ruch
@@ -14723,7 +14727,7 @@ total size is 7,276  speedup is 29.22
         przesyłanych przez sieć oraz analiza źródłowych adresów <em>IP</em>,
         używanych protokołów czy portów. W tym materiale skupimy się tylko
         i wyłącznie na oprogramowaniu <em>firewall</em>-a dostarczonym do 
-        Red Hat Enterprise Linux 9.
+        <em>Red Hat Enterprise Linux</em> 9.
       </p>
       <h2 id="20.1.firewalldtheory">20.1. Teoria firewalld</h2>
       <p>
@@ -14735,7 +14739,7 @@ total size is 7,276  speedup is 29.22
         zwykłymi <strong>zasadami</strong> (za pomocą zasad organizuje się 
         ruch wychodzący oraz przychodzący w systemie) możemy realizować
         bardziej zaawansowane funkcje takie jak translacja adresów
-        (NAT) umożliwiająca połączenie sieci lokalnej z internetem czy 
+        (<em>NAT</em>) umożliwiająca połączenie sieci lokalnej z internetem czy 
         przekierowanie portów pozwalające na kontrolowaną komunikację między
         użytkownikami internetu a serwerem wewnątrz sieci lokalnej.
       </p>
@@ -14775,20 +14779,20 @@ total size is 7,276  speedup is 29.22
         <li><strong>home</strong> - Ruch przychodzący jest odrzucany, poza
           jawnie wskazanym. Ta strefa stosowana jest w sieciach domowych.</li>
         <li><strong>work</strong> - Ruch przychodzący jest odrzucany, poza
-          jawnie wskazanym. Ta strefa jest stoswana w miejscu pracy.<li>
+          jawnie wskazanym. Ta strefa jest stoswana w miejscu pracy.</li>
         <li><strong>dmz</strong> - Ruch przychodzący jest odrzucany, poza
           jawnie wskazanym. Ta strefa jest stosowana w strefie
           zdemilitaryzowanej (nie ma ograniczeń w połączeniach miedzy
-          hostami w DMZ. Hosty są osiągalne z poziomu internetu, ale 
+          hostami w <em>DMZ</em>. Hosty są osiągalne z poziomu internetu, ale 
           nie mogą nawiązywać połączeń z innymi komputerami w sieci lokalnej
           poza strefą).</li>
         <li><strong>external</strong> - Ruch przychodzą jest odrzucany, poza
           jawnie wskazanym. W ruchu wychodzącym tej strefy dokonywana jest
-          translacja adresów IP (NAT).</li>
+          translacja adresów IP (<em>NAT</em>).</li>
         <li><strong>public</strong> - Ruch przychodzący jest odrzucany, poza
           jawnie wskazanym. Ta strefa jest stosowana w miejscah publicznych.
           Każdy nowy interfejs jest przypisywany do tej strefy.</li>
-        <li><strong>block</strong> - Ruch przychodzący jest odrzucany z
+        <li><strong>block</strong> - Ruch przychodzący jest odrzucany 
           ze specjalną wiadmością zwrotną protokołu <em>ICMP</em>.</li>
         <li><strong>drop</strong> - Ruch przychodzacy jest odrzucany bez żadnej
           wiadomości zwrotnej.</li>
@@ -14848,7 +14852,7 @@ connections are accepted.&lt;/description&gt;
         Każde z plików zawiera krótką nazwę, opis oraz deklaracje wskazujące
         otwarcie ruchu dla wskazanych w dyrektywach
         <code class="code-inline">services</code> usług. Usługi też w
-        <em>firewalld</em> mają swoje pliki, w których deklarowana są używane
+        <em>firewalld</em> mają swoje pliki, w których deklarowane są używane
         przez nie porty oraz protokoły. Lista plików usług znajduje się w
         katalogu <em>/usr/lib/firewalld/services</em>. Poniżej znajduje się
         jej fragment. W przypadku usług panuje taka sama zasada jak w przypadku
@@ -14985,7 +14989,7 @@ success
       <p>
         Za pomocą opcji <em>--list-ports</em>, możemy wyswietlić zasady
         skonfigurowane pod konkretne porty. Natomiast za pomocą opcji
-        <em>--zone</em> mogę zarządzać innymi strefami.
+        <em>--zone</em> możemy zarządzać innymi strefami.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ sudo firewall-cmd --list-ports --zone=internal
@@ -15000,10 +15004,6 @@ success
 [sudo] hasło użytkownika user: 
 success
 </pre>
-      <p>
-        Pamiętaj, aby zatwierdzić zmiany należy użyć opcji <em>--reload</em>, 
-        a do trwałych zmian wykorzystuje się opcje <em>--permanent</em>.
-      </p>
       <h3 id="20.2.3.firewallremove">20.2.3. Usuwanie portów oraz usług</h3>
       <p>
         Aby wycofać wcześniej wykonywane zmiany należy użyć opcji

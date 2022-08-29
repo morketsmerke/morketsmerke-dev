@@ -15135,7 +15135,7 @@ Last login: Thu Aug  4 09:03:57 2022 from 192.168.122.7
       <p>
         <strong>Security Enchanced Linux (SELinux)</strong> decyduje o tym co
         kto może zrobić w systemie. Ten mechanizm tworzy kolejną warstwę
-        bezpieczeństwa w systemie ponad klasycznymi zabezpieczeniami jakie
+        bezpieczeństwa ponad klasycznymi zabezpieczeniami jakie
         poznaliśmy do tej pory. Podstawowym celem <em>SELinux</em> jest
         możliwe jak największe zmniejszenie wpływu na system w momencie
         wystąpienia w nim nieuprawnionego dostępu.
@@ -15159,7 +15159,7 @@ Last login: Thu Aug  4 09:03:57 2022 from 192.168.122.7
         czy udzielić tego dostępu. Atrybutu są zapisane w postaci 
         <strong>kontekstu</strong> (lub <strong>etykiet</strong>) i dotyczą
         zarówno podmiotów jak i obiektów. Decyzje dokonane przez 
-        <em>SELinux</em> są zapiswane w specjalnym rodzaju pamięci podręcznej
+        <em>SELinux</em> są zapisywane w specjalnym rodzaju pamięci podręcznej
         nazwanej <strong>AVC</strong> (<em>Access Vector Control</em>). W
         momencie gdy dochodzić do decyzji <em>SELinux</em> sprawdza tę pamięć
         podręczną czy nie udzielał już temu podmiotowi dostępu do tego obiektu.
@@ -15170,7 +15170,7 @@ Last login: Thu Aug  4 09:03:57 2022 from 192.168.122.7
       <h3 id="21.1.1.terminology">21.1.1. Pojęcia związane z SELinux</h3>
       <p>
         Aby obeznać się chociaż w podstawowym stopniu z <em>SELinux</em>
-        należy poznać kilka pojęcie, które będą używane podczas przestawiania
+        należy poznać kilka pojęć, które będą używane podczas przedstawiania
         teorii tego mechanizmu ale również przykładów oraz ćwiczeń.
       </p>
       <ul>
@@ -15204,7 +15204,7 @@ Last login: Thu Aug  4 09:03:57 2022 from 192.168.122.7
           <em>SELinux</em> umieszcza zalogowanego użytkownika w 
           nieograniczonej domenie, a proces serwera WWW domyślnie w domenie
           ograniczonej. Każdy podmiot działający w domenie nieograniczonej
-          jest bardziej podatny niż ten, który działa w domenie ograniczonej.
+          jest większym żagrożniem niż ten, który działa w domenie ograniczonej.
         </li>
         <li><strong>Kontekst</strong> - lub etykieta, jest to znacznik
           przechowywujący atrybuty. Każdy element w ujęciu <em>SELinux</em>
@@ -15218,7 +15218,7 @@ Last login: Thu Aug  4 09:03:57 2022 from 192.168.122.7
         <li><strong>Użytkownik SELinux</strong> - predefiniowany w polityce
           użytkownik <em>SELinux</em> autoryzowany do określonego zbioru reguł.
           W polityce znajdują się mapowania użytkowników systemu na
-          użytkowników <em>SELinux</em>, aby ograniczać możliwości użytkowników.
+          użytkowników <em>SELinux</em>, aby ograniczać ich możliwości.
           Użytkownik określa jakie role oraz domeny lub typy mogą zostać 
           przypisane
           do procesu lub pliku . Jeśli użytkownik systemu będzie mieć 
@@ -15255,7 +15255,7 @@ Last login: Thu Aug  4 09:03:57 2022 from 192.168.122.7
           do jednej określonej domeny, przez co ich działania mogą zostać w
           niej ograniczone. Dla przykładu proces <em>systemd</em> działa w
           domenie <strong>unit_t</strong> a <em>firewalld</em> w
-          <strong>firewalld_t</strong>. Typ oraz domena znajdują się na trzecim
+          <strong>firewalld_t</strong>. Typ lub domena znajdują się na trzecim
           polu kontekstu.
         </li>
         <li><strong>Poziom bezpieczeństwa</strong> - poziom bezpieczńswa może
@@ -15274,7 +15274,7 @@ Last login: Thu Aug  4 09:03:57 2022 from 192.168.122.7
       <h3 id="21.1.2.contextofusers">21.1.2. Kontekst SELinux użytkowników</h3> 
       <p>
         Za pomocą opcji <strong>-Z</strong> polecenie <em>id</em> możemy
-        poznać kontekst <em>SELinux</em> użytkoników.
+        poznać kontekst <em>SELinux</em> użytkowników.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ id -Z
@@ -15285,7 +15285,7 @@ unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
         <code class="code-inline">unconfined_u</code> co oznacza, że ma
         nieograniczone możliwości. Superużytkownik również przypisanego ma
         tego samego użytkownika. Pomimo tego <em>SELinux</em> dostarcza
-        siedemiu użytkowników mechanizmu <em>SELinux</em> ograniczających wpływ
+        siedemiu swoich użytkowników ograniczających wpływ
         zwykłych użytkowników na system. Aby wyświetlić ich nazwy musimy 
         zainstalować pakiet <em>setools-console</em>.
       </p>
@@ -15398,6 +15398,7 @@ system_u:system_r:init_t:s0           1 ?        00:00:01 systemd
         wraz z podpoleceniem <em>port</em> oraz opcją <em>-l</em>.
       </p>
 <pre class="code-block">
+[user@rhel90 ~]$ sudo semanage port -l
 Typ portu SELinuksa            Protokół Numer portu
 ftp_data_port_t                tcp      20
 ftp_port_t                     tcp      21, 989, 990
@@ -15417,8 +15418,8 @@ ssh_port_t                     tcp      22
         aplikację, która może działać tylko w jednej określonej domenie. Tego
         typu zachowanie jest oczywiście poparte regułami w polityce, które
         wspierają tego typu działania. Zmiana domeny możliwa jest za pomocą
-        uprawnienia <strong>entrypoint</strong>, które kontroluje możliwość
-        zmiany domeny. Najprostszym tego przykładem jest zmiana hasła.
+        uprawnienia <strong>entrypoint</strong>, które kontroluje taką 
+        możliwość. Najprostszym tego przykładem jest zmiana hasła.
       </p>
       <p>
         <em>SELinux</em> w swojej polityce posiada zasady, dzięki którym
@@ -15489,7 +15490,7 @@ razem 0
         nasze zadania związane z <em>SELinux</em>. Wiele z nich odpowiada za
         konkretne czynności, jednak jedno <strong>semanage</strong> pozwala na
         zrealizowanie tych zadań dobierając odpowiednie podpolecenie.
-        Innym poleceniem na które należy zwrócić uwagę jest 
+        Innym poleceniem, na które należy zwrócić uwagę jest 
         <strong>chcon</strong>, które pozwala na zmianę contekstu obiektu oraz
         <strong>restorcon</strong>, które przywraca kontekst z bazy (plików
         wymienionych w poprzednim podrozdziale, podczas omawiania kontektu
@@ -15589,6 +15590,7 @@ Permissive
         system.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu</strong><br />
         Jeśli zajdzie taka potrzeba możemy przełączać się między stanami
         operacyjnymi, aby na przykład rozwiązać problem z usługą.
         Po rozwiązaniu problemów, możemy powrócić do normalnego stanu.
@@ -15654,7 +15656,7 @@ drwxr-xr-x. 2 user user user_u:object_r:public_content_t:s0 25 08-06 12:34 /tmp/
       </p>
       <h3 id="21.2.5.addandapplyfilecontext">21.2.5. Dodwanie oraz zatwierdzanie kontekstu plików SELinux</h3>
       <p>
-        Aby zatwierdzić zmieniony kontekst plików należy dodać do bazy
+        Aby zatwierdzić zmieniony kontekst plików należy dodać go do bazy
         kontekstów. Do tego posłużymy się poleceniem <strong>semanage</strong>
         wraz z podpoleceniem <em>fcontext</em>, za pomocą opcji <em>-a</em>
         wskazujemy akcje dodania nowego kontekstu, opcja <em>-s</em> wskazuje
@@ -15709,10 +15711,11 @@ drwxr-xr-x. 2 user user user_u:object_r:public_content_t:s0 25 08-06 12:34 /tmp/
 </pre>
       <p>
         Opcja <code class="code-inline">-R</code> polecenia <em>restorecon</em>
-        włącza rekrurencję, natomiast <code class="code-inline">-v</code>
+        włącza rekurencję, natomiast <code class="code-inline">-v</code>
         włącza wyświetlanie komunikatów diagnostycznych.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Podczas zmiany kontekstu plików oraz katalogów warto korzystać z
         polecenia <em>semanage</em> oraz <em>restorecon</em> aby dodawać
         kontekst do bazy a następnie przywrócić go na pliku. Przez co
@@ -15728,9 +15731,9 @@ drwxr-xr-x. 2 user user user_u:object_r:public_content_t:s0 25 08-06 12:34 /tmp/
         do mechanizmu <em>SELinux</em>.
       </p>
       <p>
-        Dodawnie portów możemy zrealizować za pomocą polecnie <em>semanage</em>,
+        Dodawnie portów możemy zrealizować za pomocą polecenia <em>semanage</em>,
         ale na początku określimy typ portu SELinux. Za pomocą podpolecenia
-        <em>port</em> wraz z opcją <em>-l</em> mozemy wylistować wszystkie
+        <em>port</em> wraz z opcją <em>-l</em> możemy wylistować wszystkie
         porty wraz z protokołami oraz typami portów. Załóżmy, że chcę dodać
         port do usługi <em>http</em>, wówczas możemy wyszukać portów 
         powiązanych z tą usługą za pomocą polecenie <em>grep</em>.
@@ -15778,6 +15781,7 @@ http_port_t                    tcp      80, 81, 443, 488, 8008, 8009, 8443, 9000
         przydzielonej do typu <code class="code-inline">http_port_t</code>.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu</strong><br />
         Aby korzystać z niestandarowych portów dla usług należy dodać je do
         typów tych usług w <em>SELinux</em>.
       </p>
@@ -15840,12 +15844,13 @@ use_nfs_home_dirs                           off
 </pre>
       <p>
         Najlepszym sposóbem wydaje mi się, że jest użycie pierwszego polecenia,
-        gdyż domyślnie zwraca więcej danych. W nawiasie wyjścia tego polecenia
+        gdyż domyślnie zwraca więcej informacji. W nawiasie wyjścia tego 
+        polecenia
         możemy zauważyć dwa stany pierwszy z nich to stan obecny,
         natomiast drugi to stan pobrany z polityki.
       </p>
       <p>
-        Aby zmienić stan wartości logiczną należy użyć polecenia
+        Aby zmienić stan wartości logicznej należy użyć polecenia
         <strong>setsebool</strong>, jako argument to polecenie przyjmuje
         nazwę wartości oraz stan, w tym przypadku 0 lub 1.
       </p>
@@ -15857,8 +15862,9 @@ use_nfs_home_dirs              (włączone,wyłączone)  Allow use to nfs home d
 </pre>
       <p>
         Teraz ta wartość jest włączona, ale jeśli uruchomie komputer ponownie,
-        to wartość wróci do stanu określonego w polityce. Aby zmienić ten stan
-        należy dodać do wcześniej użytego polecenia <em>-P</em>.
+        to wartość wróci do stanu określonego w polityce. Jeśli chcemy aby,
+        zmiany były trwałe 
+        należy dodać do wcześniej użytego polecenia opcję <em>-P</em>.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ sudo setsebool -P use_nfs_home_dirs 1
@@ -15871,8 +15877,9 @@ use_nfs_home_dirs              (włączone,włączone)  Allow use to nfs home di
       <h3 id="21.2.9.selinuxmonitoring">21.2.9. Monitorowanie naruszeń SELinux</h3>
       <p>
         Nie zależnie od trybu działania <em>SELinux</em>, generuje ostrzeżenia
-        i zapisuje za pomocą demona <em>auditd</em> do pliku
-        <em>/var/log/audit/audit.log</em> lub do pliku <em>/var/log/messages</em>
+        i zapisuje je za pomocą demona <em>auditd</em> do pliku
+        <em>/var/log/audit/audit.log</em> lub przy użyciu <em>rsyslog</em> 
+        do pliku <em>/var/log/messages</em>
         jeśli demon <em>audit</em> jest niedostępny. Ostrzeżenia generowane są
         podczas odmowy dostępu i zapisywane wraz z odpowiednimi informacjami
         w wyżej wymienionych plikach. <em>SELinux</em> analizuje te ostrzeżenia
@@ -15883,7 +15890,7 @@ use_nfs_home_dirs              (włączone,włączone)  Allow use to nfs home di
       <p>
         Za pomocą polecenia <em>sealert</em> wraz z opcją <em>-a</em> możemy
         sprawdzić podany plik pod kątem występowania ostrzeżeń. Jeśli takowe 
-        wstąpią zostanie nam zwrócony na temat raport.
+        wstąpią zostanie nam zwrócony na ten temat raport.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ sudo sealert -a /var/log/audit/audit.log
@@ -15943,7 +15950,7 @@ found 0 alerts in /var/log/audit/audit.log
         części rozdzialu zapoznaliśmy się w jaki sposób możemy manipulować
         elementami tego mechanizmu w praktyce. Na koniec poznaliśmy metodę na
         monitorowanie ostrzeżeń generowanych przez <em>SELinux</em>.
-        W następnym rozdziale zapoznamy się z podstawmi tworzenia skryptów
+        W następnym rozdziale zapoznamy się z podstawami tworzenia skryptów
         powłoki. 
       </p>
       <h1 id="22.shellscripts">22. Skrypty powłoki</h1>

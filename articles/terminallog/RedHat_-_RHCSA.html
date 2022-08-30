@@ -68,7 +68,7 @@
           <ul class="toc">
             <li><a href="#2.1.serverwithgui">2.1. Środowisko graficzne RHEL 9</a></li>
             <li><a href="#2.2.hfs">2.2. Struktura katalogowa w Uniksach</a></li>
-            <li><a href="#2.3.usingcli">2.3. Obsługa wiersza poleceń i najprostsze
+            <li><a href="#2.3.usingcli">2.3. Obsługa wiersza poleceń i najprostsze polecenia</a>
               <ul class="toc">
                 <li><a href="#2.3.1.ls">2.3.1. Listowanie zawartości katalogu</a></li>
                 <li><a href="#2.3.2.pwd">2.3.2. Wyświetlenie bieżącego katalogu roboczego</a></li>
@@ -117,7 +117,7 @@
               <ul class="toc">
                 <li><a href="#3.4.1.createfilesanddirs">3.4.1. Tworzenie plików i katalogów</a></li>
                 <li><a href="#3.4.2.listingfiles">3.4.2. Wyświetlanie zawartości pliku</a></li>
-                <li><a href="#3.4.3.copyingandmoving">3.4.3. Kopiowanie i przenoszenie plików</li>
+                <li><a href="#3.4.3.copyingandmoving">3.4.3. Kopiowanie i przenoszenie plików i katalogów</a></li>
                 <li><a href="#3.4.4.removefilesanddirs">3.4.4. Usuwanie plików i katalogów</a></li>
               </ul>
             </li>
@@ -171,7 +171,7 @@
           <ul class="toc">
             <li><a href="#5.1.whoandw">5.1. Kto jest zalogowany do systemu i co robi</a>
               <ul class="toc">
-                <li><a href="#5.1.1.loginattempts">5.1.1. Monitorowanie prób logowania się do</li>
+                <li><a href="#5.1.1.loginattempts">5.1.1. Monitorowanie prób logowania się do systemu</a></li>
                 <li><a href="#5.1.2.idandgroup">5.1.2. Informacje o użytkowniku</a></li>
               </ul>
             </li>
@@ -185,7 +185,7 @@
             </li>
             <li><a href="#5.3.basicsofusermanagement">5.3. Podstawy zarządzania użytkownikami</a>
               <ul class="toc">
-                <li><a href="#5.3.1.usersdefaultinformations">5.3.1. Domyślnie informacje</li>
+                <li><a href="#5.3.1.usersdefaultinformations">5.3.1. Domyślnie informacje użytkowników</a></li>
                 <li><a href="#5.3.2.useradd">5.3.2. Tworzenie użytowników</a></li>
                 <li><a href="#5.3.3.usermod">5.3.3. Zmiana informacji użytkownika</a></li>
                 <li><a href="#5.3.4.userdel">5.3.4. Usuwanie użytkowników</a></li>
@@ -209,14 +209,14 @@
                 <li><a href="#6.2.3.groupdel">6.2.3. Usuwanie grup</a></li>
               </ul>
             </li>
-            <li><a href="#6.3.suandsudo">6.3. Przełączanie użytkowników oraz uruchamianie
-                <ul class="toc">
-                  <li><a href="#6.3.1.su">6.3.1. Przełącznie użytkownika</a></li>
-                  <li><a href="#6.3.2.sudo">6.3.2. Polecenie sudo</a></li>
-                </ul>
+            <li><a href="#6.3.suandsudo">6.3. Przełączanie użytkowników oraz uruchamianie poleceń jako superużytkownik</a>
+              <ul class="toc">
+                <li><a href="#6.3.1.su">6.3.1. Przełącznie użytkownika</a></li>
+                <li><a href="#6.3.2.sudo">6.3.2. Polecenie sudo</a></li>
+              </ul>
             </li>
             <li><a href="#6.4.chownchgrp">6.4. Zmiana praw własności plików i katalogów</a></li>
-            <li><a href="#exec6.1">Ćwiczenie 1: Utwórz użytkowników oraz skonfiguruj</li>
+            <li><a href="#exec6.1">Ćwiczenie 1: Utwórz użytkowników oraz skonfiguruj zasady haseł</a></li>
             <li><a href="#exec6.2">Ćwiczenie 2: Zablokuj i odblokuj użytkownika</a></li>
             <li><a href="#exec6.3">Ćwiczenie 3: Zmień dane grupy</a></li>
             <li><a href="#exec6.4">Ćwiczenie 4: Konfiguracja dostępu do sudo</a></li>
@@ -1352,8 +1352,7 @@ $vboxmanage storageattach $vmname --storagectl SATA0 --port 8 --type hdd --mediu
         katalogą w postaci drzewa, jednak najpierw nauczymy się korzystać z
         poleceń w <em>RHEL</em>.
       </p>
-      <h2 id="2.3.usingcli">2.3. Obsługa wiersza poleceń i najprostsze 
-      polecenia</h2>
+      <h2 id="2.3.usingcli">2.3. Obsługa wiersza poleceń i najprostsze polecenia</h2>
       <p>
         Obsługa wiersza poleceń zależy w znacznym stopniu od powłoki, ponieważ
         to ona zajmuje się jego interpretacją i koniec końców wykonaniem
@@ -2532,8 +2531,7 @@ Jun 19 15:28:23 server1 systemd[1]: Finished dnf makecache.
 [root@server1 ~]# wc /var/log/messages
   639  7503 61333 /var/log/messages
 </pre>
-      <h3 id="3.4.3.copyingandmoving">3.4.3. Kopiowanie i przenoszenie plików
-        i katalogów</h3>
+      <h3 id="3.4.3.copyingandmoving">3.4.3. Kopiowanie i przenoszenie plików i katalogów</h3>
       <p>
         Pracując z plikami, być może wystąpić potrzeba skopiowania bądź
         przeniesienia danych w inne miejsce. Za operację kopiowania
@@ -3903,8 +3901,7 @@ user     pts/1     15:06    1.00s  0.00s  0.00s w
         (<code class="code-inline">PCPU</code>) oraz nazwę procesu, która jest
         obecnie wykonywana (<code class="code-inline">WHAT</code>).
       </p>
-      <h3 id="5.1.1.loginattempts">5.1.1. Monitorowanie prób logowania się do
-        systemu</h3>
+      <h3 id="5.1.1.loginattempts">5.1.1. Monitorowanie prób logowania się do systemu</h3>
       <p>
         Monitorując aktywność systemu nie należy zapominać o sprawdzaniu
         prób zalogowania się do niego. W dystrybucjach Linuksa istnieją trzy
@@ -4257,8 +4254,7 @@ g1:!::
         tworzyć użytkowników poznamy dwa miejsca, skąd mogą brać się te
         domyślne wartości.
       </p>
-      <h3 id="5.3.1.usersdefaultinformations">5.3.1. Domyślnie informacje
-        użytkowników</h3>
+      <h3 id="5.3.1.usersdefaultinformations">5.3.1. Domyślnie informacje użytkowników</h3>
       <p>
         Informacje o tym jaką przydzielić użytkownikowi powłokę, czy między
         jakimi wartościami powinien znajdować się jego <em>UID</em> są w
@@ -4777,8 +4773,7 @@ sysadm:x:8888:
         nie mogło odnaleźć wzorca <code class="code-inline">sysadm</code> w
         pliku <em>/etc/group</em>.
       </p>
-      <h2 id="6.3.suandsudo">6.3. Przełączanie użytkowników oraz uruchamianie
-        poleceń jako superużytkownik</h2>
+      <h2 id="6.3.suandsudo">6.3. Przełączanie użytkowników oraz uruchamianie poleceń jako superużytkownik</h2>
       <p>
         Wykonywanie zadań administracyjnych najczęściej będzie wymagać
         podniesienia uprawnień do poziomu superużytkownika - <em>root</em>.
@@ -5004,8 +4999,7 @@ PKGADM ALL = PKGCMD
         Na powyższym przykładzie zmieniłem właściciela oraz grupę do wszystkim 
         elementom w katalogu <code class="code-inline">/tmp/etc</code>.
       </p>
-      <h3 id="exec6.1">Ćwiczenie 1: Utwórz użytkowników oraz skonfiguruj
-        zasady haseł</h3>
+      <h3 id="exec6.1">Ćwiczenie 1: Utwórz użytkowników oraz skonfiguruj zasady haseł</h3>
       <p>
         Na maszynie <em>server1</em> utwórz grupę <em>lnxgrp</em> o numerze
         <em>GID</em> 6000. Utwórz użytkownika <em>user5000</em> o numerze
@@ -15959,7 +15953,7 @@ found 0 alerts in /var/log/audit/audit.log
         tekstowym. Polecenia zapisane w skryptach są najzwyklejszymi 
         poleceniami, tak jakbyśmy chcieli wykonać je z poziomu wiersza 
         polecenia.
-        Skrypt służą głównie automatyzacji nudnych oraz powtarzalnych zadań, 
+        Skrypty służą głównie automatyzacji nudnych oraz powtarzalnych zadań, 
         na przykład w systemie należy utworzyć konta dla 100 użytkowników.
         Skrypty składają się z trzech głownych składników: poleceń/instrukcji,
         konstrukcji kontroli (tj. konstrukcji warunkowych oraz pętli) i
@@ -15967,9 +15961,9 @@ found 0 alerts in /var/log/audit/audit.log
         i nie biorą udziału w jego interpretacji. Skrypt powłoki są 
         <strong>interpretowane</strong> przez powłokę, która jest uruchamiana
         wraz uruchomieniem skryptu. Rozwijane są użyte w skryptach wyrażania a
-        polecenia są uruchamiane po kolei. Jedno po drugim tak jak
+        polecenia są uruchamiane po kolei, jedno po drugim tak jak
         wpisywalibyśmy je ręczenie. W przypadku błędów powłoka zwróci
-        odpowiedni komunikat oraz numer linii w której ten błąd wystąpił. 
+        odpowiedni komunikat oraz numer linii, w której ten błąd wystąpił. 
       </p>
       <h2 id="22.1.basicsofshellscripts">22.1. Podstawy skryptów powłoki</h2>
       <p>
@@ -16001,11 +15995,11 @@ found 0 alerts in /var/log/audit/audit.log
     14	/usr/bin/who;
 </pre>
       <p>
-        Na początku każdego skryptu znajduje się nagłówek, w którym to jest
+        Na początku każdego skryptu znajduje się nagłówek, w którym jest
         ścieżka, wskazująca na program interpretera zawartości skryptu.
         Nagłówek zaczyna się od specjalnego typu kometarza jakim jest
         <strong>shebang</strong> (<strong>#!</strong>). W tym przypadku jest
-        wskazanie na program <code class="code-inline">bash</code> w katalogu
+        wskazaniem na program <code class="code-inline">bash</code> w katalogu
         <code class="code-inline">/bin</code>. W ten sposób wskazujemy, że
         zawartością tego pliku będzie skrypt powłoki <em>BASH</em>. Kolejnymi
         elementami skryptu są komentarze (zwykłe). Komentarz poprzedzony jest
@@ -16033,10 +16027,10 @@ found 0 alerts in /var/log/audit/audit.log
         użytkowników.
       </p>
       <p>
-        Dobrym miejscem na nasze skrypt jest katalog <em>/usr/local/bin</em>.
+        Dobrym miejscem na nasze skrypty jest katalog <em>/usr/local/bin</em>.
         Prze co będzie nam łatwiej je uruchamiać, ponieważ ten katalog znajduje
-        się w ścieżce wyszukiwania poleceń każde użytkownika. Niestety zapis do
-        tego katalogu wymaga podniesienia uprawnień.
+        się w ścieżce wyszukiwania poleceń każdego użytkownika. Niestety zapis 
+        do tego katalogu wymaga podniesienia uprawnień.
         Po zapisaniu takie skryptu jeśli zwrócimy uwagę na jego atrybuty,
         brakuje w nich bitu wykonania a on jest niezbędny aby można było taki
         program uruchomić.
@@ -16091,7 +16085,7 @@ user     pts/0        2022-08-08 08:28 (192.168.122.1)
         czy przypisywane wartości zmiennym. Osobiście jako, że <em>BASH</em> 
         jest
         moim podstawowym językiem to uważam, że ta opcja jest szczególnie
-        przydatna oczywiście w bardziej rozległych skryptach. Poniżej
+        przydatna oczywiście w bardziej zaawansowanych skryptach. Poniżej
         znajduje się wcześniej analizowany skrypt uruchomiony w trybie
         debugowania.
       </p>
@@ -16152,10 +16146,11 @@ user     pts/0        2022-08-08 08:28 (192.168.122.1)
         <em>echo</em>. Warto tutaj też wspomnieć o tym, że każdy skrypt
         uruchamiany jest jako oddzielny proces powłoki <em>BASH</em> -
         uruchamiany jest w podpowłoce. Zmienne zdefiniowane w skrypcie nie
-        będą dostępne, kiedy skończy on swoje działanie.
+        będą dostępne, kiedy skończy on swoje działanie (chyba że do wykonania
+        skryptu użyjemy polecenia <strong>source</strong>).
       </p>
       <p>
-        Dostęp do zmiennych środowiskowych wymaga jedynie odwołnia się do niej.
+        Dostęp do zmiennych środowiskowych wymaga jedynie odwołnia się do nich.
       </p>
 <pre class="code-block">
 [user@server10 ~]$ cat -n /usr/local/bin/pre_env.sh 
@@ -16185,7 +16180,7 @@ user     pts/0        2022-08-08 08:28 (192.168.122.1)
      7	echo "Wersja jądra to: $KERNVER";
 </pre>
       <p>
-        Jak widzimy podstawienia poleceń możemy dokonać na dwa sposoby
+        Jak widzimy podstawienie polecenia możemy dokonać na dwa sposoby
         za pomocą nawiasów poprzedzonych znakiem dolara (<strong>$()</strong>)
         lub za pomocą ukośnego apostrofu (<strong>``</strong>).  Ten skrypt
         przechowuje w nazwę komputera w zmiennej
@@ -16230,21 +16225,21 @@ Identyfikator powłoki uruchamiającej ten skrypt to: 1874
 </pre>
       <p>
         W skrypcie odwołano się do drugiego parametru pozycjnego, czyli do
-        pierwszego argumentu przekaznego do skryptu (linia: 5). W skrypcie
+        argumentu o numerze 1 (linia: 5). W skrypcie
         użyto parametrów specjalnych takich jak: liczba przekazanych argumentów
         pozycyjnych - (<strong>$#</strong>); wszystkie przekazane argumenty -
         (<strong>$*</strong>) oraz numer <em>PID</em> podpowłoki, która
         jest odpowiedzialna za wykonanie tego skryptu - (<strong>$$</strong>).
       </p>
       <p>
-        Chcąc używać po kolei parametrów pozycyjnych, musimy tak tez je zapisać
+        Chcąc używać po kolei parametrów pozycyjnych, musimy tak też je zapisać
         w skrypcie, a co jeśli ilość tych zmiennych nie będzie nam
-        znana. W tym przypadku wówczas możemy przesuwać wszyskie parametry
+        znana. W tym przypadku wówczas możemy przesuwać wszystkie parametry
         o jeden w lewo. Jeśli użyjemy wartość drugiego parametru pozycjnego
         (<em>$1</em>) i nie będzie nam już ona potrzebna, możemy użyć
         polecenia <strong>shift</strong>, które przesunie wszystkie parametry
-        o jeden (domyślnie, ponieważ polecenie to przyjmuje argument w postaci
-        liczby, o ile wartości przesunąć parametry) w lewo, przez co wartość
+        o jeden w lewo (domyślnie, ponieważ polecenie to przyjmuje argument w postaci
+        liczby, o ile wartości przesunąć parametry). Dlatego też wartość
         trzeciego parametru przejdzie na drugą pozycję, czwartego na trzecią
         itd. Po użyciu tego polecenia oryginalna wartość drugie parametru
         zostanie utracona. Poniżej znajduje się skrypt, w którym zobrazowano
@@ -16283,7 +16278,7 @@ Identyfikator powłoki uruchamiającej ten skrypt to: 1874
       <h3 id="22.2.1.exitcodes">22.2.1. Kody wyjściowe</h3>
       <p>
         Każde polecenie uruchomione w powłoce po zakończeniu pracy, nie ważne
-        czy pomyślnie czy, nie zwraca do powłoki tzw. <strong>exit code</strong>
+        czy pomyślnie, czy nie zwraca do powłoki tzw. <strong>exit code</strong>
         - kod wyjściowy. Możemy użyć tych kodów w wyrażeniach warunkowych aby
         mieć pewność, że działanie polecenia uruchomionego w poprzedniej linii
         zakończyło się sukcesem i można kontynuować wykonywanie przez skrypt
@@ -16306,8 +16301,9 @@ For example, try 'man man'.
         kod wyjściowy <code class="code-inline">0</code>. Natomiast w przypadku
         polecenia <code class="code-inline">man</code> przy którym zapomniałem
         o podaniu argumentu zwróciło wartość <code class="code-inline">1</code>.
-        W przypadku błędów zwracanym kodem wyjściowym jest najczęściej
-        wartość niezerowa.
+        W przypadku zastrzeżeń co do poprawnego wykonania zwracanym kodem 
+        wyjściowym jest najczęściej wartość niezerowa, nie zawsze jest to 1. 
+        Te wartości mogą być różne i zależne od programu.
       </p>
       <p>
         Dlaczego mówie o kodach wyjściowych w przypadku konstrukcji logicznych,
@@ -16326,13 +16322,14 @@ For example, try 'man man'.
         warunkowe obliczy prawdę wówczas zwraca kod wyjścia równy 0, a w
         przeciwnym wypadku jest 1. Elementami powłoki odpowiedzialnymi za 
         wyrażenia warukowe jest polecenie <em>test</em> oraz rozszerzenie
-        nawiasu kwadratowego (<strong>[]</strong>) i to z tego rozszerzenia
-        będziemy korzystać podczas korzystania z konstrukcji warunkowej. 
+        nawiasu kwadratowego (<strong>[]</strong>) i to tego rozszerzenia
+        będziemy używać w konstrukcjach warunkowych. 
         Na stronie podręcznika polecenia <em>BASH</em> w sekcji
         <em>CONDITIONAL EXPRESSIONS</em> znajdują się wszystkie dostępne 
         operatory wyrażeń warunkowych jakie możemy użyć w skryptach. 
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu</strong><br />
         Bardzo ważna jest dobra znajomość instrukcji logicznych oraz ich
         operatorów.
       </p>
@@ -16356,15 +16353,15 @@ For example, try 'man man'.
 </pre>
       <p>
         Konstrukcję rozpocznamy od słowa kluczowego <strong>if</strong>
-        następnie podajemy polecenie lub wyrażenie warunkowego, którego kod
+        następnie podajemy polecenie lub wyrażenie warunkowe, którego kod
         wyjściowy będzie decydować czy wykonać polecenia zawarte po słowie
         klczowym <strong>then</strong> na przykładzie są to linie od 4 do 6.
         Konstrukcja kończy się słowem kluczowym <strong>fi</strong>, które
         musi być zawarte inaczej próba uruchomienia takiego skryptu zakończy 
-        się błędem i jego wykonanie może niedojść w ogóle do skutku. Jako 
+        się błędem. Jako 
         ciekawostkę podam, że blok zawarty po słowie <em>then</em> konczy się
-        poleceniem <strong>exit</strong>, dzięki któremu możemy zakończenie
-        działania skryptu z określonym kodem wyjściowym.
+        poleceniem <strong>exit</strong>, dzięki któremu możemy zakończyć
+        działanie skryptu z określonym kodem wyjściowym.
       </p>
       <p>
         Na zamieszczonym przykładzie użyłem do przedstawienia warunku 
@@ -16397,14 +16394,14 @@ For example, try 'man man'.
         W tym przypadku warunek w postaci rozszerzenia nawiasów kwadartowych
         (najpopularniejsza forma warunków w skryptach powłoki) sprawdza czy
         wartość podana jako drugi parametr pozycyjny jest większa od 0. Jeśli
-        tak, to wykonane zostanie poleceni znajdujące się w po słowie
+        tak, to wykonane zostanie polecenie znajdujące się w po słowie
         <code class="code-inline">then</code> a jeśli nie to polecenie po
         słowie kluczowym <code class="code-inline">else</code>.
       </p>
       <h3 id="22.2.5.iftheneliffi">22.2.5. Konstrukcja if-then-elif-fi</h3>
       <p>
         Rozszerzenie konstrukcji <em>if</em> o słowo kluczowe 
-        <strong>elif</strong> pozwala zdefiniowane kolejnego warunku. W
+        <strong>elif</strong> pozwala na zdefiniowane kolejnego warunku. W
         przypadku konstrukcji <strong>if-then-elif-fi</strong>, warunków
         możebyć nieskończeniei wiele i dodatkowo możemy zakończyć całą
         konstrukcję blokiem <em>else</em>.
@@ -16430,7 +16427,7 @@ For example, try 'man man'.
         0 (operator <strong>-lt</strong>) i ostatni czy jest on równy 0
         (operator <strong>-eq</strong>). W bloku <em>else</em> znajduje się
         komunikat mówiący, że podana wartość nie jest liczbą, będzie on
-        wykonywany gdy jako argument podamy literę lub dowolny znak.
+        wykonywany gdy jako argument podamy literę lub znak specjalny.
         Podczas uruchomienia tego skryptu wraz z literowym argumentem możemy
         zauważyć błąd. Ten błąd jest generowany z tego względu, iż wymienione
         wyżej operatory są przeznaczone dla liczb całkowitych, a litera jest

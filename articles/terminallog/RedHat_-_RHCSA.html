@@ -686,6 +686,7 @@
             <li><a href="#ch23summary">Podsumowanie</a></li>
           </ul>
         </li>
+        <li><a href="#sources">Źródła</a></li>
       </ul>
       <h1 id="1.introduction">1. Wstęp</h1>
       <p>
@@ -16509,15 +16510,15 @@ For example, try 'man man'.
         zadania bez wpływu na inne procesy przy zachowaniu jak największej
         oszczędności zasobów systemu. Kontenery dostarczają do systemu
         właściwą aplikację wraz cały środowiskiem niezbędnym do jej działania,
-        wygląda ono tak samo jakby było zainstalowane na fizycznym serwerze.
+        wygląda ona tak samo jakby była zainstalowana na fizycznym serwerze.
         Aplikacja uruchamiana w kontenerze nazywana jest
         <strong>aplikacją konteneryzowaną</strong>.
       </p>
       <p>
         Kontenery do swojego działania wykorzystują funkcje jądra Linux,
         takie jak <strong>grupy kontrolne</strong> (przydzielanie zasobów
-        procesom), <strong>przestrzeń nazw</strong> (udostępniają zasoby
-        systemowe takiej jak interfejsy sieciowe) oraz moduł
+        procesom), <strong>przestrzeń nazw</strong> (udostępnienie zasobów
+        systemowych takich jak interfejsy sieciowe) oraz moduł
         <strong>seccomp</strong> i <strong>SELinux</strong>, które odpowiadają
         za kontrolowanie dostępu procesów. Wykorzystując te komponenty 
         kontenery 
@@ -16527,7 +16528,7 @@ For example, try 'man man'.
       <p>
         Korzystanie z kontenerów przynosi ze sobą wiele korzyści takich jak
         izolacja aplikacji w kontenerach, małe powiązanie z system w którym
-        kontener działa, każdy kontener jest zarządzany indywidualnie czy
+        kontener działa, niezależność kontenerów wobec siebie czy
         mniejsze obciążenie systemu. Korzyści jest naprawdę bardzo dużo,
         dlatego też konterneryzacja wypiera wirtualizację, ale oczywiście to
         wszystko zależy od konkretnego przypadku.
@@ -16543,8 +16544,8 @@ For example, try 'man man'.
       <p>
         Kontenery są rozprowadzane na zasadzie <strong>obrazów</strong>
         (ang. <em>images</em>) zawierających całe środowisko określonej
-        aplikacji, dzięki czemu może poprawnie pracować w izolacji jaką
-        zapewniają kontenery. Mechnizmy kontenerów dostarczanych wraz z
+        aplikacji, dzięki czemu może poprawnie pracować w izolowanym
+        środowisku. Mechnizmy konteneryzacji dostarczane wraz z
         <em>RHEL</em>, przestrzegają zasad <em>Inicjatywy Otwartych
         Kontenerów - OCI</em>, dzięki czemu użytkownicy mogą tworzyć obrazy o
         przemysłowych standardach. Do zarządzania obrazami <em>OCI</em>
@@ -16558,7 +16559,7 @@ For example, try 'man man'.
         Obrazy konternerów przechowywane są w <strong>rejestrach</strong>.
         Rejestry mogą być <strong>prywatne</strong> i aby pobrać obraz należy 
         się zalgować lub mogą być ogólno dostępne, <strong>publiczne</strong>
-        i każdy może z nich pobierać obrazy. W internecie dostępnych jest kilka
+        i każdy może pobierać z nich obrazy. W internecie dostępnych jest kilka
         rejestrów, z czego tylko trzy z nich wykorzystuje się w 
         <em>RHEL</em>: <em>Red Hat Container Catalog</em> występujący w dwóch
         różnych rejestrach
@@ -16582,9 +16583,10 @@ For example, try 'man man'.
         mowimy wtedy o kontenerach <strong>uprzywilejowanych</strong> oraz 
         przez zwykłych użytkowników - wówczas mówi o kontenerach
         <strong>nieuprzywilejowanych</strong>. Główną różnicą jest brak
-        możlwości z mapowania portów (przekierowania) poniżej portu
+        możlwości mapowania portów (przekierowania) poniżej portu
         <strong>1024</strong>. Warto dodać, że uruchamianie kontenerów 
-        uprzywilejowanych może powodować problemy z bezpieczeństwem.
+        uprzywilejowanych może powodować potencjalne problemy z bezpieczeństwem
+        w systemie.
         Kontenery nieuprzywilejowanene dają możliwość interakcji z nimi z
         poziomu superużytkownika i jeśli nie będzie takiej potrzeby lepiej
         korzystać z tego rodzaju kontenerów.
@@ -16601,7 +16603,8 @@ For example, try 'man man'.
         Jeśli będzie trzeba coś dopowiedzieć, zostanie to dopisane podczas
         omawiania danej kwestii. Do rozpoczęcia pracy z konterami, potrzebujemy
         oprogramowania oraz dostępu do rejestrów <em>Red Hat</em>. Najlepiej
-        więc zarejestrować maszynę na koncie firmy <em>Red Hat</em>, wtedy
+        więc zarejestrować tę instalację systemu na koncie firmy 
+        <em>Red Hat</em>, wtedy
         bez problemu będziemy mogli zaktualizować system a następnie
         zainstalować potrzebne oprogramowanie.
       </p>
@@ -16610,7 +16613,7 @@ For example, try 'man man'.
         Za pomocą konsoli wirtualne również możemy zarejestrować system w sieci
         <em>Red Hat</em>, do tego służy polecenie 
         <strong>subscription-manager</strong> wraz z podpoleceniem 
-        <em>register</em>. Polecenie to wydajmy z
+        <em>register</em>. Polecenie to wydajemy z
         podniesieniem uprawnień. Do rejestracji potrzebna jest nazwa
         użytkownika (login) podawany podczas logowania do <em>Red Hat</em>,
         podajemy ją po opcji <em>--username</em>. Na poniższym przykładzie
@@ -16626,10 +16629,9 @@ The registered system name is: primeb450.morketsmerke.net
       <p>
         Moja nazwa użytkownika została ocenzurowana na tym przykładzie, także
         po opcji <code class="code-inline">--username</code> znajduje się
-        <em>login</em> do sieci <em>Red Hat</em>. Po zarejestrowaniu, niezbędne
-        jest podłączenie serwera pod subskrypcje, za pomocą podpolecenia
-        <em>attach</em>. Poniżej pokazałem jak to wygląda w przypadku mojego
-        serwera.
+        <em>login</em> do sieci <em>Red Hat</em>. Poprawność rejestracji możemy
+        sprawdzić za pomocą polecenia <em>attach</em>.
+        Poniżej pokazałem jak to wygląda w przypadku mojego serwera.
       </p>
 <pre class="code-block">
 [xf0r3m@primeb450 ~]$ sudo subscription-manager attach
@@ -16640,8 +16642,8 @@ Product Name: Red Hat Enterprise Linux for x86_64
 Status:       Subscribed
 </pre>
       <p>
-        Teraz mogę korzystać z repozytoriów sieci <em>Red Hat</em>, i na
-        początek, radzę zaktualizować system. Jeśli będziemy korzystać z tego
+        Teraz możemy korzystać z repozytoriów sieci <em>Red Hat</em> i na
+        początek radzę zaktualizować system. Jeśli będziemy korzystać z tego
         systemu w celach innych niż testy jego i jego możliwości oraz
         zawartości, możemy podłączyć ten system już podczas instalacji.
       </p>
@@ -16712,10 +16714,9 @@ Is this ok [y/N]:
         <li><strong>attach</strong> - podłącza powłokę pod uruchomiony kontener.</li>
         <li><strong>exec</strong> - wykonuje polecenie na uruchomionym
           kontenerze.</li>
-        <li><strong>generate</strong> - generuje plik, np. programu typu
-          <em>init</em>, pozwalający na kontrolę kontenera z jego poziomu.
-          Może być to <em>systemd</em> wówczas kontener, kontrolowany będzie
-          jak każda inna usługa.</li>
+        <li><strong>generate</strong> - generuje plik, np. jednostki 
+          <em>systemd</em> pozwalający na kontrolę kontenera jakby był zwykłą
+          usługą.</li>
         <li><strong>ps</strong> - wyświetla listę działających kontenerów,
           dodanie opcji <em>-a</em>, wyświetli listę zatrzymanych kontenerów.</li>
         <li><strong>rm</strong> - usuwa kontenery.</li>
@@ -16729,6 +16730,7 @@ Is this ok [y/N]:
           ponowne uruchomienie.</li>
       </ul>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Zrozumienie przedstawionych wyżej podpoleceń oraz swobodne używanie
         polecenia <em>podman</em> jest kluczowe do wykonania zadań związanych
         z kontenerami.
@@ -16747,9 +16749,9 @@ Is this ok [y/N]:
         W pliku <em>registries.conf</em> przechowywane są adresy rejestrów,
         z których możemy pobierać obrazy kontenerów. Plik znajduje się w 
         katalogu <em>/etc/containers</em> jest on plikem globalnym, a każdy z 
-        użytkowników może przychować swoją kopie pliku w katalogu
-        <em>~/.config/containers</em>, ustawienia zawarte plikach użytkowników
-        nadpisują
+        użytkowników może przychowywać swoją kopię pliku w katalogu
+        <em>~/.config/containers</em>, ustawienia zawarte w plikach 
+        użytkowników nadpisują
         te wartości z pliku globalnego, co może być przydatne w przypadku
         kontenerów nieuprzywilejowanych. Poniżej znajduje się zawartości tego
         pliku:
@@ -16769,6 +16771,7 @@ short-name-mode = "enforcing"
         potrzeba możemy dopisać swoje prywatne rejestry do tego pliku.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Podczas egzaminu nie będzie dostępu do sieci, więc prawdopodbnie będzie
         trzeba ustawić rejestr prywatny znajdujący się w sieci egzaminacyjnej.
       </p>
@@ -16996,7 +16999,7 @@ REPOSITORY  TAG         IMAGE ID    CREATED     SIZE
       </p>
       <h3 id="23.3.1.namedcontainer">23.3.1. Zarządzanie konterami nazwanymi</h3>
       <p>
-        Aby uruchomić swój pierwszy kontenery należy na początku upewnić się 
+        Aby uruchomić swój pierwszy kontenery należy na początku upewnić się,
         że w systemie w katalogu <em>/etc</em> nie znajduje się katalog
         <em>docker</em>. Jego obecność może powodować problemy z uprawnieniami.
       </p>
@@ -17069,7 +17072,7 @@ REDHAT_SUPPORT_PRODUCT_VERSION="9.0"
 </pre>
       <p>
         W znaku zachęty, w miejscu nazwy <em>hosta</em> znajduje się
-        ciąg znaków przedstawiający identyfikator kontenera. Jeśli opuścimy
+        ciąg znaków przedstawiających identyfikator kontenera. Jeśli opuścimy
         powłokę kontenera, zostanie on zatrzymany ponieważ wykonane zostało
         jego domyślne zadaniem jakim była obsługa procesu powłoki. Zatem tego
         kontenera trzeba szukać na liście zatrzymanych kontenerów.
@@ -17248,7 +17251,7 @@ cdb3fe727ec39de7323da49bb230f2dc22bdc51da43bc48e9218d2eeb09b166b
       <h3 id="23.4.2.envtocontainers">23.4.2. Przekazywanie zmiennych środowiskowych do kontenerów</h3>
       <p>
         Nie które z konteneryzowanych aplikacji wymagają podania od użytkownika
-        pewnych parametrów do uruchomienia aplikacji. Te parametry przekazuje
+        pewnych parametrów do uruchomienia. Te parametry przekazuje
         się za pomocą zmiennych środowiskowych, a są one przezkazywane za
         pomocą opcji <strong>-e</strong> podpolecenia <em>run</em>.
       </p>
@@ -17272,13 +17275,13 @@ HOME=/root
 </pre>
       <p>
         Za pomocą opcji <code class="code-inline">-dt</code> umożliwiłem
-        działania powłoki w tle (głownym procesem obrazów <em>UBI</em> jest
+        działanie powłoki w tle (głownym procesem obrazów <em>UBI</em> jest
         powłoka). Przy użyciu opcji <code class="code-inline">-e</code> 
         przekazałem do kontenera przedstawione na przykładzie zmienne 
         środowiskowe. W drugim poleceniu używając podpolecenia
         <code class="code-inline">exec</code> uruchomiłem na kontenerze
         polecenie <code class="code-inline">env</code>, które zwraca zmienne
-        środowiskowe. Jak wskazuje wynik działa tego polecenia, przekazane
+        środowiskowe. Jak wskazuje wynik działania tego polecenia, przekazane
         przez nas wartości są obecne w środowisku kontenera jako zmienne
         środowiskowe. Teraz możemy zatrzymać i usunąć ten kontener. 
       </p>
@@ -17298,6 +17301,7 @@ rhel9-cont-env
         Takim miejscem może być katalog znajdujący się gdzieś na hoście.
       </p>
       <p class="exam_tip">
+        <strong>Odnośnie egzaminu:</strong><br />
         Konfigurując taki katalog należy pamiętać o trzech czynnościach jakie
         należy wykonać: 1. Odpowiednie uprawnienia, w przykładach będę stosować
         raczej pełnych uprawnień, tj. 777; 2. Prawo własności, jeśli jest to
@@ -17306,11 +17310,11 @@ rhel9-cont-env
         3. Właściwy typ pliku <em>SELinux</em>, tej wartości nie trzeba
         konfigurować ręcznie, wystarczy że podamy na koniec wartości
         przekazywania katalogu
-        podamy opcję <strong>:Z</strong>, spowoduje ona samodzielne przypisanie
+        opcję <strong>:Z</strong>, spowoduje ona samodzielne przypisanie
         odpowiedniego kontesktu <em>SELinux</em>.
       </p>
       <p>
-        Chcąc zobrazować jako może wyglądać takie przekazanie katalogu.
+        Chcąc zobrazować jak może wyglądać takie przekazanie katalogu.
         Czynności należy rozpocząć od utworzenia katalogu, nadania mu
         odpowiednich uprawnień oraz prawa własności.
       </p>
@@ -17334,7 +17338,7 @@ rhel9-cont-env
         <code class="code-inline">:Z</code>, powoduje ona dobranie 
         odpowiedniego kontekstu <em>SELinux</em>. Teraz podłącze się pod 
         kontener aby sprawdzić uprawnienia przekazanego katalogu, kontekst
-        <em>SELinux</em> oraz to czy możnemy przechowywać w nim dane.
+        <em>SELinux</em> oraz to czy możemy przechowywać w nim dane.
       </p>
 <pre class="code-block">
 [root@96e45fa0558c /]# ls -l 
@@ -17353,7 +17357,7 @@ total 4
 -rw-r--r--. 1 root root system_u:object_r:container_file_t:s0:c417,c733 24 Aug 11 11:55 test_file.txt
 </pre>
       <p>
-        Jak możemy zauważyć na powyższym przykładzie katalog przekazny do
+        Jak możemy zauważyć na powyższym przykładzie katalog przekazany do
         kontenera znajduje się w katalogu głównym tak jak to zostało zapisane
         podczas jego utworzenia. Następnie sprawdziłem czy da się utworzyć
         jakiś plik z zawartością w tym katalogu. Po wydaniu polecenia 
@@ -17376,7 +17380,7 @@ This is a test message!
       </p>
       <h3 id="23.4.4.controlingcontainersviasystemd">23.4.4. Kontrolowanie kontenerów przez systemd</h3>
       <p>
-        Jeśli konterów w systemie jest bardzo wiele, łatwiej jest je ogarnąć
+        Jeśli konterów w systemie jest bardzo wiele, łatwiej jest nimi zarządać 
         za pomocą programu typu <em>init</em>, jakim jest <em>systemd</em>.
         Za pomocą podpolecenia <strong>generate</strong> polecenia <em>podman</em>,
         możemy wygenerować pliki jednostki usługi, dla każdego kontenera i 
@@ -17597,7 +17601,7 @@ CONTAINER ID  IMAGE                                   COMMAND     CREATED       
         <em>/cont_perm1</em>. 
         Przez powłokę kontenera sprawdź uprawnienia przekazanego katalogu oraz
         obecność pliku, następnie utwórz w nim dodatkowy podkatalog.
-        Następnie opuść powłokę kontenera i na
+        Opuść powłokę kontenera i na
         <em>hoście</em> sprawdź obecność utworzonego podkatalogu. Na koniec
         usuń kontener oraz utworzony na potrzeby tego ćwiczenia katalog. 
       </p>
@@ -17634,11 +17638,21 @@ CONTAINER ID  IMAGE                                   COMMAND     CREATED       
         praktycznej obsługi kontenerów, od przekazywania portów do przekazania
         kontroli nad konterami do programu typu <em>init</em>, jakim jest
         <em>systemd</em> zapoznaliśmy się też z konfiguracją plików jednostek
-        użytkownika. Ten rozdział zamyka ten materiał.
-        Ponizej znajdują się przykładowe egzaminy <em>ex200</em> - 
-        <em>RHCSA</em>. Odpowiedzi będą napewno osobnym materiałem.
-        Jeśli chcemy więcej technologii <em>Red Hat</em>, możemy przystąpić
+        użytkownika. Ten rozdział zamyka ten materiał. Jeśli chcemy więcej 
+        technologii <em>Red Hat</em>, możemy przystąpić
         kolejnego certyfikatu po zdaniu <em>RHCSA</em>. Powodzenia!
+      </p>
+      <h1 id="sources">Źródła:</h1>
+      <ol>
+        <li><strong>RHCSA® Red Hat® Enterpise Linux® 8 (UPDATED)</strong>.
+          Training and Exam Preparation Guide. Second Edition. 
+          <em>Asghar Ghori</em></li>
+        <li><a href="https://access.redhat.com/solutions/6809311">How to configure a storage device to use VDO deduplication and compression in RHEL 9?</a></li>
+        <li><a href="https://www.redhat.com/en/blog/rhel-9-networking-say-goodbye-ifcfg-files-and-hello-keyfiles">RHEL 9 networking: Say goodbye to ifcfg-files, and hello to keyfiles </a></li>
+        <li>Strony podręcznika Red Hat Enterprise Linux 9</li>
+      </ol>
+      <p>
+        ~xf0r3m
       </p>
     </div>
     <p style="margin: 15px; padding: 0; outline: 0;">

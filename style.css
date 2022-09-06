@@ -43,6 +43,7 @@ p {
 
 .special_list {
 	list-style-type: none;
+	font-size: 14pt;
 }
 
 .title {
@@ -56,6 +57,10 @@ td {
 th {
 	border-top: 1px solid #c7cbd0;
 	border-bottom: 1px solid #c7cbd0;
+}
+
+a:link {
+	color: #5555ff;
 }
 
 .footer {

@@ -27,18 +27,54 @@
 </p>
 	<div class="main">
 		<h1 class="title">Ściąga z PYTHONga</h1>
-		<h2>Wprowadzenie</h2>
+		<h1 id="0.introduction">0. Wstęp.</h1>
 		<p>
-			Informacje zawarte tutaj odnoszą się do wersji Pythona powyżej 3.6. Python powinien być zainstalowany domyślnie we wiodących dystrybucjach systemu Linux. Jeśli nie ma w ogóle Pythona w wersji &gt;= 3. To warto sprawdzić czy istnieją pakiety w repozytorium dystrybucji z wersją powyżej 3.6. jeśli tak to instalujemy te pakiety. Jeśli nie, to wtedy należałoby pobrać kod źródłowy najnowszego Pythona i go skompilować. Zazwyczaj nie kompiluje, ale w przypadku kiedy użyłem dystrybucji BunsenLabs Helium, to pre-instalowanego Pythona miałem w wersji 3.5. Za mało na najnowszy "Crash Course". Kompilacje wykonujemy w następujących krokach
+			Informacje zawarte tutaj odnoszą się do wersji Pythona powyżej 3.6. 
+      Python powinien być zainstalowany domyślnie we wiodących dystrybucjach 
+      systemu Linux. Jeśli nie ma w ogóle Pythona w wersji &gt;= 3. To warto 
+      sprawdzić czy istnieją pakiety w repozytorium dystrybucji z wersją 
+      powyżej 3.6. Jeśli tak to instalujemy te pakiety. Jeśli nie, to wtedy 
+      należałoby pobrać kod źródłowy najnowszego Pythona i go skompilować. 
+      Zazwyczaj nie kompiluje, ale w przypadku kiedy użyłem dystrybucji 
+      <em>BunsenLabs Helium</em>, to pre-instalowanego Pythona miałem w wersji 
+      3.5. Za mało na najnowszy <em>Crash Course</em>. Kompilacje wykonujemy w 
+      następujących krokach:
 		</p>
 		<ol>
-			<li>Instalujemy odpowiednie dla naszej dystrybucji <em>build-essential</em> oraz dwa pakiety których nieobecność została zauważona przy wykonywaniu polecenia <code class="code-inline">make altinstall</code> i zwrócona jako błąd, mianowicie chodzi o <em>zlib1g</em> oraz <em>zlib1g-dev</em>.</li>
-			<li>Pobieramy najnowszą wersję kodu z https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tar.xz</li>
-			<li>Rozpakowujemy: <code class="code-inline">tar -xvf Python-3.8.3.tar.xz</code></li>
-			<li>Przechodzimy do katalogu: <code class="code-inline">cd Python-3.8.3.tar.xz</code></li>
-			<li>Ja w swoim systemie zachowałem obecną wersję Pythona, wskazując skryptowi konfiguracyjnemu opcje <code class="code-inline">prefix</code> wskazującą na katalog utworzony w moim katalogu domowym. <code class="code-inline">./configure --prefix="/home/xf0r3m/bin/python3.8"</code>. Użycie opcji <code class="code-inline">prefix</code>, przekazuje skryptowi, aby przygotował środowisko do kompilacji względem podanej ścieżki. Jeśli nie zostanie zwrócony żaden błąd podczas pracy skryptu, zostanie nam wygenerowany tzw. plik <em>makefile</em>.</li>
-			<li>Wydajemy polecenie kompilacji kodu. <code class="code-inline">make</code>. Po poprawnie zakończonej kompilacji, to znaczy po wyświetlonych przez polecenie <code class="code-inline">make</code> następnych kompilacjach, zostanie nam  zwrócony <em>prompt</em>, możemy przejść do ostatniej części kompilacji czyli instalacji pakietu w systemie, z racji tego iż zostawiłem pre-instalowaną wersję 3.5, wydaje polecenie '<code class="code-inline">make altinstall</code> po wykonaniu tego polecenia nasz Python 3.8 znajduje się w podkatalogu <em>bin</em><span style="text-decoration: underline;"></span> na ścieżce, którą podaliśmy w opcji <code class="code-inline">prefix</code>. </li>
-			<li>Ostatni punkt dla wygodnych, w pliku <em>.bashrc</em> możemy sobie zdefiniować alias <em>python</em> dla naszego nowo zainstalowanego Pythona.  Po uruchomieniu polecenia <code class="code-inline">python</code> powiśmy zobaczyć <em>prompt</em> powłoki wraz z informacjami odnośnie wersji. </li>
+			<li>Instalujemy odpowiednie dla naszej dystrybucji <em>build-essential</em> 
+          oraz dwa pakiety, których nieobecność została zauważona przy 
+          wykonywaniu polecenia <code class="code-inline">make altinstall</code>
+          i zwrócona jako błąd, mianowicie chodzi o <em>zlib1g</em> oraz 
+          <em>zlib1g-dev</em>.</li>
+			<li>Pobieramy najnowszą wersję kodu z 
+          <a href="https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tar.xz">https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tar.xz</a>.</li>
+			<li>Rozpakowujemy: 
+          <code class="code-inline">tar -xvf Python-3.8.3.tar.xz</code></li>
+			<li>Przechodzimy do katalogu: 
+          <code class="code-inline">cd Python-3.8.3.tar.xz</code></li>
+			<li>Ja w swoim systemie zachowałem obecną wersję Pythona, wskazując 
+          skryptowi konfiguracyjnemu opcje <code class="code-inline">prefix</code> 
+          wskazującą na katalog utworzony w moim katalogu domowym: 
+          <code class="code-inline">./configure --prefix="/home/xf0r3m/bin/python3.8"</code>.
+          Użycie opcji <code class="code-inline">prefix</code>, przekazuje 
+          skryptowi, aby przygotował środowisko do kompilacji względem podanej 
+          ścieżki. Jeśli nie zostanie zwrócony żaden błąd podczas pracy skryptu,
+          zostanie nam wygenerowany tzw. plik <em>makefile</em>.</li>
+			<li>Wydajemy polecenie kompilacji kodu: <code class="code-inline">make</code>. 
+          Po poprawnie zakończonej kompilacji, to znaczy po wyświetlonych przez
+          polecenie <code class="code-inline">make</code> następnych 
+          kompilacjach, zostanie nam zwrócony <em>prompt</em>, możemy przejść 
+          do ostatniej części kompilacji czyli instalacji pakietu w systemie.
+          Ze względu na to iż zostawiłem pre-instalowaną wersję 3.5, wydaje 
+          polecenie '<code class="code-inline">make altinstall</code> po 
+          wykonaniu tego polecenia nasz Python 3.8 znajduje się w podkatalogu 
+          <em>bin</em> na ścieżce, którą podaliśmy w opcji 
+          <code class="code-inline">prefix</code>. </li>
+			<li>Ostatni punkt jest dla wygodnych. W pliku <em>.bashrc</em> możemy
+          sobie zdefiniować alias <em>python</em> dla naszego nowo 
+          zainstalowanego Pythona.  Po uruchomieniu polecenia 
+          <code class="code-inline">python</code> powiśmy zobaczyć 
+          <em>prompt</em> powłoki wraz z informacjami odnośnie wersji.</li>
 		</ol>
 <pre class="code-block">
 Python 3.8.2 (default, Apr 27 2020, 15:53:34)
@@ -47,47 +83,77 @@ Type "help", "copyright", "credits" or "license" for more information.
 &gt;&gt;&gt;
 </pre>
 		<p>
-			Poniżej znajdują się zagadnienia z książki które warto mieć przy sobie przy pierwszych projektach tworzonych w tym języku. Kolejność jest identyczna w kolejnością występowania w książce.
+			Poniżej znajdują się zagadnienia z książki które warto mieć przy sobie 
+      przy pierwszych projektach tworzonych w tym języku. Kolejność jest 
+      identyczna z kolejnością występowania w książce.
+		</p>
+    <h1 id="1.helloworld">1. Witaj w świecie Pythona.</h1>
+		<p>
+			<strong>print()</strong> - instrukcja wyświetlająca wszystko co umieścimy
+      pomiędzy nawiasami.
 		</p>
 		<p>
-			<strong>print()</strong> - polecenie wyświetlające wszystko co umieścimy pomiędzy nawiasami.
+			Konwencja nadawania wartości zmiennym w Pythonie wygląda w ten sposób:
+    </p>
+<pre class="code-block">
+greetinsg_message = "Hello, World!"
+</pre>
+    <p>
+      Warto pamiętać o spacjach pomiędzy operatorem. Podobnie zresztą wygląda 
+      konwencja stosowania jakichkolwiek operatorów.
 		</p>
+    <h2 id="1.1.strings">1.1. Ciągi tekstowe w Pythonie</h2>
 		<p>
-			Konwencja nadawania wartości zmiennym w Pythonie wygląda w ten sposób. 'greetinsg_message = "Hello, World!"'. Warto pamiętać o spacjach pomiędzy operatorem. Podobnie zresztą wygląda konwencja stosowania jakichkolwiek operatorów.
-		</p>
-		<p>
-			<strong>Ciągi tekstowe <em>f</em> </strong>- formatowane ciągi tekstowe. Litera f pochodzi od słowa <em>format</em>, ich głównym zadaniem jest zamiana nawiasu klamrowego wraz z nazwą zmiennej na jej wartość w ciągu. Taki ciąg tworzy się w następujący sposób:
+			<strong>Ciągi tekstowe <em>f</em> </strong>- formatowane ciągi tekstowe. 
+      Litera f pochodzi od słowa <em>format</em>, ich głównym zadaniem jest 
+      zamiana nawiasu klamrowego wraz z nazwą zmiennej na jej wartość w ciągu.
+      Taki ciąg tworzy się w następujący sposób:
 		</p>
 <pre class="code-block">
 imie = 'xf0r3m'
 print(f"Witaj {imie}! Czy chcesz zanurzyć się w świat Pythona?")
 </pre>
 		<p>
-			Czy w innej zmiennej czy poleceniu <code class="code-inline">print()</code> zapisanie litery <code class="code-inline">f</code> przed znakami cudzysłowu lub apostrofu, spowoduje że dany ciąg będzie <em>ciągiem f</em>. <strong>Uwaga!</strong> <em>Ciągi f</em> są dostępne dopiero od wersji 3.6.
+			Czy w innej zmiennej czy poleceniu <code class="code-inline">print()</code> 
+      zapisanie litery <code class="code-inline">f</code> przed znakami 
+      cudzysłowu lub apostrofu, spowoduje że dany ciąg będzie <em>ciągiem f</em>. 
+    </p>
+    <p>
+      <strong>Uwaga!</strong> <em>Ciągi f</em> są dostępne dopiero od wersji 3.6.
 		</p>
 		<p>
-			<strong>Formatowanie ciągu przed wersją Pythona 3.6.</strong> Takie formatowanie polega na użyciu wbudowanej metody <strong>format()</strong>. Przykład poniżej.
+			<strong>Formatowanie ciągu przed wersją Pythona 3.6.</strong> 
+      Takie formatowanie polega na użyciu wbudowanej metody 
+      <strong>format()</strong>. Przykład poniżej.
 		</p>
 <pre class="code-block">
 imie = 'xf0r3m'
 print("Witaj {}! Czy chcesz zanurzyć się w świat Pythona?".format(imie))
 </pre>
 		<p>
-			Dodatkowa zmienna do wyświetlenia, to dodatkowa para nawiasów i kolejna zmienna jako argument metody format.
+			Dodatkowa zmienna do wyświetlenia, to dodatkowa para nawiasów i kolejna 
+      zmienna jako argument metody format.
 		</p>
 		<p>
-			Do obróbki ciągów tekstowych, a konkretnie ich <strong>normalizacji</strong> mogą służyć nam poniższe metody:
+			Do obróbki ciągów tekstowych, a konkretnie ich <strong>normalizacji</strong> 
+      mogą służyć nam poniższe metody:
 		</p>
 		<ul>
-			<li><strong>title()</strong> - Zwraca ciąg tekstowy jak tytuł, czyli każdy wyraz w ciągu zaczyna się z wielkiej litery.</li>
-			<li><strong>lower()</strong> - Zwraca ciąg tekstowy po całości zapisany małymi literami.</li>
-			<li><strong>upper()</strong> - Zwraca ciąg tekstowy zapisany po całości z wielkich liter</li>
+			<li><strong>title()</strong> - Zwraca ciąg tekstowy jak tytuł, czyli 
+          każdy wyraz w ciągu zaczyna się z wielkiej litery.</li>
+			<li><strong>lower()</strong> - Zwraca ciąg tekstowy po całości zapisany 
+          małymi literami.</li>
+			<li><strong>upper()</strong> - Zwraca ciąg tekstowy zapisany po całości 
+          z wielkich liter</li>
 		</ul>
 		<p>
-			Warto zaznaczyć że te metody nie zmieniają wartości ciągu, o ile nie przypiszemy nie ich wartości zwrotnych.
+			Warto zaznaczyć że te metody nie zmieniają wartości ciągu, o ile nie 
+      przypiszemy nie ich wartości zwrotnych.
 		</p>
 		<p>
-			<strong>Białe znaki w ciągach tekstowych. </strong>Białe znaki w naszych ciągach uzyskuje się w bardzo prosty sposób, po prostu po przez umieszczenie w ciągu:
+			<strong>Białe znaki w ciągach tekstowych. </strong>Białe znaki w naszych 
+      ciągach uzyskuje się w bardzo prosty sposób, po prostu po przez 
+      umieszczenie w ciągu:
 		</p>
 		<ul>
 			<li><strong>\t </strong> - tabulator</li>
@@ -98,40 +164,68 @@ imie = 'xf0r3m'
 print(f"Witaj \t{imie}!\nCzy chcesz zanurzyć się w świat Pythona?")
 </pre>
 		<p>
-			<strong>Usuwanie białych znaków</strong>. Może zdarzyć się taka sytuacja że weźmie się skądś dane,  i nagle gdzieś nasz algorytm nie działa, bo ma nie prawidłowe dane. Gdzieś na początku albo na końcu ciągu znajdują się nadmiarowe białe znaki np. skopiowaliśmy jakiś ciąg ze spacją na końcu. To zresztą zdarza się dość często. W tym przypadku korzystamy z metody <code class="code-inline">strip()</code> jeśli nie potrafimy jasno określić czy z lewej lub prawej strony ciągu znajdują się nadmiarowe białe znaki. Dla znaków po lewej stronie możemy użyć <strong>lstrip() </strong>a dla znaków po prawej <strong>rstrip()</strong>. Warto mieć na uwadze że te metody <strong>nie dokonują w zmiennej żadnych zmian,</strong> <strong>aby zapisać zmiany musimy nadać zmiennej wartość zwracaną przez tą metodę</strong>
+			<strong>Usuwanie białych znaków</strong>. Może zdarzyć się taka sytuacja,
+      że weźmie się skądś dane, i nagle gdzieś nasz algorytm nie działa, bo 
+      ma nieprawidłowe dane. Gdzieś na początku albo na końcu ciągu znajdują 
+      się nadmiarowe białe znaki np. skopiowaliśmy jakiś ciąg ze spacją na 
+      końcu. To zresztą zdarza się dość często. W tym przypadku korzystamy z 
+      metody <code class="code-inline">strip()</code> jeśli nie potrafimy jasno
+      określić czy z lewej lub prawej strony ciągu znajdują się nadmiarowe 
+      białe znaki. Dla znaków po lewej stronie możemy użyć <strong>lstrip()</strong>
+      a dla znaków po prawej <strong>rstrip()</strong>. Warto mieć na uwadze, 
+      że te metody <strong>nie dokonują w zmiennej żadnych zmian, aby zapisać 
+      zmiany musimy nadać zmiennej wartość zwracaną przez tą metodę</strong>.
 		</p>
 <pre class="code-block">
 dirty_strings='  python  '
 washed_strings=dirty_strings.strip()
 </pre>
+    <h2 id="1.2.moreaboutvariables">1.2. Więcej o zmiennych</h2>
 		<p>
-			Wielkie liczby możemy zapisywać za pomocą<strong> grup rozdzielonych przy pomocy znaku podkreślenia(_)</strong>, na przykład:
+			Wielkie liczby możemy zapisywać za pomocą <strong>grup rozdzielonych przy
+      pomocy znaku podkreślenia(_)</strong>, na przykład:
 		</p>
 <pre class="code-block">
 one_bilion = 1_000_000_000
 </pre>
 		<p>
-			Z poziomu Pythona nie ma znaczenia, czy jest 1000000000 czy <em>1_000_000_000</em>. Podobnie jest z mniejszymi liczbami, takimi jak 1000 (<em>1_000</em>). <strong>Uwaga! Ta funkcjonalność dostępna jest od Pythona 3.6 w górę. </strong>
+			Z poziomu Pythona nie ma znaczenia, czy jest 1000000000 czy 
+      <em>1_000_000_000</em>. Podobnie jest z mniejszymi liczbami, takimi jak 
+      1000 (<em>1_000</em>). <strong>Uwaga! Ta funkcjonalność dostępna jest od
+      Pythona 3.6 w górę.</strong>
 		</p>
 		<p>
-			<strong>Wiele przypisań</strong> wartość możemy skrócić sobie do praktycznego, aczkolwiek nie zawsze czytelnego zapisu. Na przykład:
+			<strong>Wiele przypisań</strong> wartość możemy skrócić sobie do 
+      praktycznego, aczkolwiek nie zawsze czytelnego zapisu. Na przykład:
 		</p>
 <pre class="code-block">
 x, y, z = 0, 0, 0
 a, b, c = 3, 4, 5
 </pre>
 		<p>
-			W Pythonie nie ma stałych, jednak wśród programistów nie tylko Pythona przyjęło się że każdą zmienną, której nazwa (identyfikator) będzie zapisany wielkimi literami traktuje się jako <strong>stałą</strong>.
+			W Pythonie nie ma stałych, jednak wśród programistów nie tylko Pythona 
+      przyjęło się, że każdą zmienną, której nazwa (identyfikator) będzie 
+      zapisany wielkimi literami traktuje się jako <strong>stałą</strong>.
+		</p>
+<pre class="code-block">
+UNIX_EPOCH = "01-01-1970"
+</pre>
+    <h2 id="1.2.comments">1.2. Komentarze</h2>
+    <p>
+			<strong>Komentarze</strong> w Pythonie zaczynają się od krzyżyka
+      (<strong>#</strong>). Wszystko co zostanie umieszczone po tym znaku 
+      zostanie zignorowane w przez interpreter Pythona.
 		</p>
 <pre class="code-block">
 NIGGA_AM = 300
 #BANG!
 </pre>
+    <h3 id="1.3.afewrules">1.3. Kilkanaście zasad.</h2>
 		<p>
-			<strong>Komentarze </strong>w Pythonie zaczynają się <strong>od</strong> <strong>znaku hash #</strong>. Wszystko co zostanie umieszczone po tym znaku zostanie zignorowane w przez interpreter Pythona.
-		</p>
-		<p>
-			<strong>Zen Pythona </strong>- to kilka zasad stworzonych przez społeczność Pythona. Cenne uwagi, które warto wziąć sobie do serca programując nie tylko w Pythonie. Warto sobie zrobić z tego swoisty kodeks programisty - 18 zasad.
+			<strong>Zen Pythona </strong>- to kilka zasad stworzonych przez 
+      społeczność Pythona. Cenne uwagi, które warto wziąć sobie do serca 
+      programując nie tylko w Pythonie. Warto sobie zrobić z tego swoisty 
+      kodeks programisty - 18 zasad.
 		</p>
 <pre class="code-block">
 &gt;&gt;&gt; import this
@@ -157,20 +251,26 @@ If the implementation is hard to explain, it's a bad idea.
 If the implementation is easy to explain, it may be a good idea.
 Namespaces are one honking great idea -- let's do more of those!
 </pre>
-		<p>&nbsp;</p>
-		<h2>Listy</h2>
+    <h1 id="2.morecomplexvariables">2. Bardziej złożone rodzaje zmiennych</h1>
+		<h2 id="2.1.lists">Listy</h2>
 		<p>
-			<strong>Listy </strong>- bardzo podobne do tablic. Do poszczególnych elementów<strong> uzyskujemy dostęp poprzez podanie indeksu</strong> <strong>w nawiasie kwadratowym</strong>:
+			<strong>Listy </strong> - bardzo podobne do tablic. Do poszczególnych 
+      elementów uzyskujemy dostęp poprzez podanie indeksu w nawiasie 
+      kwadratowym:
 		</p>
 <pre class="code-block">
 cars = ['audi', 'bmw', 'renault', 'honda']
 print(cars[2])
 </pre>
 		<p>
-			<strong>Dostęp do końcowych elementów listy </strong>następuje poprzez podanie <strong>ujemnego</strong> <strong>indeksu</strong>, począwszy od <strong>-1</strong> wskazujący <strong>ostatni element</strong> listy, kolejno -2 to przedostatni itd.
+			Dostęp do końcowych elementów listy następuje poprzez podanie 
+      <strong>ujemnego indeksu</strong>, począwszy od -1  wskazujący 
+      ostatni element listy, kolejno -2 to przedostatni itd.
 		</p>
 		<p>
-			<strong>Pustą listę</strong> możemy utworzyć poprzez nadanie zmiennej pary nawiasów kwadratowych.
+      Nadając zmiennej parę nawiasów kwadaratowych możemy utworzyć  
+			<strong>pustą listę</strong>, do której wrazie potrzemy będziemy mogli
+      dodać elementy.
 		</p>
 <pre class="code-block">
 cars=[]

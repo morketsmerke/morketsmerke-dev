@@ -275,28 +275,40 @@ print(cars[2])
 <pre class="code-block">
 cars=[]
 </pre>
+    <h3 id="2.1.1.appendingelementstolist">2.1.1. Dodawanie elementów do listy</h3>
 		<p>
-			<strong>Dodawanie elementów na końcu listy</strong> możemy zrealizować za pomocą wbudowanej metody <code class="code-inline">append()</code>. Jak argument metoda przyjmuje wartość dodawanego elementu.
+			Dodawanie elementów na końcu listy możemy zrealizować za pomocą 
+      wbudowanej metody <code class="code-inline">append()</code>. Jak argument
+      metoda przyjmuje wartość dodawanego elementu.
 		</p>
 <pre class="code-block">
 cars = ['audi', 'bmw', 'renault', 'honda']
 cars.append('toyota')
 </pre>
 		<p>
-			<strong>Wstawianie elementów na listę</strong> wykonujemy metodą <code class="code-inline">insert()</code>. Metoda jako argument przyjmuje indeks dla nowego elementu oraz jego wartość
+			Za pomocą metody <code class="code-inline">insert()</code>, możemy
+      wstawić element w dowolny indeks listy. Metoda jako argumenty przyjmuje 
+      indeks dla nowego elementu oraz jego wartość.
 		</p>
 <pre class="code-block">
 cars = ['audi', 'bmw', 'renault', 'honda']
 cars.insert(2, 'daewoo')
 </pre>
+    <h3 id="2.1.2.removingelementsfromlists">2.1.2. Usuwanie elementów z listy</h3>
 		<p>
-			<strong>Usuwanie elementów z listy</strong> możemy przeprowadzić na <strong>trzy</strong> sposoby. Po prostu usuwając element poprzez podanie nazwu listy oraz indeksu (tak jak byśmy uzyskiwali dostęp do wartości) poleceniu <code class="code-inline">del</code>.
+			Usuwanie elementów z listy możemy przeprowadzić na <strong>trzy</strong> 
+      sposoby. Po prostu usuwając element poprzez podanie nazwy listy oraz 
+      indeksu (tak jak byśmy uzyskiwali dostęp do wartości) instrukcji 
+      <code class="code-inline">del</code>.
 		</p>
 <pre class="code-block">
 del cars[1]
 </pre>
 		<p>
-			Kolejnym sposobem może być zabranie danej wartości z listy za pomocą metody <code class="code-inline">pop()</code>. Jako argument metoda przyjmuje indeks, tak więc możemy zabrać dowolny element, metoda <strong>domyślnie zabiera ostatni element</strong> z listy.
+			Kolejnym sposobem może być zabranie danej wartości z listy za pomocą 
+      metody <code class="code-inline">pop()</code>. Jako argument metoda 
+      przyjmuje indeks, tak więc możemy pobrać dowolny element, jeśli nie
+      podamy żadnych argumentów metoda pobierze ostatni element.
 		</p>
 <pre class="code-block">
 cars = ['audi', 'bmw', 'renault', 'honda']

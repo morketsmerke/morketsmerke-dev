@@ -220,7 +220,7 @@ UNIX_EPOCH = "01-01-1970"
 NIGGA_AM = 300
 #BANG!
 </pre>
-    <h3 id="1.3.afewrules">1.3. Kilkanaście zasad.</h3>
+    <h2 id="1.3.afewrules">1.3. Kilkanaście zasad.</h2>
 		<p>
 			<strong>Zen Pythona </strong>- to kilka zasad stworzonych przez 
       społeczność Pythona. Cenne uwagi, które warto wziąć sobie do serca 
@@ -251,8 +251,7 @@ If the implementation is hard to explain, it's a bad idea.
 If the implementation is easy to explain, it may be a good idea.
 Namespaces are one honking great idea -- let's do more of those!
 </pre>
-    <h1 id="2.morecomplexvariables">2. Bardziej złożone rodzaje zmiennych</h1>
-		<h2 id="2.1.lists">Listy</h2>
+		<h1 id="2.lists">Listy</h1>
 		<p>
 			<strong>Listy </strong> - bardzo podobne do tablic. Do poszczególnych 
       elementów uzyskujemy dostęp poprzez podanie indeksu w nawiasie 
@@ -275,7 +274,7 @@ print(cars[2])
 <pre class="code-block">
 cars=[]
 </pre>
-    <h3 id="2.1.1.appendingelementstolist">2.1.1. Dodawanie elementów do listy</h3>
+    <h2 id="2.1.appendingelementstolist">2.1. Dodawanie elementów do listy</h2>
 		<p>
 			Dodawanie elementów na końcu listy możemy zrealizować za pomocą 
       wbudowanej metody <code class="code-inline">append()</code>. Jak argument
@@ -294,7 +293,7 @@ cars.append('toyota')
 cars = ['audi', 'bmw', 'renault', 'honda']
 cars.insert(2, 'daewoo')
 </pre>
-    <h3 id="2.1.2.removingelementsfromlists">2.1.2. Usuwanie elementów z listy</h3>
+    <h2 id="2.2.removingelementsfromlists">2.2. Usuwanie elementów z listy</h2>
 		<p>
 			Usuwanie elementów z listy możemy przeprowadzić na <strong>trzy</strong> 
       sposoby. Po prostu usuwając element poprzez podanie nazwy listy oraz 
@@ -325,11 +324,36 @@ swag_gablota = 'bmw'
 cars.remove(swag_gablota)
 </pre>
 		<p>
-			<strong>Uwaga!</strong> Metoda <code class="code-inline">remove()</code> usuwa tylko pierwsze wystąpienie danej wartości na liście, więc jeśli jest więcej niż jedna taka wartość to tylko pierwsza odnaleziona zostanie usunięta.
+			<strong>Uwaga!</strong> Metoda <code class="code-inline">remove()</code> 
+      usuwa tylko pierwsze wystąpienie danej wartości na liście, więc jeśli 
+      jest więcej niż jedna taka wartość to tylko pierwsza odnaleziona zostanie
+      usunięta.
 		</p>
+    <h2 id="2.3.sortinglists">2.3. Sortowanie list</h2>
 		<p>
-			Elementy na liście mogą być innej kolejności niż moglibyśmy sobie tego życzyć, w Pythonie istnieje kilka sposób na uporządkowanie listy (<em>sortowanie</em>). Pierwszą z nich jest użycie metody <code class="code-inline">sort()</code>, metoda ta wyróżnia się tym że wprowadza zmiany samej liście, czyli jej użycie w kodzie zmieni wartość listy (sortując, zmieni indeksy wartości według sortowania). Domyślnie metoda <em>sort()</em> sortuje rosnąco, jednak możemy mieć na to wpływ, podając jej argument <code class="code-inline">reverse=True</code>, teraz metoda posortuje listę malejąco. Kolejnym sposobem na sortowanie jest sposób tymczasowy, na przykład gdy kolejność danych ma znaczenie i nie możemy jej od tak sobie zmieniać, ale jednak wypadało by aby użytkownikowi wypisać posortowane dane.
-			Za sortowanie tymczasowe odpowiada funkcja <code class="code-inline">sorted()</code>. Funkcja od metody tym kontekście różni się tym że musimy podać jako argument listę, a następnie zrobić coś z danymi zwróconymi albo przechować je w zmiennej albo wypisać za pomocą polecenia <code class="code-inline">print()</code>. Oczywiście funkcja <em>sorted()</em> również przyjmuje argument <em>reverse=True</em>.
+			Elementy na liście mogą być innej kolejności niż moglibyśmy sobie tego 
+      życzyć, w Pythonie istnieje kilka sposób na uporządkowanie listy 
+      (sortowanie).
+    </p>
+    <p> 
+      Pierwszą z nich jest użycie metody 
+      <code class="code-inline">sort()</code>, metoda ta wyróżnia się tym, że 
+      wprowadza zmiany samej liście, czyli jej użycie w kodzie zmieni kolejność
+      wartości na liście. Domyślnie metoda <em>sort()</em> sortuje rosnąco, 
+      jednak możemy mieć na to wpływ, podając jej argument 
+      <code class="code-inline">reverse=True</code>, teraz metoda posortuje 
+      listę malejąco.
+    </p>
+    <p>
+      Kolejnym sposobem na sortowanie jest sposób tymczasowy, na przykład gdy 
+      kolejność danych ma znaczenie i nie możemy jej od tak sobie zmieniać, ale
+      jednak wypadałoby aby użytkownikowi wypisać posortowane dane.
+			Za sortowanie tymczasowe odpowiada funkcja 
+      <code class="code-inline">sorted()</code>. Funkcja od metody tym 
+      kontekście różni się tym że musimy podać jako argument listę, a następnie
+      zrobić coś z danymi zwróconymi albo przechować je w zmiennej albo wypisać
+      za pomocą polecenia <code class="code-inline">print()</code>. Oczywiście 
+      funkcja <em>sorted()</em> również przyjmuje argument <em>reverse=True</em>.
 		</p>
 <pre class="code-block">
 cars = ['audi', 'bmw', 'renault', 'honda']
@@ -343,44 +367,75 @@ print(sorted(cars))
 print(sorted(cars, reverse=True))
 </pre>
 		<p>
-			W Pythonie sortowanie jest nieco bardziej skomplikowane, ponieważ ciągi tekstowe sortowane są za pomocą wartości tablicy <em>ASCII</em>. Mniejszą wartość (liczbę całkowitą przyporządkowaną do znaku w tablicy) mają wielkie litery, dlatego jeśli elementy listy mają wartość nie jednakowe (wszystkie z wielkiej/wszystkie z małej) to możemy spodziewać się że wartość zapisane wielką literą będą miały pierwszeństwo na posortowanej liście.
+			W Pythonie sortowanie jest nieco bardziej skomplikowane, ponieważ ciągi 
+      tekstowe sortowane są za pomocą wartości tablicy <em>ASCII</em>. Mniejszą
+      wartość (liczbę całkowitą przyporządkowaną do znaku w tablicy) mają 
+      wielkie litery, dlatego jeśli elementy listy mają wartość nie jednakowe 
+      (wszystkie z wielkiej/wszystkie z małej) to możemy spodziewać się, że 
+      wartość zapisane wielką literą będą miały pierwszeństwo na posortowanej 
+      liście.
 		</p>
+    <h2 id="2.4.reversingthelist">2.4. Odwracanie listy.</h2>
 		<p>
-			Inną metodą na organizację listy jest jej odwrócenie, to znaczy że ostatni element będzie pierwszym, przedostatni drugim itd, do <strong>odwracania listy służy metoda <code class="code-inline">reverse()</code>.</strong>
+			Inną metodą na organizację listy jest jej odwrócenie. To znaczy, że 
+      ostatni element będzie pierwszym, przedostatni drugim itd, 
+      do odwracania listy służy metoda <code class="code-inline">reverse()</code>.
 		</p>
 <pre class="code-block">
 cars = ['audi', 'bmw', 'renault', 'honda']
 cars.reverse()
 </pre>
 		<p>
-			Warto wspomnieć że <em>reverse()</em> trwale zmienia kolejność listy.
+			Warto wspomnieć, że <em>reverse()</em> trwale zmienia kolejność listy.
 		</p>
+    <h2 id="2.5.lengthoflist">2.5. Długość listy</h2>
 		<p>
-			Wielkość listy możemy określić przy pomocy funkcji <code class="code-inline">len()</code>, funkcja jako argument przyjmuje naszą listę
+			Wielkość listy możemy określić przy pomocy funkcji 
+      <code class="code-inline">len()</code>, funkcja jako argument przyjmuje 
+      naszą listę.
 		</p>
 <pre class="code-block">
 cars = ['audi', 'bmw', 'renault', 'honda']
 len(cars)
 </pre>
-		<p>&nbsp;</p>
-		<h2>Pętla for</h2>
+		<h1 id="3.forloop">Pętla for</h1>
 		<p>
-			<strong>Pętla for w Pythonie</strong> jest podobna konstrukcyjnie do pętli for z BASH-a, również używa się słowa kluczowego <code class="code-inline">in</code>. Jeśli chcielibyśmy przetłumaczyć na język potoczny pętlę <em>for</em> to będzie to mniej więcej tak: "Dla zmiennej <em>value</em> przypisz element z listy, następnie wykonaj blok kodu, na koniec przesuń się na kolejny element listy". Służy ona głównie iteracjom przez listy lub listy tworzone przez funkcję <em>range()</em>. Przy pętli <em>for</em> po raz pierwszy spotkamy się z zagnieżdżaniem bloków kodu. Przy każdej konstrukcji operującej na bloku kodu pojawia się <code class="code-inline">:</code> (dwukropek), oznaczający początek blok kodu. Wszystkie linie, które mają znaleźć się w owym bloku przesuwamy o jeden tab. Ponieważ wcięcia Pythonie są wykorzystywane do oznaczania bloku kodu, trzeba uważać przy ich stosowaniu.
+			Pętla <em>for</em> w Pythonie jest podobna konstrukcyjnie do pętli 
+      <em>for</em> z BASH-a, również używa się słowa kluczowego 
+      <code class="code-inline">in</code>. Jeśli chcielibyśmy przetłumaczyć na
+      język potoczny pętlę <em>for</em> to będzie to mniej więcej tak: "Dla 
+      zmiennej <em>value</em> przypisz element z listy, następnie wykonaj blok 
+      kodu, na koniec przesuń się na kolejny element listy". Ten rodzaj pętli
+      służy głównie iteracjom przez listy lub listy tworzone przez funkcję 
+      <em>range()</em> (określone zbiory danych). Przy pętli <em>for</em> po 
+      raz pierwszy spotkamy się z zagnieżdżaniem bloków kodu. Przy każdej 
+      konstrukcji operującej na bloku kodu pojawia się dwukropek 
+      (<strong>:</strong>), oznaczający początek blok kodu. Wszystkie linie, 
+      które mają znaleźć się w owym bloku przesuwamy o jeden tab. Ponieważ 
+      wcięcia Pythonie są wykorzystywane do oznaczania bloku kodu, trzeba 
+      uważać przy ich stosowaniu.
 		</p>
 <pre class="code-block">
 cars = ['audi', 'bmw', 'renault', 'honda']
 for car in cars:
 	print(car)
 </pre>
+    <h1 id="4.rangefunction">4. Funkcja range</h1>
 		<p>
-			Za generowanie serii liczb ujętych w listę odpowiedzialna jest funkcja <code class="code-inline">range()</code>. Jako argumenty przyjmuje ona zakres dla generowanej serii liczb. Cechą funkcji, o której warto wiedzieć to że ostatnia liczba z zakresu jest traktowana w sposób wyłączny, to znaczy że jeśli użyjemy funkcji <em>range()</em> do wygenerowania listy od 1 do 10, to jeśli podamy argumenty 1,10 to listę otrzymamy od 1 do 9. Ostatnia liczba jest wyłączona z przedziału. Może to wynikać z prostej implementacji funkcji <em>range()</em>, która nie uwzględnia przesunięcia indeksów tablicy o 1.
+			Za generowanie serii liczb ujętych w listę odpowiedzialna jest funkcja 
+      <code class="code-inline">range()</code>. Jako argumenty przyjmuje ona 
+      zakres dla generowanej serii liczb. Cechą funkcji, o której warto 
+      wiedzieć to to, że ostatnia liczba z zakresu jest traktowana w sposób 
+      wyłączny, to znaczy, że jeśli użyjemy funkcji <em>range()</em> do 
+      wygenerowania listy od 1 do 10, to jeśli podamy argumenty 1,10 to listę 
+      otrzymamy od 1 do 9.
 		</p>
 <pre class="code-block">
 for number in range(1,10):
 print(number)
 </pre>
 		<p>
-			Funkcja <em>range()</em> może przyjmować jeden argument, zakres końcowy.<br />
+			Funkcja <em>range()</em> może przyjmować jeden argument, zakres końcowy.
 		</p>
 <pre class="code-block">
 for number in range(5):
@@ -390,7 +445,8 @@ for number in range(5):
 			Dane wyjściowe takiej pętli będą od 0 od 4 - 5 elementów.
 		</p>
 		<p>
-			Funkcję <em>range() </em>możemy wykorzystać wraz inna funkcją - <code class="code-inline">list()</code> do tworzenia list liczbowych.
+			Funkcję <em>range() </em>możemy wykorzystać wraz inna funkcją - 
+      <code class="code-inline">list()</code> do tworzenia list liczbowych.
 		</p>
 <pre class="code-block">
 numbers = list(range(1,11))
@@ -398,66 +454,108 @@ for number in numbers:
 	print(number)
 </pre>
 		<p>
-			Po za określeniem zakresu funkcja <em>range()</em>przyjmuje również <em>krok</em>, czyli o ile ma zwiększyć kolejne elementy.
+			Po za określeniem zakresu funkcja <em>range()</em> przyjmuje również 
+      <strong>krok</strong>, czyli o ile ma zwiększyć kolejne elementy.
 		</p>
 <pre class="code-block">
 even_numbers = list(range(2,11,2))
 for evenn in even_numbers:
 	print(evenn)
 </pre>
+    <h1 id="5.simplestatsfunctions">5. Proste funkcje statystyczne</h1>
 		<p>
-			W Pythonie mamy dostępnych kilka bardzo prostych <strong>wybudowanych funkcji statystycznych</strong>. Mianowicie:
+			W Pythonie mamy dostępnych kilka bardzo prostych wybudowanych funkcji 
+      statystycznych. Mianowicie:
 		</p>
 		<ul>
 			<li><strong>min()</strong> - zwraca najmniejszą wartość na liście</li>
 			<li><strong>max()</strong> - zwraca największa wartość na liście</li>
 			<li><strong>sum() </strong>- zwraca sumę wszystkich elementów listy</li>
 		</ul>
+    <h1 id="6.listcomprehension">6. Lista składana</h1>
 		<p>
-			Aby ograniczyć  do minimum proces tworzenie list. Python wprowadza coś takiego co nazywa się <strong>listą składaną</strong>. Taka lista składa się z modelu wartości elementu (np. <em>value**2</em>) oraz z pętli for wraz z funkcją <em>range()</em>. Liczba stworzonych elementów znajduje się w argumencie funkcji <em>range()</em>. Elementy będą miały wartość obliczoną w modelu.
+			Aby ograniczyć  do minimum proces tworzenie list. Python wprowadza coś 
+      takiego co nazywa się <strong>listą składaną</strong>. Taka lista składa 
+      się z modelu wartości elementu (np. <em>value**2</em>) oraz z pętli for 
+      wraz z funkcją <em>range()</em>. Liczba stworzonych elementów znajduje 
+      się w argumencie funkcji <em>range()</em>. Elementy będą miały wartość 
+      obliczoną w modelu.
 		</p>
 <pre class="code-block">
 squares = [value**2 for value in range(1,11)]
 print(squares)
 </pre>
+    <h1 id="7.pieceoflist">7. Wycinek listy.</h1>
 		<p>
-			Powiedzmy że do obliczeń potrzebujemy dwóch środkowych wartości z listy. Aby wydobyć je w najbardziej efektywny sposób możemy użyć <strong>wycinka listy</strong>. Wycinek tworzymy, podając w miejscu indeksu przy normalnym odwoływaniu się do listy, zakres składający z się z wartości początkowej (<strong>Uwaga! Liczonej od 0</strong>.<span style="text-decoration: underline;"></span>), dwukropka(<strong>:</strong>) oraz wartości końcowej, z tym że z wartością końcową jest identycznie co w przypadku funkcji <em>range().</em> Chcąc stworzyć wycinek z drugiego oraz trzeciego elementu, muszę policzyć od 0, czyli drugi element będzie mieć indeks 1, zakres końcowy muszę podać o 1 większy więc licząc od 0 trzeci element to 2 oraz dodaje jeszcze 1 więc koniec, końców zakres końcowy to 3.
+			Powiedzmy, że do obliczeń potrzebujemy dwóch środkowych wartości z listy.
+      Aby wydobyć je w najbardziej efektywny sposób możemy użyć 
+      <strong>wycinka listy</strong>. Wycinek tworzymy, podając w miejscu 
+      indeksu przy normalnym odwoływaniu się do listy, zakres składający się z 
+      wartości początkowej (<strong>uwaga</strong>, liczonej od 0), dwukropka 
+      (<strong>:</strong>) oraz wartości końcowej, z tym, że z wartością 
+      końcową jest identycznie co w przypadku funkcji <em>range().</em> Chcąc 
+      stworzyć wycinek z drugiego oraz trzeciego elementu, należy policzyć od 0,
+      czyli drugi element będzie mieć indeks 1, zakres końcowy trzeba podać o 1
+      większy więc licząc od 0 trzeci element to 2 oraz jeszcze 1 więc koniec, 
+      końców zakres końcowy to 3.
 		</p>
 <pre class="code-block">
 even_numbers = list(range(2,11,2))
 evenn_slice = even_numbers[1:3]
 </pre>
 		<p>
-			Zakres wartości w wycinkach, jest nieco bardziej elastyczny. Na przykład chcemy wszystkie elementy do czwartego to zamiast <em>[0:4]</em> podajemy po prostu <em>[:4]</em> <span style="text-decoration: underline;"></span><span style="text-decoration: underline;"></span><span style="text-decoration: underline;"></span><span style="text-decoration: underline;"></span>możemy pominąć wartość początkową, wtedy domyślnie będzie <em>0</em>. Podobnie jest z wartością końcową <em>[2:]</em> ten zakres oznacza że wycinek będzie zawierał wszystkie elementy od 3 do końca listy. Podobnie jak w przypadku indeksów, możemy podać ujemne wartości, co będzie oznaczało że wycinek będzie zawierać elementy z końca listy. Przy podawaniu warto pamiętać że ostatni element to -1, im większa wartość ujemna tym bliżej początku listy jesteśmy.
+			Zakres wartości w wycinkach, jest nieco bardziej elastyczny. Na przykład 
+      chcemy wszystkie elementy do czwartego to zamiast <em>[0:4]</em> podajemy
+      po prostu <em>[:4]</em> możemy pominąć wartość początkową, wtedy 
+      domyślnie będzie <em>0</em>. Podobnie jest z wartością końcową 
+      <em>[2:]</em> ten zakres oznacza, że wycinek będzie zawierał wszystkie 
+      elementy od 3 do końca listy. Podobnie jak w przypadku indeksów, możemy 
+      podać ujemne wartości, przyczym podajemy tylko wartość początkową. Taki 
+      wycinek będzie zawierać elementy od tego wskazanego do końca listy. Przy 
+      podawaniu warto pamiętać że ostatni element to -1, im większa wartość ujemna tym bliżej początku listy jesteśmy.
 		</p>
 <pre class="code-block">
 even_numbers = list(range(2,11,2))
 end_values = even_numbers[-2:]
 </pre>
+    <h2 id="7.1.stepinpieceoflist">7.1. Krok w wycinku listy</h2>
 		<p>
-			Zakres wycinku ma możliwość podania trzeciego argumentu, liczby <strong>wartości kroku przy tworzeniu wycinka</strong>.
+			Zakres wycinku ma możliwość podania trzeciego argumentu, wartości kroku 
+      przy tworzeniu wycinka.
 		</p>
 <pre class="code-block">
 numbers = list(range(1,11))
 non_even_numbers=numbers[0::2]
 </pre>
+    <h2 id="7.2.iterationviapieceoflist">7.2. Iteracja przez wycinek listy</h2>
 		<p>
-			<strong>Iterując przez wycinek</strong>, w miejscu listy podajemy nasz wycinek.
+			Do wskazania pętli <em>for</em> możemy użyć wycinka listy. Na poniższym
+      przykładzie zaprezentowano jak należy to wykonać:
 		</p>
 <pre class="code-block">
 numbers = list(range(1,11))
 for value in numbers[0::2]:
 	print(value)
 </pre>
+    <h2 id="7.3.copyoflist">7.3. Kopia listy</h2>
 		<p>
-			Często może zdarzyć się taka sytuacja, że chcemy zachować pierwotną wersję listy, ale musimy użyć jej wartości do jakiś operacji, które mogą naruszyć wartości jakiś jej elementów, w tym wypadku możemy stworzyć <strong>kopię listy</strong>.
+			Często może zdarzyć się taka sytuacja, że chcemy zachować pierwotną 
+      wersję listy, ale musimy użyć jej wartości do jakiś operacji, które mogą 
+      naruszyć wartości jakiś jej elementów, w tym wypadku możemy stworzyć 
+      kopię listy.
 		</p>
 <pre class="code-block">
 cars = ['audi', 'bmw', 'renault', 'honda']
 cars_bkp = cars[:]
 </pre>
+    <h1 id="8.tuplets">8. Krotki</h1>
 		<p>
-			Może zdarzyć się potrzeba posiadania listy stałych, których wartość nie może zmienić się przez cały cykl życia programu. Z taką listą jest już lepiej w niż ze zwykłymi stałymi. Taką listę nazywa się <strong>krotką</strong>. Definiowanie krotki, przypomina definiowanie listy, jednak zamiast nawiasów kwadratowych, mamy zwykłe okrągłe. Definicja wygląda w następujący sposób:
+			Może zdarzyć się potrzeba posiadania listy stałych, których wartość nie 
+      może zmienić się przez cały cykl życia programu. Z taką listą jest już 
+      lepiej w niż ze zwykłymi stałymi. Taką listę nazywa się 
+      <strong>krotką</strong>. Definiowanie krotki, przypomina definiowanie 
+      listy, jednak zamiast nawiasów kwadratowych, mamy zwykłe okrągłe. 
+      Definicja wygląda w następujący sposób:
 		</p>
 <pre class="code-block">
 rgb = ('red', 'green', 'blue')
@@ -466,7 +564,9 @@ print(rgb[1])
 print(rgb[2])
 </pre>
 		<p>
-			Dostęp do elementów krotki, jest identyczny jak do elementów listy, co zostało zobrazowane powyżej. Teraz dla eksperymentu możemy spróbować zmienić jeden z elementów krotki.
+			Dostęp do elementów krotki, jest identyczny jak do elementów listy, co 
+      zostało zobrazowane powyżej. Teraz dla eksperymentu możemy spróbować 
+      zmienić jeden z elementów krotki.
 		</p>
 <pre class="code-block">
 &gt;&gt;&gt; rgb = ('red', 'green', 'blue')
@@ -478,7 +578,8 @@ print(rgb[2])
 TypeError: 'tuple' object does not support item assignment
 </pre>
 		<p>
-			Iteracja przebiega tak samo jak na listach. Jedyną rzeczą jaką możemy zrobić przy krotce aby zmodyfikować jej zawartość, jest jej nadpisanie.
+			Iteracja przebiega tak samo jak na listach. Jedyną rzeczą jaką możemy 
+      zrobić przy krotce aby zmodyfikować jej zawartość, jest jej nadpisanie.
 		</p>
 <pre class="code-block">
 rgb = ('red', 'green', 'blue')
@@ -489,10 +590,14 @@ print(rgb[2])
 rgb = ('cyan', 'yellow', 'magenta', 'black')
 </pre>
 		<p>
-			Krotka zawierająca jedną wartość musi zawierać przecinek na końcu, ponieważ dzięki niemu zmienna jest rozpoznawana jako krotka.
+			Krotka zawierająca jedną wartość musi zawierać przecinek na końcu, 
+      ponieważ dzięki niemu zmienna jest rozpoznawana jako krotka.
 		</p>
+    <h1 id="9.conditionalexpressions">9. Wyrażenia warunkowe</h1>
 		<p>
-			Każdy bardziej rozbudowany program będzie potrzebował instrukcji decyzyjnej. Te instrukcje uruchamiają blok kodu na podstawie testów warunkowych. Najprostszym z nich jest <strong>sprawdzenie równości</strong>.
+			Każdy bardziej rozbudowany program będzie potrzebował instrukcji 
+      decyzyjnej. Te instrukcje uruchamiają blok kodu na podstawie testów 
+      warunkowych. Najprostszym z nich jest sprawdzenie równości.
 		</p>
 <pre class="code-block">
 &gt;&gt;&gt; car = 'Audi'
@@ -500,7 +605,9 @@ rgb = ('cyan', 'yellow', 'magenta', 'black')
 False
 </pre>
 		<p>
-			W powyższym przykładzie wyszedł na jaw bardzo ważny szczegół, Python jest <em>case-sensitive</em>, rozróżnia wielkość liter. Dlatego warto przed jakimkolwiek testami warunkowymi prze prowadzić normalizacje.
+			W powyższym przykładzie wyszedł na jaw bardzo ważny szczegół, Python jest
+      <em>case-sensitive</em>, rozróżnia wielkość liter. Dlatego warto przed 
+      jakimkolwiek testami warunkowymi przeprowadzić normalizacje.
 		</p>
 <pre class="code-block">
 &gt;&gt;&gt; car = 'Audi'
@@ -508,7 +615,8 @@ False
 True
 </pre>
 		<p>
-			Kolejnym testem jaki możemy przeprowadzić na wszystkich typach danych jest <strong>sprawdzenie nierówności</strong>.
+			Kolejnym testem jaki możemy przeprowadzić na wszystkich typach danych 
+      jest sprawdzenie nierówności.
 		</p>
 <pre class="code-block">
 &gt;&gt;&gt;  car = 'Audi'
@@ -516,7 +624,11 @@ True
 False
 </pre>
 		<p>
-			<strong>Porównania mniejsze niż, mniejsze bądź równe, większe niż, większe bądź równe</strong>, są testami wykonywanymi na liczbach. Nawet jeśli zestawimy sobie w porównaniu dwa ciągi, to Python porówna wartości z tablicy ASCII pierwszych liter i na podstawie tego zostanie zwrócona <strong>wartość boolowska</strong> <strong>True</strong> lub <strong>False</strong>.
+			Porównania mniejsze niż, mniejsze bądź równe, większe niż, większe bądź 
+      równe, są testami wykonywanymi na liczbach. Nawet jeśli zestawimy sobie w
+      porównaniu dwa ciągi znaków, to Python porówna wartości z tablicy ASCII 
+      pierwszych znaków i na podstawie tego zostanie zwrócona 
+      wartość logiczna <em>True</em> lub <em>False</em>.
 		</p>
 <pre class="code-block">
 &gt;&gt;&gt; age = 19
@@ -539,12 +651,22 @@ True
 True
 </pre>
 		<p>
-			Czasami może być tak, że takie najzwyklejsze testy jak te przeprowadzone powyżej nie wystarczą, aby instrukcja warunkowa odpaliła jakiś blok kodu potrzebne będzie sprawdzenie <strong>wyrażenia logicznego</strong> (połączonych ze sobą wiele testów), do łączenia ze sobą testów służą <strong>operatory logiczne</strong>.
+			Czasami może być tak, że takie najzwyklejsze testy jak te przeprowadzone 
+      powyżej nie wystarczą, aby instrukcja warunkowa uruchomiła blok kodu 
+      potrzebne będzie sprawdzenie kilku połączonych ze sobą warunków do 
+      łączenia ze sobą testów służą operatory logiczne.
 		</p>
 		<ul>
-			<li><strong>and</strong> - operator służy do mnożenia wyników pomniejszych wyrażeń boolowskich, używany gdy wszystkie warunki muszą zwrócić tę samą wartość logiczną.</li>
-			<li><strong>or</strong> - operator służy do dodawania wyników pomniejszych wyrażeń boolowskich, używany gdy ocena końcowa testu wynika z sum poszczególnych wyrażeń.</li>
-			<li><strong>not</strong> - operator służy do negowania wyniku całego wyrażenia. Negowanie polega na odwróceniu wartość, kiedy mamy <em>True</em> to po zanegowaniu dostaniem <em>False</em> i vice versa.</li>
+			<li><strong>and</strong> - operator służy do mnożenia wyników 
+          pomniejszych wyrażeń logicznych, używany gdy wszystkie warunki muszą
+          zwrócić tę samą wartość logiczną.</li>
+			<li><strong>or</strong> - operator służy do dodawania wyników 
+          pomniejszych wyrażeń logicznych, używany gdy ocena końcowa testu 
+          wynika z sum poszczególnych wyrażeń.</li>
+			<li><strong>not</strong> - operator służy do negowania wyniku całego 
+          wyrażenia. Negowanie polega na odwróceniu wartość, kiedy mamy 
+          <em>True</em> to po zanegowaniu otrzymamy <em>False</em> i vice 
+          versa.</li>
 		</ul>
 <pre class="code-block">
 age = 19
@@ -552,7 +674,10 @@ age = 19
 True
 </pre>
 		<p>
-			Słowa kluczowego <code class="code-inline">in</code> nie wykorzystujemy tylko w pętli for, możemy również je wykorzystać do testu warunkowego, w którym to możemy określić czy dana wartość znajduje się na liście.
+			Słowa kluczowego <code class="code-inline">in</code> nie wykorzystujemy 
+      tylko w pętli <em>for</em>, możemy również je wykorzystać do wyrażenia 
+      warunkowego, w którym to możemy określić czy dana wartość znajduje się na
+      liście.
 		</p>
 <pre class="code-block">
 &gt;&gt;&gt;  pojazdy = ['audi', 'bmw', 'Kamaz']
@@ -560,24 +685,34 @@ True
 True
 </pre>
 		<p>
-			Dodając słowo kluczowe <code class="code-inline">not</code> przed słowem <em>in</em> możemy sprawdzić czy danej wartości nie ma na liście
+			Dodając słowo kluczowe <code class="code-inline">not</code> przed słowem 
+      <em>in</em> możemy sprawdzić czy danej wartości nie ma na liście.
 		</p>
 <pre class="code-block">
 pojazdy = ['audi', 'bmw', 'Kamaz']
 'audi' not in pojazdy
 False
 </pre>
-		<p>&nbsp;</p>
-		<h2>Instrukcja if</h2>
+		<h1 id="10.ifinstruction">10. Konstrukcja if</h1>
 		<p>
-			Oczywiście do sterowania programu za pomocą testów warunkowych służy polecenie <strong>if</strong>, które jest częścią dużej konstrukcji warunkowej, składającej się z polecenia <em>if</em>, rozpoczynającego całą konstrukcje i definiującego pierwszy test warunkowy, jeśli test zwrócić wartość <em>True</em> zostanie wykonany blok kodu instrukcji <em>if</em>
+			Oczywiście do sterowania wykonaniem programu za pomocą testów warunkowych
+      służy 
+      instrukcja <strong>if</strong>, które jest częścią dużej konstrukcji
+      warunkowej, składającej się z polecenia <em>if</em>, rozpoczynającego 
+      całą konstrukcje i definiującego pierwszy test warunkowy, jeśli test 
+      zwrócić wartość <em>True</em> zostanie wykonany blok kodu instrukcji 
+      <em>if</em>.
 		</p>
 <pre class="code-block">
 if test_warunkowy:
 	#blok_kodu_instrukcji_if
 </pre>
 		<p>
-			A co jeśli test warunkowy zwróci wartość <em>False</em>, w tym wypadku chcielibyśmy poddać wykonanie programu jeszcze jednemu warunkowi. Do tego celu służy druga część konstrukcji warunkowej. Konstrukcja <strong>if-elif</strong>, dlaczego <em>if-elif</em>, a nie samo elif. Wprowadzony tu podział ma charakter wyłącznie dydaktyczny tak naprawdę <em>if-elif-else</em> to jedno polecenie warunkowe, pozostałych dwóch części nie można użyć osobno bez polecenia <em>if</em>. Jednak możemy stosować wariacje <em>if-elif</em>, lub <em>if-else</em>.
+			A co jeśli test warunkowy zwróci wartość <em>False</em>, w tym wypadku 
+      możemy poddać wykonanie programu jeszcze jednemu warunkowi za pomocą
+      instrukcji <strong>elif</strong> lub za pomocą ogólnego bloku
+      przeznaczonego dla tego przypadku - <strong>else</strong>. Powiedzmy, że
+      chcemy sprawdzić jeszcze jeden warunek.
 		</p>
 <pre class="code-block">
 if test_warunkowy:
@@ -586,15 +721,27 @@ elif test_warunkowy2:
 	#blok_kodu_instrukcji_elif
 </pre>
 		<p>
-			Co jeśli oba warunki zawiodą to powinniśmy zdefiniować kod blok kodu dla takiej sytuacji. Z racji tego iż można pominąć w Pythonie blok <strong>else</strong>, ja zachęcam do jego stosowania. Autor książki podaje że:
+			Co jeśli oba warunki zawiodą to powinniśmy zdefiniować kod blok kodu dla 
+      takiej sytuacji. Z racji tego iż można pominąć w Pythonie blok 
+      <strong>else</strong>, ja zachęcam do jego stosowania. Autor książki 
+      podaje że:
 		</p>
 		<blockquote>
 			<p>
-				Blok else jest wykorzystywany w sytuacji, gdy nie został spełniony żaden warunek z warunków wcześniej zdefiniowanych za pomocą poleceń <em>if</em> lub <em>elif</em>. Brak spełnienia warunku może wynikać z podania nieprawidłowych danych lub danych o złośliwym działaniu. Jeżeli istnieje konkretny, ostateczny warunek do sprawdzenia, rozważ użycie bloku <em>elif</em> i całkowite pominięcie bloku <em>else</em>. W ten sposób zyskasz absolutną pewność, że kod będzie wykonywany jedynie po spełnieniu oczekiwanych warunków.
+				Blok else jest wykorzystywany w sytuacji, gdy nie został spełniony 
+        żaden warunek z warunków wcześniej zdefiniowanych za pomocą poleceń 
+        <em>if</em> lub <em>elif</em>. Brak spełnienia warunku może wynikać z 
+        podania nieprawidłowych danych lub danych o złośliwym działaniu. 
+        Jeżeli istnieje konkretny, ostateczny warunek do sprawdzenia, rozważ 
+        użycie bloku <em>elif</em> i całkowite pominięcie bloku <em>else</em>.
+        W ten sposób zyskasz absolutną pewność, że kod będzie wykonywany 
+        jedynie po spełnieniu oczekiwanych warunków.
 			</p>
 		</blockquote>
 		<p>
-			Moim zdaniem blok domyślny przy nie spełnieniu żadnego warunku, daje nam szanse na reakcje na nieprawidłowe dane wejściowe. Najprościej jeśli nie spełniony został żaden warunek to kończymy działanie programu.
+			Moim zdaniem blok domyślny przy nie spełnieniu żadnego warunku, daje nam 
+      szanse na reakcje na nieprawidłowe dane wejściowe. Najprościej jeśli nie 
+      spełniony został żaden warunek to kończymy działanie programu.
 		</p>
 <pre class="code-block">
 if test_warunkowy:
@@ -605,9 +752,10 @@ else:
 	#blok_kodu_else
 </pre>
 		<p>
-			Przydatną rzeczą jaką możemy zrobić z poleceniem <code class="code-inline">if</code> jest <strong>sprawdzenie przed rozpoczęciem pracy z listą, czy lista aby nie jest pusta</strong>.
+			Przydatną rzeczą jaką możemy zrobić z poleceniem 
+      <code class="code-inline">if</code> jest sprawdzenie przed rozpoczęciem 
+      pracy z listą, czy lista aby nie jest pusta.
 		</p>
-
 <pre class="code-block">
 cars=[]
 
@@ -617,38 +765,46 @@ if cars:
 else:
 	print("Lista jest pusta")
 </pre>
-
 		<p>
-			Jak widać powyżej, aby sprawdzić czy lista jest pusta w Pythonie wystarczy podać jej nazwę w miejscu testu warunkowego.
+			Jak widać powyżej, aby sprawdzić czy lista jest pusta w Pythonie 
+      wystarczy podać jej nazwę w miejscu testu warunkowego.
 		</p>
-		<p>&nbsp;</p>
-		<h2>Słowniki</h2>
+		<h1 id="11.dictionaries">11. Słowniki</h1>
 		<p>
-			<strong>Słowniki </strong>przypominają trochę format JSON zaimplementowany do języka programowania. Najprostszy słownik wygląda tak:
+			<strong>Słowniki </strong>przypominają trochę format JSON 
+      zaimplementowany do języka programowania. Najprostszy słownik wygląda 
+      tak:
 		</p>
 <pre class="code-block">
 miasto1 = { 'kraj': 'Polska', 'powierzchnia': 517.14, 'populacja': 1_790_658, }
 </pre>
 		<p>
-			Nie, <strong>przecinek na końcu</strong> nie jest błędem. wskazuje tylko że do słownika mogą zostać wprowadzone nowe <strong>pary klucz-wartość</strong>. <strong>Kluczem</strong> określamy wartość występującą w słowniku, zawsze ujętą w apostrofy lub cudzysłowie, z dwukropkiem na końcu, dzięki kluczowi będziemy odwoływać się do wartości pary. Dostęp do dowolnej wartości słownika:
+			Nie, przecinek na końcu nie jest błędem. Wskazuje tylko, że do słownika 
+      mogą zostać wprowadzone nowe <strong>pary klucz-wartość</strong>. 
+      <strong>Kluczem</strong> określamy wartość występującą w słowniku, 
+      zawsze ujętą w apostrofy lub cudzysłowie, z dwukropkiem na końcu, dzięki 
+      kluczowi będziemy odwoływać się do wartości pary. Dostęp do dowolnej 
+      wartości słownika:
 		</p>
 <pre class="code-block">
 miasto1 = { 'kraj': 'Polska', 'powierzchnia': 517.14, 'populacja': 1_790_658, }
 print(miasto1['powierzchnia'])
 </pre>
 		<p>
-			Kiedy chcemy uzyskać dostęp do konkretnej wartości to przy słowniku, klucz zapisujemy w nawiasie kwadratowym. Analogicznie do tablic asocjacyjnych w innych językach programowania.
+			Kiedy chcemy uzyskać dostęp do konkretnej wartości to przy słowniku, 
+      klucz zapisujemy w nawiasie kwadratowym. Analogicznie do tablic 
+      asocjacyjnych w innych językach programowania.
 		</p>
 		<p>
-			<strong>Pusty słownik</strong> definiujemy podobnie jak pustą listę tylko inne są znaki.
+			Pusty słownik definiujemy podobnie jak pustą listę tylko
+      inne są znaki.
 		</p>
-
 <pre class="code-block">
 empty_dict={}
 </pre>
-
 		<p>
-			Jeśli chcemy <strong>zmodyfikować wartość</strong> z jakieś pary, to tak samo jak w przypadku list, tylko że klucz zapisujemy w miejscu indeksu.
+			Jeśli chcemy zmodyfikować wartość z jakieś pary, to tak 
+      samo jak w przypadku list, tylko że klucz zapisujemy w miejscu indeksu.
 		</p>
 <pre class="code-block">
 miasto1['kraj'] = 'Polska'

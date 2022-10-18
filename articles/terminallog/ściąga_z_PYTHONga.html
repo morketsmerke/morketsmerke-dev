@@ -810,16 +810,21 @@ empty_dict={}
 miasto1['kraj'] = 'Polska'
 </pre>
 		<p>
-			Kiedy jakieś dane w słowniku staną nam się zbędne, możemy je usunąć przy pomocy polecenia <code class="code-inline">del</code>.
+			Kiedy jakieś dane w słowniku staną nam się zbędne, możemy je usunąć przy 
+      pomocy polecenia <code class="code-inline">del</code>.
 		</p>
 <pre class="code-block">
 del miasto1['populacja']
 </pre>
+    <h2 id="11.1.addingnewvalues">11.1. Dodawanie nowych wartości do słownika</h2>
 		<p>
-			<strong>Dodawanie nowych par klucz-wartość</strong> jest analogiczne do modyfikacji. Jeśli będzie modyfikować wartość pod kluczem, który nie istnieje w słowniku to zostanie ona dodana jako nowa para.
+			Dodawanie nowych par klucz-wartość jest analogiczne do modyfikacji. Jeśli
+      będzie modyfikować wartość pod kluczem, który nie istnieje w słowniku to 
+      zostanie ona dodana jako nowa para.
 		</p>
 		<p>
-			Co jeśli podczas pracy z słownikiem odwołamy się do klucza, który nie istnieje ? Python zwróci błąd.
+			Co jeśli podczas pracy z słownikiem odwołamy się do klucza, który nie 
+      istnieje? Python zwróci błąd.
 		</p>
 <pre class="code-block">
 &gt;&gt;&gt; print(miasto1['gestosc'])
@@ -828,7 +833,13 @@ Traceback (most recent call last):
 KeyError: 'gestosc'
 </pre>
 		<p>
-			Python daje możliwość użycia specjalnej metody <code class="code-inline">get()</code>, która jest wstanie zwrócić wartość podanego jako argument klucza, lub też zdefiniowanego jako kolejny argument komunikatu, w momencie kiedy dany klucz nie istnieje. Komunikat nie jest wymagany w przypadku jego braku nie zostanie nam nic zwrócone. Metoda <em>get()</em> nadaje się jako test czy dany klucz istnieje.
+			Python daje możliwość użycia specjalnej metody 
+      <code class="code-inline">get()</code>, która jest wstanie zwrócić 
+      wartość podanego jako argument klucza, lub też zdefiniowanego jako 
+      kolejny argument komunikatu, w momencie kiedy dany klucz nie istnieje. 
+      Komunikat nie jest wymagany w przypadku jego braku nie zostanie nam nic 
+      zwrócone. Metoda <em>get()</em> nadaje się jako test czy dany klucz 
+      istnieje.
 		</p>
 <pre class="code-block">
 if miasto1.get('gestosc'):
@@ -836,8 +847,11 @@ if miasto1.get('gestosc'):
 else:
 	#Gęstość nie istnieje, zrób to i to
 </pre>
+    <h2 id="11.3.interationthroughthedictionary">11.3. Iteracja przez słownik</h2>
 		<p>
-			<strong>Iteracji przez słownik</strong> w sumie są trzy rodzaje: przez pary, przez klucze i przez wartości. Przez pary, będzie prawdopodobnie najpopularniejszą z wszystkich rodzajów.
+			Iteracji przez słownik w sumie są trzy rodzaje: przez pary, przez klucze 
+      i przez wartości. Przez pary, będzie prawdopodobnie najpopularniejszą z 
+      wszystkich rodzajów.
 		</p>
 <pre class="code-block">
 miasto1 = { 'kraj': 'Polska', 'powierzchnia': 517.14, 'populacja': 1_790_658, }
@@ -847,10 +861,15 @@ for key,value in miasto1.items():
 	print(f"Wartość: {value}\n")
 </pre>
 		<p>
-			Metoda <strong>items()</strong> w dużym skrócie rozbije na dwie listy wszystkie klucze i wszystkie wartości, i to na nich pętla for w pamięci będzie przeprowadzać iteracje.
+			Metoda <code class="code-inline">items()</code> w dużym skrócie rozbije
+      na dwie listy wszystkie klucze i wszystkie wartości, i to na nich pętla 
+      <em>for</em> w pamięci będzie przeprowadzać iteracje.
 		</p>
+    <h3 id="11.3.1.iterationthroughkeysandvalues">11.3.1. Iteracja przez klucze i wartości.</h3>
 		<p>
-			<strong>Iteracja przez klucze</strong>, zadziała na podobnej zasadzie co przez parę jednak do iteracji wykorzysta tylko jedną listę, listę z kluczami. Analogicznie z <strong>iteracją przez wartości</strong> tylko że listę z wartościami.
+			Iteracja przez klucze, zadziała na podobnej zasadzie co przez parę jednak
+      do iteracji wykorzystuje się tylko jedną listę, listę z kluczami. 
+      Analogicznie z iteracją przez wartości tylko że listę z wartościami.
 		</p>
 <pre class="code-block">
 miasto1 = { 'kraj': 'Polska', 'powierzchnia': 517.14, 'populacja': 1_790_658, }
@@ -862,16 +881,28 @@ for value in miasto1.values():
 	print(f"Wartość: {value}\n")
 </pre>
 		<p>
-			Z racji tego iż <code class="code-inline">keys()</code> i <code class="code-inline">values()</code> tworzą listy to działają z słowem kluczowym <code class="code-inline">in</code>.
+			Metody <code class="code-inline">keys()</code> i 
+      <code class="code-inline">values()</code> tworzą listy, dlatego też
+      możemy przeprowadzić na nich iterację z wykorzystaniem pętli <em>for</em>
+      oraz <code class="code-inline">in</code>.
 		</p>
 		<p>
-			Wydania Pythona począwszy od 3.7, słownik zachowuje kolejność, w której były dodawane pary. Podczas pracy z słownikiem jego domyślną uporządkowaniem jest kolejność dodawania par.
+			W wydaniach Pythona począwszy od 3.7, słownik zachowuje kolejność, w 
+      której były dodawane pary. Podczas pracy z słownikiem jego domyślną 
+      uporządkowaniem jest kolejność dodawania par.
 		</p>
 		<p>
-			Listę kluczy możemy obudować funkcją <em>sorted()</em> aby je uporządkować.
+			Listę kluczy możemy obudować funkcją <em>sorted()</em> aby je 
+      uporządkować.
 		</p>
+    <h1 id="12.collections">12. Zbiory</h1>
 		<p>
-			Klucze muszą być unikatowe, aby wartości się na siebie nie nakładały. Ale wśród wartości już takich wymagań nie ma. Python udostępnia funkcję <strong>set()</strong>, która<strong> na podstawie przekazanej listy</strong> <strong>tworzy zbiór z unikatowych elementów</strong>. Zbiór jest składniowo bardzo podobny do słownika, jednak zawiera sam wartości, nie zawiera on żadnych danych porządkowych.
+			Klucze muszą być unikatowe, aby wartości się na siebie nie nakładały. Ale
+      wśród wartości już takich wymagań nie ma. Python udostępnia funkcję 
+      <strong>set()</strong>, która na podstawie przekazanej listy tworzy zbiór
+      z unikatowych elementów. Zbiór jest składniowo bardzo podobny do 
+      słownika, jednak zawiera sam wartości, nie zawiera on żadnych danych 
+      porządkowych.
 		</p>
 <pre class="code-block">
 jezyki = {'python', 'ruby', 'c', 'python'}
@@ -879,17 +910,59 @@ jezyki = {'python', 'ruby', 'c', 'python'}
 {'python', 'ruby', 'c'}
 </pre>
 		<p>
-			Sposobem na to aby uzyskać dostęp do danych zapisanych na zbiorze jest iteracja lub konwersja na listę za pomocą funkcji <em>sorted()</em>. Należy pamiętać aby zapisać gdzieś listę zwróconą przez <em>sorted()</em>
+			Sposobem na to aby uzyskać dostęp do danych zapisanych na zbiorze jest 
+      iteracja lub konwersja na listę za pomocą funkcji <em>sorted()</em>. 
+      Należy pamiętać aby zapisać gdzieś listę zwróconą przez <em>sorted()</em>
+		</p>
+    <h1 id="14.nestingindatatypes">14. Zagnieżdznie złożonych typów danych</h1>
+		<p>
+			Przedstawienie słowników umożliwia zaprezentowanie 
+      <strong>zagnieżdżania</strong>. Pozwala ono na umieszczenie jednego 
+      złożonego typu w drugim, możemy stworzyć między innymi 
+      listę słowników, listę w słowniku czy też słownik w słowniku. Listę 
+      słowników najlepiej rozpocząć od pustej listy, następnie czy to w skutek 
+      iteracji czy danych napływających do programu tworzyć nowy słownik i 
+      załadować go do listy za pomocą metody <em>append()</em>. Trochę 
+      eksperymentując zauważyłem ciekawą rzecz, mianowicie kiedy stworzyłem 
+      sobie model słownika powyżej iteracji, i chciałem odpowiednio według 
+      testów warunkowych modyfikować wartości modelu, to na listę trafiała 
+      tylko pierwsza aktualizacja przez całą iterację. Dostęp do danych 
+      zagnieżdżonych wygląda trochę jak tablice wielowymiarowe. 
+      W zależności od tego czy jest to lista słowników, to na początku podajemy
+      indeks a później klucz, w przypadku zagnieżdżenia listy w słowniku, 
+      sytuacja jest odwrotna.
+    </p>
+    <p>
+			Ostatnim przypadkiem jest słownik w słowniku, tu podajemy klucz - klucz. 
+      Do operacji na zagnieżdżeniach warto wykorzystać metody stosowane do 
+      iteracji na słownikach. Ważną rzeczą stosowaną przy zagnieżdżeniach jest 
+      ich jak największe ograniczenie, jeśli algorytm zakłada większe 
+      zagnieżdżenie niż powyżej jednego poziomu (tj. każdy klucz zawiera 
+      pojedynczą listę lub każdy element listy zawiera słownik bez zagnieżdżeń),
+      to oznacza że ma on poważne wady konstrukcyjne i na pewno jest jakiś 
+      lepszy sposób na rozwiązanie tego problemu.
+		</p>
+    <h1 id="15.gettingdatafromuser">15. Pobieranie danych od użytkownika.</h1>
+		<p>
+			Pobieranie danych od użytkowników jest realizowane dzięki funkcji 
+      <code class="code-inline">input()</code>. Funkcja ta jako argument 
+      przyjmuje, komunikat zachęcający użytkownika do wpisania danych tzw. 
+      znak zachęty. Dane wpisane przez użytkownika są zwracane w postaci ciągu
+      tekstowego.
 		</p>
 		<p>
-			Przedstawienie słowników umożliwia zaprezentowanie <strong>zagnieżdżania</strong>. Pozwala ono na umieszczenie jednego złożonego typu w drugim, możemy stworzyć między innymi <strong>listę słowników</strong>, <strong>listę w słowniku</strong> czy też <strong>słownik w słowniku</strong>. Listę słowników najlepiej rozpocząć od pustej listy, następnie czy to w skutek iteracji czy danych napływających do programu tworzyć nowy słownik i załadować go do listy za pomocą metody <em>append()</em>. Trochę eksperymentując zauważyłem ciekawą rzecz, mianowicie kiedy stworzyłem sobie model słownika powyżej iteracji, i chciałem odpowiednio według testów warunkowych modyfikować wartości modelu, to na listę trafiała tylko pierwsza aktualizacja przez całą iterację. Dostęp do danych zagnieżdżonych wygląda trochę jak tablice wielowymiarowe. W zależności od tego czy jest lista słowników, to na początku podajemy indeks a później klucz, w przypadku zagnieżdżenia listy w słowniku, sytuacja jest odwrotna.
-			Ostatnim przypadkiem jest słownik w słowniku, tu podajemy klucz - klucz. Do operacji na zagnieżdżeniach warto wykorzystać metody stosowane do iteracji na słownikach. Ważną rzeczą stosowaną przy zagnieżdżeniach jest ich jak największe ograniczenie, jeśli algorytm zakłada większe zagnieżdżenie niż powyżej jednego poziomu (tj. każdy klucz zawiera pojedynczą listę lub każdy element listy zawiera słownik bez zagnieżdżeń), to oznacza że ma on poważne wady konstrukcyjne i na pewno jest jakiś lepszy sposób na rozwiązanie tego problemu.
-		</p>
-		<p>
-			Pobieranie danych od użytkowników jest realizowane dzięki funkcji <strong>input()</strong>. Funkcja ta jako argument przyjmuje, komunikat zachęcający użytkownika do wpisania danych tzw. <strong>znak zachęty</strong>. Dane wpisane przez użytkownika są zwracane w postaci ciągu tekstowego.
-		</p>
-		<p>
-			Musimy pobrać od użytkownika, dane do obliczeń, jednak wartością zwracaną przez funkcje <em>input()</em> jest ciąg tekstowy. W tym wypadku musimy dokonać konwersji na typ całkowity. Odpowiada za to funkcja <strong>int()</strong>, której wartością zwracaną jest liczba całkowita, a argumentem dowolna wartość przypominająca liczbę, która ma zostać skonwertowana ja postać liczby całkowitej. Do obliczeń nie zawsze będziemy potrzebowali wartości całkowitej, może zdarzyć się że będziemy potrzebować wartości zmiennoprzecinkowej, aby uzyskać wartość w postaci liczby zmiennoprzecinkowej należy użyć funkcji <strong>float()</strong>. Te konwersje można odwrócić uzyskując ciąg tekstowy z liczb za pomocą funkcji <strong>str()</strong>.
+			Jeśli musimy pobrać od użytkownika dane do obliczeń, to wartością 
+      zwracaną przez funkcje <em>input()</em> jest ciąg tekstowy. W tym wypadku
+      musimy dokonać konwersji na typ całkowity. Odpowiada za to funkcja 
+      <code class="code-inline">int()</code>, której wartością zwracaną jest
+      liczba całkowita, a argumentem dowolna wartość przypominająca liczbę, 
+      która ma zostać skonwertowana ja postać liczby całkowitej. Do obliczeń 
+      nie zawsze będziemy potrzebowali wartości całkowitej. Może zdarzyć się,
+      że będziemy potrzebować wartości zmiennoprzecinkowej, aby uzyskać wartość
+      w postaci liczby zmiennoprzecinkowej należy użyć funkcji 
+      <code class="code-inline">float()</code>. Te konwersje można odwrócić 
+      uzyskując ciąg tekstowy z liczb za pomocą funkcji 
+      <code class="code-inline">str()</code>.
 		</p>
 <pre  class="code-block">
 &gt;&gt;&gt; age = input("Ile masz lat?")
@@ -903,7 +976,9 @@ Ile masz lat? 12
 False
 </pre>
 		<p>
-			Konwersje można skrócić do jednej linii, obudowując funkcję <code class="code-inline">input()</code> funkcją funkcją <code class="code-inline">int()</code>.
+			Konwersje można skrócić do jednej linii, obudowując funkcję 
+      <code class="code-inline">input()</code> funkcją funkcją 
+      <code class="code-inline">int()</code>.
 		</p>
 <pre class="code-block">
 age = int(input("Ile masz lat? "))
@@ -913,8 +988,14 @@ Ile masz lat? 18
 &gt;&gt;&gt; age &gt;= 18
 True
 </pre>
+    <h1 id="16.modulooperator">16. Operator modulo (reszty z dzielenia).</h1>
 		<p>
-			Przydatną rzeczą jeśli chodzi o obliczenia liczbowe wykorzystywane w programowaniu na pewno jest <strong>operator modulo (<code class="code-inline">%</code>)</strong>. Przyjmuje dwa operandy (dzielną i dzielnik), zwraca resztę z dzielenia dzielnej przez dzielnik. Najprostszym przykładem użycia operatora modulo (<strong>%</strong>) jest sprawdzenie czy dana wartość jest parzysta czy też nie.
+			Przydatną rzeczą jeśli chodzi o obliczenia liczbowe wykorzystywane w 
+      programowaniu napewno jest operator modulo (<code class="code-inline">%</code>). 
+      Przyjmuje dwa operandy (dzielną i dzielnik), zwraca resztę z dzielenia 
+      dzielnej przez dzielnik. Najprostszym przykładem użycia operatora modulo 
+      (<strong>%</strong>) jest sprawdzenie czy dana wartość jest parzysta czy 
+      też nie.
 		</p>
 <pre class="code-block">
 if number % 2 == 0:
@@ -922,19 +1003,23 @@ if number % 2 == 0:
 else:
 	print(f"{number} nie jest liczbą parzystą.")
 </pre>
-		<p>&nbsp;</p>
-		<h2>Pętla while</h2>
+		<h1 id="17.whileloop">17. Pętla while.</h1>
 		<p>
-			Jeśli potrzebujemy pętli która działa do pewnego momentu, np. dopóki dana zmienna ma wartość taką a taką, to wtedy musimy skorzystać z pętli <strong>while</strong>. Pętla ta działa dopóty, dopóki warunek umieszczony obok słowa kluczowego <code class="code-inline">while</code> będzie zwracał wartość <em>True</em>. Pętla <em>while</em> nie posiada wbudowanego licznika, dlatego takowy licznik musimy sobie zbudować sami.
+			Jeśli potrzebujemy pętli która działa do pewnego momentu, np. dopóki dana
+      zmienna ma wartość taką a taką, to wtedy musimy skorzystać z pętli 
+      <strong>while</strong>. Pętla ta działa dopóty, dopóki warunek 
+      umieszczony obok słowa kluczowego <code class="code-inline">while</code>
+      będzie zwracał wartość <em>True</em>. Pętla <em>while</em> nie posiada 
+      wbudowanego licznika, dlatego takowy licznik musimy sobie zbudować sami.
 		</p>
 <pre class="code-block">
 number=1
 while number &gt;= 10:
 	if number % 2 == 0:
 		print(f"{number} jest parzysta.")
-    	else:
+  else:
 		print(f"{number} nie jest parzysta.")
-    	number += 1
+  number += 1
 </pre>
 		<p>
 			Wynik działania powyższego przykładu:
@@ -952,45 +1037,100 @@ while number &gt;= 10:
 10 jest parzysta.
 </pre>
 		<p>
-			Zmienna number przybrała w tym przykładzie rolę danych, na których operujemy oraz licznika.
+			Zmienna number przybrała w tym przykładzie rolę danych, na których 
+      operujemy oraz licznika.
 		</p>
 		<p>
-			Czasami może zajść potrzeba aby kontrolować wykonanie programu za pomocą pętli while. Powiedzmy że mamy aplikacje, która wyświetla nam listę opcji, następnie prosi nas jej wybór, wybieramy jedną z opcji, następnie po wykonaniu czynności dedykowanych dla tych opcji wracamy do menu, gdzie znów możemy wybrać jedną z opcji lub zakończyć program. Konstrukcja takie aplikacji może opierać się na pętli <em>while</em>, której warunek zwraca wartość <em>True</em>, kiedy wybieramy opcje "Exit/Wyjście", no właśnie co się dzieje? Możliwości są trzy.
+			Czasami może zajść potrzeba aby kontrolować wykonanie programu za pomocą 
+      pętli <em>while</em>. Powiedzmy że mamy aplikacje, która wyświetla nam 
+      listę opcji, następnie prosi nas jej wybór, wybieramy jedną z opcji, 
+      następnie po wykonaniu czynności dedykowanych dla tych opcji wracamy do
+      menu, gdzie znów możemy wybrać jedną z opcji lub zakończyć program. 
+      Konstrukcja takie aplikacji może opierać się na pętli <em>while</em>, 
+      której warunek zwraca wartość <em>True</em>, kiedy wybieramy opcje 
+      "Exit/Wyjście", no właśnie co się dzieje? Możliwości są trzy.
 		</p>
 		<ul>
-			<li>Możliwość 1: Wybór konkretnej opcji przypisuje do zmiennej określoną wartość, pętla wykonuje się dopóty, dopóki wyżej wymieniona zmienna  jest nie równa wartości przypisywanej po wyborze opcji "Exit/Wyjście".</li>
-			<li>Możliwość 2: Przed rozpoczęciem pętli deklarowana zmienna tzw. flaga, której przypisywana jest wartość <em>True</em>. Pętla wykonuje się do momentu gdy wartość wartość flagi jest równa <em>True</em>. Wybranie opcji "Exit/Wyjście", zmienia wartość flagi na <em>False</em>, co powoduje nie spełnienie warunku, czego następstwem jest przerwanie pracy pętli.</li>
-			<li>Możliwość 3: Kod zdefiniowany pod opcją "Exit/Wyjście" zawiera tylko jedną instrukcję słowo kluczowe <strong>break</strong>. Instrukcja ta powoduje zatrzymanie wykonania bloku kodu i przejście wykonania na pierwszą instrukcję po bloku kodu pętli.</li>
+			<li>Możliwość 1: Wybór konkretnej opcji przypisuje do zmiennej określoną 
+          wartość, pętla wykonuje się dopóty, dopóki wyżej wymieniona zmienna 
+          jest nie równa wartości przypisywanej po wyborze opcji 
+          "Exit/Wyjście".</li>
+			<li>Możliwość 2: Przed rozpoczęciem pętli deklarowana zmienna tzw. flaga,
+          której przypisywana jest wartość <em>True</em>. Pętla wykonuje się do
+          momentu gdy wartość wartość flagi jest równa <em>True</em>. Wybranie 
+          opcji "Exit/Wyjście", zmienia wartość flagi na <em>False</em>, co 
+          powoduje nie spełnienie warunku, czego następstwem jest przerwanie 
+          pracy pętli.</li>
+			<li>Możliwość 3: Kod zdefiniowany pod opcją "Exit/Wyjście" zawiera tylko
+          jedną instrukcję słowo kluczowe 
+          <code class="code-inline">break</code>. Instrukcja ta
+          powoduje zatrzymanie wykonania bloku kodu i przejście wykonania na 
+          pierwszą instrukcję po bloku kodu pętli.</li>
 		</ul>
 		<p>
-			Istotną rzeczą dla każdej iteracji jest możliwość jest zrestartowania iteracji, kiedy gdzieś w kodzie pętli zostanie umieszczone słowo kluczowe <strong>continue</strong>, spowoduje powrót do sprawdzenia warunku a następnie wykonania bloku pętli od początku. To polecenie przydatne może być gdy chcemy pominąć jakieś elementy
+			Istotną rzeczą dla każdej iteracji jest możliwość jej zrestartowania, 
+      kiedy gdzieś w kodzie pętli zostanie umieszczone słowo kluczowe 
+      <code class="code-inline">continue</code>, spowoduje powrót do 
+      sprawdzenia warunku a następnie wykonania bloku pętli od początku. To 
+      polecenie przydatne może być gdy chcemy pominąć jakieś elementy
 		</p>
 		<p>
-			Przy pracy z pętlami while warto pamiętać o prawidłowym warunku, zmianie licznika czy o zakończeniu pętli w odpowiednim momencie. Patrząc na pętle, o której mówiłem akapit wcześniej, odnośnie sterowania programem to są to pętle, które bez odpowiednich mechanizmów zatrzymujących będą wykonywać się w nieskończoność. Warunek nie zawiera licznika. Zmienna w teście warunkowym bez mechanizmów stopujących  nie zmieni swojej wartości. Chociaż i w pętlach <em>while</em> opartych na liczniki też łatwo o nieskończoną pętle. Wystarczy zapomnieć zmienić licznik na końcu bloku.
+			Przy pracy z pętlami while warto pamiętać o prawidłowym warunku, zmianie
+      licznika czy o zakończeniu pętli w odpowiednim momencie. Patrząc na pętle,
+      o której mówiłem akapit wcześniej, odnośnie sterowania programem to są to
+      pętle, które bez odpowiednich mechanizmów zatrzymujących będą wykonywać
+      się w nieskończoność. Warunek nie zawiera licznika. Zmienna w teście 
+      warunkowym bez mechanizmów stopujących nie zmieni swojej wartości. 
+      Chociaż i w pętlach <em>while</em> opartych na licznikach też łatwo o 
+      nieskończoną pętle. Wystarczy zapomnieć zmienić licznik na końcu bloku.
 		</p>
 		<p>
-			Pętla <em>while</em> również nadaje się do pracy z listami czy słownikami, jedną taką ciekawą rzeczą jeśli chodzi o listy jest taki mechanizm, że jeśli umieścimy w warunku pętli nazwę listy, to  pętla będzie wykonywać się dopóki na tej liście będą jakieś elementy, mechanizmem kontroli tutaj będzie pobieranie elementów listy za pomocą metody <em>pop()</em>. Jak w każdym innym teście warunkowym w warunku pętli <em>while</em> również istnieje możliwość użycia operatora <em>in</em>
+			Pętla <em>while</em> również nadaje się do pracy z listami czy słownikami,
+      jedną taką ciekawą rzeczą jeśli chodzi o listy jest taki mechanizm, że 
+      jeśli umieścimy w warunku pętli nazwę listy, to pętla będzie wykonywać 
+      się dopóki na tej liście będą jakieś elementy, mechanizmem kontroli tutaj
+      będzie pobieranie elementów listy za pomocą metody <em>pop()</em>. Jak w 
+      każdym innym teście warunkowym w warunku pętli <em>while</em> również 
+      istnieje możliwość użycia operatora <em>in</em>
 		</p>
-		<p>&nbsp;</p>
-		<h2>Funkcje</h2>
+		<h1 id="18.function">Funkcje</h1>
 		<p>
-			<strong>Funkcje</strong> służą do przygotowania bloku kodu , który możemy później wykorzystać wielokrotnie w części głównej programu. Funkcje ułatwiają zarządzanie kodem, testowanie oraz ewentualne debugowanie z racji tego iż jest to wydzielony fragment kodu, który możemy wykonywać niezależnie od pozostałej części programu.
+			<strong>Funkcje</strong> służą do przygotowania bloku kodu , który możemy
+      później wykorzystać wielokrotnie w części głównej programu. Funkcje 
+      ułatwiają zarządzanie kodem, testowanie oraz ewentualne debugowanie z 
+      racji tego, iż jest to wydzielony fragment kodu, który możemy wykonywać 
+      niezależnie od pozostałej części programu.
 		</p>
+    <h2 id="18.1.functiondefinition">18.1. Definiowanie funkcji</h2>
 		<p>
-			<strong>Definiowane funkcji </strong>rozpoczynamy od słowa kluczowego <code class="code-inline">def</code> następnie podajemy nazwę funkcji po nazwie umieszczamy <span style="text-decoration: underline;">bez spacji</span> parę nawiasów okrągłych po nawiasach oczywiście występuje dwukropek. W nowej linii od pojedynczego tabulatora rozpoczynamy blok kodu funkcji.
+			Definiowane funkcji rozpoczynamy od słowa kluczowego 
+      <code class="code-inline">def</code> następnie podajemy nazwę funkcji po 
+      nazwie umieszczamy <span style="text-decoration: underline;">bez spacji</span>
+      parę nawiasów okrągłych po nawiasach oczywiście występuje dwukropek. 
+      W nowej linii od pojedynczego tabulatora rozpoczynamy blok kodu funkcji.
 		</p>
+    <h3 id="18.1.1.commentsinfunction">18.1.1 Komentarze w funkcji</h3>
 		<p>
-			<strong>Komentarze w funkcji</strong> umieszcza się jako tzw. <strong>docstring</strong>, którego zadaniem jest opis działania funkcji. Wszystko co zostało ujęte pomiędzy parą potrójnych cudzysłowów <strong>("""...""")</strong> jest traktowane jako <em>docstring</em>.
+			Komentarze w funkcji umieszcza się jako tzw. <strong>docstring</strong>, 
+      którego zadaniem jest opis działania funkcji. Wszystko co zostało ujęte 
+      pomiędzy parą potrójnych cudzysłowów (<strong>"""..."""</strong>) jest 
+      traktowane jako <em>docstring</em>.
 		</p>
 <pre class="code-block">
 def hello_user():
 	"""To jest funkcja, która wita użytkownika"""
 </pre>
 		<p>
-			<em>Docstring</em> wykorzystywany jest przez Python do tworzenia opisów funkcji podczas generowania dokumentacji dla poszczególnych projektów.
+			<em>Docstring</em> wykorzystywany jest przez Python do tworzenia opisów 
+      funkcji podczas generowania dokumentacji dla poszczególnych projektów.
 		</p>
+    <h3 id="18.1.2.functionparameters">18.1.2. Parametry funkcji</h3>
 		<p>
-			Bardziej zaawansowane funkcje, które mają nieco więcej czynności niż wypisane "Witaj świecie!",  zazwyczaj potrzebują jakiś danych z zewnątrz. Dane, <strong>parametry funkcji</strong> deklarujemy w nawiasie zaraz obok nazwy funkcji, w ten sposób zaznaczamy że nasza funkcją będzie wymagać jakiś informacji do działania.
+			Bardziej zaawansowane funkcje, które mają nieco więcej czynności niż 
+      wypisane "Witaj świecie!", zazwyczaj potrzebują jakiś danych z zewnątrz.
+      Dane, <strong>parametry funkcji</strong> deklarujemy w nawiasie zaraz 
+      obok nazwy funkcji, w ten sposób zaznaczamy że nasza funkcją będzie 
+      wymagać jakiś informacji do działania.
 		</p>
 <pre class="code-block">
 def hello_user(username):
@@ -998,14 +1138,24 @@ def hello_user(username):
 	print(f"Witaj, {username}!")
 </pre>
 		<p>
-			Prawdziwe dane przekazujemy w momencie wywołania funkcji w części głównej. <strong>Wywołanie funkcji</strong> jest realizowane poprzez podanie jej nazwy w raz parą nawiasów okrągłych, w których w zależności od definicji umieszczamy dane niezbędne do jej wykonania. Oczywiście jeśli funkcja nie potrzebuje żadnych danych, para nawiasów pozostaje pusta.
+			Prawdziwe dane przekazujemy w momencie wywołania funkcji w części głównej.
+      <strong>Wywołanie funkcji</strong> jest realizowane poprzez podanie jej 
+      nazwy w raz parą nawiasów okrągłych, w których w zależności od definicji
+      umieszczamy dane niezbędne do jej wykonania. Oczywiście jeśli funkcja nie
+      potrzebuje żadnych danych, para nawiasów pozostaje pusta.
 		</p>
 <pre class="code-block">
 uname = 'xf0r3m'
 hello_user(uname)
 </pre>
+    <h3 id="18.1.3.positionalarguments">18.1.3. Argumenty pozycjne</h3>
 		<p>
-			Zmienne lub też dane umieszczone w wywołaniu funkcji nazywamy <strong>argumentami</strong>. Argumenty może przekazać do funkcji na dwa różne sposoby. Pierwszy sposób to sposób klasyczny, sposób <strong>argumentów pozycyjnych</strong>, opera się on kolejności. W jakiej kolejności parametry zostały podane w definicji funkcji, to w takiej samej kolejności należy przekazać do funkcji argumenty.
+			Zmienne lub też dane umieszczone w wywołaniu funkcji nazywamy 
+      <strong>argumentami</strong>. Argumenty może przekazać do funkcji na dwa
+      różne sposoby. Pierwszy sposób to sposób klasyczny, sposób 
+      <strong>argumentów pozycyjnych</strong>, opera się on kolejności. 
+      W jakiej kolejności parametry zostały podane w definicji funkcji, to w 
+      takiej samej kolejności należy przekazać do funkcji argumenty.
 		</p>
 <pre class="code-block">
 def func1(para1, para2, para3):
@@ -1015,7 +1165,8 @@ func1('Ala', 'ma', 'kota')
 # Ala ma kota
 </pre>
 		<p>
-			Python nie zwróci błędu jeśli pomylimy kolejność. Ale wynik działania funkcji może być nieoczekiwany.
+			Python nie zwróci błędu jeśli pomylimy kolejność. Ale wynik działania 
+      funkcji może być nieoczekiwany.
 		</p>
 <pre class="code-block">
 def func1(para1, para2, para3):
@@ -1025,8 +1176,12 @@ def func1(para1, para2, para3):
 func1('kota', 'ma', 'Ala')
 # kota ma Ala
 </pre>
+    <h3 id"18.1.4.keywordsarguments">18.1.4. Argumenty w postaci słów kluczowych</h3>
 		<p>
-			Drugą metodą jest <strong>przekazywanie argumentów w postaci słów kluczowych</strong>. Opiera się ona zasadzie par "nazwa=wartość", w tym przypadku "parametr=argument". Tutaj kolejność nie ma znaczenia. Ponieważ już podczas wywołania przypisujemy parametrowi wartość <em>argumentu</em>.
+			Drugą metodą jest przekazywanie argumentów w postaci słów kluczowych. 
+      Opiera się ona zasadzie par "nazwa=wartość", w tym przypadku 
+      "parametr=argument". Tutaj kolejność nie ma znaczenia. Ponieważ już 
+      podczas wywołania przypisujemy parametrowi wartość <em>argumentu</em>.
 		</p>
 <pre class="code-block">
 def func1(para1, para2, para3):
@@ -1036,10 +1191,13 @@ func1(para3='kota', para1='Ala', para2='ma')
 # Ala ma kota
 </pre>
 		<p>
-			Może zdarzyć się że musimy przygotować funkcję dla typowych, ciągle powtarzających się danych, które mogli byśmy podać już podczas definicji funkcji. A jeśli zajdzie taka potrzeba będziemy mogli nadpisać <strong>wartość domyślną</strong> parametrów funkcji dla innych danych.
+			Może zdarzyć się że musimy przygotować funkcję dla typowych, ciągle 
+      powtarzających się danych, które mogli byśmy podać już podczas definicji
+      funkcji. A jeśli zajdzie taka potrzeba będziemy mogli nadpisać 
+      <strong>wartość domyślną</strong> parametrów funkcji dla innych danych.
 		</p>
 <pre class="code-block">
-def func1(para3, para1='Ala, para2='ma'):
+def func1(para3, para1='Ala', para2='ma'):
 	print(f"{para1} {para2} {para3}"
 
 func1('psa')
@@ -1053,10 +1211,17 @@ func1('w LoL-a', 'Tola', 'gra')
 # Tola gra w LoL-a
 </pre>
 		<p>
-			Jak można zauważyć parametry w definicji funkcji zmieniły kolejność, jest wymagane przez Python, aby parametry, które będą przekazywane jako argumenty pozycyjne zawsze były na pierwszym miejscu i tak też należy przekazywać argumenty.'
+			Jak można zauważyć parametry w definicji funkcji zmieniły kolejność, jest
+      wymagane przez Python, aby parametry, które będą przekazywane jako 
+      argumenty pozycyjne zawsze były na pierwszym miejscu i tak też należy 
+      przekazywać argumenty.
 		</p>
+    <h3 id="18.1.5.returnvaluesfromfunction">18.1.5. Zwracanie wartości przez funkcje</h3>
 		<p>
-			Funkcje często są wykorzystywane do obliczeń. Niestety co nam po obliczonych wartościach kiedy pozostają one w bloku kodu funkcji. Możemy oczywiście zwrócić wartość uzyskaną przez funkcje. Służy do tego słowo kluczowe <code class="code-inline">return</code>.
+			Funkcje często są wykorzystywane do obliczeń. Niestety co nam po 
+      obliczonych wartościach kiedy pozostają one w bloku kodu funkcji. Możemy 
+      oczywiście zwrócić wartość uzyskaną przez funkcje. Służy do tego słowo 
+      kluczowe <code class="code-inline">return</code>.
 		</p>
 <pre class="code-block">
 def pitagoras_need_c_square(a,b):
@@ -1067,10 +1232,14 @@ print(c_square)
 # 25
 </pre>
 		<p>
-			Jak widać przy zwrocie wartości wywołanie funkcji musimy przypisać do zmiennej.
+			Jak widać przy zwrocie wartości wywołanie funkcji musimy przypisać do 
+      zmiennej.
 		</p>
+    <h2 id="18.2.passingcomplexdatatypestofunc">18.2. Przekazywanie do funkcji złożonych typów dancyh</h2>
 		<p>
-			Do funkcji możemy przekazać nie tylko pojedyncze dane oraz zmienne, ale również całe listy i składniowo nie rożni się to przekazania pojedynczych danych.
+			Do funkcji możemy przekazać nie tylko pojedyncze dane oraz zmienne, ale 
+      również całe listy i składniowo nie rożni się to przekazania pojedynczych
+      danych.
 		</p>
 <pre class="code-block">
 def iteration_via_list(l):
@@ -1078,7 +1247,12 @@ def iteration_via_list(l):
 		print(f"{list_element}")
 </pre>
 		<p>
-			Warto zaznaczyć że tak jak przekazujemy zmienne, to przekazujemy ich wartość. W przypadku listy prawdopodobnie zamiast wartość przekazywane jest miejsce w pamięci rozpoczęcia listy, przez to lista zdefiniowana w głównej części programu może zostać przez tą funkcję zmodyfikowana. Istnieje technika dzięki, której możemy się przed tym uchronić, możemy przekazać kopię listy (wycinek od pierwszego do ostatniego elementu).
+			Warto zaznaczyć, że tak jak przekazujemy zmienne, to przekazujemy ich 
+      wartość. W przypadku listy prawdopodobnie zamiast wartość przekazywane 
+      jest miejsce w pamięci rozpoczęcia listy, przez to lista zdefiniowana w 
+      głównej części programu może zostać przez tą funkcję zmodyfikowana. 
+      Istnieje technika dzięki, której możemy się przed tym uchronić, możemy 
+      przekazać kopię listy (wycinek od pierwszego do ostatniego elementu).
 		</p>
 <pre class="code-block">
 received_cars = ['audi', 'bmw', 'toyota', 'subaru'];
@@ -1105,10 +1279,18 @@ repaired_cars.reverse()
 print_raport(received_cars, repaired_cars)
 </pre>
 		<p>
-			O ile nie istnieje żaden ważny powód należy przekazywać funkcjom prawdziwą listę, użycie kopii może być mniej efektywne oraz zajmować więcej pamięci.
+			O ile nie istnieje żaden ważny powód należy przekazywać funkcjom 
+      prawdziwą listę, użycie kopii może być mniej efektywne oraz zajmować 
+      więcej pamięci.
 		</p>
+    <h2 id="18.3.undefinedamountofargs">18.3. Przekazywanie nieokreślonej liczy argumentów</h2>
 		<p>
-			Podczas prac z kodem możemy spotkać się z takim problemem że nie będziemy potrafili przewidzieć ile może być potrzebnych argumentów. W Pythonie możliwe jest przekazanie dla parametru dowolnej liczby argumentów. Taki parametr definiuje się z <strong>gwiazdka (<code class="code-inline">*</code>) przed nazwą. </strong>Przekazanie kilku argumentów pod ten parametr powoduje utworzenie krotki z tymi argumentami, przez które możemy normalnie iterować.
+			Podczas prac z kodem możemy spotkać się z takim problemem że nie będziemy
+      potrafili przewidzieć ile może być potrzebnych argumentów. W Pythonie 
+      możliwe jest przekazanie dla parametru dowolnej liczby argumentów. Taki 
+      parametr definiuje się z gwiazdka (<strong>*</strong>) przed nazwą.
+      Przekazanie kilku argumentów pod ten parametr powoduje utworzenie krotki
+      z tymi argumentami, przez które możemy normalnie iterować.
 		</p>
 <pre class="code-block">
 def make_pizza(*toppings):
@@ -1119,10 +1301,16 @@ def make_pizza(*toppings):
 make_pizza('ser', 'szynka', 'pieczarki')
 </pre>
 		<p>
-			Nic nie stoi na przeszkodzie aby użyć np. argumenty pozycyjnego wraz z <strong>krotką argumentów</strong>. Należy oczywiście pamiętać o kolejności. Python zwróci błąd ponieważ parametrem tego typu nie powinny znajdować się już żadne inne parametry.
+			Nic nie stoi na przeszkodzie aby użyć np. argumenty pozycyjnego wraz z 
+      <strong>krotką argumentów</strong>. Należy oczywiście pamiętać o 
+      kolejności. Python zwróci błąd ponieważ za parametrem tego typu nie 
+      powinny znajdować się już żadne inne parametry.
 		</p>
 		<p>
-			Istnieje również metoda, która umożliwi przekazanie wielu argumentów jako słów kluczowych. Podobnie do powyższego przypadku wykorzystane są <strong>gwiazdki(<code class="code-inline">**</code>) - dwie</strong> a nie jedna. Po przekazaniu par nazwa-wartość w funkcji zostanie utworzony słownik.
+			Istnieje również metoda, która umożliwi przekazanie wielu argumentów jako
+      słów kluczowych. Podobnie do powyższego przypadku wykorzystane są 
+      gwiazdki (<strong>**</strong>), dwie a nie jedna. Po przekazaniu par 
+      nazwa-wartość w funkcji zostanie utworzony słownik.
 		</p>
 <pre class="code-block">
 def make_car(make, model, **car):
@@ -1140,7 +1328,20 @@ car = make_car('subaru', 'outback', color='blue', towPackage=True)
 print(car)
 </pre>
 		<p>
-			Te przykład jest nieco bardziej skomplikowany. Przy korzystaniu z przekazywania wielu argumentów za pomocą słów kluczowych należy pamiętać o tym że dane w <em>słowniku</em> są ułożone według kolejności dodawania danych do słownika <span style="text-decoration: underline;">(Ta zależność pojawiła się dopiero od Pythona &gt;=3.7)</span>. W tym przypadku dane do słownika przekazane przez '<em>**car</em>' trafiają jeszcze przed przejściem do wykonywania kodu funkcji. Dlatego jeśli chcemy mieszać argumenty jak na powyższym przykładzie, należy o tym pamiętać. Poprzez utworzenie nowego słownika i na początku dodanie argumentów pozycyjnych następnie przepisanie danych ze słownika '<em>car</em>' do słownika '<em>car2</em>' danych dodanych jako wielu argumentów słów kluczowych. W ten sposób uzyskaliśmy słownik o kolejności identycznej jak argumenty podane w funkcji.
+			Ten przykład jest nieco bardziej skomplikowany. Przy korzystaniu z 
+      przekazywania wielu argumentów za pomocą słów kluczowych należy pamiętać
+      o tym że dane w słowniku są ułożone według kolejności dodawania 
+      danych do słownika <span style="text-decoration: underline;">(Ta 
+      zależność pojawiła się dopiero od Pythona &gt;=3.7)</span>. W tym 
+      przypadku dane do słownika przekazane przez '<em>**car</em>' trafiają 
+      jeszcze przed przejściem do wykonywania kodu funkcji. Dlatego jeśli 
+      chcemy mieszać argumenty jak na powyższym przykładzie, należy o tym
+      pamiętać. Poprzez utworzenie nowego słownika i na początku dodanie 
+      argumentów pozycyjnych następnie przepisanie danych ze słownika 
+      <code class="code-inline">car</code> do słownika 
+      <code class="code-inline">car2</code> danych dodanych jako wielu 
+      argumentów słów kluczowych. W ten sposób uzyskaliśmy słownik o kolejności
+      identycznej jak argumenty podane w funkcji.
 		</p>
 		<p>
 			W Pythonie w prostu sposób możemy utworzyć tzw. <strong>moduły</strong> w innych językach możemy nazwać je np. plikami nagłówkowymi. Tworzymy je poprzez utworzenie oddzielnego pliku i wpisanie tam wszystkich funkcji. Kiedy mamy funkcje w oddzielnym pliku pozostaje je zaimportować. Poniżej znajdują się metody importu, wraz z przykładem użycia funkcji z zaimportowanego modułu.

@@ -1343,8 +1343,14 @@ print(car)
       argumentów słów kluczowych. W ten sposób uzyskaliśmy słownik o kolejności
       identycznej jak argumenty podane w funkcji.
 		</p>
+    <h1 id="19.modules">19. Moduły</h1>
 		<p>
-			W Pythonie w prostu sposób możemy utworzyć tzw. <strong>moduły</strong> w innych językach możemy nazwać je np. plikami nagłówkowymi. Tworzymy je poprzez utworzenie oddzielnego pliku i wpisanie tam wszystkich funkcji. Kiedy mamy funkcje w oddzielnym pliku pozostaje je zaimportować. Poniżej znajdują się metody importu, wraz z przykładem użycia funkcji z zaimportowanego modułu.
+			W Pythonie w prosty sposób możemy utworzyć tzw. <strong>moduły</strong> w
+      innych językach możemy nazwać je np. plikami nagłówkowymi. Tworzymy je 
+      poprzez utworzenie oddzielnego pliku i wpisanie tam wszystkich funkcji. 
+      Kiedy mamy funkcje w oddzielnym pliku pozostaje je tylko zaimportować. 
+      Poniżej znajdują się metody importu, wraz z przykładem użycia funkcji z 
+      zaimportowanego modułu.
 		</p>
 <pre class="code-block">
 #import sandwich
@@ -1363,15 +1369,52 @@ print(car)
 #make_sandwich('pszenne', 'szynka', 'ser', 'ketchup')
 </pre>
 			<p>
-				Możemy używać słowa kluczowego <code class="code-inline">import</code> do zaimportowania całego modułu, lub zaimportować konkretną funkcję z danego modułu poprzez kombinacje słów kluczowych <code class="code-inline">from</code> oraz <em>import</em>. Gdzie po słowie <em>from</em> podajemy nazwę modułu, po słowie <em>import</em> podajemy nazwę funkcji. Ciekawą techniką jest tworzenie <strong>aliasów</strong> dla zaimportowanych modułów lub funkcji. Po nazwie modułu lub funkcji oraz po słowie kluczomym <code class="code-inline">as</code> podajemy alias czyli taką nazwę zastępczą lub pseudonim. Tworzenie aliasów przydaje się gdy np. mamy podejrzenie że funkcja w module ma taką samą nazwę jak funkcja w głównej części programu. Linia przed ostatnia z powyższego przykładu jest równoznaczna z linią pierwsza ('<em>from sandwich import *</em>' = '<em>import sandwich</em>').
+				Możemy używać słowa kluczowego <code class="code-inline">import</code> 
+        do zaimportowania całego modułu, lub zaimportować konkretną funkcję z 
+        danego modułu poprzez kombinacje słów kluczowych 
+        <code class="code-inline">from</code> oraz <em>import</em>. Gdzie po 
+        słowie <em>from</em> podajemy nazwę modułu, po słowie <em>import</em> 
+        podajemy nazwę funkcji. Ciekawą techniką jest tworzenie 
+        <strong>aliasów</strong> dla zaimportowanych modułów lub funkcji. Po 
+        nazwie modułu lub funkcji oraz po słowie kluczomym 
+        <code class="code-inline">as</code> podajemy alias czyli taką nazwę 
+        zastępczą lub pseudonim. Tworzenie aliasów przydaje się gdy np. mamy 
+        podejrzenie, że funkcja w module ma taką samą nazwę jak funkcja w 
+        głównej części programu. Linia przed ostatnia z powyższego przykładu 
+        mogą wydawać się równoznaczne, ale ostatnii przykład pokazuje nam w
+        jaki sposób możemy zaimportować funkcje z modułu. Ta czynność pozwala
+        na pominięcie prefixu nazwy modułu
 			</p>
-			<p>&nbsp;</p>
-			<h2>Programowanie zorientowane obiektowo</h2>
+			<h1 id="20.objectorientedprograming">20. Programowanie zorientowane obiektowo</h1>
 			<p>
-				<strong>Programowanie zorientowane obiektowo</strong> jest metodą, która pozwala programistom przedstawiać przy użyciu komputera rzeczy znane nam z realnego świata. Weźmy takiego człowieka. Człowiek jest <strong>obiektem</strong> zarówno w znanym nam świecie, jak i również może zostać przedstawiony jako obiekt w świecie wirtualnym. Jeśli człowiek staje się obiektem w ujęciu programistycznym, to jego cechy szczególne stają się <strong>właściwościami/atrybutami</strong> obiektu. Czynności jakie wykonuje mogą być <strong>metodami</strong>. Jednak człowiek jest przedstawicielem gatunku. Gatunku ludzkiego. Obiekty są również przedstawicielami gatunku jaki sobie zdefiniujemy. Tym gatunkiem są <strong>klasy</strong>.
+				<strong>Programowanie zorientowane obiektowo</strong> jest metodą, 
+        która pozwala programistom przedstawiać przy użyciu komputera rzeczy 
+        znane nam z realnego świata. Weźmy takiego człowieka. Człowiek jest 
+        <strong>obiektem</strong> zarówno w znanym nam świecie, jak i również 
+        może zostać przedstawiony jako obiekt w świecie wirtualnym. Jeśli 
+        człowiek staje się obiektem w ujęciu programistycznym, to jego cechy 
+        szczególne stają się <strong>właściwościami/atrybutami</strong> obiektu.
+        Czynności jakie wykonuje mogą być <strong>metodami</strong>.
+      </p>
+      <p>
+        Człowiek jest przedstawicielem gatunku. Gatunku ludzkiego. Obiekty są 
+        również przedstawicielami gatunku jaki sobie zdefiniujemy. Tym 
+        gatunkiem są <strong>klasy</strong>.
 			</p>
 			<p>
-				<strong>Definicje klasy</strong> rozpoczynamy od słowa kluczowego <code class="code-inline">class</code><em> </em>następnie podajemy nazwę tej klasy oraz zaraz obok nazwy <span style="text-decoration: underline;">bez spacji</span> parę nawiasów okrągłych oraz dwukropek. W następnej linii po jednym znaku tabulacji możemy rozpoczynać definicję klasy. Klasa z poziomu kodu źródłowego składa się głównie z funkcji, które tutaj nazywają się metodami. Pierwszą definiowaną metodą jest metoda <code class="code-inline">__init__</code>, <strong>przy zapisie tej nazwy należy uważać na to że jest ona obudowana dwoma znaki podkreślenia</strong> <strong>(__)</strong>. Ta metoda jest metodą specjalną, ma za zadanie zainicjować  właściwości/atrybuty zapisane w jej bloku. Te atrybuty będą atrybutami obiektu. Argumenty dla tej metody są przekazywane podczas tworzenia egzemplarza klasy, czyli obiektu.
+				<strong>Definicje klasy</strong> rozpoczynamy od słowa kluczowego 
+        <code class="code-inline">class</code><em> </em>następnie podajemy 
+        nazwę tej klasy oraz zaraz obok nazwy bez spacji parę nawiasów
+        okrągłych oraz dwukropek. W następnej linii po jednym znaku tabulacji 
+        możemy rozpoczynać definicję klasy. Klasa z poziomu kodu źródłowego 
+        składa się głównie z funkcji, które tutaj nazywają się metodami. 
+        Pierwszą definiowaną metodą jest metoda 
+        <code class="code-inline">__init__</code>. <strong>Uwaga</strong>, przy
+        zapisie tej nazwy należy uważać na to, że jest ona obudowana dwoma 
+        znaki podkreślenia (<strong>__</strong>). Ta metoda jest metodą 
+        specjalną, ma za zadanie zainicjować właściwości zapisane w jej bloku.
+        Te atrybuty będą atrybutami obiektu. Argumenty dla tej metody są 
+        przekazywane podczas tworzenia egzemplarza klasy, czyli obiektu.
 			</p>
 <pre class="code-block">
 class User():
@@ -1381,27 +1424,44 @@ class User():
         self.age = age
         self.sex = sex
 </pre>
-		<p>
-			Parametr <code class="code-inline">self</code>  jest obiektem, który będzie tworzony na podstawie tej klasy. Słowo kluczowe <em>self</em> będzie oznaczać po prostu obiekt tej klasy, to atrybutowi obiektu tej klasy w metodzie <em>__init__</em> nadajemy  wartość parametru 'firstname'. Z racji tego że obiekt jest egzemplarzem klasy stąd słowo self (samemu sobie).
-		</p>
-		<p>
-			Egzemplarz klasy (obiekt) tworzymy nadając zmiennej wartości w postaci wywołania zdefiniowanej wcześniej klasy.
-		</p>
+		  <p>
+			  Parametr <code class="code-inline">self</code> jest obiektem, który 
+        będzie tworzony na podstawie tej klasy. Słowo kluczowe <em>self</em> 
+        będzie oznaczać po prostu obiekt tej klasy. To atrybutowi obiektu tej 
+        klasy w metodzie <em>__init__</em> nadajemy wartość parametru 
+        <code class="code-inline">firstname</code>. Z racji tego że obiekt jest 
+        egzemplarzem klasy stąd słowo self (samemu sobie).
+		  </p>
+      <h2 id="20.1.object">20.1. Objekt</h2>
+		  <p>
+			  Egzemplarz klasy (obiekt) tworzymy nadając zmiennej wartości w postaci 
+        wywołania zdefiniowanej wcześniej klasy.
+		  </p>
 <pre class="code-block">
 user1 = User('Jan', 'Nowak', '47', 'M')
 </pre>
-		<p>
-			Argumentami przekazywanymi klasie są tak naprawę argumenty dla metody <em>__init__</em>, ponieważ to ona jest uruchamiana podczas tworzenia obiektu. Argument <em>self</em> jest przekazywany automatycznie.
-		</p>
-		<p>
-			Powiedzmy że mamy utworzy obiekt 'user1'. Dostęp do jego właściwości uzyskujemy dzięki <strong>notacji kropki (<code class="code-inline">.</code>)</strong>.
+		  <p>
+			  Argumentami przekazywanymi klasie są tak naprawę argumenty dla metody 
+        <em>__init__</em>, ponieważ to ona jest uruchamiana podczas tworzenia 
+        obiektu. Argument <em>self</em> jest przekazywany automatycznie.
+		  </p>
+		  <p>
+			  Powiedzmy że mamy utworzy obiekt 'user1'. Dostęp do jego właściwości 
+        uzyskujemy dzięki notacji kropki (<code class="code-inline">.</code>).
 		</p>
 <pre class="code-block">
 print(f"Witaj {user1.firstname} {user1.lastname}")
 # &gt;&gt;&gt; Witaj Jan Nowak
 </pre>
+    <h2 id="20.2.methods">20.2. Metody</h2>
 		<p>
-			Mamy już cechy szczególne, to teraz pora na czynności jakie ten obiekt może wykonać. Do opisu czynności obiektu wykorzystuje się metody, czyli funkcje w kontekście obiektowym. Z pierwszą metodą mieliśmy już do czynienia przy okazji metody <em>__init__</em>, może jest ona nieco przezroczysta, jednak to nadal metoda. W poniższym przykładzie stworzymy sobie metodę, która opisze nam tego użytkownika, bo na razie właściwości to suche dane.
+			Mamy już cechy szczególne, to teraz pora na czynności jakie ten obiekt 
+      może wykonać. Do opisu czynności obiektu wykorzystuje się metody, czyli 
+      funkcje w kontekście obiektowym. Z pierwszą metodą mieliśmy już do 
+      czynienia przy okazji metody <em>__init__</em>, może jest ona nieco 
+      przezroczysta, jednak to nadal metoda. W poniższym przykładzie stworzymy
+      sobie metodę, która opisze nam tego użytkownika, bo na razie właściwości
+      to suche dane.
 		</p>
 <pre class="code-block">
 def describe_user(self):
@@ -1409,13 +1469,21 @@ def describe_user(self):
     print(f"\t-wiek: {self.age}\n\t-płeć: {self.sex}")
 </pre>
 		<p>
-			Metoda różni się tym od funkcji że znajduje się wewnątrz klasy oraz tym że zawsze ma parametr <em>self</em>, który pozwala jej na dostęp do właściwości obiektu. Metody wywołujemy prawie przez cały czas pod czas zabawy Pythonem, więc wywołanie metody naszej klasy nie powinno być problemem.
+			Metoda tym różni się od funkcji, że znajduje się wewnątrz klasy oraz tym,
+      że zawsze ma parametr <em>self</em>, który pozwala jej na dostęp do 
+      właściwości obiektu. Metody wywołujemy prawie przez cały czas pod czas 
+      zabawy Pythonem, więc wywołanie metody naszej klasy nie powinno być 
+      problemem.
 		</p>
 <pre class="code-block">
 user1.describe_user()
 </pre>
+    <h2 id="20.3.workingonattributs">20.3. Praca z atrybutami obiektów.</h2> 
 		<p>
-			Właściwości/atrybuty obiektu nie muszą być zawsze przekazywane przez użytkownika podczas tworzenia obiektu mogą przyjmować <strong>wartości domyślne</strong> w zdefiniowane wewnątrz<em> </em>metody <em>__init__</em>.
+			Właściwości/atrybuty obiektu nie muszą być zawsze przekazywane przez 
+      użytkownika podczas tworzenia obiektu mogą przyjmować 
+      <strong>wartości domyślne</strong> w zdefiniowane wewnątrz<em> 
+      </em>metody <em>__init__</em>.
 		</p>
 <pre class="code-block">
 class User():
@@ -1427,12 +1495,30 @@ class User():
         self.rank = 'Junior user'
 </pre>
 		<p>
-			Wraz z biegiem programu opartego na obiektach ich właściwości mogą, czasami wręcz muszą się zmienić. W Pythonie możemy to zrealizować na trzy sposoby.
+			Wraz z biegiem programu opartego na obiektach ich właściwości mogą, 
+      czasami wręcz muszą się zmienić. W Pythonie możemy to zrealizować na trzy
+      sposoby.
 		</p>
 		<ul>
-			<li>Sposób 1: <strong>Zmiana bezpośrednia.</strong> Po prostu bierzemy obiekt następnie za pomocą<em> notacji kropki</em> uzyskujemy dostęp do właściwości i za pomocą operatora przypisania <em>=</em> nadajemy atrybutowi nową wartość. (Ta technika generalnie nie jest polecana.)</li>
-			<li>Sposób 2: <strong>Nowa metoda przeznaczona do aktualizowania wartości poszczególnych właściwości.</strong> Tworzymy metodę w parametrem self, oraz parametrem który będzie przechowywał nową wartość metody, w bloku w metody do atrybutu uzyskujemy dostęp poprzez parametr <em>self</em> oraz notację kropki i nadajemy mu wartość parametru, która ma zostać przekazana w postaci argumentu z głównej części programu.</li>
-			<li>Sposób 3: <strong>Nowa metoda inkrementująca lub dekrementując wartość właściwość. </strong>Ta metoda od tej ze sposobu nr. 2 różni się w zasadzie tylko znakiem w tym wypadku jest <em>+=</em> a nie <em>=</em>. Wartość o jaką będziemy zmieniać naszą właściwość również podajemy w postaci parametru. Oczywiście może to zależeć od metody.</li>
+			<li><strong>Sposób 1</strong>: Zmiana bezpośrednia. Po prostu bierzemy 
+          obiekt następnie za pomocą <strong>notacji kropki</strong> uzyskujemy
+          dostęp
+          do właściwości i za pomocą operatora przypisania (<strong>=</strong>) 
+          nadajemy atrybutowi nową wartość. Ta technika generalnie nie jest 
+          polecana.</li>
+			<li><strong>Sposób 2</strong>: Nowa metoda przeznaczona do aktualizowania
+          wartości poszczególnych właściwości. Tworzymy metodę w parametrem 
+          <em>self</em> oraz z parametrem, który będzie przechowywał nową 
+          wartość metody, w bloku w metody do atrybutów uzyskujemy dostęp 
+          poprzez parametr <em>self</em> oraz notację kropki i nadajemy mu nową
+          wartość parametru, która ma zostać przekazana w postaci argumentu z 
+          głównej części programu.</li>
+			<li><strong>Sposób 3</strong>: Nowa metoda inkrementująca lub 
+          dekrementując wartość właściwość. Ta metoda od tej ze sposobu nr. 2 
+          różni się w zasadzie tylko znakiem w tym wypadku jest to 
+          <strong>+=</strong> a nie <strong>=</strong>. Wartość o jaką będziemy
+          zmieniać naszą właściwość również podajemy w postaci parametru. 
+          Oczywiście może to zależeć od metody.</li>
 		</ul>
 		<p>
 			<span style="text-decoration: underline;">Sposób 1:</span>
@@ -1481,11 +1567,23 @@ user1 = User('Jan', 'Nowak', '47', 'M')
 user1.promote_user('Standard user')
 user1.happy_birthday()
 </pre>
+  <h2 id="20.4.inheritance">20.4. Dziedziczenie</h2>
 	<p>
-		Mamy sobie naszych użytkowników. Jednak potrzebujemy specjalnego użytkownika, który będzie tym wszystkim zarządzał - Administratora. Problem napotykamy wtedy kiedy chcemy zdefiniować jakieś ekstra metody dla admina, ale nie chcemy umieszczać ich w tej samej klasie do definiowania użytkowników, musimy również pamiętać że admin to też użytkownik, i wypadało by mieć w bazie jego dane. Przekopiowanie kodu jest nieefektywne, ale z pomocą przechodzi na <strong>dziedziczenie</strong>, czyli tworzenie <strong>klas potomnych</strong> na podstawie istniejącej już klasy.
+		Mamy sobie naszych użytkowników. Jednak potrzebujemy specjalnego 
+    użytkownika, który będzie tym wszystkim zarządzał - Administratora. Problem
+    napotykamy wtedy kiedy chcemy zdefiniować jakieś ekstra metody dla admina, 
+    ale nie chcemy umieszczać ich w tej samej klasie do definiowania 
+    użytkowników, musimy również pamiętać, że admin to też użytkownik, i 
+    wypadało by mieć w bazie jego dane. Przekopiowanie kodu jest nieefektywne,
+    ale z pomocą przechodzi na <strong>dziedziczenie</strong>, czyli tworzenie 
+    <strong>klas potomnych</strong> na podstawie istniejącej już klasy.
 	</p>
 	<p>
-		Przy tworzeniu klas potomnych warto pamiętać o jednej rzeczy. Klasa potomna jest to oddzielna klasa zawierająca połączenie z <strong>klasą nadrzędną</strong>. Klasy potomne mogą inicjować dla swoich obiektów właściwość klasy nadrzędnej oraz obiekty klas potomnych mogą korzystać z metod klasy nadrzędnej. Definicja takiej klasy wygląda następująco.
+		Przy tworzeniu klas potomnych warto pamiętać o jednej rzeczy. Klasa potomna
+    jest to oddzielna klasa zawierająca połączenie z <strong>klasą nadrzędną</strong>. 
+    Klasy potomne mogą inicjować dla swoich obiektów właściwość klasy 
+    nadrzędnej oraz obiekty klas potomnych mogą korzystać z metod klasy 
+    nadrzędnej. Definicja takiej klasy wygląda następująco.
 	</p>
 <pre class="code-block">
 class User():
@@ -1520,7 +1618,13 @@ class Admin(User):
         print(f'Użytkownik {username} został zbanowany')
 </pre>
 		<p>
-			Cechami po których można poznać że dana klasa jest klasą potomną, jest to że <strong>w parametrach klasy znajduje się nazwa klasy nadrzędnej.</strong> W metodzie __init__ występuje metoda <code class="code-inline">super()</code>, której celem jest realizowanie połączenia pomiędzy klasą potomną a klasą nadrzędną. Użycie metody <em>super()</em> zależy od konstrukcji klasy nadrzędnej.  Utworzenie takiego obiektu różni się tylko nazwą klasy.
+			Cechami po których można poznać że dana klasa jest klasą potomną, jest to,
+      że w parametrach klasy znajduje się nazwa klasy nadrzędnej. W metodzie 
+      <code class="code-inline">__init__</code> występuje metoda 
+      <code class="code-inline">super()</code>, której celem jest realizowanie 
+      połączenia pomiędzy klasą potomną a klasą nadrzędną. Użycie metody 
+      <em>super()</em> zależy od konstrukcji klasy nadrzędnej.  Utworzenie 
+      takiego obiektu różni się tylko nazwą klasy.
 		</p>
 <pre class="code-block">
 root = Admin('Jan' 'Kowalski', 25, 'M')
@@ -1530,7 +1634,11 @@ root.check_quota_type()
 # Unlimited
 </pre>
 		<p>
-			Atrybuty mogą przechowywać wiele rzeczy, od pojedynczych wartość po obiekty innych klas. Istnieje możliwość wewnątrz klasy <strong>przekazać atrybutowi jako wartość egzemplarz obiektu. </strong>Rozważmy to że musimy każdemu z naszych użytkowników zdefiniować uprawnienia, co im wolno, a co nie. Możemy spojrzeć na zestaw uprawnień jak na obiekt.
+			Atrybuty mogą przechowywać wiele rzeczy, od pojedynczych wartość po 
+      obiekty innych klas. Istnieje możliwość wewnątrz klasy 
+      przekazać atrybutowi jako wartość egzemplarz obiektu. Rozważmy to że 
+      musimy każdemu z naszych użytkowników zdefiniować uprawnienia, co im 
+      wolno, a co nie. Możemy spojrzeć na zestaw uprawnień jak na obiekt.
 		</p>
 <pre class="code-block">
 class User():
@@ -1587,11 +1695,24 @@ user1 = User('Jan', 'Nowak', 47, 'M')
 user1.permissions.show_permissions()
 </pre>
 		<p>
-			W powyższym przykładzie pokazano jak można użyć obiektu jako wartości atrybutu innego obiektu oraz jak uzyskać dostęp do metod takiego obiektu. 'root' jest obiektem w klasie 'Admin', następnie po kropce podajemy nazwę atrybutu w tym przypadku jest 'permissions', aby po następnej kropce (z racji tego że wartość 'permissions' to też obiekt) podajemy nazwę metody 'show_permissions()' i w ten sposób uzyskaliśmy dostęp do zdefiniowanych w innym obiekcie uprawnień przypisanych do obiektów użytkowników jako atrybuty.
+			W powyższym przykładzie pokazano jak można użyć obiektu jako wartości 
+      atrybutu innego obiektu oraz jak uzyskać dostęp do metod takiego obiektu.
+      <code class="code-inline">root</code> jest obiektem w klasie
+      <code class="code-inline">Admin</code>, następnie po kropce podajemy 
+      nazwę atrybutu w tym przypadku jest 
+      <code class="code-inline">permissions</code>, aby po następnej kropce 
+      (z racji tego że wartość <code class="code-inline">permissions</code> to
+      też obiekt) podajemy nazwę metody 
+      <code class="code-inline">show_permissions()</code> i w ten sposób 
+      uzyskaliśmy dostęp do zdefiniowanych w innym obiekcie uprawnień 
+      przypisanych do obiektów użytkowników jako atrybuty.
 		</p>
 		<p>
-			<strong>Klasy podobnie jak funkcje też można umieszczać w modułach</strong>, klasy umieszcza się w modułach w identyczny sposób jak funkcje. Identycznie też się je importuje. Kilka akapitów wyżej jest opis jak to zrobić.
+			Klasy podobnie jak funkcje też można umieszczać w modułach, klasy 
+      umieszcza się w modułach w identyczny sposób jak funkcje. Identycznie też
+      się je importuje. Kilka akapitów wyżej jest opis jak to zrobić.
 		</p>
+    <h1 id="21.standardlibrary">21. Biblioteka standardowa</h1>
 		<p>
 			Wiele modułów zwierających pomocne klasy oraz funkcje jest dostarczanych wraz z Python jako <strong>Biblioteka standardowa Pythona.</strong> Wśród nich możemy znaleźć taki moduł jak <code class="code-inline">random</code >, który zawiera funkcje służące do generowania liczb losowych - <strong>randint() </strong><em>(lepiej nie używać jej w dużych projektach ze względów bezpieczeństwa)</em> oraz np. <code class="code-inline">choice()</code>, która zwraca nam losowo wybraną wartość z listy lub krotki.
 		</p>

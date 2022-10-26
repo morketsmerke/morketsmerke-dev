@@ -2822,8 +2822,9 @@ pepperoni_tops = pepperoni.toping_set.order_by('-name')
 		<p>
 			Powłoka w naszej pracy z Django będzie odgrywać ważną rolę, dzięki niej 
       możemy testować nasze zapytania zanim umieścimy je w widokach, co jest 
-      znacznie lepszym rozwiązaniem a niżeli używanie nie pewnych zapytań.
+      znacznie lepszym rozwiązaniem a niżeli używanie niepewnych zapytań.
 		</p>
+    <h2 id="2.3.creatingappspages">2.3. Tworzenie aplikacji</h2>
 		<p>
 			Kiedy mamy omówione modele oraz zapytania to teraz możemy przejść do 
       tworzenia naszych stron aplikacji. Tworzenie stron aplikacji możemy 
@@ -2833,7 +2834,11 @@ pepperoni_tops = pepperoni.toping_set.order_by('-name')
       głównej. Strona główna powinna zostać wyświetlona, kiedy użytkownika poda
       adres strony np. https://terminallog.morketsmerke.net. Kiedy my podamy 
       teraz adres naszego serwera dostaniem stronę z informacją o tym, że nasz
-      projekt Django jest gotowy do pracy. Aby moc mapować nasze adresy na 
+      projekt Django jest gotowy do pracy.
+    </p>
+    <h3 id="2.3.1.sitemappings">2.3.1. Mapowanie stron aplikacji</h3>
+    <p>
+      Aby moc mapować nasze adresy na 
       konkretne strony, musimy przekierować adres serwera w pliku 
       <em>urls.py</em> w katalogu naszego projektu na plik mapowania URL 
       (<em>urls.py</em>) w katalogu naszej aplikacji. Jakby jeszcze tego było 
@@ -2864,10 +2869,36 @@ urlpatterns = [
 ]
 </pre>
 		<p>
-			<strong>Funkcja <code class="code-inline">path</code></strong> przyjmuje jak widzimy powyżej trzy argumenty. <strong>Pierwszy z nich, jest ciąg który zostanie przekazany przez przeglądarkę w momencie żądania danej strony</strong>. Teraz ten ciąg jest pusty, ponieważ po przez adres serwera będziemy żądać strony głównej naszej aplikacji. <strong>Drugim argument jest funkcja widoku, której zadaniem jest przetworzenie i przygotowanie danych do użycia w szablonie</strong>, <strong>jeśli mówimy o czynnościach jakie wykonuje dana aplikacja internetowa w Django, to mówimy o czynnościach wykonywanych właśnie przez kod zdefiniowany ciele funkcji widoku</strong>, przeważnie jedna podstrona to jedna funkcja widoku. Funkcja widoku jest uruchamiana w momencie gdy żądanie zostanie dopasowane do pierwszego argumentu funkcji <em>path</em>. <strong>Ostatnim argumentem jest nazwa zmiennej używana przy tworzeniu odnośników w szablonach, Python podstawi wartość pierwszego parametru jeśli tworząc odnośnik odwołamy się do tej zmiennej</strong>.
+			Funkcja <code class="code-inline">path</code> przyjmuje 
+      jak widzimy powyżej trzy argumenty. Pierwszy z nich, jest ciąg, który 
+      zostanie przekazany przez przeglądarkę w momencie żądania danej strony. 
+      Teraz ten ciąg jest pusty, ponieważ po przez adres serwera będziemy żądać
+      strony głównej naszej aplikacji. Drugim argumentem jest funkcja widoku, 
+      której zadaniem jest przetworzenie i przygotowanie danych do użycia w 
+      szablonie. Jeśli mówimy o czynnościach jakie wykonuje dana 
+      aplikacja internetowa w Django, to mówimy o czynnościach wykonywanych 
+      właśnie przez kod zdefiniowany ciele funkcji widoku. Przeważnie jedna 
+      podstrona to jedna funkcja widoku. Funkcja widoku jest uruchamiana w 
+      momencie gdy żądanie zostanie dopasowane do pierwszego argumentu funkcji
+      <em>path</em>. Ostatnim argumentem jest nazwa zmiennej używana przy 
+      tworzeniu odnośników w szablonach, Python podstawi wartość pierwszego 
+      parametru jeśli tworząc odnośnik odwołamy się do tej zmiennej.
 		</p>
+    <h3 id="2.3.2.creatingaview">2.3.2. Tworzenie widoku</h3>
 		<p>
-			Po zdefiniowaniu mapowania, czas na drugą czynność. Na zdefiniowanie kodu funkcji widoku. Przechodzimy do pliku <em>views.py</em> następnie tworzymy nową funkcję o nazwie <em>index</em> przyjmującej parametr o nazwie <em>request</em>. Z racji tego że jest to strona główna, to będzie się ona opierać głównie na szablonie. Więc tutaj nasza funkcja widoku, będzie mieć tylko jedną linę, kiedy otworzymy plik <em>views.py</em> pierwsza linia zawiera import funkcji <code class="code-inline">render</code>, odpowiada ona za wygenerowanie gotowego pliku HTML z szablonu, który zrozumie każda przeglądarka. Funkcja <em>render</em> przyjmuje w tym przypadku dwa argumenty. Żądanie przechowywane w parametrze <code class="code-inline">request</code> oraz ścieżkę dostępu do szablonu. Plik <em>views.py</em> powinien wyglądać następująco.
+			Po zdefiniowaniu mapowania, czas na drugą czynność. Na zdefiniowanie kodu
+      funkcji widoku. Przechodzimy do pliku <em>views.py</em> następnie 
+      tworzymy nową funkcję o nazwie <em>index</em> przyjmującej parametr o 
+      nazwie <em>request</em>. Z racji tego że jest to strona główna, to będzie
+      się ona opierać głównie na szablonie. Więc tutaj nasza funkcja widoku, 
+      będzie mieć tylko jedną linę, kiedy otworzymy plik <em>views.py</em> 
+      pierwsza linia zawiera import funkcji 
+      <code class="code-inline">render</code>, 
+      odpowiada ona za wygenerowanie gotowego pliku HTML z szablonu, który 
+      zrozumie każda przeglądarka. Funkcja <em>render</em> przyjmuje w tym 
+      przypadku dwa argumenty. Żądanie przechowywane w parametrze 
+      <code class="code-inline">request</code> oraz ścieżkę dostępu do 
+      szablonu. Plik <em>views.py</em> powinien wyglądać następująco.
 		</p>
 <pre class="code-block">
 from django.shortcuts import render
@@ -2878,19 +2909,65 @@ def index(request):
     """Strona główna aplikacji Pizzas"""
     return render(request, 'pizzas/index.html')
 </pre>
+    <h3 id="2.3.3.creatingatemplate">2.3.3. Tworzenie szablonu</h3>
 		<p>
-			Ze ścieżką dostępu do szablonu jest o tyle zabawnie że, aby szablon był widziany przez Django musi być umieszczony w katalogu aplikacji następnie w podkatalogu <em>templates</em>, w którym znajduje się kolejny podkatalog o nazwie aplikacji, a w nim dopiero szablon. Pliki szablonów to tak naprawdę pliki HTML, które zawierają <strong>znaczniki szablonu</strong>, dzięki którym możemy wprowadzać nasze dane na strony witryny, ale również w prosty sposób nią zarządzać. Szablon strony głównej nie zawiera wiele informacji, nie zawiera nawet żadnego znacznika szablonu.
+			Ze ścieżką dostępu do szablonu jest o tyle zabawnie że, aby szablon był 
+      widziany przez Django musi być umieszczony w katalogu aplikacji następnie
+      w podkatalogu <em>templates</em>, w którym znajduje się kolejny 
+      podkatalog o nazwie aplikacji, a w nim dopiero szablon. Pliki szablonów 
+      to tak naprawdę pliki HTML, które zawierają 
+      <strong>znaczniki szablonu</strong>, dzięki którym możemy wprowadzać 
+      nasze dane na strony witryny, ale również w prosty sposób nią zarządzać. 
+      Szablon strony głównej nie zawiera wiele informacji, nie zawiera nawet 
+      żadnego znacznika szablonu.
 		</p>
 <pre class="code-block">
 &lt;p&gt;Pizzeria&lt;/p&gt;
 
 &lt;p&gt;Aplikacja ta pozwala na przymowanie zamówień oraz wyświetlanie menu pizzerii&lt;/p&gt;
 </pre>
+    <h3 id="2.3.4.mappingapps">2.3.4. Mapowanie aplikacji</h3>
+    <p>
+      Chcąc uruchomić do co zrobiliśmy do tej pory, musimy przed uruchomieniem
+      serwera wskazać w pliku mapowania URL-i projektu konkretną aplikację. Tę
+      czynność należy wykonać w pliku <em>&lt;nazwa_projektu&gt;/urls.py</em> w
+      tym konkrentym przypadku jest to <em>pizzeria/urls.py</em>. Wykonanie
+      czynności rozpoczynamy od zaimportowanie funkcji <em>include</em>.
+      Funkcją ta jest dostępna w module <em>django.urls</em> więc po 
+      <em>path</em> na górze pliku do pisujemy 
+      <code class="code-inline">, include</code>.
+    </p>
+<pre class="code-block">
+from django.urls import path, include
+</pre>
+    <p>
+      Następnie podobnie do mapowań stron aplikacji, jako kolejny element list
+      podajemy wywłołanie funkcji <code class="code-inline">path</code> wraz
+      z pustym żądaniem oraz zamiast podawać funkcję widoku oraz nazwę zmiennej
+      wywołujemy funkcję <code class="code-inline">include</code> wraz ze
+      wskazaniem pliku mapowania stron aplikacji w postaci 
+      <em>'nazwa_aplikacji.urls'</em> 
+    </p>
+<pre class="code-block">
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('pizzas.urls')),
+]
+</pre>
+    <h3 id="2.3.5.anexampleexpanding">2.3.5. Rozszerzanie przykładu</h3>
 		<p>
-			Z racji tego że mamy trochę za mało informacji, aby zaprezentować duże możliwości szablonów w Django, rozbudujemy trochę naszą aplikacje o jedną podstronę zawierającą menu naszej pizzerii.
+			Z racji tego że mamy trochę za mało informacji, aby zaprezentować duże 
+      możliwości szablonów w Django, rozbudujemy trochę naszą aplikacje o jedną
+      podstronę zawierającą menu naszej pizzerii.
 		</p>
 		<p>
-			Naszą rozbudowę zaczniemy od stworzenia szablonu w którym to będą znajdować się same odnośniki do naszych podstron, Inne szablony będą dziedziczyć te elementy od niego. W naszym katalogu z szablonami tworzymy plik o nazwie <em>base.html</em>. Plik zawiera w sumie dwie linijki
+			Naszą rozbudowę zaczniemy od stworzenia szablonu, w którym to będą 
+      znajdować się same odnośniki do naszych podstron, Inne szablony będą 
+      dziedziczyć te elementy od niego. W naszym katalogu z szablonami 
+      tworzymy plik o nazwie <em>base.html</em>. Plik zawiera w sumie dwie linijki
 		</p>
 <pre class="code-block">
 &lt;a href="{% url 'pizzas:index' %}"&gt;Pizzeria&gt;/a&lt;
@@ -2898,13 +2975,24 @@ def index(request):
 {% block content %}{% endblock content %}
 </pre>
 		<p>
-			<strong>Znacznik szablonu <code class="code-inline">url</code> w atrybucie <em>href</em> wstawi bezwzględny adres URL zawierający wzorzec przypisany do nazwy <code class="code-inline">index</code> w funkcji <em>path</em> w pliku <em>urls.py</em></strong>. Po przeniesieniu tytułu jako odnośnika do szablonu nadrzędnego. Możemy teraz wpisać linię ustawiającą<strong> dziedziczenie w szablonie</strong> <em>index.html</em>. Linię wstawiamy na samej górze.
+			Znacznik szablonu <code class="code-inline">url</code> w atrybucie 
+      <code class="code-inline">href</code> wstawi bezwzględny adres URL 
+      zawierający wzorzec przypisany do nazwy 
+      <code class="code-inline">index</code> w funkcji <em>path</em> w pliku 
+      <em>urls.py</em></strong>. Po przeniesieniu tytułu jako odnośnika do 
+      szablonu nadrzędnego. Możemy teraz wpisać linię ustawiającą
+      <strong>dziedziczenie w szablonie</strong> 
+      <em>index.html</em>. Linię wstawiamy na samej górze.
 		</p>
 <pre class="code-block">
 {% extends 'pizzas/base.html' %}
 </pre>
 		<p>
-			Kiedy mamy już odpowiednie miejsce gdzie będziemy umieszczać odnośniki do naszych podstron. Możemy przejść teraz do utworzenia widoku naszej podstrony, naszą stronę nazwiemy klasycznie <code class="code-inline">menu</code>. W pliku <em>views.py</em> naszej aplikacji <em>pizzas</em>, umieszczamy poniższy kod.
+			Kiedy mamy już odpowiednie miejsce gdzie będziemy umieszczać odnośniki do
+      naszych podstron. Możemy przejść teraz do utworzenia widoku naszej 
+      podstrony, naszą stronę nazwiemy klasycznie 
+      <code class="code-inline">menu</code>. W pliku <em>views.py</em> naszej 
+      aplikacji <em>pizzas</em>, umieszczamy poniższy kod.
 		</p>
 <pre class="code-block">
 def menu(request):

@@ -3027,15 +3027,58 @@ def menu(request):
     return render(request, 'pizzas/menu.html', pizza_dict)
 </pre>
 		<p>
-			Przed przystąpieniem do objaśniania chciałbym przestawić model wyświetlania danych, otóż chciałem uzyskać taki sam lub zbliżony ulotkom z pizzerii wydruk menu, czyli:
+			Przed przystąpieniem do objaśniania chciałbym przestawić model 
+      wyświetlania danych, otóż chciałem uzyskać taki sam lub zbliżony ulotkom
+      z pizzerii wydruk menu, czyli:
 		</p>
 		<p>
 			<strong>nazwa_pizzy - składniki/dodatki</strong>
 		</p>
 		<p>
-			A więc problem nie był kod widoku, ponieważ tu mogliśmy zbudować kod realizujący to samo zadanie w znacznie prostszy sposób, ale kod szablonu. Znaczniki szablonu mają duże możliwości, jednak nie są pełnym odwzorowaniem tego co można zrobić w Pythonie. Rozwiązanie było banalne. Mamy listę z nazwami pizz, uruchamiamy pętle, wewnątrz tej iteracji, odwołujemy się nazwą pizzy do listy składników i problem rozwiązany. Jednak w szablonach Django, jedyne co możemy zrobić z zmiennymi to nadać im wartość i wypisać. Nie możemy użyć zmiennej szablonu jako klucza aby odwołać się do kolejnej listy w zagnieżdżonej pętli <code class="code-inline">for</code>. Używanie zmiennej <em>context</em> w szablonie zakończyło się fiaskiem, mogliśmy pisać kod szablonu, który niczego nie generował. Zajrzałem więc do oficjalnej dokumentacji Django, rozwiązanie od razu nie przypadło mi do gustu, słownik + lista+ obiekty, jednak jak możemy się o tym przekonać rozwiązanie działa.
-			Słownik w tym przypadku jest strukturą danych przekazywaną do szablonu za sprawą funkcji <code class="code-inline">render</code>, lista jest strukturą dzięki, której może odbyć się iteracja przez nasze pizze, obiekty pizzy został użyty w celu spięcia nazwy pizzy oraz jej dodatków w jednej strukturze, do której będziemy mogli się odwołać w szablonie. Za pewne istnieje inne rozwiązanie, jednak jeśli drogi czytelniku w życiu stworzyłeś może jeden program w Pythonie, przeczytałeś całą pierwszą część Crash Course (uwaga wykonując większość ćwiczeń, wszystkich nie trzeba ponieważ się powtarzają, ewentualnie trzeba zmienić jedną rzecz jednak logika pozostaje ta sama) i dotarłeś aż tutaj to moja umiejętność programowania w Pythonie jest mniej więcej na Twoim poziomie. Tak więc co się dzieje w widoku, już tłumaczę. Na początku importujemy nasze modele, żeby było skąd dane pobrać. Wydane zostaje zapytanie do modelu <code class="code-inline">Pizza</code> o wszystkie (egzemplarze modelu) rekordy, tworząc listę naszych pizz.
-			Tworzymy klasę naszej pizzy, klasa będzie zawierać tylko metodę <code  class="code-inline">__init__</code> a oraz dwie właściwości nazwę oraz dodatki jako ciągi tekstowe Przeprowadzając iteracje, z elementu naszej listy pizz tworzymy nazwę pizzy po prostu przechowując ją w zmiennej jako ciąg tekstowy, pobieramy listę naszych dodatków odwołując się kluczem obcym pizzy do modelu <code class="code-inline">Toping</code>. Przerabiamy listę dodatków na ciąg tekstowy. Po utworzeniu listy dodatków jako ciągu możemy, zacząć tworzyć obiekty. Nowo utworzone obiekty trafiają do listy i tak kończy się iteracja. Na samym końcu dodajmy naszą listę obiektów do słownika, który w ostatniej linii naszego widoku jest przekazywany do szablonu za pomocą funkcji <code class="code-inline">render</code>. Poniżej znajduje się kod naszego szablonu.
+			A więc problem nie był kod widoku, ponieważ tu mogliśmy zbudować kod 
+      realizujący to samo zadanie w znacznie prostszy sposób, ale kod szablonu.
+      Znaczniki szablonu mają duże możliwości, jednak nie są pełnym 
+      odwzorowaniem tego co można zrobić w Pythonie. Rozwiązanie było banalne.
+      Mamy listę z nazwami pizz, uruchamiamy pętle, wewnątrz tej iteracji, 
+      odwołujemy się nazwą pizzy do listy składników i problem rozwiązany. 
+      Jednak w szablonach Django, jedyne co możemy zrobić z zmiennymi to nadać
+      im wartość i wypisać. Nie możemy użyć zmiennej szablonu jako klucza aby 
+      odwołać się do kolejnej listy w zagnieżdżonej pętli 
+      <code class="code-inline">for</code>. Używanie zmiennej <em>context</em>
+      w szablonie zakończyło się fiaskiem, mogliśmy pisać kod szablonu, który 
+      niczego nie generował. Zajrzałem więc do oficjalnej dokumentacji Django,
+      rozwiązanie od razu nie przypadło mi do gustu, słownik + lista + obiekty,
+      jednak jak możemy się o tym przekonać rozwiązanie działa.
+			Słownik w tym przypadku jest strukturą danych przekazywaną do szablonu za
+      sprawą funkcji <code class="code-inline">render</code>, lista jest
+      strukturą dzięki, której może odbyć się iteracja przez nasze pizze, 
+      obiekty pizzy został użyty w celu spięcia nazwy pizzy oraz jej dodatków w
+      jednej strukturze, do której będziemy mogli się odwołać w szablonie.
+      Zapewne istnieje inne rozwiązanie, jednak jeśli drogi czytelniku w życiu
+      stworzyłeś może jeden program w Pythonie, przeczytałeś całą pierwszą 
+      część <em>Crash Course</em> (uwaga wykonując większość ćwiczeń, 
+      wszystkich nie trzeba ponieważ się powtarzają, ewentualnie trzeba zmienić
+      jedną rzecz jednak logika pozostaje ta sama) i dotarłeś aż tutaj to moja
+      umiejętność programowania w Pythonie jest mniej więcej na Twoim poziomie.
+    </p>
+    <p>
+      Tak więc co się dzieje w widoku, już tłumaczę. Na początku importujemy 
+      nasze modele, żeby było skąd dane pobrać. Wydane zostaje zapytanie do 
+      modelu <code class="code-inline">Pizza</code> o wszystkie (egzemplarze 
+      modelu) rekordy, tworząc listę naszych pizz.
+			Tworzymy klasę naszej pizzy, klasa będzie zawierać tylko metodę 
+      <code class="code-inline">__init__</code> a oraz dwie właściwości nazwę 
+      oraz dodatki jako ciągi tekstowe. Przeprowadzając iteracje z elementu 
+      naszej listy pizz tworzymy nazwę pizzy po prostu przechowując ją w 
+      zmiennej jako ciąg tekstowy, pobieramy listę naszych dodatków odwołując 
+      się kluczem obcym pizzy do modelu <code class="code-inline">Toping</code>.
+      Przerabiamy listę dodatków na ciąg tekstowy. Po utworzeniu listy dodatków
+      jako ciągu możemy, zacząć tworzyć obiekty. Nowo utworzone obiekty 
+      trafiają do listy i tak kończy się iteracja. Na samym końcu dodajmy naszą
+      listę obiektów do słownika, który w ostatniej linii naszego widoku jest 
+      przekazywany do szablonu za pomocą funkcji 
+      <code class="code-inline">render</code>. Poniżej znajduje się kod naszego
+      szablonu.
 		</p>
 <pre class="code-block">
 {% extends 'pizzas/index.html' %}
@@ -3057,10 +3100,13 @@ def menu(request):
 {% endblock content %}
 </pre>
 		<p>
-			W tym momencie powinniśmy mieć gotowe menu. Teraz przygotujemy stronę, która wyświetli nam listę dodatków każdej z pizzy, abyś mogli zobaczyć jak działa <strong>przekazywanie danych do aplikacji za pomocą adresu URL</strong>
+			W tym momencie powinniśmy mieć gotowe menu. Teraz przygotujemy stronę, 
+      która wyświetli nam listę dodatków każdej z pizzy, abyś mogli zobaczyć 
+      jak działa przekazywanie danych do aplikacji za pomocą adresu URL.
 		</p>
 		<p>
-			Naszą rozbudowę rozpoczęliśmy od utworzenia widoku dla nowej strony. Widok jak widać poniżej jest bardzo prosty.
+			Naszą rozbudowę rozpoczęliśmy od utworzenia widoku dla nowej strony.
+      Widok jak widać poniżej jest bardzo prosty.
 		</p>
 <pre class="code-block">
 def pizza_site(request, pizza_id):
@@ -3078,7 +3124,17 @@ def pizza_site(request, pizza_id):
     return render(request, 'pizzas/pizza_site.html', context)
 </pre>
 		<p>
-			<strong>Zwrócić uwagę należy na dodatkowy parametr przekazywany do widoku. Parametr o nazwie <code class="code-inline">pizza_id</code> będzie przekazywali za pomocą adresu URL, taki parametr definiuje się we wzorcu adresu URL</strong>. Wzorcem zajmiemy się pod koniec naszych prac. Szablon dla tej strony został przedstawiony poniżej. Za pomocą słownika <code class="code-inline">context</code> została przekazana nazwa pizzy oraz lista z jej składnikami, nową rzeczą wprowadzoną tutaj jest <strong>znacznik szablonu <em>{% empty %</em>}</strong> oznacza on mniej więcej to że jeśli interpreter natrafi na pustą listę to możemy zdefiniować w bardzo prosty sposób komunikat o tym że składniki na tej pizzy są na życzenie.
+		  Zwrócić uwagę należy na dodatkowy parametr przekazywany do widoku. 
+      Parametr o nazwie <code class="code-inline">pizza_id</code> będzie 
+      przekazywali za pomocą adresu URL, taki parametr definiuje się we wzorcu
+      adresu URL. Wzorcem zajmiemy się pod koniec naszych prac.
+      Szablon dla tej strony został przedstawiony poniżej. Za pomocą słownika
+      <code class="code-inline">context</code> została przekazana nazwa pizzy 
+      oraz lista z jej składnikami, nową rzeczą wprowadzoną tutaj jest 
+      znacznik szablonu <code class="code-inline">{% empty %}</code> oznacza on
+      mniej więcej to że jeśli interpreter natrafi na pustą listę to możemy 
+      zdefiniować w bardzo prosty sposób komunikat o tym że składniki na tej 
+      pizzy są na życzenie.
 		</p>
 <pre class="code-block">
 {% extends 'pizzas/base.html' %}
@@ -3097,13 +3153,25 @@ def pizza_site(request, pizza_id):
 {% endblock content %}
 </pre>
 		<p>
-			Mając już szablon możemy przejść do mapowania URL-i. W aplikacji <em>pizzas</em> w pliku <em>urls.py</em> za pomocą funkcji <code class="code-inline">path</code> dopisujemy do listy <em>urlspattern</em> kolejny wzorzec adresu.
+			Mając już szablon możemy przejść do mapowania URL-i. W aplikacji 
+      <em>pizzas</em> w pliku <em>urls.py</em> za pomocą funkcji 
+      <code class="code-inline">path</code> dopisujemy do listy 
+      <em>urlspattern</em> kolejny wzorzec adresu.
 		</p>
 <pre class="code-block">
 path('pizza/&lt;int:pizza_id&gt;', views.pizza_site, name='pizza_site')
 </pre>
 	<p>
-		Stąd właśnie bierze się parametr widoku <code class="code-inline">pizza_site</code>, <strong>jeśli po <em>pizza/</em> podamy liczbę całkowitą to wywołamy widok <em>pizza_site</em> przekazując tę liczbę jako identyfikator rekordu pizzy</strong>. Wszystko świetnie, jednak nie znamy <em>id</em> pizz. Należało by stworzyć odnośnik do konkretnej pizzy w menu. W obecnej formie naszego menu próżno szukać <em>id</em>. Dlatego też musimy zmodyfikować widok <em>menu</em> dodając do naszej klasy atrybut id, który można pobrać bezpośrednio z egzemplarza modelu za pomocą notacji kropki i właściwości o nazwie <em>id</em>. Poniżej wstawiam zmieniony kod widoku <code class="code-inline">menu</code>.
+		Stąd właśnie bierze się parametr widoku 
+    <code class="code-inline">pizza_site</code>, jeśli po <em>pizza/</em> 
+    podamy liczbę całkowitą to wywołamy widok <em>pizza_site</em> przekazując
+    tę liczbę jako identyfikator rekordu pizzy</strong>. Wszystko świetnie, 
+    jednak nie znamy <em>id</em> pizz. Należało by stworzyć odnośnik do 
+    konkretnej pizzy w menu. W obecnej formie naszego menu próżno szukać 
+    <em>id</em>. Dlatego też musimy zmodyfikować widok <em>menu</em> dodając do
+    naszej klasy atrybut id, który można pobrać bezpośrednio z egzemplarza 
+    modelu za pomocą notacji kropki i właściwości o nazwie <em>id</em>. Poniżej
+    wstawiam zmieniony kod widoku <code class="code-inline">menu</code>.
 	</p>
 <pre class="code-block">
 def menu(request):
@@ -3139,7 +3207,8 @@ def menu(request):
     return render(request, 'pizzas/menu.html', pizza_dict)
 </pre>
 		<p>
-			Teraz musimy utworzyć nasz odnośnik w pętli w pliku szablonu menu aby pojawił się dla każdej pizzy.
+			Teraz musimy utworzyć nasz odnośnik w pętli w pliku szablonu menu, aby 
+      pojawił się dla każdej pizzy.
 		</p>
 <pre class="code-block">
 {% extends 'pizzas/index.html' %}
@@ -3162,18 +3231,30 @@ def menu(request):
 {% endblock content %}
 </pre>
 		<p>
-			Podczas tworzenia adresu odnośnika za pomocą znacznika szablonu <code class="code-inline">url</code> odwołujemy się do wzorca zdefiniowanego za pomocą wartości nadanej parametrowi <em>name</em> funkcji <em>path</em><strong> </strong>w pliku <em>urls.py</em>, tym razem <strong>wartość <em>pizza_id</em>  podajemy obok odwołania się do wzorca</strong>. Teraz przy wywołaniu strony menu przy każdej z pizz powinien pokazać się odnośnik "Pokaż" kierujący nas do konkretnej strony pizzy.
+			Podczas tworzenia adresu odnośnika za pomocą znacznika szablonu 
+      <code class="code-inline">url</code> odwołujemy się do wzorca 
+      zdefiniowanego za pomocą wartości nadanej parametrowi <em>name</em> 
+      funkcji <em>path</em>w pliku <em>urls.py</em>, tym razem wartość 
+      <em>pizza_id</em> podajemy obok odwołania się do wzorca. Teraz przy 
+      wywołaniu strony menu przy każdej z pizz powinien pokazać się odnośnik
+      "Pokaż" kierujący nas do konkretnej strony pizzy.
 		</p>
-		<p>&nbsp;</p>
-		<h2>Aplikacja users</h2>
+		<h2 id="2.4.theuserapplication">2.4. Aplikacja users</h2>
 		<p>
-			Skoro mamy już stronę główną, mamy menu i jest z czego wybierać możemy teraz przejść do składania zamówień. Złożenie zamówienia w naszej pizzerii będzie wymagało utworzenia konta. <strong>Obsługą kont zajmie się odrębna aplikacja Users, którą teraz utworzymy</strong>. Przechodzimy do katalogu naszego projektu i wydajemy następujące polecenie:
+			Skoro mamy już stronę główną, mamy menu i jest z czego wybierać możemy 
+      teraz przejść do składania zamówień. Złożenie zamówienia w naszej 
+      pizzerii będzie wymagało utworzenia konta. Obsługą kont zajmie się 
+      odrębna aplikacja <em>users</em>, którą teraz utworzymy. Przechodzimy do
+      katalogu naszego projektu i wydajemy następujące polecenie:
 		</p>
 <pre class="code-block">
 (project_env) xf0r3m@macbook:python/django$ python manage.py startapp users
 </pre>
 		<p>
-			Po wydaniu tego polecenia zostanie utworzona struktura plików identyczna jak dla aplikacji <em>pizzas</em>. Teraz instalujemy aplikacje <em>users</em> w identyczny sposób jak instalowaliśmy aplikacje <em>pizzas</em>.
+			Po wydaniu tego polecenia zostanie utworzona struktura plików identyczna
+      jak dla aplikacji <em>pizzas</em>. Teraz instalujemy aplikacje 
+      <em>users</em> w identyczny sposób jak instalowaliśmy aplikacje 
+      <em>pizzas</em>.
 		</p>
 <pre class="code-block">
 INSTALLED_APPS = [
@@ -3187,10 +3268,21 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 </pre>
-		<p>&nbsp;</p>
-		<h2>Logowanie użytkowników</h2>
+		<h3 id="2.4.1.userslogin">2.4.1. Logowanie użytkowników</h3>
 		<p>
-			Naszą przygodę z kontami użytkowników zaczniemy od dania możliwości logowania potencjalnym klientom naszej pizzerii. Samo logowanie w Django jest banalne ponieważ korzystać będziemy z gotowego, przygotowanego przez Django widoku dla logowania. Jedynego czego będziemy potrzebować to mapowania URL oraz szablonu. Zaczniemy od mapowania. W pliku <em>urls.py</em> projektu <em>pizzeria</em> na liście <code class="code-inline">urlpatterns</code> dokonujemy takiego samego przekierowania jak w przypadku przekierowania w aplikacji <em>pizzas</em> jednak naszym wzorcem będzie <code class="code-inline">users/</code> a pliku <em>urls.py</em> będzie znajdował się w katalogu aplikacji <em>users</em> (jako argument funkcji <code class="code-inline">include</code> podajemy <code class="code-inline">users.urls</code>).
+			Naszą przygodę z kontami użytkowników zaczniemy od dania możliwości 
+      logowania potencjalnym klientom naszej pizzerii. Samo logowanie w Django
+      jest banalne ponieważ korzystać będziemy z gotowego, przygotowanego przez
+      Django widoku dla logowania. Jedynego czego będziemy potrzebować to 
+      mapowania URL oraz szablonu. Zaczniemy od mapowania. 
+      W pliku <em>urls.py</em> projektu <em>pizzeria</em> na liście 
+      <code class="code-inline">urlpatterns</code> dokonujemy takiego samego 
+      przekierowania jak w przypadku przekierowania w aplikacji <em>pizzas</em>
+      jednak naszym wzorcem będzie <code class="code-inline">users/</code> a
+      pliku <em>urls.py</em> będzie znajdował się w katalogu aplikacji 
+      <em>users</em> (jako argument funkcji 
+      <code class="code-inline">include</code> podajemy 
+      <code class="code-inline">users.urls</code>).
 		</p>
 <pre class="code-block">
 urlpatterns = [
@@ -3201,7 +3293,15 @@ urlpatterns = [
 </pre>
 
 		<p>
-			W aplikacji <em>users</em> tworzymy plik urls.py. W nim importujemy funkcje <code class="code-inline">path</code> oraz <code class="code-inline">include</code> z modułu <code class="code-inline">django.urls</code>, definiujemy <code class="code-inline">app_name</code> następnie na liście <code class="code-inline">urlpatterns</code> dodajemy jedno wywołanie funkcji <code class="code-inline">path</code> kierujące puste domyślne zapytanie do pliku zdefiniowanego przez Django <code class="code-inline">django.contrib.auth.urls</code>.
+			W aplikacji <em>users</em> tworzymy plik urls.py. W nim importujemy 
+      funkcje <code class="code-inline">path</code> oraz 
+      <code class="code-inline">include</code> z modułu 
+      <code class="code-inline">django.urls</code>, definiujemy 
+      <code class="code-inline">app_name</code> następnie na liście 
+      <code class="code-inline">urlpatterns</code> dodajemy jedno wywołanie 
+      funkcji <code class="code-inline">path</code> kierujące puste domyślne
+      zapytanie do pliku zdefiniowanego przez Django 
+      <code class="code-inline">django.contrib.auth.urls</code>.
 		</p>
 <pre class="code-block">
 from django.urls import path,include
@@ -3212,7 +3312,13 @@ urlpatterns = [
 ]
 </pre>
 		<p>
-			Teraz kiedy mapowanie jest gotowe, możemy przejść do utworzenia szablonu. Domyślna funkcja widoku stworzona do logowania generuje stronę na podstawie szablonu <em>login.html</em> umieszczonego w katalogu <strong><em>templates/registration</em>. Te nazwy muszą zostać zachowane</strong>. Utwórzmy te katalogi wewnątrz katalogu aplikacji <em>users</em>. Następnie utworzymy plik z szablonem.
+			Teraz kiedy mapowanie jest gotowe, możemy przejść do utworzenia szablonu.
+      Domyślna funkcja widoku stworzona do logowania generuje stronę na 
+      podstawie szablonu <em>login.html</em> umieszczonego w katalogu 
+      <em>templates/registration</em>. 
+      <strong>Te nazwy muszą zostać zachowane</strong>. Utwórzmy te katalogi 
+      wewnątrz katalogu aplikacji <em>users</em>. Następnie utworzymy plik z 
+      szablonem.
 		</p>
 <pre class="code-block">
 {% extends 'pizzas/base.html' %}
@@ -3229,7 +3335,23 @@ urlpatterns = [
 {% endblock content %}
 </pre>
 		<p>
-			Tak prezentuje się nasz szablon logowania. Warto zwrócić uwagę na to jak <strong>łatwy jest dostęp do zasobów innej aplikacji wystarczy odpowiednia ścieżka (patrz znacznik <em>extends</em>)</strong>, w atrybucie <em>action</em> zdefiniowana została strona, która ma obsłużyć dany formularz. <strong>Znacznik szablonu <code class="code-inline">csrf_token</code> służy zabezpieczeniu formularza przez atakiem CSRF</strong>. Następnie wyświetlany jest sam formularz, który przechowywany jest w zmiennej <code class="code-inline">form</code>. Wyświetlenie jej wraz z<strong> <code class="code-inline">as.p</code> spowoduje że etykiety oraz pola wprowadzania danych zostaną wyświetlone jako jeden akapit i tak dla każdego z elementów formularza</strong>. <strong>Formularze w Django nie zawierają przycisków</strong>, trzeba je zdefiniować samemu.<strong> Ostatnią rzeczą jest przekazanie wraz z formularzem do widoku adresu strony, do której ma zostać przekierowany użytkownik po poprawnym zalogowaniu.</strong> Jako ciekawostkę możemy sobie dodać warunek w formularzu, który wyświetli nam komunikat z informacją o tym że formularz nie został poprawnie wypełniony.  W ten czas nasz formularz wyglądać będzie tak:
+			Tak prezentuje się nasz szablon logowania. Warto zwrócić uwagę na to jak
+      łatwy jest dostęp do zasobów innej aplikacji wystarczy odpowiednia 
+      ścieżka (patrz znacznik <em>extends</em>), w atrybucie 
+      <em>action</em> zdefiniowana została strona, która ma obsłużyć dany 
+      formularz. Znacznik szablonu <code class="code-inline">csrf_token</code>
+      służy zabezpieczeniu formularza przez atakiem CSRF. Następnie wyświetlany
+      jest sam formularz, który przechowywany jest w zmiennej 
+      <code class="code-inline">form</code>. Wyświetlenie jej wraz z 
+      <code class="code-inline">as.p</code> spowoduje, że etykiety oraz pola 
+      wprowadzania danych zostaną wyświetlone jako jeden akapit i tak dla 
+      każdego z elementów formularza. Formularze w Django nie zawierają 
+      przycisków, trzeba je zdefiniować samemu. Ostatnią rzeczą jest 
+      przekazanie wraz z formularzem do widoku adres strony, do której ma 
+      zostać przekierowany użytkownik po poprawnym zalogowaniu. Jako 
+      ciekawostkę możemy sobie dodać warunek w formularzu, który wyświetli nam
+      komunikat z informacją o tym że formularz nie został poprawnie 
+      wypełniony. W ten czas nasz formularz wyglądać będzie tak:
 		</p>
 <pre class="code-block">
 {% extends 'pizzas/base.html' %}
@@ -3252,7 +3374,12 @@ urlpatterns = [
 {% endblock content %}
 </pre>
 		<p>
-			Dlaczego jednak jako ciekawostkę? Otóż <strong>Django sam dodaje takową informacje jeśli formularz nie przejdzie walidacji</strong>. Teraz dodamy warunek w pliku w szablonie bazowym aplikacji <em>pizzas</em>, po to abyśmy wiedzieli że zostaliśmy zalogowani oraz w przeciwnym wypadku wyświetli odnośnik prowadzący do strony logowania. Poniżej znajduje się już uzupełniony kod szablonu bazowego aplikacji <em>pizzas</em>.</p>
+			Dlaczego jednak jako ciekawostkę? Otóż Django sam dodaje takową 
+      informacje jeśli formularz nie przejdzie walidacji. Teraz dodamy warunek
+      w pliku w szablonie bazowym aplikacji <em>pizzas</em>, po to abyśmy 
+      wiedzieli, że zostaliśmy zalogowani oraz w przeciwnym wypadku wyświetli
+      odnośnik prowadzący do strony logowania. Poniżej znajduje się już 
+      uzupełniony kod szablonu bazowego aplikacji <em>pizzas</em>.
 		</p>
 <pre class="code-block">
 &lt;p&gt;
@@ -3273,7 +3400,15 @@ urlpatterns = [
 {% block content %} {% endblock content%}
 </pre>
 		<p>
-			Jednego użytkownika już mamy. Możemy się zalogować się jako superużytkownik. Po poprawnym zalogowaniu zostaniemy przeniesieni do z powrotem na stronę główną, jednak teraz zamiast "Zaloguj się" zobaczymy "Witaj, pizza_admin". Teraz pod powitaniem umieścimy przycisk "Wyloguj", który będzie kończył sesję użytkownika w aplikacji. Wylogowanie również jest funkcją, która jest dostarczana wraz z Django. Mapowanie URL-u wylogowania jest również dostarczane przez Django, tak jak mapowanie URL-u logowania. Szablon bazowy wygląda następująco po dodaniu nowego odnośnika.
+			Jednego użytkownika już mamy. Możemy się zalogować się jako 
+      superużytkownik. Po poprawnym zalogowaniu zostaniemy przeniesieni z 
+      powrotem na stronę główną, jednak teraz zamiast <em>Zaloguj się</em>
+      zobaczymy <em>Witaj, pizza_admin</em>. Teraz pod powitaniem umieścimy 
+      przycisk <em>Wyloguj</em>, który będzie kończył sesję użytkownika w 
+      aplikacji. Wylogowanie również jest funkcją, która jest dostarczana wraz
+      z Django. Mapowanie URL-u wylogowania jest również dostarczane przez 
+      Django, tak jak mapowanie URL-u logowania. Szablon bazowy wygląda 
+      następująco po dodaniu nowego odnośnika.
 		</p>
 <pre class="code-block">
 &lt;p&gt;
@@ -3300,7 +3435,14 @@ urlpatterns = [
 {% block content %} {% endblock content%}
 </pre>
 		<p>
-			W ramach eksperymentu, kliknijmy w ten odnośnik. Zostaniemy poinformowani o wylogowaniu z naszej aplikacji przez witrynę administracyjną Django. Nie zbyt fajnie, co? Oczywiście to zachowanie możemy zmienić, tworząc nowy szablon w katalogu <em>templates/registration</em>. <strong>Uwaga!</strong> <strong>Plik musi nazywać się: logged_out.html.</strong> Po rozszerzeniu pliku o szablon bazowy, między znacznikami<em> </em>szablonu oznaczającymi zawartość strony w tym szablonie możemy umieścić wszystko co nam się podoba.
+			W ramach eksperymentu, kliknijmy w ten odnośnik. Zostaniemy poinformowani
+      o wylogowaniu z naszej aplikacji przez witrynę administracyjną Django. 
+      Nie zbyt fajnie, co? Oczywiście to zachowanie możemy zmienić, tworząc 
+      nowy szablon w katalogu <em>templates/registration</em>. 
+      <strong>Uwaga</strong>, Plik musi nazywać się: logged_out.html. 
+      Po rozszerzeniu pliku o szablon bazowy, między znacznikami szablonu 
+      oznaczającymi zawartość strony w tym szablonie możemy umieścić wszystko
+      co nam się podoba.
 		</p>
 <pre class="code-block">
 {% extends 'pizzas/base.html' %}
@@ -3313,10 +3455,13 @@ urlpatterns = [
 
 {% endblock content %}
 </pre>
-		<p>&nbsp;</p>
-		<h2>Rejestracja użytkowników</h2>
+		<h3 id="2.4.2.theuserregistration">2.4.2. Rejestracja użytkowników</h3>
 		<p>
-			Teraz możemy dać możliwość samodzielnego utworzenia konta na stronie naszej pizzerii. Tutaj nie jest już tak kolorowo. Jedyne co nam <strong>Django oferuje w tym przypadku jest formularz. </strong>Widok, szablon oraz mapowanie URL-u musimy utworzyć samodzielnie. Zaczynamy od widoku dla formularza rejestracji.
+			Teraz możemy dać możliwość samodzielnego utworzenia konta na stronie 
+      naszej pizzerii. Tutaj nie jest już tak kolorowo. Jedyne co nam 
+      Django oferuje w tym przypadku jest formularz. Widok, szablon oraz 
+      mapowanie URL-u musimy utworzyć samodzielnie. Zaczynamy od widoku dla 
+      formularza rejestracji.
 		</p>
 <pre class="code-block">
 from django.shortcuts import render, redirect
@@ -3337,22 +3482,73 @@ def register(request):
    return render(request, 'registration/register.html", context)
 </pre>
 		<p>
-			W tym przypadku aby funkcja widoku mogła poprawnie działać oraz wyświetlać nam formularz, potrzebujemy modułów. Pierwszą funkcją jaką importujemy jest <code class="code-inline">redirect</code>, powoduje ona przekierowanie HTTP, na stronę podaną jako argument. <strong>Adresy stron podane jako argumenty funkcji <em>redirect </em>czy też w znacznikach szablonu <em>url</em> podajem w formacie <code class="code-inline">nazwa_aplikacji:nazwa_mapowania</code> - wartość argumentu <em>name</em> funkcji <em>path</em> w pliku <em>urls.py</em>.</strong> Następnie importujemy nasz formularz oraz funkcję <em>login</em>. Za pomocą tej funkcji będzie możliwe automatyczne zalogowanie nowo utworzonego użytkownika. Funkcje widoku obsługujące formularz posiadają pewien schemat. Taka funkcja rozpoczyna się od sprawdzenia użytej metody przesłania danych do serwera, protokół HTTP wyróżnia dwie <strong>GET</strong> oraz <strong>POST</strong>. Metoda <em>GET</em> służy głównie do obsługi żądań osób odwiedzających witrynę. Poniżej żądanie wyświetlenia strony konkretnej pizzy.
+			W tym przypadku aby funkcja widoku mogła poprawnie działać oraz 
+      wyświetlać nam formularz, potrzebujemy modułów. Pierwszą funkcją jaką 
+      importujemy jest <code class="code-inline">redirect</code>, powoduje ona
+      przekierowanie HTTP, na stronę podaną jako argument. Adresy stron podane
+      jako argumenty funkcji <em>redirect</em> czy też w znacznikach szablonu 
+      <em>url</em> podajem w formacie 
+      <code class="code-inline">nazwa_aplikacji:nazwa_mapowania</code> -
+      wartość argumentu <em>name</em> funkcji <em>path</em> w pliku 
+      <em>urls.py</em>.</strong> Następnie importujemy nasz formularz oraz 
+      funkcję <em>login</em>. Za pomocą tej funkcji będzie możliwe automatyczne
+      zalogowanie nowo utworzonego użytkownika. Funkcje widoku obsługujące 
+      formularz posiadają pewien schemat. Taka funkcja rozpoczyna się od 
+      sprawdzenia użytej metody przesłania danych do serwera, protokół HTTP 
+      wyróżnia dwie <strong>GET</strong> oraz <strong>POST</strong>. 
+      Metoda <em>GET</em> służy głównie do obsługi żądań osób odwiedzających 
+      witrynę. Poniżej żądanie wyświetlenia strony konkretnej pizzy.
 		</p>
 <pre class="code-block">
 http://localhost:8000/pizza/1
 </pre>
 		<p>
-			Żądanie wyświetlenia konkretnej pizzy zostało przesłane do serwera za pomocą żądania <em>GET</em>. Najprościej można to ująć w ten sposób że żądania <strong><em>GET</em> są przesyłanie w adresie strony. </strong>Natomiast żądania<strong> <em>POST</em> są przesyłane oddzielnym pakietem transmisji.</strong> W żądaniach <em>POST</em> najczęsciej są przesyłane dane formularzy.
+			Żądanie wyświetlenia konkretnej pizzy zostało przesłane do serwera za 
+      pomocą żądania <em>GET</em>. Najprościej można to ująć w ten sposób, że
+      żądania <em>GET</em> są przesyłanie w adresie strony. Natomiast 
+      żądania <em>POST</em> są przesyłane oddzielnym pakietem transmisji.
+      W żądaniach <em>POST</em> najczęsciej są przesyłane dane formularzy.
 		</p>
 		<p>
-			Jeśli w nasz widok, ktoś wywołał za pomocą żądania <em>GET</em> to wtedy zmiennej <code class="code-inline">form</code> zostanie nadany pusty formularz. Następnie definiowana jest zmienna <code class="code-inline">context</code> zawierająca wszelkie dane dla szablonu w tym nasz formularz. Na sam koniec funkcja widoku zwraca wygenerowaną przed funkcję <code class="code-inline">render()</code> stronę, na której znajduje się nasz formularz rejestracji. W przeciwnym wypadku jeśli nasza funkcja została wywołana za pomocą żądania POST (np. kiedy użytkownik przesłał formularz), to tworzona jest zmienna z formularzem gdzie jego dane są pobierane z właściwości <code class="code-inline">POST</code> obiektu <code class="code-inline">request</code>.
-			Za pomocą instrukcji warunkowej <code class="code-inline">if</code> oraz metody formularza <code class="code-inline">is_valid()</code> sprawdza jest poprawność wypełnienia pól formularza, jeśli któraś z wartości pół nie przechodzi walidacji (sprawdzenia poprawności), to następną czynnością jest wpisanie formularza do zmiennej <code class="code-inline">context</code> i wygenerowanej strony z formularzem oraz komunikatem błędu.
-			Zaś kiedy formularz został wypełniony bezbłędnie to wykonywana jest metoda formularza <code class="code-inline">save()</code>, która powoduje zapisanie danych z formularza w bazie danych na podstawie przypisanego do niego modelu. Zwróćmy uwagę na to że <strong>wartość zwraca przez metodę <em>save()</em> została zapisana do zmiennej <code class="code-inline">new_user</code>. Dzięki tej zmiennej będzie możliwe automatyczne zalogowanie zarejestrowanego użytkownika</strong>, kiedy mamy tą zmienną możemy zalogować użytkownika za pomocą funkcji <code class="code-inline">login()</code> ta funkcja pobiera dwa argumenty obiekt żądania (<em>request</em>) oraz odniesienie do użytkownika (<em>new_user</em>).
-			Kiedy użytkownik został zalogowany, możemy teraz przekierować go na stronę główną, która zostanie wyświetlona ze spersonalizowanym powitaniem oraz odnośnikiem do wylogowania się z konta na naszej stronie. Teraz potrzebujemy jeszcze szablonu, który poza odnośnikiem nie różni się niczym do szablonu logowania.
+			Jeśli nasz widok, ktoś wywołał za pomocą żądania <em>GET</em> to wtedy 
+      zmiennej <code class="code-inline">form</code> zostanie nadany pusty 
+      formularz. Następnie definiowana jest zmienna 
+      <code class="code-inline">context</code> zawierająca wszelkie dane dla 
+      szablonu w tym nasz formularz. Na sam koniec funkcja widoku zwraca 
+      wygenerowaną przed funkcję <code class="code-inline">render()</code> 
+      stronę, na której znajduje się nasz formularz rejestracji. W przeciwnym 
+      wypadku jeśli nasza funkcja została wywołana za pomocą żądania POST 
+      (np. kiedy użytkownik przesłał formularz), to tworzona jest zmienna z 
+      formularzem gdzie jego dane są pobierane z właściwości 
+      <code class="code-inline">POST</code> obiektu 
+      <code class="code-inline">request</code>.
+			Za pomocą instrukcji warunkowej <code class="code-inline">if</code> oraz
+      metody formularza <code class="code-inline">is_valid()</code> sprawdza 
+      jest poprawność wypełnienia pól formularza, jeśli któraś z wartości pół 
+      nie przechodzi walidacji (sprawdzenia poprawności), to następną czynnością
+      jest wpisanie formularza do zmiennej 
+      <code class="code-inline">context</code> i wygenerowanej strony z 
+      formularzem oraz komunikatem błędu.
+			Zaś kiedy formularz został wypełniony bezbłędnie to wykonywana jest 
+      metoda formularza <code class="code-inline">save()</code>, która powoduje
+      zapisanie danych z formularza w bazie danych na podstawie przypisanego do
+      niego modelu. Zwróćmy uwagę na to, że wartość zwraca przez metodę 
+      <em>save()</em> została zapisana do zmiennej 
+      <code class="code-inline">new_user</code>. Dzięki tej zmiennej będzie 
+      możliwe automatyczne zalogowanie zarejestrowanego użytkownika, kiedy mamy
+      tą zmienną możemy zalogować użytkownika za pomocą funkcji 
+      <code class="code-inline">login()</code> ta funkcja pobiera dwa argumenty
+      obiekt żądania (<em>request</em>) oraz odniesienie do użytkownika (
+      <em>new_user</em>).
+			Kiedy użytkownik został zalogowany, możemy teraz przekierować go na 
+      stronę główną, która zostanie wyświetlona ze spersonalizowanym powitaniem
+      oraz odnośnikiem do wylogowania się z konta na naszej stronie. Teraz 
+      potrzebujemy jeszcze szablonu, który poza odnośnikiem nie różni się 
+      niczym do szablonu logowania.
 		</p>
 		<p>
-			Plik szablonu formularza rejestracji znajduje się w folderze <em>templates/registration</em> pod nazwą <em>register.html</em>:
+			Plik szablonu formularza rejestracji znajduje się w folderze 
+      <em>templates/registration</em> pod nazwą <em>register.html</em>:
 		</p>
 <pre class="code-block">
 {% extends 'pizzas/base.html' %}
@@ -3379,7 +3575,8 @@ http://localhost:8000/pizza/1
 path('register/', views.register, name="register"),
 </pre>
 		<p>
-			Teraz możemy do szablonu bazowego aplikacji <em>pizzas</em> dodać odnośnik dla niezalogowanych, prowadzący do naszej strony z rejestracją.i
+			Teraz możemy do szablonu bazowego aplikacji <em>pizzas</em> dodać 
+      odnośnik dla niezalogowanych, prowadzący do naszej strony z rejestracją.
 		</p>
 <pre class="code-block">
 &lt;p&gt;
@@ -3404,11 +3601,19 @@ path('register/', views.register, name="register"),
 {% endif %}
 
 {% block content %} {% endblock content%}
-</pre>
-		<p>&nbsp;</p>
-		<h2>Zamówienia</h2>
+		
+    <h2 id="2.5.expandingpizzasapplication">2.5. Rozbudowa aplikacji 'pizzas'.</h2>
 		<p>
-			Teraz kiedy mamy logowanie oraz rejestracje. To powinniśmy mieć możliwość złożenia zamówienia w naszej pizzerii (aplikacja <em>pizzas</em>). Sama operacja jest dość złożona bo do realizacji tego zadania potrzebujemy aż 5 elementów: modelu zamówienia, widoku wyświetlającego zamówienia, widoku dodającego zamówienia, formularza, szablonu i mapowania URL. Zaczniemy od modelu zamówienia. Na nasze zamówienie będzie składać się pizza, wielkość, sos pierwszy oraz sos drugi, dowóz czy odbiór własny oraz datę zamówienia. Model prezentuje się poniżej. Stosować będziemy skróty, które nasz kucharz będzie stanie odszyfrować dlatego pola są takie małe.
+			Teraz kiedy mamy logowanie oraz rejestracje. To powinniśmy mieć możliwość
+      złożenia zamówienia w naszej pizzerii (aplikacja <em>pizzas</em>). Sama 
+      operacja jest dość złożona bo do realizacji tego zadania potrzebujemy 
+      aż 5 elementów: modelu zamówienia, widoku wyświetlającego zamówienia, 
+      widoku dodającego zamówienia, formularza, szablonu i mapowania URL. 
+      Zaczniemy od modelu zamówienia. Na nasze zamówienie będzie składać się 
+      pizza, wielkość, sos pierwszy oraz sos drugi, dowóz czy odbiór własny 
+      oraz datę zamówienia. Model prezentuje się poniżej. Stosować będziemy 
+      skróty, które nasz kucharz będzie stanie odszyfrować dlatego pola są 
+      takie małe.
 		</p>
 <pre class="code-block">
 class Order(models.Model):
@@ -3433,7 +3638,10 @@ class Order(models.Model):
 (project_env) xf0r3m@macbook:python/django$ python manage.py migrate
 </pre>
 		<p>
-			Po pomyślnej migracji zarejestrujemy nowy model na witrynie administracyjnej, po to aby dodać kilka testowych wartość do sprawdzenia widoku wyświetlania złożonych zamówień. Widok złożonych zamówień prezentuje się następująco:
+			Po pomyślnej migracji zarejestrujemy nowy model na witrynie 
+      administracyjnej, po to aby dodać kilka testowych wartość do sprawdzenia
+      widoku wyświetlania złożonych zamówień. Widok złożonych zamówień 
+      prezentuje się następująco:
 		</p>
 <pre class="code-block">
 def orders_view(request):
@@ -3445,7 +3653,8 @@ def orders_view(request):
     return render(request, 'pizzas/orders_view.html', context)
 </pre>
 		<p>
-			W szablonie zamiast używać listy użyjemy tabeli. Poniżej znajduje się kod szablonu.
+			W szablonie zamiast używać listy użyjemy tabeli. Poniżej znajduje się kod
+      szablonu.
 		</p>
 <pre class="code-block">
 {% extends 'pizzas/base.html' %}
@@ -3482,7 +3691,9 @@ def orders_view(request):
 {% endblock content %}
 </pre>
 		<p>
-			Teraz możemy przejść do składania zamówień na naszą pizzę, zaczniemy od formularza. Nie jest on może trudny w interpretacji ale jest nieco bardziej złożony niż te przedstawione w książce.
+			Teraz możemy przejść do składania zamówień na naszą pizzę, zaczniemy od 
+      formularza. Nie jest on może trudny w interpretacji ale jest nieco 
+      bardziej złożony niż te przedstawione w książce.
 		</p>
 <pre class="code-block">
 from django import forms
@@ -3527,11 +3738,39 @@ class NewOrder(forms.ModelForm):
         }
 </pre>
 		<p>
-			Formularze w Django to nic innego jak klasy potomne, klasy <code class="code-inline">ModelForms</code> modułu <code class="code-inline">django.forms</code>, jednak kodu określającego formularz nie tworzymy w samej klasie potomnej tylko w pod klasie <code class="code-inline">Meta</code>. Z racji tego że klasa <em>ModelForm</em> bazuje na modelach (zresztą jak sama nazwa wskazuje) musimy pamiętać o ich imporcie jeszcze przed zdefiniowaniem samej klasy.
-			W klasie <em>Meta</em> podajemy takie informacje jak <strong>model</strong> na jakim bazuje formularz (<strong>zmienna <code class="code-inline">model</code></strong>), <strong>pola formularza</strong> (<strong>lista <code class="code-inline">fields</code></strong>) oraz <strong>etykiety</strong> (<strong>słownik <code class="code-inline">labels</code></strong>), z racji tego że informacje przekazywane przez zamawiającego mogą być predefiniowane, to cały formularz oprzemy na jednym elemencie, na liście wyboru <em>select</em>.
-			<strong>Jeśli nasz model zawiera klucz obcy, to pole z automatu jest ustawiane przez Django jako element <em>select</em></strong>. Resztę naszych pól musimy ustawić samodzielnie.
-			<strong>Zmianie elementów przydzielanych przez Django, służy słownik <code class="code-inline">widgets</code></strong>, w której każdemu polu przypisujemy wyświetlany element, w tym przypadku jest to <code class="code-inline">forms.Select</code> czyli element HTML <em>select</em> <strong>jako argument <code class="code-inline">choices</code> podajemy listę z dwuelementowych krotek</strong>, w naszym przypadku zdefiniowaną powyżej słownika <em>widgets</em>.
-			Jako ciekawostkę podam fakt, że <strong>jeśli mamy w jakieś krotce w pierwszym elemencie podamy jako pierwszy argument, czyli wartość elementu <em>option</em>, wartość <em>None</em> to pole automatycznie stanie się polem <em>required</em></strong>, czyli jego wartość musi być ustawiona inaczej przeglądarka nie pozwoli wysłać formularza. Poniżej znajduje się kod widoku obsługującego ten formularz.
+			Formularze w Django to nic innego jak klasy potomne, klasy 
+      <code class="code-inline">ModelForms</code> modułu 
+      <code class="code-inline">django.forms</code>, jednak kodu określającego
+      formularz nie tworzymy w samej klasie potomnej tylko w pod klasie 
+      <code class="code-inline">Meta</code>. Z racji tego, że klasa 
+      <em>ModelForm</em> bazuje na modelach (zresztą jak sama nazwa wskazuje) 
+      musimy pamiętać o ich imporcie jeszcze przed zdefiniowaniem samej klasy.
+			W klasie <em>Meta</em> podajemy takie informacje jak 
+      model na jakim bazuje formularz 
+      (zmienna <code class="code-inline">model</code>), pola formularza 
+      (lista <code class="code-inline">fields</code>) oraz etykiety 
+      (słownik <code class="code-inline">labels</code>), z 
+      racji tego że informacje przekazywane przez zamawiającego mogą być 
+      predefiniowane, to cały formularz oprzemy na jednym elemencie, na liście
+      wyboru <em>select</em>.
+			<strong>Jeśli nasz model zawiera klucz obcy, to pole z automatu jest 
+      ustawiane przez Django jako element <em>select</em></strong>. Resztę 
+      naszych pól musimy ustawić samodzielnie.
+			Zmianie elementów przydzielanych przez Django, służy słownik 
+      <code class="code-inline">widgets</code></strong>, w którym każdemu polu
+      przypisujemy wyświetlany element, w tym przypadku jest to 
+      <code class="code-inline">forms.Select</code> czyli element HTML 
+      <em>select</em> jako argument <code class="code-inline">choices</code> 
+      podajemy listę z dwuelementowych krotek</strong>, w naszym przypadku 
+      zdefiniowaną powyżej słownika <em>widgets</em>.
+    </p>
+    <p>
+			Jako ciekawostkę podam fakt, że jeśli w jakieś krotce w pierwszym 
+      elemencie podamy jako pierwszy argument, czyli wartość elementu 
+      <em>option</em>, wartość <em>None</em> to pole automatycznie stanie się 
+      polem <em>required</em></strong>, czyli jego wartość musi być ustawiona
+      inaczej przeglądarka nie pozwoli wysłać formularza. Poniżej znajduje się
+      kod widoku obsługującego ten formularz.
 		</p>
 <pre class="code-block">
 def new_order(request):
@@ -3547,7 +3786,10 @@ def new_order(request):
     return render(request, 'pizzas/new_order.html', context)
 </pre>
 		<p>
-			Ten przypadek obsługi jest chyba najprostszy. Nie ma tu nic złożone, po przejściu walidacji zamówienie jest zapisywane w bazie. Pod mapowaniem <em>thank_you</em> kryje się jeden akapit z podziękowanie za złożenie zamówienia. Poniżej znajduje kod szablonu.
+			Ten przypadek obsługi jest chyba najprostszy. Nie ma tu nic złożonego, po
+      przejściu walidacji zamówienie jest zapisywane w bazie. Pod mapowaniem 
+      <em>thank_you</em> kryje się jeden akapit z podziękowanie za złożenie 
+      zamówienia. Poniżej znajduje kod szablonu.
 		</p>
 <pre class="code-block">
 {% extends 'pizzas/base.html' %}
@@ -3569,7 +3811,16 @@ def new_order(request):
 {% endblock content %}
 </pre>
 		<p>
-			Powiedzmy że zamówiliśmy pizzę, ale w pizzerii skończył się jeden jej składnik. Kelnerka po kontakcie telefonicznym z klientem doszła do porozumienia i klient wybrał inną pizzę. Jednak w systemie nie ma możliwości zmiany zamówienia. Utworzymy ją. Do tego celu potrzebujemy dodatkowego widoku, mapowania, szablonu oraz odnośnika do edycji zamówienia w tabeli z zamówieniami. Edycje danych wpisywanych za pomocą formularza tworzy się bardzo szybko ponieważ wystarczy skopiować widok oraz szablon. W widoku dodać kilka rzeczy, w szablonie zmieć dwie rzecz oraz dodać jedną. Poniżej znajduje się kod widoku, najważniejszy w tym przedsięwzięciu.
+			Powiedzmy że zamówiliśmy pizzę, ale w pizzerii skończył się jeden jej 
+      składnik. Kelnerka po kontakcie telefonicznym z klientem doszła do 
+      porozumienia i klient wybrał inną pizzę. Jednak w systemie nie ma 
+      możliwości zmiany zamówienia. Utworzymy ją. Do tego celu potrzebujemy 
+      dodatkowego widoku, mapowania, szablonu oraz odnośnika do edycji 
+      zamówienia w tabeli z zamówieniami. Edycje danych wpisywanych za pomocą 
+      formularza tworzy się bardzo szybko ponieważ wystarczy skopiować widok 
+      oraz szablon. W widoku dodać kilka rzeczy, w szablonie zmieć dwie rzecz 
+      oraz dodać jedną. Poniżej znajduje się kod widoku, najważniejszy w tym 
+      przedsięwzięciu.
 		</p>
 <pre class="code-block">
 def edit_order(request, order_id):
@@ -3589,8 +3840,32 @@ def edit_order(request, order_id):
     return render(request, 'pizzas/edit_order.html', context)
 </pre>
 		<p>
-			Zatem po kolei żeby było wiadomo jakie zamówienie mamy zmienić potrzebujemy jego identyfikatora, <em>id</em> z tabeli w bazie danych. Potrzebne nam <em>id</em> będzie przekazywane w żądaniu <em>GET</em>, przez kliknięcie w łącze na stronie z zamówieniami. Na początku naszego widoku importujemy model <code class="code-inline">Order</code>, aby uzyskać dostęp do egzemplarzy tego modelu w bazie. Za pomocą zapytania <code class="code-inline">Order.objects.get(id=order_id)</code>, pobraliśmy rekord zamówienia do zmiennej <code class="code-inline">order</code>. Następnie wykonuje się klasyczna obsługa formularza z tą jednak różnicą że kiedy tworzone są egzemplarze formularza to przekazywany jest argument <code class="code-inline">instance</code>, któremu nadawana jest wartość naszego zapytania, <strong>ustawienie argumentu <em>instance</em> powoduje wypełnienie pół formularza danymi z zapytania</strong>, strona <em>edit_ok</em> zawiera jeden akapit z informacją że zapisano zmiany w zamówieniu.
-			<strong>W zmiennej <code class="code-inline">context</code> została dodana wartość obiektu <code class="code-inline">order</code> pod kluczem <code class="code-inline">order</code>. Jest to niezbędne kiedy zmieniamy rekordy, ponieważ w atrybucie <code class="code-inline">action</code> formularza musimy podać <em>id</em> zmienianego rekordu, ponieważ ten widok będzie wykonywany po raz drugi gdy użytkownik prześle dane. Dlatego też po słowie kluczowym <code class="code-inline">else</code> gdzie deklarowany jest formularz, podano argument <code class="code-inline">instance</code>, aby było wiadomo jaki rekord należy zmienić. </strong>Poniżej znajduje się kod szablonu.
+			Zatem po kolei żeby było wiadomo jakie zamówienie mamy zmienić 
+      potrzebujemy jego identyfikatora, <em>id</em> z tabeli w bazie danych. 
+      Potrzebne nam <em>id</em> będzie przekazywane w żądaniu <em>GET</em>, 
+      przez kliknięcie w łącze na stronie z zamówieniami. Na początku naszego 
+      widoku importujemy model <code class="code-inline">Order</code>, aby 
+      uzyskać dostęp do egzemplarzy tego modelu w bazie. Za pomocą zapytania 
+      <code class="code-inline">Order.objects.get(id=order_id)</code>, 
+      pobraliśmy rekord zamówienia do zmiennej 
+      <code class="code-inline">order</code>. Następnie wykonuje się klasyczna
+      obsługa formularza z tą jednak różnicą, że kiedy tworzone są egzemplarze 
+      formularza to przekazywany jest argument 
+      <code class="code-inline">instance</code>, któremu nadawana jest wartość
+      naszego zapytania, ustawienie argumentu <em>instance</em> powoduje 
+      wypełnienie pół formularza danymi z zapytania</strong>, 
+      strona <em>edit_ok</em> zawiera jeden akapit z informacją że zapisano 
+      zmiany w zamówieniu.
+			W zmiennej <code class="code-inline">context</code> została dodana 
+      wartość obiektu <code class="code-inline">order</code> pod kluczem 
+      <code class="code-inline">order</code>. Jest to niezbędne kiedy zmieniamy
+      rekordy, ponieważ w atrybucie <code class="code-inline">action</code> 
+      formularza musimy podać <em>id</em> zmienianego rekordu, ponieważ ten 
+      widok będzie wykonywany po raz drugi gdy użytkownik prześle dane. Dlatego
+      też po słowie kluczowym <code class="code-inline">else</code> gdzie 
+      deklarowany jest formularz, podano argument 
+      <code class="code-inline">instance</code>, aby było wiadomo jaki rekord 
+      należy zmienić. Poniżej znajduje się kod szablonu.
 		</p>
 <pre class="code-block">
 {% extends 'pizzas/base.html' %}
@@ -3612,7 +3887,12 @@ def edit_order(request, order_id):
 {% endblock content %}
 </pre>
 		<p>
-			Tutaj zmieniono atrybut <code class="code-inline">action</code> na <code class="code-inline">edit_order</code>, dodano <code class="code -inline">order.id</code> oraz zmieniono treść przycisku. Poniżej znajduje się zawartość pliku <em>pizzas/urls.py</em> z uwzględnieniem nowego mapowania oraz zmieniony kod szablonu <em>pizzas/orders_view.html</em>.
+			Tutaj zmieniono atrybut <code class="code-inline">action</code> na 
+      <code class="code-inline">edit_order</code>, dodano 
+      <code class="code -inline">order.id</code> oraz zmieniono treść 
+      przycisku. Poniżej znajduje się zawartość pliku <em>pizzas/urls.py</em> 
+      z uwzględnieniem nowego mapowania oraz zmieniony kod szablonu 
+      <em>pizzas/orders_view.html</em>.
 		</p>
 		<p>
 			<span style="text-decoration: underline;">Plik pizzas/urls.py</span>
@@ -3671,16 +3951,30 @@ urlpatterns = [
 
 {% endblock content %}
 </pre>
-		<p>&nbsp;</p>
-		<h2>Zabezpieczenie aplikacji</h2>
+		<h2 id="2.6.securinganapplication">2.6. Zabezpieczenie aplikacji</h2>
 		<p>
-			Kolejną rzeczą jak należy zrobić to zabezpieczyć pewne strony przed niepowołanym dostępem. W zależności od tego jakie restrykcje chcemy wprowadzić możemy użyć konkretnych metod. Pierwszą z nich jest wymaganie logowania, jeśli nie zalogowani przejedziemy pod adres <em>http://localhost:8000/new_order</em>. Zostanie nam przedstawiona strona do składania zamówień. W ten sposób osoba złośliwa może po nabijać zamówień, zostawiając jedynie ślad w logach o ile uruchomiliśmy serwer wraz z opcją zapisywania dziennika. Django daje nam banalny sposób na zabezpieczenie się przed tego typu sytuacjami. W pliku <em>views.py</em> w aplikacji <em>pizzas</em> importujemy <strong>dekorator</strong> (dodatek/modyfikator do funkcji) o nazwie <code class="code-inline">login_required</code>.
+			Kolejną rzeczą jak należy zrobić to zabezpieczyć pewne strony przed 
+      niepowołanym dostępem. W zależności od tego jakie restrykcje chcemy 
+      wprowadzić możemy użyć konkretnych metod. Pierwszą z nich jest wymaganie
+      logowania, jeśli nie zalogowani przejedziemy pod adres 
+      <em>http://localhost:8000/new_order</em>. Zostanie nam przedstawiona 
+      strona do składania zamówień. W ten sposób osoba złośliwa może po 
+      nabijać zamówień, zostawiając jedynie ślad w logach o ile uruchomiliśmy
+      serwer wraz z opcją zapisywania dziennika. Django daje nam banalny sposób
+      na zabezpieczenie się przed tego typu sytuacjami. 
+      W pliku <em>views.py</em> w aplikacji <em>pizzas</em> importujemy 
+      <strong>dekorator</strong> (dodatek/modyfikator do funkcji) o nazwie 
+      <code class="code-inline">login_required</code>.
 		</p>
 <pre class="code-block">
 from django.contrib.auth.decorators import login_required
 </pre>
 		<p>
-			<strong>Dekorator <code class="code-inline">login_required</code> sprawdzi czy jesteśmy zalogowani, kiedy będziemy wywoływać funkcje widoku</strong>. <strong>Dekoratora używamy w pomocą znaku <code class="code-inline">@</code> oraz nazwy dekoratora tuż nad definicją widoku</strong>, tak jak przedstawiono to poniżej:
+			Dekorator <code class="code-inline">login_required</code> sprawdzi czy 
+      jesteśmy zalogowani, kiedy będziemy wywoływać funkcje widoku. Dekoratora
+      używamy w pomocą znaku <code class="code-inline">@</code> oraz nazwy 
+      dekoratora tuż nad definicją widoku</strong>, tak jak przedstawiono to 
+      poniżej:
 		</p>
 <pre class="code-block">
 @login_required
@@ -3695,22 +3989,41 @@ def new_order(request):
 def edit_order(request, order_id):
 </pre>
 		<p>
-			Aby działało to poprawnie w ustawieniach projektu pizzeria/settings.py musimy zdefiniować zmienną LOGIN_URL na samym dole pliku, jeśli tego nie zrobimy niezalogowani użytkownicy, przechodzący pod zabezpieczoną przez dekorator stronę otrzymają stronę błędu, że nie znaleziono strony. <strong>Wartość zmiennej <code class="code-inline">LOGIN_URL</code> zapisujemy w klasycznym odniesieniu do strony, tak jak w przypadku znaczników szablonu url, czy funkcji redirect <em>(nazwa_aplikacji:nazwa_mapowania_URL)</em></strong>.
+			Aby działało to poprawnie w ustawieniach projektu pizzeria/settings.py 
+      musimy zdefiniować zmienną LOGIN_URL na samym dole pliku, jeśli tego nie
+      zrobimy niezalogowani użytkownicy, przechodzący pod zabezpieczoną przez 
+      dekorator stronę otrzymają stronę błędu, że nie znaleziono strony. 
+      Wartość zmiennej <code class="code-inline">LOGIN_URL</code> zapisujemy w 
+      klasycznym odniesieniu do strony, tak jak w przypadku znaczników szablonu 
+      URL, czy funkcji <em>redirect</em> 
+     (<em>nazwa_aplikacji:nazwa_mapowania_URL</em>).
 		</p>
 <pre class="code-block">
 LOGIN_URL = 'users:login'
 </pre>
 		<p>
-			Teraz kiedy nie zalogowani, spróbujemy na przykład podejrzeć zamówienia. Zostaniemy przekierowani na stronę logowania, identycznie będzie z wywołaniem widoku <em>new_order</em>, czyli złożeniem nowego zamówienia oraz z jego edycją.
+			Teraz kiedy nie zalogowani, spróbujemy na przykład podejrzeć zamówienia. 
+      Zostaniemy przekierowani na stronę logowania, identycznie będzie z 
+      wywołaniem widoku <em>new_order</em>, czyli złożeniem nowego zamówienia
+      oraz z jego edycją.
 		</p>
 		<p>
-			Drugi sposób w jaki możemy zabezpieczyć naszą aplikacje, jest wyświetlenie użytkownikom rzeczy stricte tyczących się ich. Powiedzmy że użytkownik powinien mieć wgląd w swoje zamówienia. Ta zmiana będzie wymagać trochę pracy, ale myślę że jest ciekawy do opisania przypadek, ponieważ <strong>musimy zmienić już wdrożony model danych</strong>. Dodać jedną kolumnę do tabeli, to nie jest problem jeśli tabela była by pusta, ale co jeśli dane do tej tabeli już zostały wprowadzone dane. Zaczniemy od zaimportowania modelu User w pliku <em>pizzas/models.py</em>.
+			Drugi sposób w jaki możemy zabezpieczyć naszą aplikacje, jest 
+      wyświetlenie użytkownikom rzeczy stricte tyczących się ich. Powiedzmy że
+      użytkownik powinien mieć wgląd w swoje zamówienia. Ta zmiana będzie 
+      wymagać trochę pracy, ale myślę że jest ciekawy do opisania przypadek,
+      ponieważ musimy zmienić już wdrożony model danych. Dodać jedną kolumnę do
+      tabeli, to nie jest problem jeśli tabela była by pusta, ale co jeśli dane
+      do tej tabeli już zostały wprowadzone dane. Zaczniemy od zaimportowania
+      modelu User w pliku <em>pizzas/models.py</em>.
 		</p>
 <pre class="code-block">
 from django.contrib.auth.models import User
 </pre>
 		<p>
-			Następnie dodamy do naszego modelu <code class="code-inline">Order</code> nowe kolumnę o nazwie <code class="code-inline">owner</code>, która będzie kluczem obcym w modelu User dostarczanym przez Django.
+			Następnie dodamy do naszego modelu <code class="code-inline">Order</code>
+      nowe kolumnę o nazwie <code class="code-inline">owner</code>, która 
+      będzie kluczem obcym w modelu <em>User</em> dostarczanym przez Django.
 		</p>
 <pre class="code-block">
 class Order(models.Model):
@@ -3734,7 +4047,13 @@ class Order(models.Model):
 (project_env) xf0r3m@macbook:python/django$ python manage.py makemigrations pizzas
 </pre>
 		<p>
-			Podczas wykonywania tego polecenia<strong> Python wyświetli informacje o tym że próbujemy dodać nie-zerowe pole do modelu <em>Order</em> bez wartości domyślnej i nie jest to możliwe, ponieważ zmiany muszą być również uwzględnione na istniejących już rekordach.</strong> Python daje nam do wyboru dwie opcje, albo podanie teraz wartość jaka zostanie przypisana w polu <em>owner</em> dla istniejących już rekordów, lub porzucenie migracji i dodanie wartości domyślnej w deklaracji pola w klasie modelu.
+			Podczas wykonywania tego polecenia Python wyświetli informacje o tym, że
+      próbujemy dodać nie-zerowe pole do modelu <em>Order</em> bez wartości 
+      domyślnej i nie jest to możliwe, ponieważ zmiany muszą być również 
+      uwzględnione na istniejących już rekordach. Python daje nam do wyboru 
+      dwie opcje, albo podanie teraz wartość jaka zostanie przypisana w polu 
+      <em>owner</em> dla istniejących już rekordów, lub porzucenie migracji i 
+      dodanie wartości domyślnej w deklaracji pola w klasie modelu.
 		</p>
 <pre class="code-block">
 You are trying to add a non-nullable field 'owner' to order without a default; we can't do that (the database needs something to populate existing rows).
@@ -3744,7 +4063,11 @@ Please select a fix:
 Select an option: 2
 </pre>
 		<p>
-			Teraz wybierzemy opcje nr. 2. Jeśli podczas testowania rejestracji stworzyliśmy użytkownika to możemy mu nadać wszystkie zamówienia, <strong><em>models.ForeignKey()</em> zawiera identyfikatory (<em>id</em>) z zewnętrznej tabeli</strong>. Aby dowiedzieć się jakie <em>id</em> mają nasi użytkownicy skorzystamy z pomocy powłoki Django.
+			Teraz wybierzemy opcje nr. 2. Jeśli podczas testowania rejestracji 
+      stworzyliśmy użytkownika to możemy mu nadać wszystkie zamówienia, 
+      <em>models.ForeignKey()</em> zawiera identyfikatory (<em>id</em>) z 
+      zewnętrznej tabeli</strong>. Aby dowiedzieć się jakie <em>id</em> mają 
+      nasi użytkownicy skorzystamy z pomocy powłoki Django.
 		</p>
 <pre class="code-block">
 (project_env) xf0r3m@macbook:python/django$ python manage.py shell
@@ -3759,7 +4082,13 @@ Select an option: 2
 2 xf0r3m
 </pre>
 		<p>
-			Na początku importujemy nasz model, następnie pobieramy wszystkie egzemplarze tego modelu aby poprzez iteracje wpisać <em>id</em> oraz nazwę użytkownika. Teraz wiemy że nasz stworzony w celach testowych użytkownik ma <em>id</em> = 2.  Oczywiście moglibyśmy to pominąć i domyślić się że musi mieć <em>id</em> = 2. Jednak chciałem przedstawić tutaj sposób w jaki możemy to sprawdzić aby mieć pewność. Również możemy wyszukać użytkownika za pomocą lekko zmodyfikowanego zapytania.
+			Na początku importujemy nasz model, następnie pobieramy wszystkie 
+      egzemplarze tego modelu aby poprzez iteracje wpisać <em>id</em> oraz 
+      nazwę użytkownika. Teraz wiemy, że nasz stworzony w celach testowych 
+      użytkownik ma <em>id</em> = 2.  Oczywiście moglibyśmy to pominąć i 
+      domyślić się że musi mieć <em>id</em> = 2. Jednak chciałem przedstawić 
+      tutaj sposób w jaki możemy to sprawdzić aby mieć pewność. Również możemy
+      wyszukać użytkownika za pomocą lekko zmodyfikowanego zapytania.
 		</p>
 <pre class="code-block">
 &gt;&gt;&gt; user = User.objects.get(username='xf0r3m')
@@ -3767,7 +4096,10 @@ Select an option: 2
 2
 </pre>
 		<p>
-			Teraz kiedy znamy już <em>id</em> możemy ponownie wydać polecenie migracji. Python znów nas zapyta o to samo, jednak teraz wybieramy opcje nr. 1 a następnie po znaku zachęty <em>&gt;&gt;&gt;</em> wpiszemy <em>id</em> naszego użytkownika.
+			Teraz kiedy znamy już <em>id</em> możemy ponownie wydać polecenie 
+      migracji. Python znów nas zapyta o to samo, jednak teraz wybieramy opcje
+      nr. 1 a następnie po znaku zachęty <em>&gt;&gt;&gt;</em> wpiszemy 
+      <em>id</em> naszego użytkownika.
 		</p>
 <pre class="code-block">
 You are trying to add a non-nullable field 'owner' to order without a default;
@@ -3784,7 +4116,11 @@ Type 'exit' to exit this prompt
 &gt;&gt;&gt; 2
 </pre>
 		<p>
-			Teraz zmodyfikujemy widok <code class="code-inline">order_views</code>, tak aby wyświetlał zamówienia wszystkich użytkowników, jeśli zalogowanym użytkownikiem jest <code class="code-inline">pizza_admin</code>, czyli nasz superużytkownik. A jeśli zalogowany jest kto inny, to widzi on tylko swoje zamówienia.
+			Teraz zmodyfikujemy widok <code class="code-inline">order_views</code>, 
+      tak aby wyświetlał zamówienia wszystkich użytkowników, jeśli zalogowanym
+      użytkownikiem jest <code class="code-inline">pizza_admin</code>, czyli 
+      nasz superużytkownik. A jeśli zalogowany jest kto inny, to widzi on 
+      tylko swoje zamówienia.
 		</p>
 <pre class="code-block">
 @login_required
@@ -3801,9 +4137,15 @@ def orders_view(request):
     context = {'orders': orders}
     return render(request, 'pizzas/orders_view.html', context)
 </pre>
-
 		<p>
-			Ważną rzeczą użytą w tym przypadku jest to iż <strong>egzemplarz klasy User zalogowanego użytkownika jest przechowywany w właściwości <code class="code-inline">user</code> obiektu <code class="code-inline">request</code></strong>. Jednak chcąc przyrównać nazwy użytkowników musimy użyć właściwości <em>username</em>. Ze względu na iż zmodyfikowaliśmy model <em>Order</em> teraz nie możliwe jest dodanie nowego zamówienia bez zmian uwzględniających właściciela. Poniżej znajduje się kod widoku new_order uwzględniający właściciela.
+			Ważną rzeczą użytą w tym przypadku jest to, iż egzemplarz klasy 
+      <em>User</em> zalogowanego użytkownika jest przechowywany w właściwości 
+      <code class="code-inline">user</code> obiektu 
+      <code class="code-inline">request</code></strong>. Jednak chcąc 
+      przyrównać nazwy użytkowników musimy użyć właściwości <em>username</em>. 
+      Ze względu na iż zmodyfikowaliśmy model <em>Order</em> teraz nie możliwe
+      jest dodanie nowego zamówienia bez zmian uwzględniających właściciela. 
+      Poniżej znajduje się kod widoku new_order uwzględniający właściciela.
 		</p>
 <pre class="code-block">
 @login_required
@@ -3822,7 +4164,10 @@ def new_order(request):
     return render(request, 'pizzas/new_order.html', context)
 </pre>
 		<p>
-			Z założeń wynika iż użytkownik raz przypisany do zamówienia jest nietykalny, nie musimy w ogóle zmieniać kodu widoku <em>edit_order</em>.  Wprowadziłem lekką zmianę do szablonu <em>orders_view.html</em> aby wyświetlał datę, według narzuconego formatu.
+			Z założeń wynika iż użytkownik raz przypisany do zamówienia jest 
+      nietykalny, nie musimy w ogóle zmieniać kodu widoku <em>edit_order</em>. 
+      Wprowadziłem lekką zmianę do szablonu <em>orders_view.html</em> aby 
+      wyświetlał datę, według narzuconego formatu.
 		</p>
 <pre class="code-block">
 {% extends 'pizzas/base.html' %}
@@ -3863,10 +4208,20 @@ def new_order(request):
 {% endblock content %}
 </pre>
 		<p>
-			<strong>Pionowa kreska <code class="code-inline">|</code> oraz <code class="code-inline">date:'d M Y H:i'</code> są to filtry znaczników szablonu, w tym przypadku jest filtr daty, który wyświetla nam date w formacje 01 Jan 1970 00:00. </strong>
+			Pionowa kreska <code class="code-inline">|</code> oraz 
+      <code class="code-inline">date:'d M Y H:i'</code> są to filtry 
+      znaczników szablonu, w tym przypadku jest filtr daty, który wyświetla 
+      nam date w formacje 01 Jan 1970 00:00. </strong>
 		</p>
 		<p>
-			Aby upewnić się ze wszystko działa utwórzmy trzeciego użytkownika i złóżmy zamówienie. Użytkownicy powinni widzieć tylko swoje zamówienia, z kolei superużytkownik powinien widzieć je wszystkie. Ostatnią rzeczą jaka pozostała do zabezpieczenia, jest wyłączność na edycje zamówień przez superużytkownika. Zwykli użytkownicy nie powinni mieć dostępu do zmiany zamówienia. Zmian musimy dokonać w dwóch miejscach: w szablonie oraz w widoku <em>edit_order</em>. Najpierw rozpoczniemy od szablonu. Poniżej zmieniony kod szablonu
+			Aby upewnić się ze wszystko działa utwórzmy trzeciego użytkownika i 
+      złóżmy zamówienie. Użytkownicy powinni widzieć tylko swoje zamówienia, 
+      z kolei superużytkownik powinien widzieć je wszystkie. Ostatnią rzeczą 
+      jaka pozostała do zabezpieczenia, jest wyłączność na edycje zamówień 
+      przez superużytkownika. Zwykli użytkownicy nie powinni mieć dostępu do 
+      zmiany zamówienia. Zmian musimy dokonać w dwóch miejscach: w szablonie 
+      oraz w widoku <em>edit_order</em>. Najpierw rozpoczniemy od szablonu. 
+      Poniżej zmieniony kod szablonu
 		</p>
 <pre class="code-block">
 {% extends 'pizzas/base.html' %}
@@ -3911,13 +4266,22 @@ def new_order(request):
 {% endblock content %}
 </pre>
 		<p>
-			Dodaliśmy dwa znaczniki warunkowe szablonu, sprawdzające czy uwierzytelniony użytkownik to <code class="code-inline">pizza_admin</code >. Teraz zajmiemy się kodem widoku, na początek importujemy dwie rzeczy z modułu <code class="code-inline">django.http</code>.
+			Dodaliśmy dwa znaczniki warunkowe szablonu, sprawdzające czy 
+      uwierzytelniony użytkownik to 
+      <code class="code-inline">pizza_admin</code>. Teraz zajmiemy się kodem 
+      widoku, na początek importujemy dwie rzeczy z modułu 
+      <code class="code-inline">django.http</code>.
 		</p>
 <pre class="code-block">
 from django.http import HttpResponseRedirect, Http404
 </pre>
 		<p>
-			Następnie w kodzie widoku <strong>dopisujemy warunek, który przyrówna <code class="code-inline">request.user.username</code> do ciągu <code class="code-inline">pizza_admin</code> jeśli się te wartości nie będą się zgadzać wtedy zostanie zgłoszony wyjątek <code class="code-inline">Http404</code></strong>. Poniżej znajduje się kod zmodyfikowanej funkcji widoku.
+			Następnie w kodzie widoku dopisujemy warunek, który przyrówna 
+      <code class="code-inline">request.user.username</code> do ciągu 
+      <code class="code-inline">pizza_admin</code> jeśli się te wartości nie 
+      będą się zgadzać wtedy zostanie zgłoszony wyjątek 
+      <code class="code-inline">Http404</code></strong>. Poniżej znajduje się 
+      kod zmodyfikowanej funkcji widoku.
 		</p>
 <pre class="code-block">
 @login_required
@@ -3940,16 +4304,25 @@ def edit_order(request, order_id):
     context = {'form': form, 'order': order}
     return render(request, 'pizzas/edit_order.html', context)
 </pre>
-		<p>&nbsp;</p>
-		<h2>Nadawanie stylu aplikacji - Bootstrap4</h2>
+		<h2 id="2.7.usingbootstrap4fordjango">2.7. Nadawanie stylu aplikacji - Bootstrap 4</h2>
 		<p>
-			Przed nami ostatni rozdział podróży przez Pythona oraz przez Django. Zostały jeszcze dwa zagadnienia, które należało by omówić w kontekście Django. Nadawanie stylu oraz oraz wdrożenie naszej aplikacji na <strong>platformie sieciowej Heroku</strong>. Zaczniemy od nadawania stylu, aby nasza aplikacja zaczęła wyglądać bardziej profesjonalnie za pomocą znanego zestawu narzędzi jakim jest <strong>Bootstrap 4</strong>. Dla nasze aplikacji skorzystamy z prostego motywu. Na początku instalujemy dodatek zawierający Bootstrap przygotowany do współpracy z Django . W aktywnym środowisku wirtualnym wydajemy polecenie:</p>
+			Przed nami ostatni rozdział podróży przez Pythona oraz przez Django. 
+      Zostały jeszcze dwa zagadnienia, które należało by omówić w kontekście 
+      Django. Nadawanie stylu oraz oraz wdrożenie naszej aplikacji na 
+      platformie sieciowej Heroku</strong>. Zaczniemy od nadawania stylu, aby 
+      nasza aplikacja zaczęła wyglądać bardziej profesjonalnie za pomocą 
+      znanego zestawu narzędzi jakim jest <strong>Bootstrap 4</strong>. Dla 
+      naszej aplikacji skorzystamy z prostego motywu. Na początku instalujemy 
+      dodatek zawierający Bootstrap przygotowany do współpracy z Django. W 
+      aktywnym środowisku wirtualnym wydajemy polecenie:
 		</p>
 <pre class="code-block">
 (project_env) xf0r3m@macbook:python/django$ pip install django-bootstrap4
 </pre>
 		<p>
-			Po zainstalowaniu Bootstrap, dopisujemy go zainstalowanych aplikacji w naszym projekcie. Plik <em>pizzeria/settings.py</em>, zmienna <code class="code-inline">INSTALLED_APPS</code>.
+			Po zainstalowaniu Bootstrap, dopisujemy go zainstalowanych aplikacji w 
+      naszym projekcie. Plik <em>pizzeria/settings.py</em>, zmienna 
+      <code class="code-inline">INSTALLED_APPS</code>.
 		</p>
 <pre class="code-block">
 INSTALLED_APPS = &#91;
@@ -3965,10 +4338,18 @@ INSTALLED_APPS = &#91;
 ]
 </pre>
 		<p>
-			Teraz kiedy nasz Bootstrap jest już zainstalowany. Możemy podmienić kod z szablonu <em>base.html</em> na ten poniżej.
+			Teraz kiedy nasz Bootstrap jest już zainstalowany. Możemy podmienić kod z
+      szablonu <em>base.html</em> na ten poniżej.
 		</p>
 		<p>
-			Najprościej rzecz ujmując, ten szablony stworzy bazową stronę naszej aplikacji. Na górze strony zostanie umieszczony responsywny pasek nawigacyjny, zawierający wszystkie nasze dotychczasowe odnośniki oraz nazwę aplikacji. Responsywność wygląda w ten sposób że jeśli strona zostanie wyświetlona na wąskim ekranie, odnośniki zostaną schowane w wysuwanym na dół menu. A na pasku zostanie wyświetlona nazwa aplikacji czy już w tym przypadku projektu oraz przycisk aktywujący wysunięcie menu. Poniżej znajduje się kod szablonu bazowego.
+			Najprościej rzecz ujmując, ten szablony stworzy bazową stronę naszej 
+      aplikacji. Na górze strony zostanie umieszczony responsywny pasek 
+      nawigacyjny, zawierający wszystkie nasze dotychczasowe odnośniki oraz 
+      nazwę aplikacji. Responsywność wygląda w ten sposób że jeśli strona 
+      zostanie wyświetlona na wąskim ekranie, odnośniki zostaną schowane w 
+      wysuwanym na dół menu. A na pasku zostanie wyświetlona nazwa aplikacji 
+      czy już w tym przypadku projektu oraz przycisk aktywujący wysunięcie 
+      menu. Poniżej znajduje się kod szablonu bazowego.
 		</p>
 <pre class="code-block">
 {% load bootstrap4 %}
@@ -4048,14 +4429,69 @@ INSTALLED_APPS = &#91;
 &lt;/html&gt;
 </pre>
 		<p>
-			W tym szablonie <strong>na samy początku ładujemy Bootstrap4</strong> aby mieć możliwość skorzystania ze znaczników szablonu przygotowanych przez tę aplikację. Następnie tworzona jest podstawowa struktura strony HTML, z zaznaczeniem użycia języka polskiego w atrybucie <code class="code-inline">lang</code> w znaczniku otwierającym HTML, w nagłówku strony - pomiędzy znacznikami <code class="code-inline">head</code>, przekazywane są informacje odpowiedzialne za kodowanie strony <code class="code-inline">&lt;meta charset="utf-8"&gt;</code>, responsywność <code class="code-inline">&lt;meta name="viewport" ...&gt;</code>, ustawienie tekstu wyświetlanego w tytule karty lub/i okna przeglądarki <code class="code-inline">&lt;title&gt;&lt;/title&gt;</code>.
-			Następnie mamy <strong>dwa znaczniku szablonu Django, w których to ładowane są pliki arkusza stylów CSS oraz biblioteki JavaScript ze wskazaniem o użyciu pełnej biblioteki, a nie wersji odchudzonej (nie zawierającej obsługi AJAX-a oraz efektów - takich rzeczy jak np. slideToggle)</strong>.
-		 	W ciele strony - między znacznikami <code class="code-inline">&lt;body&gt;</code> umieszczamy nasz pasek nawigacyjny <code class="code-inline">&lt;nav ...&gt;</code>. Na pasku nawigacyjnym umieszczamy odnośnik do strony głównej zatytułowany nazwą projektu w Django, przycisk widoczny jedynie na małych ekranach, zwężonych oknach przeglądarki lub dużych zoomach, powodujący wyjechanie menu ukrytego w wyżej wymienionych sytuacjach zaraz pod przyciskiem znajduje się  znajduje się sekcja <code class="code-inline">&lt;div&gt;</code> z menu przedstawionym tutaj za pomocą listy nieuporządkowanej. Wewnątrz listy znajdują się znaczniki szablonu oraz odnośniki znane nam z poprzedniej wersji pliku <em>base.html</em>. Pod paskiem nawigacji znajduje się element główny naszej strony, zwierający dwa znaczniki sekcji.
-			Pierwszy z nich zawiera, <strong>parę znaczników szablonu <code class="code-inline">block page_header</code>, dzięki temu zdefiniowany na innej stronie znaczniki <em>block page_header</em> zostanie wstawiony w to miejesce</strong>, nieco enigmatyczne wydają się użyte w tej sekcji klasy, pierwszy z nich <code class="code-inline">pb-2</code> oznacza wewnętrzny odstęp dolny treści elementu krawędzi elementu (<em>padding-bottom</em>) o wielkości <code class="code-inline">$spacer</code> * 0,5, gdzie <em>$spacer</em> (zmienna SASS - język pre procesora kompilowany do CSS) przyjmuje wartość 16px. klasa <em>pb</em> istnieje w 5 wariantach. od * 0,25 od * 3. Identycznie jest z drugą klasą, tylko że zamiast dopełnienia (odstęp pomiędzy treścią elementu a jego krawędzią), mamy margines czyli odstęp między krawędzią elementu a krawędzią następnego elementu, w naszym przypadku mamy margines dolny, ponieważ po literce <code class="code-inline">m</code> występuje literka <code class="code-inline">b</code> następnie po myślniku mamy warjant, klasa border-bottom powoduje nałożenie stylów zdefiniowanych w tej klasie na dolną krawędź elementów.
-			Nie ma co rozwodzić się na wszystkimi użytymi tym przykładzie klasami. Ponieważ ten kod w 90% został zaczerpnięty z przykładów znajdujących się po tym adresem <a href="https://getbootstrap.com/docs/4.5/examples/">https://getbootstrap.com/docs/4.5/examples/</a> jedne co zostało zmienione to podział elementu <code class="code-inline">main</code> na dwie sekcje div i nadanie większego odstępu pierwszej sekcji od drugie wyżej wymienionymi stylami. Teraz nadamy styl stronie głównej.
+			W tym szablonie na samy początku ładujemy Bootstrap 4 aby
+      mieć możliwość skorzystania ze znaczników szablonu przygotowanych przez 
+      tę aplikację. Następnie tworzona jest podstawowa struktura strony HTML, 
+      z zaznaczeniem użycia języka polskiego w atrybucie 
+      <code class="code-inline">lang</code> w znaczniku otwierającym HTML, w 
+      nagłówku strony - pomiędzy znacznikami 
+      <code class="code-inline">head</code>, przekazywane są informacje 
+      odpowiedzialne za kodowanie strony <code class="code-inline">&lt;meta 
+      charset="utf-8"&gt;</code>, responsywność 
+      <code class="code-inline">&lt;meta name="viewport" ...&gt;</code>, 
+      ustawienie tekstu wyświetlanego w tytule karty lub/i okna przeglądarki 
+      <code class="code-inline">&lt;title&gt;&lt;/title&gt;</code>.
+			Następnie mamy dwa znaczniku szablonu Django, w których to ładowane są 
+      pliki arkusza stylów CSS oraz biblioteki JavaScript ze wskazaniem o 
+      użyciu pełnej biblioteki, a nie wersji odchudzonej (nie zawierającej 
+      obsługi AJAX-a oraz efektów - takich rzeczy jak np. slideToggle).
+    </p>
+    <p>
+		 	W ciele strony - między znacznikami 
+      <code class="code-inline">&lt;body&gt;</code> umieszczamy nasz pasek 
+      nawigacyjny <code class="code-inline">&lt;nav ...&gt;</code>. Na pasku 
+      nawigacyjnym umieszczamy odnośnik do strony głównej zatytułowany nazwą 
+      projektu w Django, przycisk widoczny jedynie na małych ekranach, 
+      zwężonych oknach przeglądarki lub dużych zoomach, powodujący wyjechanie 
+      menu ukrytego w wyżej wymienionych sytuacjach zaraz pod przyciskiem 
+      znajduje się  znajduje się sekcja 
+      <code class="code-inline">&lt;div&gt;</code> z menu przedstawionym tutaj
+      za pomocą listy nieuporządkowanej. Wewnątrz listy znajdują się znaczniki
+      szablonu oraz odnośniki znane nam z poprzedniej wersji pliku 
+      <em>base.html</em>. Pod paskiem nawigacji znajduje się element główny 
+      naszej strony, zwierający dwa znaczniki sekcji.
+    </p>
+    <p>
+			Pierwszy z nich zawiera, parę znaczników szablonu 
+      <code class="code-inline">block page_header</code>, dzięki temu 
+      zdefiniowany na innej stronie znaczniki <em>block page_header</em> 
+      zostanie wstawiony w to miejesce, nieco enigmatyczne wydają się użyte w 
+      tej sekcji klasy, pierwszy z nich <code class="code-inline">pb-2</code> 
+      oznacza wewnętrzny odstęp dolny treści elementu krawędzi elementu 
+      (<em>padding-bottom</em>) o wielkości 
+      <code class="code-inline">$spacer</code> * 0,5, gdzie <em>$spacer</em> 
+      (zmienna SASS - język pre procesora kompilowany do CSS) przyjmuje wartość
+      16px. klasa <em>pb</em> istnieje w 5 wariantach. od * 0,25 od * 3. 
+      Identycznie jest z drugą klasą, tylko że zamiast dopełnienia (odstęp 
+      pomiędzy treścią elementu a jego krawędzią), mamy margines czyli odstęp 
+      między krawędzią elementu a krawędzią następnego elementu, w naszym 
+      przypadku mamy margines dolny, ponieważ po literce 
+      <code class="code-inline">m</code> występuje literka 
+      <code class="code-inline">b</code> następnie po myślniku mamy warjant, 
+      klasa border-bottom powoduje nałożenie stylów zdefiniowanych w tej 
+      klasie na dolną krawędź elementów.
+			Nie ma co rozwodzić się na wszystkimi użytymi tym przykładzie klasami. 
+      Ponieważ ten kod w 90% został zaczerpnięty z przykładów znajdujących 
+      się po tym adresem 
+      <a href="https://getbootstrap.com/docs/4.5/examples/">https://getbootstrap.com/docs/4.5/examples/</a> 
+      jedne co zostało zmienione to podział elementu 
+      <code class="code-inline">main</code> na dwie sekcje div i nadanie 
+      większego odstępu pierwszej sekcji od drugie wyżej wymienionymi stylami.
+      Teraz nadamy styl stronie głównej.
 		</p>
 		<p>
-			Poniżej prezentuje się kod szablonu strony głównej, w przeciwieństwie do poprzedniego nie jest tak obszerny.
+			Poniżej prezentuje się kod szablonu strony głównej, w przeciwieństwie do
+      poprzedniego nie jest tak obszerny.
 		</p>
 <pre class="code-block">
 {% extends 'pizzas/base.html' %}
@@ -4071,10 +4507,20 @@ INSTALLED_APPS = &#91;
 {% endblock page_header %}
 </pre>
 		<p>
-			Tutaj zostaje wykorzystany blok <code class="code-inline">page_header</code> aby umieścić element nazwany przez Bootstap Jumbotronem. Jest to wyróżniający się duży prostokąt, przeważnie z dużym tytułem, drobnym opisem oraz łączem w postaci przycisku. "&amp;raquo;" to encja HTML (encje zawierają znaki specjalnej, cięzko jest wpisać za pomocą klawiatury) przedstawiąca dwa połączone znaki większości lub jak kto woli dwa prawe ostre nawiasty "»" . Przycisk kieruje na formularz rejestracji, teraz sobie obstylujemy formularze. Styl dla formularzy rejestracji będzie taki podstawowy, a styl dla formlarza logowania weźmiemy z przykładów na stronie Bootstrap
+			Tutaj zostaje wykorzystany blok <code class="code-inline">page_header</code> 
+      aby umieścić element nazwany przez Bootstap Jumbotronem. Jest to 
+      wyróżniający się duży prostokąt, przeważnie z dużym tytułem, drobnym 
+      opisem oraz łączem w postaci przycisku. "&amp;raquo;" to encja HTML 
+      (encje zawierają znaki specjalnej, cięzko jest wpisać za pomocą 
+      klawiatury) przedstawiąca dwa połączone znaki większości lub jak kto woli
+      dwa prawe ostre nawiasty "»" . Przycisk kieruje na formularz rejestracji,
+      teraz sobie obstylujemy formularze. Styl dla formularzy rejestracji 
+      będzie taki podstawowy, a styl dla formlarza logowania weźmiemy z 
+      przykładów na stronie Bootstrap.
 		</p>
 		<p>
-			Poniżej znajduje się kod formularza rejestracji, jest to klasyczny książkowy przykład nadawania formularzom w Django stylów Bootstrap4.
+			Poniżej znajduje się kod formularza rejestracji, jest to klasyczny 
+      książkowy przykład nadawania formularzom w Django stylów Bootstrap 4.
 		</p>
 <pre class="code-block">
 {% extends 'pizzas/base.html' %}
@@ -4099,9 +4545,15 @@ INSTALLED_APPS = &#91;
 
 {% endblock content %}
 </pre>
-<p>
-	Ten formularz będzie nieco inny, dodamy obraz w bloku <code class="code-inline">page_header</code>. Musimy dodać również dostosowane dlatego tego formularza style. <strong>W tym przykładzie warto zwrócić uwagę na to że nie wykorzystaliśmy formularza przygotowanego przez Django, skorzystaliśmy jedynie z nazw pól odpowiednich dla formularza </strong>i przesłaliśmy nasz spersonalizowany formularz. Kod jest nieco obszerny.
-</p>
+    <p>
+	    Ten formularz będzie nieco inny, dodamy obraz w bloku 
+      <code class="code-inline">page_header</code>. Musimy dodać również 
+      dostosowane dlatego tego formularza style. W tym przykładzie warto 
+      zwrócić uwagę na to że nie wykorzystaliśmy formularza przygotowanego 
+      przez Django, skorzystaliśmy jedynie z nazw pól odpowiednich dla 
+      formularza i przesłaliśmy nasz spersonalizowany formularz. Kod jest nieco
+      obszerny.
+    </p>
 <pre class="code-block">
 {% extends 'pizzas/base.html' %}
 
@@ -4166,7 +4618,12 @@ INSTALLED_APPS = &#91;
 {% endblock content %}
 </pre>
 		<p>
-			Z racji tego iż nasz formularz jest dostosowywany. Musieliśmy też dodać również własny komunikat o tym że logowanie się nie powiodło. Alert z możliwością zamknięcia znajduje się w pomiędzy warunkowymi znacznikami szablonu. Do obstylowania pozostała jeszcze tabelka z zamówieniami, formularz zamówienia, edycja zamówienia, menu, strona pizzy oraz strona wylogowania. Poniżej znajdują sią szablony obstylowanych już stron.
+			Z racji tego iż nasz formularz jest dostosowywany. Musieliśmy też dodać 
+      również własny komunikat o tym że logowanie się nie powiodło. Alert z 
+      możliwością zamknięcia znajduje się w pomiędzy warunkowymi znacznikami 
+      szablonu. Do obstylowania pozostała jeszcze tabelka z zamówieniami, 
+      formularz zamówienia, edycja zamówienia, menu, strona pizzy oraz strona 
+      wylogowania. Poniżej znajdują sią szablony obstylowanych już stron.
 		</p>
 		<p>
 			<span style="text-decoration: underline;">Strona podglądu zamówień:</span>
@@ -4220,7 +4677,8 @@ INSTALLED_APPS = &#91;
 		<p>
 			<span style="text-decoration: underline;">Strona formularza zamówień</span>:
 		</p>
-<pre class="code-block">{% extends 'pizzas/base.html' %}
+<pre class="code-block">
+{% extends 'pizzas/base.html' %}
 {% load bootstrap4 %}
 
 {% block page_header %}
@@ -4240,7 +4698,10 @@ INSTALLED_APPS = &#91;
 {% endblock content %}
 </pre>
 		<p>
-			Warto zaznaczyć że usunięto znacznik warunkowy, który wyświetlał informacje, o ile zapisanie zmian się nie powiodło, otóż jeśli wyświetlenie formularza pozostawiamy Bootstrapowi, to on sam wyświetli komunikat jeśli w formularzu pojawią się błędy.
+			Warto zaznaczyć że usunięto znacznik warunkowy, który wyświetlał 
+      informacje, o ile zapisanie zmian się nie powiodło, otóż jeśli 
+      wyświetlenie formularza pozostawiamy Bootstrapowi, to on sam wyświetli 
+      komunikat jeśli w formularzu pojawią się błędy.
 		</p>
 		<p>
 			<span style="text-decoration: underline;">Strona edycji zamówień:</span>
@@ -4345,16 +4806,24 @@ INSTALLED_APPS = &#91;
 
 {% endblock content %}
 </pre>
-		<p>&nbsp;</p>
-		<h2>Platforma Heroku</h2>
+		<h2 id="2.8.herokuplatform">2.8. Platforma Heroku</h2>
 		<p>
-			Teraz kiedy mamy obstylowaną naszą aplikacje, możemy wrzucić ją na <strong>platformę sieciową Heroku</strong>. Wdrożenie danych na platformę Heroku, będzie wymagało trochę zachodu. Na początku sprawdzimy czy w naszym systemie są obecne pakiety, które umożliwią kompilacje instalowanego przez <em>pip</em> oprogramowania. Poniższa procedurę testowano na Ubuntu LTS Desktop 20.04, w terminalu wydajemy następujące polecenie.
+			Teraz kiedy mamy obstylowaną naszą aplikacje, możemy wrzucić ją na 
+      <strong>platformę sieciową Heroku</strong>. Wdrożenie danych na platformę
+      Heroku, będzie wymagało trochę zachodu. Na początku sprawdzimy czy w 
+      naszym systemie są dostępne pakiety, które umożliwią kompilacje 
+      instalowanego przez <em>pip</em> oprogramowania. Poniższa procedurę 
+      testowano na Ubuntu LTS Desktop 20.04, w terminalu wydajemy następujące 
+      polecenie.
 		</p>
 <pre class="code-block">
 $ sudo apt install python3-psycopg2 python3-dev libpq-dev postgresql-server-dev-all build-essential
 </pre>
 		<p>
-			Powyższe polecenie zainstaluje wybrane pakiety jeśli, któregoś brakuje w systemie. Aby móc w ogóle pracować z Heroku potrzebujemy założyć sobie na platformie konto, aby to zrobić przechodzimy pod ten adres: <a href="https://signup.heroku.com/">https://signup.heroku.com/</a>.
+			Powyższe polecenie zainstaluje wybrane pakiety jeśli, któregoś brakuje w 
+      systemie. Aby móc w ogóle pracować z Heroku potrzebujemy założyć sobie na
+      platformie konto, aby to zrobić przechodzimy pod ten adres: 
+      <a href="https://signup.heroku.com/">https://signup.heroku.com/</a>.
 		</p>
 		<p>
 			Po założeniu konta możemy zainstalować heroku w naszym systemie.
@@ -4363,7 +4832,8 @@ $ sudo apt install python3-psycopg2 python3-dev libpq-dev postgresql-server-dev-
 $ sudo snap install --classic heroku
 </pre>
 		<p>
-			Kiedy nasze oprogramowanie zostanie zainstalowane, możemy przejść do katalogu naszą aplikacją i uruchomić środowisko wirtualne.
+			Kiedy nasze oprogramowanie zostanie zainstalowane, możemy przejść do 
+      katalogu naszą aplikacją i uruchomić środowisko wirtualne.
 		</p>
 <pre class="code-block">
 $ cd python/django3
@@ -4379,13 +4849,20 @@ python/django3 $ source blog_env/bin/activate
 (blog_env) python/django3 $ pip install gunicorn
 </pre>
 		<p>
-			Aby nasza aplikacja mogła działać na platformie Heroku w sposób identyczny jak na komputerze lokalnym, musi mieć zainstalowane takie samo oprogramowanie jakie instalowaliśmy przez <code class="code-inline">pip</code> do tej pory. Nie było tego dużo, django oraz django-bootstrap4. Jednak Heroku nie rozwiąże sobie zależności samodzielnie, dlatego na liście trzeba uwzględnić wszystko razem z zależnościami, to zadanie możemy wykonać jednym poleceniem.
+			Aby nasza aplikacja mogła działać na platformie Heroku w sposób 
+      identyczny jak na komputerze lokalnym, musi mieć zainstalowane takie 
+      samo oprogramowanie jakie instalowaliśmy przez 
+      <code class="code-inline">pip</code> do tej pory. Nie było tego dużo, 
+      <em>django</em> oraz <em>django-bootstrap4</em>. Jednak Heroku nie 
+      rozwiąże sobie zależności samodzielnie, dlatego na liście trzeba 
+      uwzględnić wszystko razem z zależnościami, to zadanie możemy wykonać 
+      jednym poleceniem.
 		</p>
 <pre class="code-block">
-(blog_env) python/django3 $ pip freeze > requirements.txt
+(blog_env) python/django3 $ pip freeze &gt; requirements.txt
 </pre>
 		<p>
-			<strong>Plik musi nazywać <em>requirements.txt</em></strong>. Tak wygląda jego zawrtość:
+			Plik musi nazywać <em>requirements.txt</em>. Tak wygląda jego zawrtość:
 		</p>
 <pre class="code-block">
 asgiref==3.2.10
@@ -4402,23 +4879,32 @@ sqlparse==0.3.1
 whitenoise==5.2.0
 </pre>
 		<p>
-			<strong>Uwaga! </strong>Może się zdarzyć że w tym pliku znajdzie się taka linia: <code class="code-inline">pkg-resources==0.0.0</code>. Należy ją usunąć, gdyż nasz projekt nie zostanie zbudowany na Heroku, bo nie będzie mógł odnaleźć takiej zależności. Ta linia nie jest istotna, została wpisana do pliku przez błąd <code class="code-inline">pip</code>.
+			<strong>Uwaga</strong>, może się zdarzyć że w tym pliku znajdzie się taka
+      linia: <code class="code-inline">pkg-resources==0.0.0</code>. Należy ją 
+      usunąć, gdyż nasz projekt nie zostanie zbudowany na Heroku, bo nie będzie
+      mógł odnaleźć takiej zależności. Ta linia nie jest istotna, została 
+      wpisana do pliku przez błąd <code class="code-inline">pip</code>.
 		</p>
 		<p>
-			Po utworzeniu listy zależności należy wskazać Heroku, jakiej <strong>wersji Pythona</strong> ma używać dla naszego projektu, wersje sprawdzimy poniższym poleceniem.
+			Po utworzeniu listy zależności należy wskazać Heroku, jakiej 
+      wersji Pythona ma używać dla naszego projektu, wersje sprawdzimy 
+      poniższym poleceniem.
 		</p>
 <pre class="code-block">
 (blog_env) python/django3 $ python --version
 Python 3.8.2
 </pre>
 		<p>
-			<strong>Natomiast zawtość pliku <em>runtime.txt</em></strong> <strong>(nazwa pliku musi być identyczna)</strong> musi wyglądać następująco:
+			Natomiast zawtość pliku <em>runtime.txt</em> (nazwa pliku musi być identyczna)  musi wyglądać następująco:
 		</p>
 <pre class="code-block">
 python-3.8.2
 </pre>
 		<p>
-			<strong>Python z małej litery i myślnik zamiast spacji</strong>. Nastepnym a zarazem ostatnim potrzebnym nam plikiem, będzie plik stricte Heroku <em><strong>Procfile</strong></em>, w nim zostanie zdefiniowany proces maszyny wirtualnej odpowiedzialny za hostowanie naszego projektu.
+			Python z małej litery i myślnik zamiast spacji. Nastepnym a zarazem 
+      ostatnim potrzebnym nam plikiem, będzie plik stricte Heroku 
+      <em>Procfile</em>, w nim zostanie zdefiniowany proces maszyny wirtualnej
+      odpowiedzialny za hostowanie naszego projektu.
 		</p>
 		<p>
 			<span style="text-decoration: underline;">Zawrtość pliku Procfile</span>
@@ -4427,17 +4913,29 @@ python-3.8.2
 web: gunicorn blog.wsgi --log-file -
 </pre>
 		<p>
-			Teraz kiedy mamy wszystkie pliki możemy dopisać ustawienia dla Heroku w naszym projekcie. W głównym katalogu projektu w pliku <em>settings.py</em> na samym końcu pliku dopisujemy poniższe linie.
+			Teraz kiedy mamy wszystkie pliki możemy dopisać ustawienia dla Heroku w 
+      naszym projekcie. W głównym katalogu projektu w pliku 
+      <em>settings.py</em> na samym końcu pliku dopisujemy poniższe linie.
 		</p>
 <pre class="code-block">
 import django_heroku
 django_heroku.settings(locals())
 </pre>
 		<p>
-			Aby móc synchronizować nasz kod źródłowy z platformą Heroku skorzystamy z systemu kontroli wersji<strong> Git</strong>. Git w dużym skrócie tworzy zatwierdzenie (<em>commit</em>) zmian w kodzie, które są tak jakby oddzielną jego wersją. Projekty tworzą repozytoria, w których przechowywane są zatwierdzenia, każda nowa funkcjonalność może być (nawet dobrze, gdyby była) kolejnym zatwierdzeniem. Daje nam to możliwość powrotu do poprzedniej wersji w razie problemów. Git jest obecnie standardem zarządania kodem źródłowym, w nie długim czasie od publikacji tego materiału pojawi się kolejny tym razem dużo mniejszy posty odnośnie podstaw Git-a.
+			Aby móc synchronizować nasz kod źródłowy z platformą Heroku skorzystamy z
+      systemu kontroli wersji <strong>Git</strong>. Git w dużym skrócie tworzy
+      zatwierdzenie (<em>commit</em>) zmian w kodzie, które są tak jakby 
+      oddzielną jego wersją. Projekty tworzą repozytoria, w których 
+      przechowywane są zatwierdzenia, każda nowa funkcjonalność może być 
+      (nawet dobrze, gdyby była) kolejnym zatwierdzeniem. Daje nam to 
+      możliwość powrotu do poprzedniej wersji w razie problemów. Git jest 
+      obecnie standardem zarządania kodem źródłowym, w nie długim czasie od 
+      publikacji tego materiału pojawi się kolejny tym razem dużo mniejszy 
+      posty odnośnie podstaw Git-a.
 		</p>
 		<p>
-			Git powinien być już zainstalowany w systemie. Jednak warto się upewnić wydając polecenie:
+			Git powinien być już zainstalowany w systemie. Jednak warto się upewnić 
+      wydając polecenie:
 		</p>
 <pre class="code-block">
 $ git --version
@@ -4446,20 +4944,25 @@ $ git --version
 git version 2.25.1
 </pre>
 		<p>
-			Jeśli dostaniemy taki wynik polecenie, oznacza to że Git jest już zainstalowany w systemie. Instalacja na Ubuntu wymaga jednego polecenia:
+			Jeśli dostaniemy taki wynik polecenie, oznacza to że Git jest już 
+      zainstalowany w systemie. Instalacja na Ubuntu wymaga jednego polecenia:
 		</p>
 <pre class="code-block">
 $ sudo apt install git
 </pre>
 		<p>
-			Teraz możemy przejść do konfiguracji, musimy podać nazwę użytkownika oraz adres e-mail, który dokonuje zatwierdzeń, ponieważ Git to monitoruje, jeśli zapomnimy o tym kroku, Git będzie wymagał podania tych danych przy pierwszym przesłaniu kodu do zdalnego repozytorium na platformie Heroku.
+			Teraz możemy przejść do konfiguracji, musimy podać nazwę użytkownika oraz
+      adres e-mail, który dokonuje zatwierdzeń, ponieważ Git to monitoruje, 
+      jeśli zapomnimy o tym kroku, Git będzie wymagał podania tych danych przy
+      pierwszym przesłaniu kodu do zdalnego repozytorium na platformie Heroku.
 		</p>
 <pre class="code-block">
 $ git config --global user.name "xf0r3m"
 $ git config --global user.email "morketsmerke@gmail.com"
 </pre>
 		<p>
-			Po skonfigurowaniu gita możemy utworzyć puste repozytorium w katalogu z danymi projektu wydając bardzo proste polecenie
+			Po skonfigurowaniu gita możemy utworzyć puste repozytorium w katalogu z 
+      danymi projektu wydając bardzo proste polecenie
 		</p>
 <pre class="code-block">
 python/django3 $ git init
@@ -4471,7 +4974,16 @@ python/django3 $ git init
 Initialized empty Git repository in /home/xf0r3m/python/django3/.git/
 </pre>
 		<p>
-			Teraz dodamy plik, w którym zdefiniujemy wszystkie pliki/katalogi, które mają być ignorowane przez Git podczas dodawania zmian do repozytorium. Tworzymy plik <em>.gitignore</em>, plik ten będzie ukryty z powodu kropki poprzedzającej nazwę pliku. W tym pliku wpisujemy katalog środowiska wirtualnego <em>blog_env/</em>, katalog <em>__pycache__/</em> oraz wszystkie pliki baz danych <em>*.sqlite3</em>. Dlaczego?<strong> Otóż monitowanie plików lokalnej bazy danych jest generalnie złą praktyką i może doprowadzić do niezłych tarapatów, kiedy np. nadpiszemy bazę produkcyjną tą na platformie Heroku, bazą testową z Git-a. Dlatego pomijamy ten plik.</strong> Poniżej znajduje się zawartość pliku <em>.gitignore</em>
+			Teraz dodamy plik, w którym zdefiniujemy wszystkie pliki/katalogi, które
+      mają być ignorowane przez Git podczas dodawania zmian do repozytorium. 
+      Tworzymy plik <em>.gitignore</em>, plik ten będzie ukryty z powodu kropki
+      poprzedzającej nazwę pliku. W tym pliku wpisujemy katalog środowiska 
+      wirtualnego <em>blog_env/</em>, katalog <em>__pycache__/</em> oraz 
+      wszystkie pliki baz danych <em>*.sqlite3</em>. Dlaczego? Otóż monitowanie
+      plików lokalnej bazy danych jest generalnie złą praktyką i może 
+      doprowadzić do niezłych tarapatów, kiedy np. nadpiszemy bazę produkcyjną
+      tą na platformie Heroku, bazą testową z Git-a. Dlatego pomijamy ten plik. 
+      Poniżej znajduje się zawartość pliku <em>.gitignore</em>
 		</p>
 <pre class="code-block">
 	blog_env/
@@ -4479,19 +4991,26 @@ __pycache__/
 *.sqlite3
 </pre>
 		<p>
-			Teraz kiedy mamy już zdefiniowany plik <em>.gitignore</em>, możemy przejść do pierwszego zatwierdzenia. W katalogu projektu wydajemy polecenie
+			Teraz kiedy mamy już zdefiniowany plik <em>.gitignore</em>, możemy 
+      przejść do pierwszego zatwierdzenia. W katalogu projektu wydajemy 
+      polecenie:
 		</p>
 <pre class="code-block">
 $ git add .
 </pre>
 		<p>
-			To polecenie doda do repozytorium wszystkie pliki projektu poza plikami i katalogami z pliku <em>.gitignore</em>.
+			To polecenie doda do repozytorium wszystkie pliki projektu poza plikami i
+      katalogami z pliku <em>.gitignore</em>.
 		</p>
 <pre class="code-block">
 $ git commit -am "Projekt gotowy do wdrożenia na platformie Heroku"
 </pre>
 		<p>
-			Powyższe polecenie powoduje właśnie zatwierdzenie. Opcja <code class="code-inline">-a</code> powoduje uzwględnienie wszystkich zmodyfikowanych plików do zatwierdzenia, natomiast opcja <code class="code-inline">-m</code> powoduje dodanie komunikatu do zatwierdzenia.
+			Powyższe polecenie powoduje właśnie zatwierdzenie. Opcja 
+      <code class="code-inline">-a</code> powoduje uzwględnienie wszystkich 
+      zmodyfikowanych plików do zatwierdzenia, natomiast opcja 
+      <code class="code-inline">-m</code> powoduje dodanie komunikatu do 
+      zatwierdzenia.
 		</p>
 		<p>
 			Po wydaniu powyższego polecenia warto wydać polecenie:
@@ -4500,14 +5019,19 @@ $ git commit -am "Projekt gotowy do wdrożenia na platformie Heroku"
 $ git status
 </pre>
 		<p>
-			Aby sprawdzić stan wykonanego zatwierdzania, wynik działania polecenia powinien wyglądać podobnie jak poniżej.
+			Aby sprawdzić stan wykonanego zatwierdzania, wynik działania polecenia 
+      powinien wyglądać podobnie jak poniżej.
 		</p>
 <pre class="code-block">
 $ git status
 On branch master
 nothing to commit, working tree clean
 </pre>
-		<p>Po wykonaniu pierwszego zatwierdzenia przyszedł czas na przekazanie projektu do Heroku. Teraz musimy przypomnieć sobie adres e-mail, na jaki zakładaliśmy konto Heroku oraz jakie było do niego hasło. Jeśli mamy już te dane w pobliżu wydajemy polecenie
+		<p>
+      Po wykonaniu pierwszego zatwierdzenia przyszedł czas na przekazanie 
+      projektu do Heroku. Teraz musimy przypomnieć sobie adres e-mail, na jaki
+      zakładaliśmy konto Heroku oraz jakie było do niego hasło. Jeśli mamy już
+      te dane w pobliżu wydajemy polecenie
 		</p>
 <pre class="code-block">
 python/django3 $ heroku login
@@ -4516,10 +5040,17 @@ Logging in... done
 Logged in as user@example.com
 </pre>
 		<p>
-			Po wydaniu powyższego polecenia, zgodnie z instrukcją naciskamy dowolny klawisz poza literą <code class="code-inline">q</code>, aby otworzyła nam się przeglądarka. Tam podajemy dane dostępowe do Heroku, po poprawny zalogowaniu, zostanie wyświetlony komunikat o poprawyn zalogowaniu oraz o tym że możemy już zamknąć okno przeglądarki. W terminalu pod instrukcją wyświetloną przez polecenie, zostaną dopisane pozostałe dwie linie takie jak przedstawione powyżej.
+			Po wydaniu powyższego polecenia, zgodnie z instrukcją naciskamy dowolny 
+      klawisz poza literą <code class="code-inline">q</code>, aby otworzyła 
+      nam się przeglądarka. Tam podajemy dane dostępowe do Heroku, po poprawny
+      zalogowaniu, zostanie wyświetlony komunikat o poprawyn zalogowaniu oraz 
+      o tym że możemy już zamknąć okno przeglądarki. W terminalu pod instrukcją
+      wyświetloną przez polecenie, zostaną dopisane pozostałe dwie linie takie
+      jak przedstawione powyżej.
 		</p>
 		<p>
-			Po zalogowaniu możemy już utworzyć nową aplikację wydając w terminalu poniższe polecenie.
+			Po zalogowaniu możemy już utworzyć nową aplikację wydając w terminalu 
+      poniższe polecenie.
 		</p>
 <pre class="code-block">
 python/django3 $ heroku create
@@ -4527,13 +5058,22 @@ Creating app... done, ⬢ dry-atoll-67152
 https://dry-atoll-67152.herokuapp.com/ | https://git.heroku.com/dry-atoll-67152.git
 </pre>
 		<p>
-			W odpowiedzi na to polecenie otrzymamy nazwę nowo utworzonej aplikacji na Heroku, potem zmienimy ją na bardziej przystępną, oraz dwa adresy. Jeden pod którym aplikacja jest dostępna w internecie, natomiast drugi to adres zdalnego repozytorium Git, na który będziemy <strong>wpychać</strong> zatwierdzenia kodu naszej aplikacji. Adres Git dla naszej aplikacji Heroku został już automatycznie zdefiniowany jako adres zdalnego repozytorium pod nazwą <code class="code-inline">heroku</code>. Dokonajmy teraz pierwszego wepchnięcia oraz zbudujmy naszą aplikacje na platformie Heroku. Budowa następuje automatycznie po wepchnięciu.
+			W odpowiedzi na to polecenie otrzymamy nazwę nowo utworzonej aplikacji na
+      Heroku, potem zmienimy ją na bardziej przystępną, oraz dwa adresy. Jeden
+      pod którym aplikacja jest dostępna w internecie, natomiast drugi to adres
+      zdalnego repozytorium Git, na który będziemy <strong>wpychać</strong> 
+      zatwierdzenia kodu naszej aplikacji. Adres Git dla naszej aplikacji 
+      Heroku został już automatycznie zdefiniowany jako adres zdalnego 
+      repozytorium pod nazwą <code class="code-inline">heroku</code>. 
+      Dokonajmy teraz pierwszego wepchnięcia oraz zbudujmy naszą aplikacje na 
+      platformie Heroku. Budowa następuje automatycznie po wepchnięciu.
 		</p>
 <pre class="code-block">
 python/django3 $ git push heroku master
 </pre>
 		<p>
-			Po wydaniu tego polecenia na ekranie zostanie wyświetlony cały proces budowania aplikacji w Heroku.
+			Po wydaniu tego polecenia na ekranie zostanie wyświetlony cały proces 
+      budowania aplikacji w Heroku.
 		</p>
 <pre class="code-block">
 Enumerating objects: 46, done.
@@ -4602,13 +5142,24 @@ To https://git.heroku.com/dry-atoll-67152.git
  *[new branch]      master -&gt; master
 </pre>
 		<p>
-			Jeśli otrzymaliśmy podobny input, to znaczy że cały proces przebiegł prawidłowo. Teraz jeśli wydamy polecenie:
+			Jeśli otrzymaliśmy podobny input, to znaczy że cały proces przebiegł 
+      prawidłowo. Teraz jeśli wydamy polecenie:
 		</p>
 <pre class="code-block">
 python/django3 $ heroku open
 </pre>
 		<p>
-			Zostanie otworzona przeglądarka z nasza aplikacją w Heroku. Jednak, jeśli klikniemy w odnośnik 'Menu', zostanie nam zrócona strona błedu <em>ProgrammingError</em>, oznacza to mniej więcej tyle i aż tyle że nie ma bazy danych. Utworzenie bazy danych oraz dodanie superużytkownika, to dwie kolejne czynności, które możemy wykonać dwa różne sposoby przedstawie je poniżej, aby byśmy zwrócili uwagę na to że z aplikacjami na Heroku można wchodzić w interakcje w dwojaki sposób. Pierwszy z nich to wydawanie konkretnych poleceń <strong>poprzedzając nasze polecenie słowami <code class="code-inline">heroku run</code></strong>. Uruchamiamy daną czynność tak samo jak w środowisku wirtualnym na naszym lokalnym komputerze. Tak też stworzymy bazę danych.
+			Zostanie otworzona przeglądarka z nasza aplikacją w Heroku. Jednak, 
+      jeśli klikniemy w odnośnik 'Menu', zostanie nam zrócona strona błedu 
+      <em>ProgrammingError</em>, oznacza to mniej więcej tyle i aż tyle że nie
+      ma bazy danych. Utworzenie bazy danych oraz dodanie superużytkownika, to
+      dwie kolejne czynności, które możemy wykonać dwa różne sposoby. 
+      Przedstawie je poniżej, aby byśmy zwrócili uwagę na to że z aplikacjami 
+      na Heroku można wchodzić w interakcje w dwojaki sposób. Pierwszy z nich 
+      to wydawanie konkretnych poleceń poprzedzając nasze polecenie słowami 
+      <code class="code-inline">heroku run</code>. Uruchamiamy daną czynność 
+      tak samo jak w środowisku wirtualnym na naszym lokalnym komputerze. Tak 
+      też stworzymy bazę danych.
 		</p>
 <pre class="code-block">
 python/django3 $ heroku run python manage.py migrate
@@ -4638,7 +5189,11 @@ Running migrations:
   Applying sessions.0001_initial... OK
 </pre>
 		<p>
-			Jak można zauważyć na początku trwa nawiązywanie połączenia z naszym kontenerem (naszą aplikacją), a następnie wykonywane jest polecenie. Drugim sposobem jest uruchomienie <strong>powłoki w środowisku kontenera Heroku</strong>, za pomocą tej metody utworzymy superużytkownika. Aby uruchomić powłokę  należy wydać następujące polecenie.
+			Jak można zauważyć na początku trwa nawiązywanie połączenia z naszym 
+      kontenerem (naszą aplikacją), a następnie wykonywane jest polecenie. 
+      Drugim sposobem jest uruchomienie powłoki w środowisku kontenera Heroku,
+      za pomocą tej metody utworzymy superużytkownika. Aby uruchomić powłokę 
+      należy wydać następujące polecenie.
 		</p>
 <pre class="code-block">
 python/django3 $ heroku run bash
@@ -4646,7 +5201,9 @@ Running bash on ⬢ dry-atoll-67152... up, run.8503 (Free)
 ~ $
 </pre>
 		<p>
-			Po połączeniu zostanie na zrócony taki charakterystyczny, krótki znak zachęty. Zaraz zanim wydajemy polecenie, takie jakie wydawaliśmy podczas tworzenie superużytkownika na naszym komputerze.
+			Po połączeniu zostanie na zrócony taki charakterystyczny, krótki znak 
+      zachęty. Zaraz zanim wydajemy polecenie, takie jakie wydawaliśmy podczas 
+      tworzenie superużytkownika na naszym komputerze.
 		</p>
 <pre class="code-block">
 ~ $ python manage.py createsuperuser
@@ -4657,22 +5214,43 @@ Password (again):
 Superuser created successfully.
 </pre>
 		<p>
-			Teraz możemy przjeść do naszej aplikacji oraz móc sprawdzić moduł logowania oraz zalogować się do witryny administracyjnej aby zdefiniować trochę danych.
+			Teraz możemy przjeść do naszej aplikacji oraz móc sprawdzić moduł 
+      logowania oraz zalogować się do witryny administracyjnej aby zdefiniować
+      trochę danych.
 		</p>
 		<p>
-			Teraz kiedy nasza aplikacja jest gotowa, możemy przjeść do nadania jej nieco przyjaźniejszej nazwy. Zmianę nazwy realizujemy za pomocą polecenia:
+			Teraz kiedy nasza aplikacja jest gotowa, możemy przjeść do nadania jej 
+      nieco przyjaźniejszej nazwy. Zmianę nazwy realizujemy za pomocą 
+      polecenia:
 		</p>
 <pre class="code-block">
 python/django3 $ heroku apps:rename blogs-morkme-v01
 </pre>
 		<p>
-			<strong>Pamiętać jednak należy o tym że podczas nadawania nazw w Heroku możemy korzystać jedynie z liter, cyfr oraz myślników</strong>.
+		  Pamiętać jednak należy o tym że podczas nadawania nazw w Heroku 
+      możemy korzystać jedynie z liter, cyfr oraz myślników.
 		</p>
 		<p>
-			Teraz przejdziemy do zabepieczenia naszej aplikacji. Zwróćmy uwagę na to że gdy w plikach naszego projektu na Heroku zabrakło bazy danych, <strong>została na zwrócona strona z opisem błędu </strong><em><strong>ProgrammingError</strong></em><strong>, ta strona została przygotowana przez Debuger.</strong> W środowisku testowym jest powszechne i często spotykane zjawisko, że w razie błędów zostanie wyświetlona strona z informacjami o tym gdzie szukać danego błędu, jednak w środowisku produkcyjnym takim jak Heroku jest to niedopuszczalne, takie strony zazwyczaj zwracają za dużo newralgicznych danych i mogą być wykorzystane do ataków przeciwko nam. Na podstawie zmiennej środowiskowej będziemy regulować wyświetlanie stron debugera. Z racji tego iż<strong> w Django zmienna Debug przyjmuje wartość boolowską, a z kolei zmienne środowiskowe przechowują ciągi tekstowe</strong>, będzie nam potrzebna konstrukcja if, którą zaimplementujemy w pliku <em>settings.py</em> w głównym katalogu projektu.
+			Teraz przejdziemy do zabepieczenia naszej aplikacji. Zwróćmy uwagę na to,
+      że gdy w plikach naszego projektu na Heroku zabrakło bazy danych, została
+      na zwrócona strona z opisem błędu <em>ProgrammingError</em>, ta strona 
+      została przygotowana przez Debuger.</strong> W środowisku testowym jest 
+      powszechne i często spotykane zjawisko, że w razie błędów zostanie 
+      wyświetlona strona z informacjami o tym gdzie szukać danego błędu, 
+      jednak w środowisku produkcyjnym takim jak Heroku jest to 
+      niedopuszczalne, takie strony zazwyczaj zwracają za dużo newralgicznych 
+      danych i mogą być wykorzystane do ataków przeciwko nam. Na podstawie 
+      zmiennej środowiskowej będziemy regulować wyświetlanie stron debugera.
+      Z racji tego iż w Django zmienna <em>Debug</em> przyjmuje wartość 
+      boolowską, a z kolei zmienne środowiskowe przechowują ciągi tekstowe, 
+      będzie nam potrzebna konstrukcja if, którą zaimplementujemy w pliku 
+      <em>settings.py</em> w głównym katalogu projektu.
 		</p>
 		<p>
-			Naszą implementacje zaczynamy od zaimportowania obiektu <code class="code-inline">environ</code> modułu <code class="code-inline">os</code> na górze pliku. Następnie na samym dole pliku wprowadzamy poniższy kod.
+			Naszą implementacje zaczynamy od zaimportowania obiektu 
+      <code class="code-inline">environ</code> modułu 
+      <code class="code-inline">os</code> na górze pliku. Następnie na samym 
+      dole pliku wprowadzamy poniższy kod.
 		</p>
 <pre class="code-block">
 if environ.get('DEBUG') == 'TRUE':
@@ -4681,13 +5259,23 @@ elif environ.get('DEBUG') == 'FALSE':
     DEBUG = False
 </pre>
 		<p>
-			Za pomocą metody <code class="code-inline">get</code> obiektu <em>environ</em>, pobieramy wartość zmiennej środowiskowej, której nazwa jest pobierana jako ciąg tekstowy w pierwszym argumencie. W zależności od wyniku przyrównania wartości w zmiennej <code class="code-inline">DEBUG</code> nadawana jest wartość boolowska <code class="code-inline">True</code> or <code class="code-inline">False</code>. Z racji tego iż przesłaliśmy plik <em>settings.py</em>, wraz ustawioną opcją <em>DEBUG</em> na <em>True</em>. To teraz musimy ją zmienić w naszej aplikacji na platformie Heroku, możemy tego dokonać za pomocą jednego polecenia.
+			Za pomocą metody <code class="code-inline">get</code> obiektu 
+      <em>environ</em>, pobieramy wartość zmiennej środowiskowej, której nazwa 
+      jest pobierana jako ciąg tekstowy w pierwszym argumencie. W zależności od
+      wyniku przyrównania wartości w zmiennej 
+      <code class="code-inline">DEBUG</code> nadawana jest wartość boolowska 
+      <code class="code-inline">True</code> or 
+      <code class="code-inline">False</code>. Z racji tego iż przesłaliśmy plik
+      <em>settings.py</em>, wraz ustawioną opcją <em>DEBUG</em> na 
+      <em>True</em>. To teraz musimy ją zmienić w naszej aplikacji na 
+      platformie Heroku, możemy tego dokonać za pomocą jednego polecenia.
 		</p>
 <pre class="code-block">
 python/django3 $ heroku config:set DEBUG=FALSE
 </pre>
 		<p>
-			<strong>To polecenie spowoduje ustawienie podanej zmiennej środowiskowej na podaną wartość oraz restart aplikacji</strong>. Teraz otworzymy naszą aplikację za pomocą polecenia <code class="code-inline">heroku open</code> i przejdziemy pod stronę, której nie zaimplementowano w naszej aplikacji. Powinniśmy otrzymać typowy komunikat <em>Not Found</em>. Ten komunikat nie pasuje do szaty graficznej naszej aplikacji, my jednak możemy dodać własne szablony dla typowych błędów. Szablony będą banalne, ale będą miały jedną ważną cechę. Będą ładować podstawowy wygląd naszej aplikacji. Zaczynamy od utworzenia katalogu <em>templates</em> w głównym katalogu projektu. W tym katalogu tworzymy dwa pliki: <em>404.html</em> oraz <em>500.html</em>. Poniżej zamieszczam zawartość każdego szablonu.
+			To polecenie spowoduje ustawienie podanej zmiennej środowiskowej na 
+      podaną wartość oraz restart aplikacji</strong>. Teraz otworzymy naszą aplikację za pomocą polecenia <code class="code-inline">heroku open</code> i przejdziemy pod stronę, której nie zaimplementowano w naszej aplikacji. Powinniśmy otrzymać typowy komunikat <em>Not Found</em>. Ten komunikat nie pasuje do szaty graficznej naszej aplikacji, my jednak możemy dodać własne szablony dla typowych błędów. Szablony będą banalne, ale będą miały jedną ważną cechę. Będą ładować podstawowy wygląd naszej aplikacji. Zaczynamy od utworzenia katalogu <em>templates</em> w głównym katalogu projektu. W tym katalogu tworzymy dwa pliki: <em>404.html</em> oraz <em>500.html</em>. Poniżej zamieszczam zawartość każdego szablonu.
 		</p>
 		<p>
 			<span style="text-decoration: underline;">Plik 404.html</span>

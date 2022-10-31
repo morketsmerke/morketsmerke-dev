@@ -107,6 +107,44 @@
           <li><a href="#1.26.sourcecodestyle">1.26. Koncepcje stylu kodu źródłowego</a></li>
         </ul>
       </li>
+      <li><a href="#2.part2">Część 2: Aplikacje internetowe</a>
+        <ul class="toc">
+          <li><a href="#2.1.virtualenv">Środowisko wirtualne</a></li>
+          <li><a href="#2.2.djangobasics">Podstawy pracy z frameworkiem Django</a>
+            <ul class="toc">
+              <li><a href="#2.2.1.installationofdjango">2.2.1. Instalacja django</a></li>
+              <li><a href="#2.2.2.creatingnewproject">2.2.2. Stworzenie nowego projektu w Django</a></li>
+              <li><a href="#2.2.3.cratetindbforproject">2.2.3. Tworzenie bazy danych dla projektu</a></li>
+              <li><a href="#2.2.4.startaprojectserver">2.2.4. Uruchomienie serwera projektu</a></li>
+              <li><a href="#2.2.5.creatinganapplication">2.2.5. Tworzenie aplikacji Django</a></li>
+              <li><a href="#2.2.6.models">2.2.6. Modele</a></li>
+              <li><a href="#2.2.7.instalationappinproject">2.2.7. Instalacja aplikacji w projekcie</a></li>
+              <li><a href="#2.2.8.approvingmodels">2.2.8. Zatwierdzanie modeli w bazie danych.</a></li>
+              <li><a href="#2.2.9.managingmodelsviaadminsite">2.2.9. Zarządzanie modelami za pomocą wirtyny administracyjnej Django</a></li>
+              <li><a href="#2.2.10.djangoshell">2.2.10. Powłoka Django</a></li>
+            </ul>
+          </li>
+          <li><a href="#2.3.creatingappspages">2.3. Tworzenie aplikacji</a>
+            <ul class="toc">
+              <li><a href="#2.3.1.sitemappings">2.3.1. Mapowanie stron aplikacji</a></li>
+              <li><a href="#2.3.2.creatingaview">2.3.2. Tworzenie widoku</a></li>
+              <li><a href="#2.3.3.creatingatemplate">2.3.3. Tworzenie szablonu</a></li>
+              <li><a href="#2.3.4.mappingapps">2.3.4. Mapowanie aplikacji</a></li>
+              <li><a href="#2.3.5.anexampleexpanding">2.3.5. Rozszerzanie przykładu</a></li>
+            </ul>
+          </li>
+          <li><a href="#2.4.theuserapplication">2.4. Aplikacja users</a>
+            <ul class="toc">
+              <li><a href="#2.4.1.userslogin">2.4.1. Logowanie użytkowników</a></li>
+              <li><a href="#2.4.2.theuserregistration">2.4.2. Rejestracja użytkowników</a></li>
+            </ul>
+          </li>
+          <li><a href="#2.5.expandingpizzasapplication">2.5. Rozbudowa aplikacji 'pizzas'.</a></li>
+          <li><a href="#2.6.securinganapplication">2.6. Zabezpieczenie aplikacji</a></li>
+          <li><a href="#2.7.usingbootstrap4fordjango">2.7. Nadawanie stylu aplikacji - Bootstrap 4</a></li>
+          <li><a href="#2.8.herokuplatform">2.8. Platforma Heroku</a></li>
+        </ul>
+      </li>
     </ol>
     <h1 id="1.part1">Część 1: Zapoznanie się z językiem Python</h1>
 		<h2 id="1.1.introduction">1.1. Wstęp.</h2>
@@ -2403,7 +2441,7 @@ OK
     <p>
 		  <strong>Koniec części pierwszej.</strong>
     </p>
-		<h1 id="2.part2"><strong>Część 2: Aplikacje internetowe</strong></h1>
+		<h1 id="2.part2">Część 2: Aplikacje internetowe</h1>
 		<p>
 			<strong>Django</strong> to zestaw narzędzi 
       (czyt. <em>framework</em>) pozwalający na tworzenie aplikacji 
@@ -3601,7 +3639,7 @@ path('register/', views.register, name="register"),
 {% endif %}
 
 {% block content %} {% endblock content%}
-		
+</pre>		
     <h2 id="2.5.expandingpizzasapplication">2.5. Rozbudowa aplikacji 'pizzas'.</h2>
 		<p>
 			Teraz kiedy mamy logowanie oraz rejestracje. To powinniśmy mieć możliwość
@@ -5275,7 +5313,16 @@ python/django3 $ heroku config:set DEBUG=FALSE
 </pre>
 		<p>
 			To polecenie spowoduje ustawienie podanej zmiennej środowiskowej na 
-      podaną wartość oraz restart aplikacji</strong>. Teraz otworzymy naszą aplikację za pomocą polecenia <code class="code-inline">heroku open</code> i przejdziemy pod stronę, której nie zaimplementowano w naszej aplikacji. Powinniśmy otrzymać typowy komunikat <em>Not Found</em>. Ten komunikat nie pasuje do szaty graficznej naszej aplikacji, my jednak możemy dodać własne szablony dla typowych błędów. Szablony będą banalne, ale będą miały jedną ważną cechę. Będą ładować podstawowy wygląd naszej aplikacji. Zaczynamy od utworzenia katalogu <em>templates</em> w głównym katalogu projektu. W tym katalogu tworzymy dwa pliki: <em>404.html</em> oraz <em>500.html</em>. Poniżej zamieszczam zawartość każdego szablonu.
+      podaną wartość oraz restart aplikacji. Teraz otworzymy naszą aplikację za
+      pomocą polecenia <code class="code-inline">heroku open</code> i 
+      przejdziemy pod stronę, której nie zaimplementowano w naszej aplikacji. 
+      Powinniśmy otrzymać typowy komunikat <em>Not Found</em>. Ten komunikat 
+      nie pasuje do szaty graficznej naszej aplikacji, my jednak możemy dodać 
+      własne szablony dla typowych błędów. Szablony będą banalne, ale będą 
+      miały jedną ważną cechę. Będą ładować podstawowy wygląd naszej aplikacji.
+      Zaczynamy od utworzenia katalogu <em>templates</em> w głównym katalogu 
+      projektu. W tym katalogu tworzymy dwa pliki: <em>404.html</em> oraz 
+      <em>500.html</em>. Poniżej zamieszczam zawartość każdego szablonu.
 		</p>
 		<p>
 			<span style="text-decoration: underline;">Plik 404.html</span>
@@ -5298,8 +5345,19 @@ python/django3 $ heroku config:set DEBUG=FALSE
 {% endblock page_header %}
 </pre>
 		<p>
-			Teraz wracamy do naszego pliku <em>settings.py</em> w nim ustawiamy jedną rzecz. Na początku importujemy obiekt <em>path</em> z modułu <em>os</em>. Następnie odszukujemy klucz <em>DIRS</em> w słowniku wenątrz listy <em>TEMPLATES</em>. Następnie wewnątrz listy DIRS wpisujemy jedną wartość zwracaną przez metodę <em>join</em> obiektu <em>path</em>, która jako argumenty przyjmuje ścieżkę bazową <em>BASE_DIR</em> oraz ścieżkę dostępu do szablonów względem ścieżki bazowej. Trochę to zagmatwane, ale jak spojrzymy w górę kodu dostrzerzemy fakt iż <em>BASE_DIR</em> to zmienna, którą możemy sobie odtworzyć w powłoce. Jako<em>__file__</em> podstawimy ścieżke do dostępową do pliku <em>settings.py</em> względem naszego katalogu głównego z plikami, gdzie znajdują katalog projektu, katalogi aplikacji oraz katalog ze środowiskiem wirtualnym.
-			<span style="text-decoration: underline;"></span>Poniżej zamieściłem listing z konsoli jak możemy sprawdzić naszą ścieżkę.
+			Teraz wracamy do naszego pliku <em>settings.py</em> w nim ustawiamy jedną
+      rzecz. Na początku importujemy obiekt <em>path</em> z modułu <em>os</em>.
+      Następnie odszukujemy klucz <em>DIRS</em> w słowniku wenątrz listy 
+      <em>TEMPLATES</em>. Następnie wewnątrz listy DIRS wpisujemy jedną wartość
+      zwracaną przez metodę <em>join</em> obiektu <em>path</em>, która jako 
+      argumenty przyjmuje ścieżkę bazową <em>BASE_DIR</em> oraz ścieżkę dostępu
+      do szablonów względem ścieżki bazowej. Trochę to zagmatwane, ale jak 
+      spojrzymy w górę kodu dostrzerzemy fakt iż <em>BASE_DIR</em> to zmienna,
+      którą możemy sobie odtworzyć w powłoce. Jako<em>__file__</em> podstawimy
+      ścieżke do dostępową do pliku <em>settings.py</em> względem naszego 
+      katalogu głównego z plikami, gdzie znajdują katalog projektu, katalogi 
+      aplikacji oraz katalog ze środowiskiem wirtualnym.
+			Poniżej zamieściłem listing z konsoli jak możemy sprawdzić naszą ścieżkę.
 		</p>
 <pre class="code-block">
 &gt;&gt;&gt;from pathlib import Path
@@ -5308,21 +5366,41 @@ python/django3 $ heroku config:set DEBUG=FALSE
 PosixPath('/home/xf0r3m/python/django3')
 </pre>
 		<p>
-			Teraz znając już wartość naszej zmiennej <em>BASE_DIR</em> możemy perfekcyjnie ustalić ścieżke dostępową do naszych szablonów.
+			Teraz znając już wartość naszej zmiennej <em>BASE_DIR</em> możemy 
+      perfekcyjnie ustalić ścieżke dostępową do naszych szablonów.
 		</p>
 		<p>
-			Warto pamiętać o tym że te szablony będą wyświetlane tylko wtedy, gdy opcja <em>DEBUG</em> jest ustawiona na False. Możemy je przetestować żądając strony, której nie ma, otrzymamy stronę błędu 404. Natomiast jeśli spróbujemy edytować zamówienie, którego niema to w ten czas otrzymamy stronę błędu 500. Skupmy się przez chwilę na tym drugim przypadku, kiedy chcemy edytować zamowienie, którego nie ma. Przezkazujemy za pomocą metody <em>GET</em> identyfikator zamówienia, kiedy widok próbuje wydobyć informacje odnośnie rekordu o takim identyfikatorze otzymuje wartość <em>None</em>, oznacza to tyle że nie ma takiego rekordu, jeśli więc nie ma takiego rekordu to żądana strona edycji zamówienia nie może istnieć, więc lepiej użyć strony 404 niż 500.
-			Można to zrealizować wykorzystując funkcję <code class="code-inline">get_object_or_404</code> z tego samego modułu <code class="code-inline">django.shortcuts</code>, z którego importowaliśmy funkcje render oraz redirect, następnie możemy jej użyć w każdym widoku wymagającym identyfikatora np. w zapytaniach do bazy.
+			Warto pamiętać o tym, że te szablony będą wyświetlane tylko wtedy, gdy 
+      opcja <em>DEBUG</em> jest ustawiona na False. Możemy je przetestować 
+      żądając strony, której nie ma, otrzymamy stronę błędu 404. Natomiast 
+      jeśli spróbujemy edytować zamówienie, którego niema to w ten czas 
+      otrzymamy stronę błędu 500. Skupmy się przez chwilę na tym drugim 
+      przypadku, kiedy chcemy edytować zamowienie, którego nie ma. 
+      Przezkazujemy za pomocą metody <em>GET</em> identyfikator zamówienia, 
+      kiedy widok próbuje wydobyć informacje odnośnie rekordu o takim 
+      identyfikatorze otzymuje wartość <em>None</em> oznacza to tyle, że nie ma
+      takiego rekordu, jeśli więc nie ma takiego rekordu to żądana strona 
+      edycji zamówienia nie może istnieć, więc lepiej użyć strony 404 niż 500.
+			Można to zrealizować wykorzystując funkcję 
+      <code class="code-inline">get_object_or_404</code> z tego samego modułu 
+      <code class="code-inline">django.shortcuts</code>, z którego 
+      importowaliśmy funkcje <em>render</em> oraz <em>redirect</em>, następnie 
+      możemy jej użyć w każdym widoku wymagającym identyfikatora np. w 
+      zapytaniach do bazy.
 		</p>
 <pre class="code-block">
 # order = Order.objects.get(id=order_id)
 order = get_object_or_404(Order, id=order_id)
 </pre>
 		<p>
-			Zbliżamy się do końca tej ściągi, jednak zanim się rozejdziemy dalej poznawać świat Pythona, posprzątamy po sobie. Jednak jeśli chcesz możesz w ramach ćwiczenia rozwinąć projekt Pizzeria do stanu użytczeności.
+			Zbliżamy się do końca tego materiału, jednak zanim się rozejdziemy dalej 
+      poznawać świat Pythona, posprzątamy po sobie. Jednak jeśli chcesz możesz
+      w ramach ćwiczenia rozwinąć projekt Pizzeria do stanu użytczeności.
 		</p>
 		<p>
-			Jednak jeśli ta aplikacja, która była z nami przez dłuższą część nauki frameworka Django przestała być potrzebna, to możemy ją usunąć z platformy wydajac polecenie:
+			Jednak jeśli ta aplikacja, która była z nami przez dłuższą część nauki 
+      <em>frameworka</em> Django przestała być potrzebna, to możemy ją usunąć z
+      platformy wydajac polecenie:
 		</p>
 <pre class="code-block">
 python/django2 $ heroku apps:destroy pizzeria-morkme-1a
@@ -5333,14 +5411,17 @@ python/django2 $ heroku apps:destroy pizzeria-morkme-1a
  &gt;
 </pre>
 		<p>
-			Heroku zarząda od nas potwierdzenia, w postaci ponownego wprowadzenia nazwy aplikacji. Po jej podaniu, otrzymamy informacje poprawnym <strong>zniszczeniu</strong> aplikacji na platformie Heroku.
+			Heroku zarząda od nas potwierdzenia, w postaci ponownego wprowadzenia 
+      nazwy aplikacji. Po jej podaniu, otrzymamy informacje poprawnym 
+      zniszczeniu (usunięciu) aplikacji na platformie Heroku.
 		</p>
 <pre class="code-block">
 &gt; pizzeria-morkme-1a
 Destroying ⬢ pizzeria-morkme-1a (including all add-ons)... done
 </pre>
 		<p>
-			Jeśli chodzi o podstawy Pythona oraz Django to wydaje mi się że mamy je już za sobą. Przez bardzo długi czas bo ponad dwa miesiąc pisał dla was:
+			Jeśli chodzi o podstawy Pythona oraz Django to wydaje mi się, że mamy je 
+      już za sobą.
 		</p>
 		<p>
 			~xf0r3m

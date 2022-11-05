@@ -11,24 +11,24 @@
 				ul {
 					text-align: left;
 				}
+				.toc {
+					list-style-type: none;
+				}
+				body {
+					width: 99%;
+					height: 100vh;
+				}
+				.main {
+					width: 100%;
+				}
 			</style>
 		</head>
 		<body>
-<pre>
- _                      _             _ _
-| |_ ___ _ __ _ __ ___ (_)_ __   __ _| | | ___   __ _
-| __/ _ \ '__| '_ ` _ \| | '_ \ / _` | | |/ _ \ / _` |
-| ||  __/ |  | | | | | | | | | | (_| | | | (_) | (_| |
- \__\___|_|  |_| |_| |_|_|_| |_|\__,_|_|_|\___/ \__, |
-			                        |___/
-</pre>
-<p class="header_link">
-	&#9760;&nbsp;<a href="https://morketsmerke.github.io">morketsmerke</a>&nbsp;&#9760;
-</p>
-	<div class="main">
-		<h1 class="title">Ściąga z PYTHONga</h1>
-    <h2>Spis treści</h2>
-    <ol>
+	
+ 	<div class="main">
+	<div id="tableOfContent">
+		<h1>Ściąga z PYTHONga</h1>
+    <ol class="toc mainToc">
       <li><a href="#1.part1">Część 1: Zapoznanie się z językiem Python</a>
         <ul class="toc">
           <li><a href="#1.1.introduction">1.1. Wstęp.</a></li>
@@ -146,6 +146,25 @@
         </ul>
       </li>
     </ol>
+    <p class="footer">
+		  ~xf0r3m<br />
+		  2021; COPYLEFT; ALL RIGHTS REVERSED;
+	  </p>
+	</div>
+	<div id="content">
+  <div id="contentHeader">
+<pre id="divisionBaner">
+ _                      _             _ _
+| |_ ___ _ __ _ __ ___ (_)_ __   __ _| | | ___   __ _
+| __/ _ \ '__| '_ ` _ \| | '_ \ / _` | | |/ _ \ / _` |
+| ||  __/ |  | | | | | | | | | | (_| | | | (_) | (_| |
+ \__\___|_|  |_| |_| |_|_|_| |_|\__,_|_|_|\___/ \__, |
+			                        |___/
+</pre>
+<p id="contentHeaderLink" class="header_link">
+	   &#9760;&nbsp;<a href="https://morketsmerke.github.io">morketsmerke</a>&nbsp;&#9760;
+    </p>
+    </div>
     <h1 id="1.part1">Część 1: Zapoznanie się z językiem Python</h1>
 		<h2 id="1.1.introduction">1.1. Wstęp.</h2>
 		<p>
@@ -4094,9 +4113,11 @@ class Order(models.Model):
       dodanie wartości domyślnej w deklaracji pola w klasie modelu.
 		</p>
 <pre class="code-block">
-You are trying to add a non-nullable field 'owner' to order without a default; we can't do that (the database needs something to populate existing rows).
+You are trying to add a non-nullable field 'owner' to order without a default; 
+we can't do that (the database needs something to populate existing rows).
 Please select a fix:
- 1) Provide a one-off default now (will be set on all existing rows with a null value for this column)
+ 1) Provide a one-off default now (will be set on all existing rows with a null
+    value for this column)
  2) Quit, and let me add a default in models.py
 Select an option: 2
 </pre>
@@ -4406,7 +4427,9 @@ INSTALLED_APPS = &#91;
             &lt;a class="navbar-brand" href="{% url 'pizzas:index' %}"&lt;
                 Dolce&amp;Gusto
             &lt;/a&gt;
-            &lt;button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation"&gt;
+            &lt;button class="navbar-toggler" type="button" data-toggle="collapse" 
+            data-target="#navbarCollapse" aria-controls="navbarCollapse" 
+            aria-expanded="false" aria-label="Toggle navigation"&gt;
                 &lt;span class="navbar-toggler-icon"&gt;&lt;/span&gt;
             &lt;/button&gt;
             &lt;div class="collapse navbar-collapse" id="navbarCollapse"&gt;
@@ -4645,10 +4668,13 @@ INSTALLED_APPS = &#91;
         {% csrf_token %}
         &lt;h1 class="h3 mb-3 font-weight-normal text-center"&gt;Zaloguj się&lt;/h1&gt;
         &lt;label for="username" class="sr-only"&gt;Nazwa użytkownika&lt;/label&gt;
-        &lt;input type="text" id="username" name="{{form.username.html_name}}" class="form-control" placeholder="Nazwa użytkownika" required autofocus&gt;
+        &lt;input type="text" id="username" name="{{form.username.html_name}}" 
+        class="form-control" placeholder="Nazwa użytkownika" required autofocus&gt;
         &lt;label for="form.password" class="sr-only"&gt;Hasło&lt;/label&gt;
-        &lt;input type="password" id="password" name="{{form.password.html_name}}" class="form-control" placeholder="Hasło" required&gt;
-        &lt;button class="btn btn-lg btn-primary btn-block" type="submit"&gt;Zaloguj&lt;/button&gt;
+        &lt;input type="password" id="password" name="{{form.password.html_name}}" 
+        class="form-control" placeholder="Hasło" required&gt;
+        &lt;button class="btn btn-lg btn-primary btn-block" 
+        type="submit"&gt;Zaloguj&lt;/button&gt;
         &lt;p class="mt-5 mb-3 text-muted text-center"&gt;&amp;copy; 2020&lt;/p&gt;
         &lt;input type="hidden" name="next" value="{% url 'pizzas:index' %}" /&gt;
     &lt;/form&gt;
@@ -4933,7 +4959,8 @@ whitenoise==5.2.0
 Python 3.8.2
 </pre>
 		<p>
-			Natomiast zawtość pliku <em>runtime.txt</em> (nazwa pliku musi być identyczna)  musi wyglądać następująco:
+			Natomiast zawartość pliku <em>runtime.txt</em> (nazwa pliku musi być 
+      identyczna) musi wyglądać następująco:
 		</p>
 <pre class="code-block">
 python-3.8.2
@@ -5157,14 +5184,22 @@ remote:          Downloading whitenoise-5.2.0-py2.py3-none-any.whl (19 kB)
 remote:        Building wheels for collected packages: psycopg2
 remote:          Building wheel for psycopg2 (setup.py): started
 remote:          Building wheel for psycopg2 (setup.py): finished with status 'done'
-remote:          Created wheel for psycopg2: filename=psycopg2-2.8.5-cp38-cp38-linux_x86_64.whl size=483298 sha256=7daad67c78674aaee0b224f104bccb4ab6a0dbc40682c37b80f6f6e5572f5f7e
-remote:          Stored in directory: /tmp/pip-ephem-wheel-cache-105idbzs/wheels/35/64/21/9c9e2c1bb9cd6bca3c1b97b955615e37fd309f8e8b0b9fdf1a
+remote:          Created wheel for psycopg2: 
+filename=psycopg2-2.8.5-cp38-cp38-linux_x86_64.whl size=483298 
+sha256=7daad67c78674aaee0b224f104bccb4ab6a0dbc40682c37b80f6f6e5572f5f7e
+remote:          Stored in directory: /tmp/pip-ephem-wheel-cache-105idbzs/
+wheels/35/64/21/9c9e2c1bb9cd6bca3c1b97b955615e37fd309f8e8b0b9fdf1a
 remote:        Successfully built psycopg2
-remote:        Installing collected packages: asgiref, soupsieve, beautifulsoup4, dj-database-url, pytz, sqlparse, Django, django-bootstrap4, whitenoise, psycopg2, django-heroku, gunicorn
-remote:        Successfully installed Django-3.1 asgiref-3.2.10 beautifulsoup4-4.9.1 dj-database-url-0.5.0 django-bootstrap4-2.2.0 django-heroku-0.3.1 gunicorn-20.0.4 psycopg2-2.8.5 pytz-2020.1
+remote:        Installing collected packages: asgiref, soupsieve, beautifulsoup4, 
+dj-database-url, pytz, sqlparse, Django, django-bootstrap4, whitenoise, psycopg2,
+django-heroku, gunicorn
+remote:        Successfully installed Django-3.1 asgiref-3.2.10 
+beautifulsoup4-4.9.1 dj-database-url-0.5.0 django-bootstrap4-2.2.0 
+django-heroku-0.3.1 gunicorn-20.0.4 psycopg2-2.8.5 pytz-2020.1
 soupsieve-2.0.1 sqlparse-0.3.1 whitenoise-5.2.0
 remote: -----&gt; $ python manage.py collectstatic --noinput
-remote:        132 static files copied to '/tmp/build_f49f7b9a/staticfiles', 418 post-processed.
+remote:        132 static files copied to '/tmp/build_f49f7b9a/staticfiles', 
+418 post-processed.
 remote:
 remote: -----&gt; Discovering process types
 remote:        Procfile declares types -&gt; web
@@ -5423,12 +5458,7 @@ Destroying ⬢ pizzeria-morkme-1a (including all add-ons)... done
 			Jeśli chodzi o podstawy Pythona oraz Django to wydaje mi się, że mamy je 
       już za sobą.
 		</p>
-		<p>
-			~xf0r3m
-		</p>
+    </div>
 	</div>
-	<p class="footer">
-		2021; COPYLEFT; ALL RIGHTS REVERSED;
-	</p>
-		</body>
-	</html>
+	</body>
+</html>

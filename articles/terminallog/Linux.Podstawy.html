@@ -3973,7 +3973,7 @@ $ sudo reboot
           czas. Linux to głównie narzędzie do pracy na naszym komputerze, na
           tym etapie - podstawowym.
         </p>
-        <h2 id="7.systemconfigurationandusers">7. Konfiguracje systemowe oraz użytkownicy</h2>
+        <h1 id="7.systemconfigurationandusers">7. Konfiguracje systemowe oraz użytkownicy</h1>
         <p>
           W tym rozdziale zajmiemy się drobnymi konfigracjami, nie których
           komponentów systemowych takich jak <em>syslog</em> czy <em>cron</em>
@@ -3986,7 +3986,7 @@ $ sudo reboot
           konfiguracyjne znajdują się w katalog <strong>/etc</strong> i od
           omówienia tego katalogu zaczniemy.
         </p>
-        <h1 id="7.1.etcdirectory">7.1. Katalog /etc</h1>
+        <h2 id="7.1.etcdirectory">7.1. Katalog /etc</h2>
         <p>
           Jak wiemy z opisu hierarchii systemu plików (katalogu głównego), w 
           katalogu <strong>/etc</strong> przechowywane są różnego rodzaju
@@ -4153,7 +4153,456 @@ $Umask 0022
           <em>funkcja.priorytet</em> po opcji <strong>-p</strong>
           (na stronie podręcznika opcja określona jest jako priorytet) oraz
           komunikat do zapisania. Jeśli priorytet został pominięty, zostanie
-          użyty domyślny <em>user.notice</em>.
+          użyty domyślny <em>user.notice</em>. W zależności od konfiguracji
+	        <em>rsyslog</em> oraz użytej funkcji nasz komunikat powinien
+	        pojawić jednym z plików wyszczególnionych w konfiguracji plików.
+          W przypadku użycia narzędzia <em>logger</em> z domyślnymi wartościami
+          komunikat zostanie zapisany do <em>/var/log/messages</em>.
+        </p>
+        <p>
+          Większość rejestratorów nie tylko w postaci odrębnego programu jakim
+          jest <em>rsyslog</em>, ale także funkcje, nie których <em>daemonów</em>
+          jak np. serwer WWW <em>Apache2</em> zapisują do swoje komunikaty
+          diagnostyczne do <em>/var/log</em>, co może powodować szybkie
+          zapełnienie przestrzeni dyskowej. Jednak się to nie dzieje, dzięki 
+          programowi <strong>logrotate</strong>, którego zadaniem jest
+          (w zależności od konfiguracji) usuwanie lub kompresja starych plików
+          dzienników i utworzenie miejsca na nowe komunikaty.
+        </p>
+        <p>
+          Z racji tego, iż demony działają w trakcje czynności wykonywanych 
+          przez <em>logrotate</em>, skrypty obsługujące konkretne pliki 
+          dziennika, tworzą puste pliki o takiej samej nazwie jak te utworzone
+          przez demon.
+        </p>
+        <h2 id="7.3.userconfig">7.3. Konfiguracja użytkowników</h2>
+        <p>
+          Komputery jak i systemy operacyjne mają za zadanie służyć
+          użytkownikom. Jak wiemy użytkownicy w systemach istnieją aby
+          wyznaczać granicę. Mówiąc kolokwialnie każdy z nas ma swoją
+          piaskownice i swoje zabawki. W Linuksach użytkownicy są opisywani za
+          pomocą kilku plików w katalogu <em>/etc</em>.
+        </p>
+        <h3 id="7.3.1.passwdfile">7.3.1. Plik /etc/passwd</h3>
+        <p>
+          Plik <em>/etc/passwd</em> jest podstawowym źródłem informacji o 
+          użytkownikach w systemie. W tym pliku każdy wiersz to jeden wpis
+          definiujący użytkownika. Każdy wiersz podzielony jest na 7 pól.
+          Poniżej znajduje się kilka przykładowych wpisów:
+        </p>
+<pre class="code-block">
+pulse:x:109:114:PulseAudio daemon,,,:/run/pulse:/usr/sbin/nologin
+saned:x:110:117::/var/lib/saned:/usr/sbin/nologin
+colord:x:111:118:colord colour management daemon,,,:/var/lib/colord:/usr/sbin/nologin
+lightdm:x:112:119:Light Display Manager:/var/lib/lightdm:/bin/false
+libvirt-qemu:x:64055:105:Libvirt Qemu,,,:/var/lib/libvirt:/usr/sbin/nologin
+geoclue:x:113:124::/var/lib/geoclue:/usr/sbin/nologin
+user:x:1000:1000::/home/user:/bin/bash
+xf0r3m:x:1001:1001::/home/xf0r3m:/bin/bash
+</pre>
+        <p>
+          Pola te zawierają kolejno:
+        </p>
+        <ul>
+          <li><strong>Nazwa użytkownika</strong> - jednoznaczny identyfikator
+            użytkownika, służący do rozpoznawania użytkowników miedzy innymi
+            użytkownikami.</li>
+          <li><strong>Zaszyfrowane hasło</strong> - w dystrybucjach Linuksa
+            hasło nigdy nie było przechowywany w jawnej postaci, nawet w tak
+            zamieszchłych czasas kiedy znajdowało się ono w pliku 
+            <em>/etc/passwd</em>. Obecnie po haśle został tylko
+            <code class="code-inline">x</code>, co oznacza, że hasło jest
+            przechowywany w pliku <em>/etc/shadow</em>, który również zostanie
+            tu omówiony.</li>
+          <li><strong>UID (identyfikator użytkownika)</strong> - numer
+            identyfikujący użytkownika, służy głównie odwołaniu się jądra do
+            konkretnego użytkownika.</li>
+          <li><strong>GID (identyfikator grupy)</strong> - numer
+            identyfikujący podstawową grupę użytkownika.</li>
+          <li><strong>Pole GECOS</strong> - pole przechowujące rzeczywiste
+            informacje o użytkowniku takie jak imie, nazwisko, numer telefonu,
+            adres e-mail, numer pokoju. Pole może zostać pominięte, co widzimy
+            na kilku wpisach na przykładzie.</li>
+          <li><strong>Katalog domowy</strong> - ścieżka wskazująca na katalog
+            domowy użytkownika.</li>
+          <li><strong>Program uruchamiany po zalogowaniu (powłoka)</strong> -
+            ścieżka wskazująca na program jaki ma zostać uruchomiony po 
+            zalogowaniu, najczęściej jest to interaktywna powłoka.</li>.
+        </ul>
+        <p>
+          Drugie pole wpisu w <em>/etc/passwd</em> może przyjmować dwie
+          dodatkowe wartości. Pole może zawierać gwiazdkę (<strong>*</strong>),
+          która uniemożliwia logowanie lub pole może być puste co pozwala na
+          zalogowanie się bez podawania hasła. 
+        </p>
+        <p>
+          Jeśli przefiltrujemy za pomocą polecenia <em>grep</em> plik 
+          <em>/etc/passwd</em> pod kątem ustawionych programów (powłok), to
+          na powiedzmy ok. 50 (zależności od dystrybucji) tylko dwóch, trzech
+          użytkowników ma ustawioną powłokę. Pozostali użytkownicy zazwyczaj
+          mają ustawiony program, który uniemożliwia im korzystanie z systemu
+          nawet gdy się zalogują. Tacy użytkownicy nazwani są 
+          <strong>pseudoużytkownikami</strong>. Tego rodzaju użytkownicy
+          istnieją w jednym celu, aby uruchamiać z ich uprawnieniami różne
+          programy, głównie demony sieciowe. Co w razie włamania spowoduje, że
+          atakujący zostanie uwięziony na koncie, na którym nic nie może
+          zrobić.
+        </p>
+        <p>
+          Pseudoużytkownicy zaliczają się do użytkowników specjalnych obok nich
+          istnieje jeszcze jeden użytkownik - <strong>root</strong>, który ma
+          niczym nie ograniczone uprawnienia. Dlatego też nosi nazwę
+          <em>superużytkownika</em>. Posiada on UID i GID równy 0 oraz jego
+          katalog domowy znajduje się bezpośrednio w głównym katalogu. Innym
+          ciekawym użytkownikiem specjalnym jest użytkownik <em>nobody</em>,
+          który nie ma możliwości zapisu niczego w systemie.
+        </p>
+        <p>
+          Kombinacja wpisu w pliku <em>/etc/passwd</em> oraz katalogu domowego
+          może być określana jako <strong>konto</strong>.
+        </p>
+        <h3 id="7.3.2.shadowfile">7.3.2. Plik /etc/shadow</h3>
+        <p>
+          Plik <em>/etc/shadow</em> jest podobnym plikiem <em>/etc/passwd</em>,
+          jednak zamiast przechowywać informacje o użytkownika plik ten 
+          przechowuje informacje o hasłach. Plik <em>/etc/shadow</em> posiada
+          jedno wspólne pole wraz z plikiem <em>/etc/passwd</em> a jest nim
+          nazwa użytkownika. Hasło podobnie do pliku <em>/etc/passwd</em> 
+          znajduje się na drugim polu we wpisie. Pozostałe pola są
+          odpowiedzialne za ważność hasła. Wpisy w pliku <em>/etc/shadow</em>
+          biorą również czynny udział w blokowaniu dostępu użytkownikom. 
+          Zawartośc pliku wygląda w następujący sposób:
+        </p>
+<pre class="code-block">
+root:$y$j9T$h19rJ2ObBXMdBdXOHB0wF.$.Lqb5iG3.HpsO0FcghqSkXbcA6D5rIp9woC/Ovj40Q7:19251:0:99999:7:::
+...
+user:$y$j9T$bAf/P4bLm00VJQyS3Lf8I1$dzie3XL5lORpP7jmo4CeanOqhuWMpPzdQArAlQ9AfG0:19327:0:99999:7:::
+</pre>
+        <p>
+          Na tym etapie nauki dalsza analiza tych wpisów nie ma sensu, jeśli
+          jednak ktoś jest ciekawy pozostałych pól to może zajrzeć do mojego
+          materiału przygotowywującego do RHCSA: <a href="https://morketsmerke.github.io/articles/terminallog/RedHat_-_RHCSA.html#6.1.passwordaging">https://morketsmerke.github.io/articles/terminallog/RedHat_-_RHCSA.html#6.1.passwordaging</a>
+        </p>
+        <h3 id="7.3.3.changingusers">7.3.3. Manipulowanie użytkownikami i hasłami</h3>
+        <p>
+          Omawiane dotychczas pliki są zwykłymi plikami tekstowymi, których 
+          zawartością możemy manipulować za pomocą ulubionego edytora
+          tekstowego. Nie jest to jednak zalecane działania. Ze względu na 
+          ścisłą budowę (nie możliwe jest aby umieszczać w tych plikach 
+          komentarz lub puste wiersze) oraz restrykcyjną składnie wierszy.
+          Możemy użyć specjalnego narzędzia jakim jest <strong>vipw</strong>.
+          Polecenie to tworzy kopię zmienianych plików i następnie otwiera plik
+          ten plik w terminalowym edytorze. Konfiguruje ono również ten edytor
+          aby zaznaczał składnię wpisów w plików, po zapisaniu zmian polecenie
+          sprawdzi składnie zmienonych lub dodanych wpisów. Jeśli wszystko
+          będzie dobrze, to polecenie zapisze zmiany jeśli coś będzienie nie
+          tak to polecenie zaproponuje poprawienie błędu. Polecenie wymaga
+          oczywiście uprawnień administratora. Wydając polecenie bez żadnej
+          opcji otworzy ono plik <em>/etc/passwd</em> do edycji a jesli dodamy
+          opcje <strong>-s</strong> to wówczas zostanie otworzony plik 
+          <em>/etc/shadow</em>.
+        </p>
+        <p>
+          Inną metodą jest wykorzystanie np. opcji polecnia 
+          <strong>passwd</strong> jego domyślną rolą jest zmiana hasła, bądź 
+          ustawianie ważności hasła, jednak dodając opcję <strong>-s</strong>
+          mozemy zmienić domyślny program startowy (powłokę) lub za pomocą
+          opcji <strong>-f</strong> możemy zmienić nazwę użytkownika. Po
+          więcej informacji zapraszam do strony podręcznika polecenie 
+          <em>passwd</em>. Jeśli na naszym przypadku polecenie <em>passwd</em>
+          może nie być zadowalające. Można wówczas skorzystać z polecenie typu
+          <strong>usermod</strong>.
+        </p>
+        <h3 id="7.3.4.groups">7.3.4. Grupy</h3>
+        <p>
+          Rolą grup w systemach uniksopodobnych jest współdzielenie plików.
+          Dzięki nim możemy zwiększyć uprawnienia do pliku, nie którym
+          użytkownikom, chroniąc je przed innymi. Wynika to z możliwosci
+          nadania uprawnień grupie, natomiast można je zabrać wszystkim 
+          pozostałym. Obecnie stacje uniksowe stały się bardziej
+          spersonalizowanie to współdzielenie plików przy użyciu grup
+          straciło na znaczeniu. Jednak grupy tak jak użytkowników możemy 
+          wykorzystać do uzyskiwania dodatkowych uprawnień lub ich
+          ograniczania.
+        </p>
+        <p>
+          Wraz z każdym nowym użytkownikiem tworzona jest nowa grupa o tej
+          samej nazwie co użytkownik. Grupa ta jest również ustawiana jako
+          grupa podstawowa tworzonego użytkownika. Definicje grup znajdują
+          się w pliku <em>/etc/group</em>. Poniżej znajduje się fragment:
+        </p>
+<pre class="code-block">
+libvirt:x:123:user,xf0r3m
+libvirt-qemu:x:64055:libvirt-qemu,user,xf0r3m
+geoclue:x:124:
+user:x:1000:
+xf0r3m:x:1001:
+</pre>
+        <p>
+          Jak możemy zauważyć wpisy dzielą się na cztery pola, które kolejno
+          oznaczają:
+        </p>
+        <ul>
+          <li><strong>Nazwa grupy</strong> - nazwa jednoznacznie identyfikująca
+            grupę.</li>
+          <li><strong>Hasło grupy</strong> - hasło grupy. Obecnie aby podłączyć
+            użytkownika do grupy potrzebna jest interwencja administratora lub
+            kogoś z jego uprawnieniami. Jeśli jednak grupa posiada hasło to 
+            użytkownik może podłączyć się do grupy za pomocą polecenia
+            <strong>newgrp</strong> (dalej jest taka możliwość). Obecnie
+            jednak nie stosuje się haseł dla grup. Hasła grup są przechowywane
+            w pliku <em>/etc/gshadow</em>.</li>
+          <li><strong>GID (identyfikator grupy)</strong> - numeryczny
+            identyfikator grupy, służy do odniesienia jądra do konkretnej
+            grupy.</li>
+          <li><strong>List członków grupy</strong> - lista uzytkowników
+            należących do grupy.</li>
+        </ul>
+        <p>
+          Grupy odpowiadające istniejącym użytkownikom nie posiadają żadnych
+          członków w tym pliku, jednak odpowiadający tym grupom użytkownicy są
+          ich domyślnymi członkami.
+        </p>
+        <p>
+          Jądro Linux, nie posługuje się nazwami użytkowników czy grup 
+          odwołując się do jednego lub drugiego bytu. W tym celu używa wartości
+          UID oraz GID, aby ich używanie miało sens muszą być one unikatowe
+          w skali całego systemu. Oczywiście może zdażyć się przypadek, że
+          dwóch użytkowników będzie miało ten sam UID, ale są to bardzo rzadkie
+          i specyficzne przypadki.
+        </p>
+        <h2 id="gettyandlogin">7.4. Getty oraz login</h2>
+        <p>
+          Te dwa programy nie są zbyt skomplikowane w swoim działaniu.
+          Działanie programu <em>getty</em> polega na podłaczeniu się pod
+          terminal (nie ważne czy wirtualny czy fizyczny podłączony przez 
+          port COM) i wyświetlenie znaku zachęty logowania (napisu "login: ")
+          i oczekiwania podanie nazwy użytkownika. Kiedy nazwa zostanie podana
+          polecenie to zastępuje same siebie wywołując program <em>login</em>.
+          Ten program odpowiedzialny jest za wyświetlenie znaku zachęty hasła
+          (napisu "hasło:") po podaniu przez użytkownika hasła program
+          spróbuje go uwierzytelnić. Jeśli to się powiedzie wówczas program
+          <em>login</em> zastąpi sam siebie po przez wywołanie systemowe
+          <em>exec()</em> programem startowym ustawionym w ostatnim polu 
+          wpisu w pliku <em>/etc/passwd</em>.
+        </p>
+        <p>
+          Prawdopodbnie nigdy nie będzie potrzeby konfiguracji tych programów,
+          nie mniej jednak jest taka możliwość.
+        </p>
+        <h2 id="7.5.time">7.5. Ustawienia czasu.</h2>
+        <p>
+          Działanie wielu operacji w systemach uniksopodobnych opiera się o
+          czas. Za zegar w tych systemach odpowiedzialne jest jądro. Jednak
+          nie jest ono wstanie wziąć precyzyjnych ustawień czasowych samo z
+          siebie. Większość komputerów klasy PC posiada potrzmywany bateryjnie
+          zegar czasu rzeczywistego, jądro synchronizuje swój zegar z tym 
+          zegarem jednak z racji tego, iż maszyny uniksowe nie są uruchamiane
+          ponownie przez miesiące a nawet lata. W czasie systemowym pojawia 
+          się odchylenie. 
+        </p>
+        <p>
+          Zegar systemowy jądra również jest korygowany na podstawie ustawień
+          strefy czasowej w jakiej się znajdujemy, dlatego też 
+          RTC (ang. <em>Real Time Clock</em>) w BIOS lub UEFI powinien być 
+          ustawiony zgodnie ze strefą czasową UTC. Za pomocą poniższego
+          polecenie możemy ustawić czasem UTC jądra względem RTC.
+        </p>
+<pre class="code-block">
+$ sudo hwclock --hctosys --utc
+</pre>
+        <h3 id="7.5.1.timezonesandtimerepresentation">7.5.1. Strefy czasowe i reprezentacja czasu</h3>
+        <p>
+          Jądro przechowuje swój czas w formacie uniksowym, czyli ilości 
+          sekund od północy 1 stycznia 1970 roku. Na podstawie tych informacji
+          takie polecenia jak <strong>date</strong> dokonuja wszelkich 
+          konwersji i wyświetlają nam zrozumiałą dla nas datę i czas. Czas
+          uniksowy możemy wyświetlić sobie za pomocą polecenia <em>date</em>
+          z opcją <strong>+%s</strong> (niestety polecenie <em>date</em> ma
+          nieco inny format opcji).
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ date
+śro, 28 gru 2022, 13:11:53 CET
+xf0r3m@immudex:~$ date +%s
+1672229517
+</pre>
+        <p>
+          Domyślnie polecenie <code class="code-inline">date</code> wyświetla
+          datę i czas skorygowany o ustawioną w naszym systemie na podstawie
+          przybliżonej lokalizacji strefę czasową. Ustawiona strefa czasowa
+          znajduje się katalogu <em>/etc</em> jako dowiązanie symboliczne do
+          jednego z plików stref dostępnych w systemie w katalogu 
+          <em>/usr/share/zoneinfo</em>.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ ls -al /etc/localtime 
+lrwxrwxrwx 1 root root 33 11-04 17:46 /etc/localtime -&gt; /usr/share/zoneinfo/Europe/Warsaw
+</pre>
+        <p>
+          Strefę czasową możemy zmienić za pomocą polecenia interaktywnego 
+          polecenia <strong>tzselect</strong>. Polecenie to spróbuje określić
+          twoją przybliżoną lokalizacje na podstawie stolicy kraju w jakim się
+          znajdujesz. Następnie utworzy nowe dowiązanie symboliczne
+          <em>/etc/localtime</em> do odpowiedniego pliku strefy.
+        </p>
+        <p>
+          Jeśli z jakiś przyczyn potrzebujemy sprawdzić jaki bedzie czas w
+          wybranej przez nas strefie czasowej, możemy zmienić zmienną
+          środowiskową TZ, która przechowuje informacje o ustawionej strefie
+          czasowej. Tę czynność możemy wykonać na czas wykonania pojedyńczego
+          polecenia, ustawiając wartość zmiennej w tej samej linii co polecenie
+          <em>date</em>
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ TZ=Asia/Tokyo date
+śro, 28 gru 2022, 21:29:01 JST
+</pre>
+        <h3 id="7.5.2.settingntptime">7.5.2. Czas sieciowy</h3>
+        <p>
+          Jeśli nasza maszyna sieciowa jest na przykład serwerem ze stałym 
+          dostępem do sieci. To aby zniwelować to odchylenie czasowe, którym
+          wspomniałem na początku tego podrozdziału możemy uruchomić na nim 
+          specjalną usługę sieciową, która pobierze czas z serwerów
+          podłączonych do bardzo precyzyjnych zegarów atomowych.
+        <p>
+        <p>
+          Pierwszą rzeczą jak należy zrobić leży pobrać pakiet odpowiedzialny
+          za demon NTP w naszym systemie. Następnie skonfigurować go zgodnie
+          jego dokumentacją. Najprostsza konfigurację możemy zapisać w
+          poniższych krokach.
+        </p>
+        <ol>
+          <li>Znalezienie najbliższego dla siebie serwera NTP, najlepiej
+            na poziomie STRATUM nie większym niż 3.</li>
+          <li>Zapisanie adresów serwera (serwerów, może być pula) w pliku
+            konfiguracyjnym demona NTP, najczęściej jest to 
+            <em>/etc/ntp.conf</em>.</li>
+          <li>Uruchomienie polecenia <em>ntpdate</em></li>
+          <li>Włącznienie demona NTP do uruchomienia w trakcie autostartu</li>
+        </ol>
+        <p>
+          Jeśli nasz komputery nie posiada stałego łącza internetowego możemy
+          wówczas uruchomić takiego demona jak <em>chronyd</em>. Ostatecznie
+          mozemy zsynchonizowany czas systemowy załadować do zegara RTC za 
+          pomocą poniższego polecenia.
+        </p>
+<pre class="code-block">
+$ sudo hwclock --systohc --utc
+</pre>
+        <p>
+          W tym podrozdziale umieściłem polecenie, którego nie wyjaśniłem.
+          jest nim <strong>poziom STRATUM</strong>. Wyjasnienie tego pojecia
+          wymaga zagłebienia się w protokół NTP, co zrobiłem w materiale
+          przygotowawczym do RHCSA znajdującym się tutaj:<a href="https://morketsmerke.github.io/articles/terminallog/RedHat_-_RHCSA.html#18.1.ntp">https://morketsmerke.github.io/articles/terminallog/RedHat_-_RHCSA.html#18.1.ntp</a>.
+        </p>
+        <h2 id="7.6.cron">7.6. Tworzenie powtarzalnych zadań za pomocą cron</h2>
+        <p>
+          Wróćmy na chwile do drugiego podrozdziału. Tam pod koniec omówiliśmy
+          sobie gdzie znajdują się pliki dziennika i w jaki sposób system 
+          radzi sobie z problem szybko przyrastających plików zawierających
+          komunikaty diagonostyczne z przeróżnych demonów. Wspomnialiśmy tam 
+          o <em>logrotate</em>. Ten program aby zapobiec zużyciu całego miejsca
+          na dysku musi uruchamiać się co jakiś czas.
+        </p>
+        <p>
+          W uniksach aby wykonywać jakieś czynności co określoną ilość czasu,
+          musimy skorzystać z programu o nazwie <strong>cron</strong>. Ten 
+          program to swojego rodzaju harmonogram zadań, w którym to może
+          zdefiniować co uruchomić, kiedy lub co ile czasu i przez kogo.
+          Definicje zadań znajdując się w specjalnych plikach zwanych
+          <em>crontab</em>. Każdy użytkownik ma swój plik. Ponieważ pliki te
+          znajdując się w miejscu, do które zwykli użytkownicy nie mają dostępu
+          (a mimo to mogą z niego w pełnoprawny sposób korzystać) muszą używać
+          dostarczonym wraz z <em>cron</em> narzędziem.
+        </p>
+        <p>
+          Aby móc zdefiniować zadania należy wydać następujące polecenie:
+        </p>
+<pre class="code-block">
+$ crontab -e
+</pre>
+        <p>
+          Wówczas otworzy nam się wybrany przez nas wcześniej edytor
+          terminalowy. Wewnątrz pliku znajdziemy obszerny komentarz, w którym
+          to rozpisano dokładnie całą składnie definicji zadania <em>cron</em>.
+        </p>
+        <p>
+          Otóż zadania <em>cron</em> to jednowierszowe wpisy definiujące na 
+          początku czas (kiedy, co ile czasu) w którym należy uruchomić zadanie
+          Następnie polecenie, które należy uruchomić.
+        </p>
+<pre class="code-block">
+21 0 * * * /usr/local/bin/backup.sh &gt; /var/log/backup_sh.log 2&gt;&amp;1
+</pre>
+        <p>
+          To zadanie zostanie uruchomione codziennie 21 minut po północy. Skąd
+          to wiem, otóż już śpieszę z wyjaśnieniami. Najpierw objaśnie
+          poszczególne pola.
+        </p>
+        <ul>
+          <li><code class="code-inline">21</code> - pole minut, podanie tutaj
+            takie zwykłej wartości jak na przykładzie, spowoduje uruchomienie
+            zadania o podanej minucie godziny. Zakres wartości od 0 - 59.</li>
+          <li><code class="code-inline">0</code> - pole godziny, podanie
+            wartości w tym polu spowoduje, że zadanie zostanie uruchomione
+            o tej samej pełnej godzinie każdego dnia, chyba że podano konkretną
+            minutę. Zakres wartości od 0 - 23.</li>
+          <li><strong><span style="color: lightgreen">*</span></strong> - pole
+            dnia miesiąca, wartość w tym polu spowoduje, że zadanie zostanie
+            uruchomione o północy podanego dnia miesiąca, chyba że zdefiniowano
+            wcześniejsze pola. Zakres wartości od 1 - 31.</li>
+          <li><strong><span color="color: fuchsia">*</span></strong> - pole
+            miesiąca, wartość w tym polu spowoduje uruchomienie zadania o
+            północy 1 dnia miesiąca, chyba że zdefiniowano wcześniejsze pola.
+            Zakres wartości od 1 - 12.</li>
+          <li><strong><span color="color: cornfloweblue">*</span></strong> -
+            pole dnia tygodnia, wartość w tym polu spowoduje uruchomienie
+            zadania co tydzeń o północy podanego dnia tygodnia. Chyba że 
+            zdefiniowano wcześniejsze pola. Zakres wartości od 0 - 7, przy czym
+            0 i 7 to niedziela.</li>
+        </ul>
+        <p>
+          Ustawienia czasu wykonania zadania jest wmiarę prostę o ile nie
+          wymagamy bardzo złożonego warunku czasowego lub nie próbujemy go 
+          zrozumieć (zadając sobie pytanie: kiedy to dokładnie się wykona?).
+          Załóżmy że chcemy aby zadanie wykonało się w każdy weekend wakacji
+          w Polsce. Warunek czasowy może przyjmować: wartości krokowe
+          (<strong>/2</strong>) co dwie minuty, godziny, dni, miesiące; 
+          zakresy (<strong>5-10</strong>) od 5-10 minuty, godziny, dnia itd lub
+          listy (<strong>11,12</strong>) zadanie wykoania się np. 11 i 12
+          każdego miesiąca. Zakresy oraz listy można ze sobą łączyć, jak i
+          dodać pojedyńczą wartość do zakresu, np. 5-10,12. Przy tworzeniu 
+          warunku czasowego możemy posłużyć się stronami takimi jak:
+        </p>
+        <ul>
+          <li><a href="https://crontab.guru">https://crontab.guru</a></li>
+        </ul>
+        <h3 id="7.6.1.instalationofcrontab">7.6.1. Instalacja tablicy cron</h3>
+        <p>
+          Po zapisaniu zmian tablica z zadaniami crona (<em>crontab</em>)
+          zostanie automatycznie zainstalowana w katalogu
+          <em>/var/spool/cron/crontab</em>. Polecenie 
+          <code class="code-inline">crontab</code> daje możliwość instalacji
+          tablicy zadań z zwykłego pliku tekstowego, dokonujemy tego za pomocą
+          polecenia <em>crontab</em> wraz z opcją <strong>-l</strong>. Jednak
+          korzystanie z opcji <code class="code-inline">-e</code> jest bardziej
+          zalecane. Wówczas podczas zapisywania zmian polecenie sprawdzi 
+          zadania pod kątem poprawności składni i przypadku błedu, zapyta czy
+          nie chcemy go poprawić.
+        </p>
+        <p>
+          Tablice z zdaniami cron możemy usunąć za pomocą opcji 
+          <strong>-r</strong> polecania <code class="code-inline">crontab</code>.
+        </p>
+        <h3 id="7.6.2.systemwidecrontab">7.6.2. Systemowa tablica zadań crontab</h3>
+        <p>
+          Prócz tablic użytkowników, istnieje jescze systemowa tablica
+          z zadaniami <em>cron</em>. Ją edytujemy już pomocą edytora tekstowego
+          ponieważ jej wpisy mają nieco inną składnie niż tablice użytkowników.
+          W jej wpisach znajduje się dodatkowe pole między dniem tygodnia a
+          poleceniem. W nim definiuje się użytkownika z którego uprawnienami
+          realizowane jest zapisane zadanie. 
         </p>
       </div>
 			<p style="margin: 15px; padding: 0; outline: 0;">

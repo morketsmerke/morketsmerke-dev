@@ -4578,7 +4578,7 @@ $ crontab -e
         <ul>
           <li><a href="https://crontab.guru">https://crontab.guru</a></li>
         </ul>
-        <h3 id="7.6.1.instalationofcrontab">7.6.1. Instalacja tablicy cron</h3>
+        <h3 id="7.6.1.instalationofcrontab">7.6.1. Instalacja tablicy cron.</h3>
         <p>
           Po zapisaniu zmian tablica z zadaniami crona (<em>crontab</em>)
           zostanie automatycznie zainstalowana w katalogu
@@ -4595,20 +4595,320 @@ $ crontab -e
           Tablice z zdaniami cron możemy usunąć za pomocą opcji 
           <strong>-r</strong> polecania <code class="code-inline">crontab</code>.
         </p>
-        <h3 id="7.6.2.systemwidecrontab">7.6.2. Systemowa tablica zadań crontab</h3>
+        <h3 id="7.6.2.systemwidecrontab">7.6.2. Systemowa tablica zadań crontab.</h3>
         <p>
           Prócz tablic użytkowników, istnieje jescze systemowa tablica
           z zadaniami <em>cron</em>. Ją edytujemy już pomocą edytora tekstowego
           ponieważ jej wpisy mają nieco inną składnie niż tablice użytkowników.
           W jej wpisach znajduje się dodatkowe pole między dniem tygodnia a
-          poleceniem. W nim definiuje się użytkownika z którego uprawnienami
-          realizowane jest zapisane zadanie. 
+          poleceniem. W nim definiuje się użytkownika, z którego uprawnienami
+          realizowane jest zapisane zadanie. Dlatego też polecenie 
+          <em>crontab</em> z opcją <em>-e</em> nie ma tutaj zastosowania. Jako
+          systemowej tablicy cron, nie wykorzystuje się również tablicy
+          superużytkownika. Za tablicę systemową odpowiedzialny jest plik 
+          <em>/etc/crontab</em>. Plik ten edytujemy za pomocą zwykłego edytora,
+          kiedy zakończymy edycję, należy uruchomić demon <em>cron</em>
+          ponownie.
         </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo vim /etc/crontab 
+xf0r3m@immudex:~$ sudo systemctl restart cron
+</pre>
+        <p>
+          Inną metodą na powtarzalne wykonywanie czynności jest skorzystania
+          z jednego katalogów: <em>/etc/cron.daily</em>, 
+          <em>/etc/cron.hourly</em>, <em>/etc/cron.monthly</em> lub 
+          <em>/etc/cron.weekly</em>. Wykorzystanie tych katalogów polega na 
+          umieszczeniu skryptu (powłoki, nawet jednej linii z konkretnym
+          poleceniem) w jednym z nich. W systemowej tablicy <em>cron</em> jest
+          napisane o której wykonywane są zadania zapisane w tych katalogach.
+          Skrypty uruchamiane są przez znane nam z poprzednie rozdziału
+          narzędzie jakim jest <em>run-parts</em>. W nowszych dystrybucjach
+          obsługą tych katalogów może zajmować się demon <em>anacron</em>.
+        </p>
+        <h3 id="7.6.3.futureofcron">7.6.3. Przysłość narzędzia cron.</h3>
+        <p>
+          Narzędzie <em>cron</em> jest starsze od samego Linuksa. Jeśli coś
+          jest, aż tak stare to kwalifikuje się do wymiany. Obecnie są czynione
+          postępy w temacie zastąpienia <em>cron</em>-a jakimś innym
+          rozwiązaniem. Kandydatem mogą być elementy licznika czasu
+          <em>systemd</em>. Jednak utworzenie ulepszonej funkcjonalności to
+          jedno, a zapewnienie wstecznej zgodność z systemami oraz narzedziami
+          dalej wykorzystującymi cron to drugie, bez zapewnienia wstecznej
+          zgodności zmian nie będzie, więc póki co <em>cron</em> jeszcze z
+          nami pozostanie.
+        </p>
+        <h2 id="7.7.at">7.7. Planowanie jednorazowych zadań.</h2>
+        <p>
+          Jedno narzędzie do planowania zadań w przyszłości już poznaliśmy. 
+          Narzędzie <strong>at</strong> napewno nie ma tak szerokiego użycia
+          jak <em>cron</em>, to pomaga wykonać pewne zadania po za czasem 
+          czynnego użytkowania komputera. Jeśli musimy poczekać do powiedzmy
+          północy, aby móc wykonać jakąś czynność, możemy ją zaplanować
+          za pomocą polecenia <em>at</em>, pozostawić komputer włączony i
+          iść spać.
+        </p>
+        <p>
+          Za pomocą polecenia <em>at</em>, możemy nie tylko zaplanować
+          wykonanie zadania na kilka godzin do przodu ale i nawet na kilka
+          miesięcy. Aby jednak to zrealizować należy poznać polecenie
+          <em>at</em>, które może nie być domyślnie dostępne w każdej
+          i trzeba je będzie zainstalować.
+        </p>
+        <p>
+          Aby rozpocząć planowanie zadania należy wydać polecenie <em>at</em>
+          i jako argument podać czas ewentualnie datę jeśli zadanie ma zostać
+          wykonane w dalszej przyszłości. Po wydaniu tego polecenia zostanie
+          nam wyświetlony prompt <em>at&gt;</em>. Po wyświetleniu prompta
+          podajemy polecenie do wykonania w zadaniu. Polecenia możemy podawać
+          do momentu kiedy naciśniemy kombinację klawiszy <em>Ctrl+d</em>,
+          przed zatwiedzeniem polecenia należy upewnić się, że zostało 
+          poprawnie zapisane ponieważ nie będzie możliwości jego edycji.
+          Po naciśnięciu wspomnianiej kombinacji zadanie zostanie zatwierdzone
+          Na poniższym przykładzie utworzyłem jedno zadanie z jednym 
+          poleceniem:
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ at 00:00 01.01.2023
+warning: commands will be executed using /bin/sh
+at&gt; echo "Happy New Year" &gt; /dev/pts/1
+at&gt; &lt;EOT&gt;
+job 1 at Sun Jan  1 00:00:00 2023
+</pre>
+        <p>
+          Za pomocą opcji <strong>-l</strong> polecenia <em>at</em> lub
+          polecenia <em>atq</em> możemy wyświetlić znajdujące się w pamieci
+          demona <em>atd</em> zadania.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ at -l
+1	Sun Jan  1 00:00:00 2023 a xf0r3m
+xf0r3m@immudex:~$ atq
+1	Sun Jan  1 00:00:00 2023 a xf0r3m
+</pre>
+        <p>
+          Natomiast za pomocą opcji <strong>-r</strong> polecenia <em>at</em>
+          lub za pomocą polecenia <em>atrm</em>, możemy usunąć zdanie, przyczym
+          należy podać numer zadnia widniejący w pierwszej kolumnie danych 
+          wyjściowych zwracanych przez polecenie <em>at</em> w raz z opcją
+          <em>-l</em> lub polecenie <em>atq</em>.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ atq
+1	Sun Jan  1 00:00:00 2023 a xf0r3m
+xf0r3m@immudex:~$ at -r 1
+xf0r3m@immudex:~$ atq
+</pre>
+        <h2 id="7.8.switchinguids">7.8. Identyfikatory użytkowników oraz ich przełączanie.</h2>
+        <p>
+          Jak pamiętamy, lub może nie bit <em>setuid</em> powodował fakt iż 
+          program uruchomiony z tym bitem dział (jego proces) z uprawnieniami
+          właściciela pliku. Tutaj poznamy inne możliwości przełączania
+          użytkowników wraz regułami oraz jaki udział ma w tym wszystkim jądro.
+        </p>
+        <p>
+          Na Linuksie istnieją dwie metody na przełączanie użytkowników.
+          Pierwszym z nich jest ustawienie wspomnianego wcześniej bitu dla
+          pliku wykonywalnego. A drugim sposobem jest wykorzystanie wywołania
+          systemowego <strong>setuid()</strong>, a żeby sprawę jeszcze bardziej
+          skomplikować to wersji tego wywołania systemowego jest kilka, w 
+          zależności o tego na jaki identyfikator użytkownika chcemy się
+          przełączyć. Zanim poznamy możliwe identyfikator (a przynajmniej ich
+          część) warto poznać reguły dotyczące możliwości procesów w zakresie
+          przełączania identyfikatorów. Otóż:
+        </p>
+        <ul>
+          <li>Procesy działające z uprawnieniami superużytkownika mogą używać
+            wywołania systemowego <em>setuid()</em> do uzyskania uprawnień 
+            dowolnego innego użytkownika.</li>
+          <li>Proces, który nie działa z uprawnieniami superużytkownika ma 
+            poważne ograniczenia odnośnie korzystania z wywołania systemowego
+            <em>setuid()</em>. Przeważnie takie procesy nie mogą z niego 
+            korzystać.</li>
+          <li>Dowolny proces może wykonać program z ustawionym bitem 
+            <em>setuid</em>, o ile dysponuje odpowiednimi uprawnieniami do
+            tego pliku (każdy proces działa z uprawnieniami jakiegoś
+            jakiegoś użytkownika i dziedziczy po nim uprawnienia).</li>
+        </ul>
+        <p>
+          Dla ścisłości w tym przełączaniu użytkowników nie chodzi o
+          przełączanie między kontami. A raczej o to, że na podstawie
+          dostępnych mechanizmów w systemie proces może zmieniać uprawnienia
+          wrazie potrzeby oraz możliwości z jakim został uruchomiony.
+        </p>
+        <h3 id="7.8.1.processowneranduids">7.8.1. Właściciel procesu oraz identyfikatory użytkownikow</h3>
+        <p>
+          Dotych czas można było sądzić, że procesy, które uruchamiamy w
+          Linuksie posiadły jeden identyfikator użytkownika. Użytkownika, który
+          ten proces zainicjował. Rzeczywistość jest niestety zgoła inna. 
+          Każdy proces posiada conajmniej dwa identyfikatory użytkowników.
+          Pierwszym z nich jest <strong>euid</strong> 
+          (ang. <em>Effective User IDentificator</em>) - efektywy identyfikator
+          użytkownika. Ten identyfikator wskazuje na użytkownika, z ktorego 
+          uprawnienia działa ten proces. Drugim jest <strong>ruid</strong>
+          (ang. <em>Real User IDentificator</em>) - rzeczywisty identyfikator
+          użytkownika. Ten wskazuje natomiast użytkownika, który zainicjował
+          ten proces. 
+        </p>
+        <p>
+          Ze względu na niejasność związane z rozgraniczeniem miedzy 
+          <em>euid</em> a <em>ruid</em>. Rzeczywistemu identyfikatorowi
+          użytkownika przypisje się rolę właściciela procesu. Może on 
+          prowadzić interakcje z procesem wysyłać do niego sygnały w tym 
+          kończyć jego działanie. W przypadku większości procesów 
+          działających w systemie <em>ruid</em> oraz <em>euid</em> będą równe.
+          Jednak w przypadku gdy uruchomimy proces z ustawionym bitem
+          <em>setuid</em>, efektywny identyfikator zostanie ustawiony na
+          właściciela pliku, zaś rzeczywisty identyfikator będzie 
+          przechowywać nasz UID. Najprostszym przykładem uruchomienia programu 
+          z bitem <em>setuid</em> a za razem doświadczenia przełączenia 
+          identyfikatorów jest użycie polecenia <strong>sudo</strong>.
+        </p>
+        <p>
+          Żeby całość jeszcze bardziej skomplikować, do tych dwóch
+          identyfikatorów należy dodać jescze większego poziomu skomplikowania
+          to istnieje trzeci identyfikator <strong>suid</strong>
+          (ang. <em>Saved User IDentificator</em>) - zapisany identyfikator
+          użytkownika. Podczas działania, proces może przełączać się między
+          zapisanym a rzeczywistym identyfikatorem. 
+        </p>
+        <p>
+          Jeśli uruchomimy jakiś proces przy użyciu polecenia <em>sudo</em>
+          i ten proces będzie trwać, i spróbujemy go zabić to wówczas 
+          dostaniemy informacje o braku dostępu. Polecenie <em>sudo</em>
+          z ustawionym bitem <em>setuid</em> (jak i inne) zamienia 
+          <strong>jawnie</strong>
+          identyfikatory użytkowników za pomocą wywołania systemowego
+          <em>setuid()</em>. Wynika to z kilku problemów jakie wynikają z
+          braku zgodności między identyfikatorami, przez co nie musimy
+          się zbytnio przejmować identyfikatorami oraz ich przełączaniem.
+        </p>
+        <p>
+          Ze względu na duże uprawnienia (czynny udział jądra w przełączaniu
+          użytkowników oraz obsłudzie uprawnień dostępu do pliku) programów z 
+          ustawionym bitem 
+          <em>setuid</em> i działającym wraz z nim wywowałań systemowych.
+          Należy uważać jakim programom nadaje się ten bit. Pozostawienie
+          kopii powłoki z ustawionym takim bitem, daje możliwość zwykłym 
+          użytkownikom przejęcia kontroli nad całym systemem. Wydając jedno
+          polecenie.
+        </p>
+        <h2 id="7.9.identifyandauthtenticate">7.9. Identyfikacja i uwierzytelnianie</h2>
+        <p>
+          Każdy wieloużytkowy system musi zapewnić mechanizmy czuwające nad
+          kontrolą użytkowników. Użytkownicy powinni przedstawić się systemowi
+          przekazać tajną informację (hasło), aby ten wiedział że jest tym
+          za kogo się podaje, wówczas mechanizmy w systemie będą wiedzieć, że
+          ten użytkownik jest tym za kogo się podaje. Jesli uzytkownik został
+          uwierzytelniony ma on dostęp do swojego konta, które jest
+          autoryzowane (posiada pewne prawa w systemie) i w ten sposób systemy
+          identyfikują uzytkowników. To tak wygląda tylko w teorii. Z racji
+          tego, iż jądro zna tylko UID, ustalenie nazwy użytkownika potrzebuje
+          kilku czynności. Można przedstawic tutaj krokowy algorytm, który
+          byłby w stanie ustalić taką nazwę, jednak stosuje sie funkcję
+          biblioteki standardowej, które pomagają w ustaleniu takich
+          informacji. Problem stanowią natomiast hasła, ponieważ funkcje 
+          biblioteki standardowej posiadają w sobie pewne założenia, które
+          niestety nie sprawdzają się przy obecnym sposobie przechowywania
+          haseł w systemie. Więc zatem w jaki sposób obecne dystrybucje
+          dokonuja uwierzytelniania? Wykorzystują on do tego 
+          <strong>podsystem PAM</strong>.
+        </p>
+        <h2 id="7.10.pamsystem">7.10. System PAM</h2>
+        <p>
+          System PAM (ang. <em>Pluggable Authentication Modules</em>) jest to
+          zbiór bibliotek współdzielonych, których zadaniem jest udostępnienie
+          uwierzytelniania użytkownika, w taki sposób aby aplikacja nie
+          musiała się tym zajmować. System PAM może również kontrolować
+          autoryzację użytkownika np. blokując mu dostęp do pewnych usług. Jak
+          sama nazwa wskazuje system ten wykorzystuje dynamicznie ładowane
+          moduły, które realizują poszczególne zadania w zależności od użytej
+          funkcji (o tym za chwilę). Jeśli system ma sprawdzić hasło
+          użytkownika użyje modułu <em>pam_unix.so</em>. Ze względu te 
+          informacje dość łatwym zdaniem jest stworzenie dodatkowych modułów
+          obsługujących uwierzytelniania dwuskładnikowe lub klucze fizyczne,
+          mimo to system PAM dalej pozostaje spuścizną Uniksa przez co,
+          niektóre zagadnienia bywają skomplikowane a intefejs programowania
+          nie jest zbyt prosty. To z tego systemu korzysta większość aplikacji
+          wymagających uwierzytelniania na dystrybucjach Linuksa, ponieważ 
+          połączenie aplikacji z PAM wymaga niewiele pracy lub wcale.
+        </p>
+        <h3 id="7.10.1.pamconfig">7.10.1. Konfiguracja PAM</h3>
+        <p>
+          Ze względu na to iż konfiguracja różni się w zależności od
+          dystrybucji, cieżko jest się odnaleźć i wyjaśnić to w ogólny sposób.
+          pliki konfiguracyjne systemu powinny znajdować się w katalogu 
+          <em>/etc/pam.d/</em>. Ich nazwy często zawierają nazwy komponentów
+          systemu, które wykorzystują system PAM. Najprostszym z nich jest
+          plik <em>/etc/pam.c/chsh</em>. Polecenie <em>chsh</em> służy do
+          zmiany powłowki. Pierwszy wiersz pliku wygląda następująco:
+        </p>
+<pre class="code-block">
+auth  requisite pam_shell.so
+</pre>
+        <p>
+          Nakłada on wymóg, aby podana podczas zmiany powłoka była wymieniona
+          w pliku <em>/etc/shells</em>, w przeciwym wypadku uwierzytelnienie
+          użytkownika kończy się nie powodzeniem.
+        </p>
+        <p>
+          Każda linia konfiguracji PAM składa się z co najmniej trzech części.
+          Z:
+        </p>
+        <ul>
+         <li><strong>Typu funkcji</strong>, które aplikacja żąda od systemu PAM
+          w tym przypadku jest to <code class="code-inline">auth</code>
+          powodujący uwierzytelnienie użytkownika.</li>
+         <li><strong>Argumentu kontrolnego</strong>, decydującego o tym jak
+          system zareaguje na powodzenie lub niepowodzenie działania
+          wykonywanego przez typ funkcji.</li>
+         <li><strong>Modułu</strong>, określającego jak czynność zostanie tak
+          naprawdę wykonana. W tym przypadku jest sprawdzenie czy funkcja 
+          występuje w pliku <em>/etc/shells</em>.</li>
+        </ul>
+        <h4>Typy funkcji</h4>
+        <p>
+          System PAM oferuje aplikacji wykonanie czynności określonej jedną z 
+          z poniższych funkcji:
+        </p>
+        <ul>
+          <li><strong>auth</strong> - uwierzytelnienie użytkownika.</li>
+          <li><strong>account</strong> - sprawdzenie status (czy użytkownik
+            jest autoryzowany do wykonania pewnej czynności).</li>
+          <li><strong>session</strong> - wykonanie jakieś czynność na bierzącej
+            sesji użytkownika.</li>
+          <li><strong>password</strong> - zmiana danych uwierzytelniania.</li> 
+        </ul>
+        <p>
+          Warto wspomnieć, że moduły mogą zachować się inaczej (wykonywać inną
+          czynność, gdy zestawimy je z innymi funkcjami. Dla przykładu moduł
+          <em>pan_unix.so</em> dla modułu <em>auth</em> sprawdzi poprawność
+          podanego hasła, natomiast dla funkcji <em>password</em> ustawi je
+          użytkownikowi. Dlatego też funkcję i moduł podczas konfiguracji
+          PAM należy traktować jako parę.
+        </p>
+        <h4>Argumenty kontrolne</h4>
+        <p>
+          Inną częścią, wartą omówienie są argumenty kontrolne. Są one 
+          stosowane ze względu na to iż wiersz zapisane w konfiguracji są 
+          zestawiane, co oznacza, że nie zawsze nie powodzenie jednego 
+          wiersza może oznaczać zwrócenie do aplikacji informacji o
+          powodzeniu lub niepowodzeniu funkcji przez nią żądanej. Inną kwestią 
+          jest rozszerzona składnia
+          argumentów, kontolnych dopuszająca inne wartości niż tylko prawda
+          czy fałsz. Więcej na ten temat znajduje się na stronie podręcznika
+          pliku <em>pam.conf</em>. Poniżej znajdują się arguementy kontrolne
+          o prostej składni.
+        </p>
+        <ul>
+          <li><strong>sufficient</strong>. Jeśli reguła opatrzona tym 
+          argumentem powiedzie się, zbędne staje się sprawdzanie pozostałych
+          reguł, system PAM nie musi tego robić. Jeśli się niepowiedzie to
+          system przechodzi do kolejnej reguły.</li>
+        </ul>
       </div>
 			<p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;
 			</p>
 		</body>
 	</html>
-
-

@@ -3994,11 +3994,11 @@ $ sudo reboot
           w systemie. Kiedyś każdy z programów przechowywał luzem swoją
           konfigurację tym katalogu. Obecnie jak możemy się przekonać większość
           zawartości <em>/etc</em> stanowią podkatalogi. Oczywiście wiele
-          plików nadal się w nim znajduje, najczęsciej są to takiego katalogi
-          jak <em>/etc/fstab</em> - znany z 4 rozdziału czy pliki
+          plików nadal się w nim znajduje, najczęsciej są to takie pliki
+          jak <em>/etc/fstab</em> czy
           <em>/etc/passwd</em> lub <em>/etc/shadow</em> służące do
           przechowywania informacji o użytkownikach. Katalogi w <em>/etc</em>
-          mają nazyw przeważnie odpowiadające nazwą programów, które
+          mają nazwy przeważnie odpowiadające nazwom programów, które
           konfigurują. Wyjątkiem są katalogi z końcówką <em>.d</em>. Pliki
           konfiguracyjne
           zostały umieszczone w tych katalogach, aby nie zostały one nadpisane
@@ -4007,14 +4007,14 @@ $ sudo reboot
         </p>
         <p>
           Pliki konfiguracyjne, nie których pakietów mogą występować w
-          przypadku nie których pakietów w dwóch różnych wersjach. Pierwsza
+          dwóch różnych wersjach. Pierwsza
           to jest, ta którą wszyscy znamy czyli katalog <em>/etc</em> taka
           konfiguracja nazywana jest <em>konfiguracją z możliwością dostosowania</em>.
           Druga wersją jest <em>konfiguracja bez możliwości dostosowania</em>
           znajdująca się w katalogu <em>/usr/lib</em>. Oczywiście to jest tylko
-          koncepcja, aby administratorzy zajeli się konfiguracją w <em>/etc</em>
+          koncepcja, aby administratorzy zajęli się konfiguracją w <em>/etc</em>
           a konfiguracje w <em>/usr/lib</em> zostawili opiekunom pakietów
-          (osobom przygotowywującym pakiet oprogramowanie dla danej dystrybucji,
+          (osobom przygotowywującym pakiet oprogramowania dla danej dystrybucji,
           z wybranym programem) oraz twórcom samej dystrybucji. Możemy zmieniać
           oczywiście konfiguracje w tym katalogu, jednak trzeba mieć na uwadze
           dwie rzeczy: 
@@ -4035,8 +4035,8 @@ $ sudo reboot
           Znaczna część komunikatów dignostycznych z różnych komponentów
           systemowych spływa do protokołowania czy rejestrowania lub
           prowadzenia plików dziennika. W języku polskim istnieje kilka
-          określenie co konkretnie robi usługa <strong>syslog</strong>, której
-          zadaniem jest nasłuchiwanie na komunikaty diagnostyczne i
+          określeń na to co konkretnie robi usługa <strong>syslog</strong>, 
+          której zadaniem jest nasłuchiwanie na komunikaty diagnostyczne i
           przekazywanie ich do pliku, na ekran poszczególnych użytkowników lub
           całkowite zignorowanie. Wszystko zależy od konfiguracji.
         </p>
@@ -4050,8 +4050,8 @@ $ sudo reboot
           <em>/var/log</em>. Warto mieć jednak na uwadze fakt, iż nie
           wszystkie pliki przechowywane w tym katalogu są zarządzane, przez
           tę usługę. Nie które daemony mogą posiadać swoje sposoby na
-          utrzymanie i prezentowanie użytkownikowi własne komunikaty
-          diagnostyczne. Więcej informacji na temat jakie <em>logi</em> są
+          utrzymanie i prezentowanie użytkownikowi własnych komunikaty
+          diagnostycznych. Więcej informacji na temat jakie <em>logi</em> są
           przechwytywane przez <em>rsyslog</em> znajduje się w pliku
           konfiguracyjnym - <strong>/etc/rsyslog.conf</strong>.
         </p>
@@ -4087,21 +4087,21 @@ mail.*      -/var/log/maillog
           Selektor zaś składa się z kolejnych dwóch części: 
           <strong>funkcji</strong> oraz <strong>priorytetu</strong>. Funkcja
           określa źródło komunikatów i są one na stałe zaimplementowane w
-          <em>rsyslog</em> a priorytet ich rodzaj, które są następujące
-          (ułożenie według od najniższego do najwyższego):
+          <em>rsyslog</em> a priorytety ich rodzaj wśród, których możemy
+          wymienić (ułożenie według od najniższego do najwyższego):
         </p>
 <pre class="code-block">
 debug, info, notice, warning, error, crit, alert, emerg
 </pre>
         <p>
           Tworząc selektor oddziela się funkcję od priorytetu za pomocą kropki.
-          Priorytet służ do ograniczania wielkość przechwytywanych komunikatów,
+          Priorytet służy do ograniczania wielkość przechwytywanych komunikatów,
           albowiem <em>rsyslog</em> rozpoczyna przechwytywanie komunikatów od
           tego priorytetu w górę. Jeśli przypatrzmy się pierwszej linii
-          konfiguracji, zauważy, że do pliku 
+          konfiguracji, zauważymy, że do pliku 
           <code class="code-inline">/var/log/messages</code> będzie
           spływać masa informacji, ponieważ selektor uwzględnia komunikaty
-          ze wszystkich placów z minimalnym priorytetem 
+          ze wszystkich funkcji z minimalnym priorytetem 
           <code class="code-inline">debug</code>. Istnieją jednak pewne
           wykluczenia. Na selektor może składać się więcej niż jedna para
           <em>funkcja.priorytet</em>, co również widać w pierwszej linii
@@ -4123,13 +4123,13 @@ debug, info, notice, warning, error, crit, alert, emerg
           superużytkownika. Podanie jakiej kolwiek nazwy użytkownika w akcji
           spowoduje przesłanie mu (za pomocą polecenia <strong>write</strong>)
           komunikatu diagnostycznego, o ile użytkownik zezwala na wyświetlanie
-          tego typu komunikatów (polecenie <strong>mesg</strong>). Chodziaż
+          tego typu komunikatów (polecenie <strong>mesg</strong>). Chociaż
           komunikaty wysłane przez superużytkownika są wyświetlane mimo tych
           ustawień. Kolejnym przypadkiem związanym z wysyłaniem jest użycie
           specjalnego <strong>modułu wyjściowego</strong> reprezentującego
           konkretną akcje, w tym przypadku jest wysyłanie wiadomości do
           zobrazowane w ostatniej linii przykładu. Jak mogliśmy zauważyć w
-          liniach reguł możemy używać symbolu wieloznacznego gwiazdku
+          liniach reguł możemy używać symbolu wieloznacznego gwiazdki
           (<strong>*</strong>).
         </p>
         <p>
@@ -4155,15 +4155,19 @@ $Umask 0022
           komunikat do zapisania. Jeśli priorytet został pominięty, zostanie
           użyty domyślny <em>user.notice</em>. W zależności od konfiguracji
 	        <em>rsyslog</em> oraz użytej funkcji nasz komunikat powinien
-	        pojawić jednym z plików wyszczególnionych w konfiguracji plików.
+	        pojawić jednym z plików wyszczególnionych w konfiguracji.
           W przypadku użycia narzędzia <em>logger</em> z domyślnymi wartościami
           komunikat zostanie zapisany do <em>/var/log/messages</em>.
         </p>
         <p>
-          Większość rejestratorów nie tylko w postaci odrębnego programu jakim
-          jest <em>rsyslog</em>, ale także funkcje, nie których <em>daemonów</em>
-          jak np. serwer WWW <em>Apache2</em> zapisują do swoje komunikaty
-          diagnostyczne do <em>/var/log</em>, co może powodować szybkie
+          Większość rejestratorów istnieje nie tylko w postaci odrębnego 
+          programu jakim
+          jest <em>rsyslog</em>, ale także w postaci funkcji, nie których 
+          <em>daemonów</em>
+          jak np. serwer WWW <em>Apache2</em> one również zapisuje swoje 
+          komunikaty
+          diagnostyczne do <em>/var/log</em>. Bardzo duża ilość danych
+          spływająca do jednego katalogu może powodować szybkie
           zapełnienie przestrzeni dyskowej. Jednak się to nie dzieje, dzięki 
           programowi <strong>logrotate</strong>, którego zadaniem jest
           (w zależności od konfiguracji) usuwanie lub kompresja starych plików
@@ -4283,19 +4287,24 @@ user:$y$j9T$bAf/P4bLm00VJQyS3Lf8I1$dzie3XL5lORpP7jmo4CeanOqhuWMpPzdQArAlQ9AfG0:1
           jednak ktoś jest ciekawy pozostałych pól to może zajrzeć do mojego
           materiału przygotowywującego do RHCSA: <a href="https://morketsmerke.github.io/articles/terminallog/RedHat_-_RHCSA.html#6.1.passwordaging">https://morketsmerke.github.io/articles/terminallog/RedHat_-_RHCSA.html#6.1.passwordaging</a>
         </p>
+        <p>
+          Plik <em>/etc/shadow</em> jest dość mocno zabezpieczonym plikiem,
+          zwykli użytkownicy nie posiadają do niego żadnych praw. Jedyną
+          uprawnioną osobą do manipulacji nim jest superużytkownik.
+        </p>
         <h3 id="7.3.3.changingusers">7.3.3. Manipulowanie użytkownikami i hasłami</h3>
         <p>
           Omawiane dotychczas pliki są zwykłymi plikami tekstowymi, których 
           zawartością możemy manipulować za pomocą ulubionego edytora
-          tekstowego. Nie jest to jednak zalecane działania. Ze względu na 
+          tekstowego. Nie jest to jednak zalecane działanie. Ze względu na 
           ścisłą budowę (nie możliwe jest aby umieszczać w tych plikach 
-          komentarz lub puste wiersze) oraz restrykcyjną składnie wierszy.
+          komentarze lub puste wiersze) oraz restrykcyjną składnie wierszy.
           Możemy użyć specjalnego narzędzia jakim jest <strong>vipw</strong>.
-          Polecenie to tworzy kopię zmienianych plików i następnie otwiera plik
+          Polecenie to tworzy kopię zmienianych plików i następnie otwiera
           ten plik w terminalowym edytorze. Konfiguruje ono również ten edytor
           aby zaznaczał składnię wpisów w plików, po zapisaniu zmian polecenie
-          sprawdzi składnie zmienonych lub dodanych wpisów. Jeśli wszystko
-          będzie dobrze, to polecenie zapisze zmiany jeśli coś będzienie nie
+          sprawdzi składnie zmienionych lub dodanych wpisów. Jeśli wszystko
+          będzie dobrze, to polecenie zapisze zmiany jeśli coś będzie nie
           tak to polecenie zaproponuje poprawienie błędu. Polecenie wymaga
           oczywiście uprawnień administratora. Wydając polecenie bez żadnej
           opcji otworzy ono plik <em>/etc/passwd</em> do edycji a jesli dodamy
@@ -4308,9 +4317,9 @@ user:$y$j9T$bAf/P4bLm00VJQyS3Lf8I1$dzie3XL5lORpP7jmo4CeanOqhuWMpPzdQArAlQ9AfG0:1
           ustawianie ważności hasła, jednak dodając opcję <strong>-s</strong>
           mozemy zmienić domyślny program startowy (powłokę) lub za pomocą
           opcji <strong>-f</strong> możemy zmienić nazwę użytkownika. Po
-          więcej informacji zapraszam do strony podręcznika polecenie 
+          więcej informacji zapraszam do strony podręcznika polecenia 
           <em>passwd</em>. Jeśli na naszym przypadku polecenie <em>passwd</em>
-          może nie być zadowalające. Można wówczas skorzystać z polecenie typu
+          może nie być zadowalające. Można wówczas skorzystać z polecenia typu
           <strong>usermod</strong>.
         </p>
         <h3 id="7.3.4.groups">7.3.4. Grupy</h3>
@@ -4377,7 +4386,8 @@ xf0r3m:x:1001:
           Działanie programu <em>getty</em> polega na podłaczeniu się pod
           terminal (nie ważne czy wirtualny czy fizyczny podłączony przez 
           port COM) i wyświetlenie znaku zachęty logowania (napisu "login: ")
-          i oczekiwania podanie nazwy użytkownika. Kiedy nazwa zostanie podana
+          i oczekiwania na podanie nazwy użytkownika. Kiedy nazwa zostanie
+          podana
           polecenie to zastępuje same siebie wywołując program <em>login</em>.
           Ten program odpowiedzialny jest za wyświetlenie znaku zachęty hasła
           (napisu "hasło:") po podaniu przez użytkownika hasła program
@@ -4406,7 +4416,7 @@ xf0r3m:x:1001:
           strefy czasowej w jakiej się znajdujemy, dlatego też 
           RTC (ang. <em>Real Time Clock</em>) w BIOS lub UEFI powinien być 
           ustawiony zgodnie ze strefą czasową UTC. Za pomocą poniższego
-          polecenie możemy ustawić czasem UTC jądra względem RTC.
+          polecenia możemy ustawić czas UTC jądra względem RTC.
         </p>
 <pre class="code-block">
 $ sudo hwclock --hctosys --utc
@@ -4429,7 +4439,7 @@ xf0r3m@immudex:~$ date +%s
 </pre>
         <p>
           Domyślnie polecenie <code class="code-inline">date</code> wyświetla
-          datę i czas skorygowany o ustawioną w naszym systemie na podstawie
+          datę i czas skorygowany o ustawioną w naszym systemie, na podstawie
           przybliżonej lokalizacji strefę czasową. Ustawiona strefa czasowa
           znajduje się katalogu <em>/etc</em> jako dowiązanie symboliczne do
           jednego z plików stref dostępnych w systemie w katalogu 
@@ -4450,9 +4460,10 @@ lrwxrwxrwx 1 root root 33 11-04 17:46 /etc/localtime -&gt; /usr/share/zoneinfo/E
           Jeśli z jakiś przyczyn potrzebujemy sprawdzić jaki bedzie czas w
           wybranej przez nas strefie czasowej, możemy zmienić zmienną
           środowiskową TZ, która przechowuje informacje o ustawionej strefie
-          czasowej. Tę czynność możemy wykonać na czas wykonania pojedyńczego
+          czasowej na czas wykonania polecenia. Tę czynność możemy wykonać na 
+          czas wykonania pojedyńczego
           polecenia, ustawiając wartość zmiennej w tej samej linii co polecenie
-          <em>date</em>
+          <em>date</em>.
         </p>
 <pre class="code-block">
 xf0r3m@immudex:~$ TZ=Asia/Tokyo date
@@ -4465,9 +4476,9 @@ xf0r3m@immudex:~$ TZ=Asia/Tokyo date
           wspomniałem na początku tego podrozdziału możemy uruchomić na nim 
           specjalną usługę sieciową, która pobierze czas z serwerów
           podłączonych do bardzo precyzyjnych zegarów atomowych.
+        </p>
         <p>
-        <p>
-          Pierwszą rzeczą jak należy zrobić leży pobrać pakiet odpowiedzialny
+          Pierwszą rzeczą jak należy zrobić to pobrać pakiet odpowiedzialny
           za demon NTP w naszym systemie. Następnie skonfigurować go zgodnie
           jego dokumentacją. Najprostsza konfigurację możemy zapisać w
           poniższych krokach.
@@ -4478,8 +4489,8 @@ xf0r3m@immudex:~$ TZ=Asia/Tokyo date
           <li>Zapisanie adresów serwera (serwerów, może być pula) w pliku
             konfiguracyjnym demona NTP, najczęściej jest to 
             <em>/etc/ntp.conf</em>.</li>
-          <li>Uruchomienie polecenia <em>ntpdate</em></li>
-          <li>Włącznienie demona NTP do uruchomienia w trakcie autostartu</li>
+          <li>Uruchomienie polecenia <em>ntpdate</em>.</li>
+          <li>Włącznienie demona NTP do uruchomienia w trakcie autostartu.</li>
         </ol>
         <p>
           Jeśli nasz komputery nie posiada stałego łącza internetowego możemy
@@ -4492,16 +4503,16 @@ $ sudo hwclock --systohc --utc
 </pre>
         <p>
           W tym podrozdziale umieściłem polecenie, którego nie wyjaśniłem.
-          jest nim <strong>poziom STRATUM</strong>. Wyjasnienie tego pojecia
+          Jest nim <strong>poziom STRATUM</strong>. Wyjasnienie tego pojecia
           wymaga zagłebienia się w protokół NTP, co zrobiłem w materiale
-          przygotowawczym do RHCSA znajdującym się tutaj:<a href="https://morketsmerke.github.io/articles/terminallog/RedHat_-_RHCSA.html#18.1.ntp">https://morketsmerke.github.io/articles/terminallog/RedHat_-_RHCSA.html#18.1.ntp</a>.
+          przygotowawczym do RHCSA znajdującym się tutaj: <a href="https://morketsmerke.github.io/articles/terminallog/RedHat_-_RHCSA.html#18.1.ntp">https://morketsmerke.github.io/articles/terminallog/RedHat_-_RHCSA.html#18.1.ntp</a>.
         </p>
         <h2 id="7.6.cron">7.6. Tworzenie powtarzalnych zadań za pomocą cron</h2>
         <p>
           Wróćmy na chwile do drugiego podrozdziału. Tam pod koniec omówiliśmy
           sobie gdzie znajdują się pliki dziennika i w jaki sposób system 
           radzi sobie z problem szybko przyrastających plików zawierających
-          komunikaty diagonostyczne z przeróżnych demonów. Wspomnialiśmy tam 
+          komunikaty diagnostyczne z przeróżnych demonów. Wspomnialiśmy tam 
           o <em>logrotate</em>. Ten program aby zapobiec zużyciu całego miejsca
           na dysku musi uruchamiać się co jakiś czas.
         </p>
@@ -4512,8 +4523,8 @@ $ sudo hwclock --systohc --utc
           zdefiniować co uruchomić, kiedy lub co ile czasu i przez kogo.
           Definicje zadań znajdując się w specjalnych plikach zwanych
           <em>crontab</em>. Każdy użytkownik ma swój plik. Ponieważ pliki te
-          znajdując się w miejscu, do które zwykli użytkownicy nie mają dostępu
-          (a mimo to mogą z niego w pełnoprawny sposób korzystać) muszą używać
+          znajdując się w miejscu, do którego zwykli użytkownicy nie mają 
+          dostępu muszą używać
           dostarczonym wraz z <em>cron</em> narzędziem.
         </p>
         <p>
@@ -4563,7 +4574,7 @@ $ crontab -e
             0 i 7 to niedziela.</li>
         </ul>
         <p>
-          Ustawienia czasu wykonania zadania jest wmiarę prostę o ile nie
+          Ustawienia czasu wykonania zadania jest w miarę proste o ile nie
           wymagamy bardzo złożonego warunku czasowego lub nie próbujemy go 
           zrozumieć (zadając sobie pytanie: kiedy to dokładnie się wykona?).
           Załóżmy że chcemy aby zadanie wykonało się w każdy weekend wakacji
@@ -4585,7 +4596,8 @@ $ crontab -e
           <em>/var/spool/cron/crontab</em>. Polecenie 
           <code class="code-inline">crontab</code> daje możliwość instalacji
           tablicy zadań z zwykłego pliku tekstowego, dokonujemy tego za pomocą
-          polecenia <em>crontab</em> wraz z opcją <strong>-l</strong>. Jednak
+          polecenia <code class="code-inline">crontab</code> wraz z opcją 
+          <strong>-l</strong>. Jednak
           korzystanie z opcji <code class="code-inline">-e</code> jest bardziej
           zalecane. Wówczas podczas zapisywania zmian polecenie sprawdzi 
           zadania pod kątem poprawności składni i przypadku błedu, zapyta czy
@@ -4622,7 +4634,7 @@ xf0r3m@immudex:~$ sudo systemctl restart cron
           umieszczeniu skryptu (powłoki, nawet jednej linii z konkretnym
           poleceniem) w jednym z nich. W systemowej tablicy <em>cron</em> jest
           napisane o której wykonywane są zadania zapisane w tych katalogach.
-          Skrypty uruchamiane są przez znane nam z poprzednie rozdziału
+          Skrypty uruchamiane są przez znane nam z poprzedniego rozdziału
           narzędzie jakim jest <em>run-parts</em>. W nowszych dystrybucjach
           obsługą tych katalogów może zajmować się demon <em>anacron</em>.
         </p>
@@ -4641,7 +4653,7 @@ xf0r3m@immudex:~$ sudo systemctl restart cron
         <h2 id="7.7.at">7.7. Planowanie jednorazowych zadań.</h2>
         <p>
           Jedno narzędzie do planowania zadań w przyszłości już poznaliśmy. 
-          Narzędzie <strong>at</strong> napewno nie ma tak szerokiego użycia
+          Narzędzie <strong>at</strong> na pewno nie ma tak szerokiego użycia
           jak <em>cron</em>, to pomaga wykonać pewne zadania po za czasem 
           czynnego użytkowania komputera. Jeśli musimy poczekać do powiedzmy
           północy, aby móc wykonać jakąś czynność, możemy ją zaplanować
@@ -4653,7 +4665,7 @@ xf0r3m@immudex:~$ sudo systemctl restart cron
           wykonanie zadania na kilka godzin do przodu ale i nawet na kilka
           miesięcy. Aby jednak to zrealizować należy poznać polecenie
           <em>at</em>, które może nie być domyślnie dostępne w każdej
-          i trzeba je będzie zainstalować.
+          dystrybucji i trzeba je będzie zainstalować.
         </p>
         <p>
           Aby rozpocząć planowanie zadania należy wydać polecenie <em>at</em>
@@ -4741,12 +4753,12 @@ xf0r3m@immudex:~$ atq
           Dotych czas można było sądzić, że procesy, które uruchamiamy w
           Linuksie posiadły jeden identyfikator użytkownika. Użytkownika, który
           ten proces zainicjował. Rzeczywistość jest niestety zgoła inna. 
-          Każdy proces posiada conajmniej dwa identyfikatory użytkowników.
+          Każdy proces posiada co najmniej dwa identyfikatory użytkowników.
           Pierwszym z nich jest <strong>euid</strong> 
-          (ang. <em>Effective User IDentificator</em>) - efektywy identyfikator
+          (ang. <em>Effective User IDentifier</em>) - efektywy identyfikator
           użytkownika. Ten identyfikator wskazuje na użytkownika, z ktorego 
           uprawnienia działa ten proces. Drugim jest <strong>ruid</strong>
-          (ang. <em>Real User IDentificator</em>) - rzeczywisty identyfikator
+          (ang. <em>Real User IDentifier</em>) - rzeczywisty identyfikator
           użytkownika. Ten wskazuje natomiast użytkownika, który zainicjował
           ten proces. 
         </p>
@@ -4768,7 +4780,7 @@ xf0r3m@immudex:~$ atq
           Żeby całość jeszcze bardziej skomplikować, do tych dwóch
           identyfikatorów należy dodać jescze większego poziomu skomplikowania
           to istnieje trzeci identyfikator <strong>suid</strong>
-          (ang. <em>Saved User IDentificator</em>) - zapisany identyfikator
+          (ang. <em>Saved User IDentifier</em>) - zapisany identyfikator
           użytkownika. Podczas działania, proces może przełączać się między
           zapisanym a rzeczywistym identyfikatorem. 
         </p>
@@ -4781,7 +4793,7 @@ xf0r3m@immudex:~$ atq
           identyfikatory użytkowników za pomocą wywołania systemowego
           <em>setuid()</em>. Wynika to z kilku problemów jakie wynikają z
           braku zgodności między identyfikatorami, przez co nie musimy
-          się zbytnio przejmować identyfikatorami oraz ich przełączaniem.
+          się zbytnio przejmować nimi oraz ich przełączaniem.
         </p>
         <p>
           Ze względu na duże uprawnienia (czynny udział jądra w przełączaniu
@@ -4797,14 +4809,14 @@ xf0r3m@immudex:~$ atq
         <p>
           Każdy wieloużytkowy system musi zapewnić mechanizmy czuwające nad
           kontrolą użytkowników. Użytkownicy powinni przedstawić się systemowi
-          przekazać tajną informację (hasło), aby ten wiedział że jest tym
-          za kogo się podaje, wówczas mechanizmy w systemie będą wiedzieć, że
-          ten użytkownik jest tym za kogo się podaje. Jesli uzytkownik został
+          przekazać tajną informację (hasło), wówczas mechanizmy w systemie 
+          będą wiedzieć, że
+          ten użytkownik jest tym za kogo się podaje. Jeśli użytkownik został
           uwierzytelniony ma on dostęp do swojego konta, które jest
           autoryzowane (posiada pewne prawa w systemie) i w ten sposób systemy
-          identyfikują uzytkowników. To tak wygląda tylko w teorii. Z racji
-          tego, iż jądro zna tylko UID, ustalenie nazwy użytkownika potrzebuje
-          kilku czynności. Można przedstawic tutaj krokowy algorytm, który
+          identyfikują użytkowników. To tak wygląda tylko w teorii. Z racji
+          tego, iż jądro zna tylko UID, ustalenie nazwy użytkownika wymaga 
+          kilku czynności. Można przedstawić tutaj krokowy algorytm, który
           byłby w stanie ustalić taką nazwę, jednak stosuje sie funkcję
           biblioteki standardowej, które pomagają w ustaleniu takich
           informacji. Problem stanowią natomiast hasła, ponieważ funkcje 
@@ -4835,7 +4847,7 @@ xf0r3m@immudex:~$ atq
         </p>
         <h3 id="7.10.1.pamconfig">7.10.1. Konfiguracja PAM</h3>
         <p>
-          Ze względu na to iż konfiguracja różni się w zależności od
+          Ze względu na to, iż konfiguracja różni się w zależności od
           dystrybucji, cieżko jest się odnaleźć i wyjaśnić to w ogólny sposób.
           pliki konfiguracyjne systemu powinny znajdować się w katalogu 
           <em>/etc/pam.d/</em>. Ich nazwy często zawierają nazwy komponentów
@@ -4853,18 +4865,18 @@ auth  requisite pam_shell.so
         </p>
         <p>
           Każda linia konfiguracji PAM składa się z co najmniej trzech części.
-          Z:
+          Między innymi z:
         </p>
         <ul>
-         <li><strong>Typu funkcji</strong>, które aplikacja żąda od systemu PAM
-          w tym przypadku jest to <code class="code-inline">auth</code>
-          powodujący uwierzytelnienie użytkownika.</li>
-         <li><strong>Argumentu kontrolnego</strong>, decydującego o tym jak
-          system zareaguje na powodzenie lub niepowodzenie działania
-          wykonywanego przez typ funkcji.</li>
-         <li><strong>Modułu</strong>, określającego jak czynność zostanie tak
-          naprawdę wykonana. W tym przypadku jest sprawdzenie czy funkcja 
-          występuje w pliku <em>/etc/shells</em>.</li>
+          <li><strong>Typu funkcji</strong>, które aplikacja żąda od systemu PAM
+            w tym przypadku jest to <code class="code-inline">auth</code>
+            powodujący uwierzytelnienie użytkownika.</li>
+          <li><strong>Argumentu kontrolnego</strong>, decydującego o tym jak
+            system zareaguje na powodzenie lub niepowodzenie działania
+            wykonywanego przez typ funkcji.</li>
+          <li><strong>Modułu</strong>, określającego jaka czynność zostanie tak
+            naprawdę wykonana. W tym przypadku jest sprawdzenie czy funkcja 
+            występuje w pliku <em>/etc/shells</em>.</li>
         </ul>
         <h4>Typy funkcji</h4>
         <p>
@@ -4890,22 +4902,136 @@ auth  requisite pam_shell.so
         <h4>Argumenty kontrolne</h4>
         <p>
           Inną częścią, wartą omówienie są argumenty kontrolne. Są one 
-          stosowane ze względu na to iż wiersz zapisane w konfiguracji są 
-          zestawiane, co oznacza, że nie zawsze nie powodzenie jednego 
+          stosowane ze względu na to, iż wiersz zapisane w konfiguracji są 
+          zestawiane, co oznacza, że nie zawsze status (powodzenie,
+          niepowodzenie) jednego 
           wiersza może oznaczać zwrócenie do aplikacji informacji o
           powodzeniu lub niepowodzeniu funkcji przez nią żądanej. Inną kwestią 
           jest rozszerzona składnia
-          argumentów, kontolnych dopuszająca inne wartości niż tylko prawda
+          argumentów kontolnych dopuszająca inne wartości niż tylko prawda
           czy fałsz. Więcej na ten temat znajduje się na stronie podręcznika
           pliku <em>pam.conf</em>. Poniżej znajdują się arguementy kontrolne
           o prostej składni.
         </p>
         <ul>
           <li><strong>sufficient</strong>. Jeśli reguła opatrzona tym 
-          argumentem powiedzie się, zbędne staje się sprawdzanie pozostałych
-          reguł, system PAM nie musi tego robić. Jeśli się niepowiedzie to
-          system przechodzi do kolejnej reguły.</li>
+            argumentem powiedzie się, zbędne staje się sprawdzanie pozostałych
+            reguł, system PAM nie musi tego robić. Jeśli się niepowiedzie to
+            system przechodzi do kolejnej reguły.</li>
+          <li><strong>requisite</strong>. Jeśli reguła z tym argumentem
+            niepowiedzie się to wówczas całe uwierzytelnianie kończy się
+            niepowodzeniem. Jeśli reguła powiedzie się, to system przechodzi do
+            sprawdzenia pozostałych reguł, oczywiście jeśli zostały 
+            zdefiniowane.
+          </li>
+          <li><strong>required</strong>. Jeśli reguła powiedzie się to system
+            przechodzi do kolejnych reguł. Jeśli nie to system i tak sprawdzi
+            pozostałe dostępne reguły jednak jedyną zwracaną infomacją bedzie
+            niepowodzienie bez znaczenia czy następujące po <em>required</em>
+            reguły sie powiodły lub nie.</li>
         </ul>
+        <p>
+          Znając składnię reguł systemu PAM, możemy spóbować samodzielnie
+          przeanalizować drugą linię znajdującą się w pliku <em>chsh</em> w
+          katalogu <em>/etc/pam.d</em>.
+        </p>
+<pre class="code-block">
+auth  sufficient  pam_rootok.so
+</pre>
+        <p>
+          Pamiętając o tym, że typ funkcji oraz moduł należy taktować jako
+          parę. Skupimy się na początku na argumencie kontrolonym. Otóż jeśli
+          ta reguła zakończy się powodzeniem system PAM nie będzie dalej
+          sprawdzać reguł. Natomiast funkcja (wraz z modułem) mają za zadanie
+          ustalenie czy to superużytkownik próbuje się uwierzytelnić.
+        </p>
+        <p>
+          Zwrócićmy uwagę na to, iż mimo tego co poznaliśmy konfigrację PAM
+          oraz przeanalizowaliśmy skonstruowany plik konfiguracyjny dla 
+          <em>chsh</em>, to 
+          <em>root</em> nadal może ustawić dowolną powłokę. Wynika to z
+          konstrukcji samego narzędzia. W tym przypadku PAM ma działać nad
+          uwierzytelnianiem zwykłego użytkownika i jego działań.
+        </p>
+        <p>
+          Moduły w regułach PAM mogą posiadać argumenty i są one umieszczane
+          po nazwie modułu, na przykład:
+        </p>
+<pre class="code-block">
+auth  sufficient  pam_unix.so nullok
+</pre>
+        <p>
+          Argument ten pozwala na stosowanie pustego hasła podczas
+          uwierzytelnienia.
+        </p>
+        <h3 id="7.10.3.pamnotices">7.10.3. Uwagi dotyczące PAM</h3>
+        <p>
+          Ze względu na to, iż wiekszość mechanizmów opisanych w tym materiale
+          zostało przedstawionych pobierznie, przecież to podstawy. To poniżej
+          znajduje się kilka wskazówek odnośnie systemu PAM.
+        </p>
+        <ul>
+          <li>Lista dostępnych w systemie modułów możemy wyświetlić za pomocą
+            polecenia 
+<pre class="code-block">
+$ man -k pam_
+</pre>
+            Jeśli potrzebujemy znać lokalizację modułów PAM, wówczas możemy
+            spróbowac użyć polecenia <em>locate</em> podając nazwę modułu
+            jako argument polecenia.</li>
+          <li>Strony podręcznika zawierają opis funkcji i argumentów dla
+            każdego modułu.</li>
+          <li>W wielu dystrybucjach pliki konfiguracji systemu PAM są
+            generowane automatycznie, wiec ich modyfikacja może nie być
+            najlepszym pomysłem. Przed wprowadzeniem zmian warto zapoznać
+            się z umieszczonymi w tych plikach komentarzami.</li>
+          <li>Plik <em>/etc/pam.d/other</em> definiuje konfigurację dla
+            aplikacji, które nie posiadają własnego pliku. Zazwyczaj
+            wszystko tam jest blokowane.</li>
+          <li>Istnieje możliwość dołączenia dodatkowych plików konfiguracjnych.
+            Za pomocą dyrektywy <em>@include</em> możemy załadować cały
+            dodatkowy plik, ale za pomocą specjalnego argumentu kontrolnego
+            możemy załadować plik konfiguracjny dla określonej funkcji. Te
+            sposoby są określne przez dystrybucje.</li>
+          <li>Definicja reguł systemu PAM nie kończy się na argumentach 
+            modułów. Moduły mogą uzyskiwać dostęp do plików w katalogu
+            <em>/etc/security</em>, które głownie mają na celu ograniczanie
+            uprawnień użytkownikom.</li>
+        </ul>
+        <h3 id="7.10.3.pamandpasswords">7.10.3. System PAM i hasła</h3>
+        <p>
+          System PAM możemy wykorzystać do uzyskiwania informacji na temat
+          haseł w systemie. Wykorzystanie modułu <em>pam_unix.so</em> wraz
+          z funkcją <em>auth</em> powoduje sprawdzenie hasła. Natomiast
+          jeśli użyjemy tego modułu wraz z funkcją <em>password</em> moduł
+          ustawi podane przez uzytkownika hasło. Wyszukując odpowiednią 
+          regułę możemy dowiedzieć się na przykład jakiego algorytmu użyto
+          do tworzenia skrótu hasła. Do odnalezienia tej linii posłużymy się
+          poniższym poleceniem. 
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:/ic0$ grep password.*unix /etc/pam.d/*
+/etc/pam.d/common-password:# used to change user passwords.  The default is pam_unix.
+/etc/pam.d/common-password:password	[success=1 default=ignore]	pam_unix.so obscure yescrypt
+</pre>
+        <p>
+          W drugiej linii znajduje się poszukiwana przez nas 
+          reguła. Skupmy się tylko na argumentach modułu. Otóż argument
+          <code class="code-inline">obscure</code>, najprościej rzecz ujmując
+          powoduje on sprawdzenie czy podane hasło jest wystarczająco 
+          "przesłonięte" (nie jest zbliżone do obecnie używanego). Kolejny
+          argument to algorytm szyfrowania w tym przypadku jest to
+          nowy algorytm <code class="code-inline">yescrypt</code>, do Debiana
+          został on wdrożony wraz z wypuszeniem wersji 11 "Bullseye".
+        </p>
+        <p>
+          No dobrze, w przypadku ustawiania hasła mamy jawnie podany algorytm.
+          A co w przypadku gdy moduł PAM musi sprawdzić czy podane hasło jest
+          poprawne. Niestety w tym przypadku PAM próbuje odgadnąć algorytm
+          wykorzystując do tego bibliotekę libcrypt, ktora wypróbowuje
+          wszystkie dostępne możliwości do momentu aż coś zadziała lub
+          nie pozostanie nic sprawdzenia.
+        </p>
       </div>
 			<p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

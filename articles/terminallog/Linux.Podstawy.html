@@ -5032,6 +5032,43 @@ xf0r3m@immudex:/ic0$ grep password.*unix /etc/pam.d/*
           wszystkie dostępne możliwości do momentu aż coś zadziała lub
           nie pozostanie nic sprawdzenia.
         </p>
+        <h1 id="processandresourcemonitoring">8. Procesy oraz monitorowania zasobów</h1>
+        <p>
+          Jeśli pamiętamy definicję procesu, to wiem że proces to nic innego
+          jak wystąpienie uruchomionego programu. Każdy proces aby mógł
+          wykonać swoje zadanie potrzebuje zasobów sprzetowych naszych 
+          komputerów oferowanych przez system operacyjny. Jądro odpowiada
+          za sprawiedliwy przydział zasobów systemowych. Samo jądro również
+          może mieć być zasobem - zasobem programowym wykorzystywanym przez
+          procesy do uzyskiwania dostępu do plików czy do urządzeń
+          wejścia-wyjścia.  
+        </p>
+        <p>
+          W tym rozdziale objaśnimy sobie nieco bardziej procesy oraz zajmiemy
+          się monitorowaniem zasobów. Jednak nie po to aby optymalizować
+          system, ponieważ ten na domyślnych ustawieniach dystrybucji działa 
+          całkiem dobrze i nie potrzeba nic zmieniać. Zajmiemy się 
+          natomiast monitorowaniem zasobów by lepiej zrozumieć co jest 
+          dokładnie mierzone, dzięki czemu przybliżymy sobie, nie które
+          działania jądra.
+        </p>
+        <h2 id="8.1.processtraking">8.1. Śledzenie procesów</h2>
+        <p>
+          Procesy możemy śledzić za pomocą polecenia <strong>ps</strong> i
+          w zależności od użytych przełączników możemy uzyskać różne 
+          rezultaty działania tego polecenia. Osobiście polecam
+          kombinację trzech przełączników <strong>-aux</strong>. Poza tym
+          to polecenie posiada trzy rózne możliwości wprowadzania do niego
+          opcji. Ja skupie się na jednym myślniku i łączeniu razem opcji. 
+          Inną godną polecenia kombinacją opcji jest <strong>-elf</strong>
+          te opcje zwracaną najważniesze dla nas informacje, na przykład
+          jak wartość priorytetu oraz wartość <em>nice</em>, które biorą
+          udział w szeregowaniu procesów do wykoniania. Dlaczeo polecam tę
+          pierwszą kombinacją, ponieważ najczęściej zo zarządzania jakimś
+          procesami będzie nam potrzebny PID, właściciel procesu, z jakiego
+          polecania proces pochodzi lub procentowe wartości zużycia pamięci
+          czy procsora.
+        </p>
       </div>
 			<p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

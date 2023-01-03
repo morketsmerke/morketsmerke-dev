@@ -5063,12 +5063,49 @@ xf0r3m@immudex:/ic0$ grep password.*unix /etc/pam.d/*
           Inną godną polecenia kombinacją opcji jest <strong>-elf</strong>
           te opcje zwracaną najważniesze dla nas informacje, na przykład
           jak wartość priorytetu oraz wartość <em>nice</em>, które biorą
-          udział w szeregowaniu procesów do wykoniania. Dlaczeo polecam tę
-          pierwszą kombinacją, ponieważ najczęściej zo zarządzania jakimś
+          udział w szeregowaniu procesów do wykoniania. Dlaczego polecam tę
+          pierwszą kombinacją, ponieważ najczęściej do zarządzania jakimś
           procesami będzie nam potrzebny PID, właściciel procesu, z jakiego
           polecania proces pochodzi lub procentowe wartości zużycia pamięci
           czy procsora.
         </p>
+        <p>
+          Innym przydatnym narzędziem dla śledzenia procesów jest polecenie
+          <strong>top</strong>. Ponieważ informacje wyświetlane przez to
+          polecenie są odświerzane co 1 sekundę dając aktualy obraz tego co
+          się aktualnie dzieje w systemie. Po uruchomieniu tego programu na
+          same górze listy procesów znajdują się najbardziej aktywne z nich.
+          Podczas działania programu, może przekazywać do niego opcje za
+          pomocą naciśniecia odpowiedniego klawisza. Poniżej znajduje się
+          kilka opisanych klawiszy.
+        </p>
+        <ul>
+          <li><strong>Spacja</strong> - natychmiastowe odświerzania ekranu.</li>
+          <li><strong>Shift + m</strong> - sortuje procesy pod względem
+            zajętości pamięci.</li>
+          <li><strong>Shift + t</strong> - sortuje procesy pod względem
+            całkowitego zużycia czasu procesora.</li>
+          <li><strong>Shift + p</strong> - sortuje procesy pod względem
+            aktualnego zużycia czasu procesora. Użycie tego polecenia
+            przywraca domyślne ustawienia.</li>
+          <li><strong>u</strong> - wyświetla tylko dane procesów 
+            użytkownika.<li>
+          <li><strong>f</strong> - umożliwia wybranie różnych statystyk do
+            wyświetlenia.</li>
+          <li><strong>?</strong> - wyświetla informacje o opcjach programu
+            <em>top></em>.</li>
+        </ul>
+        <p>
+          W dystrybucjach Linuksa dostępne są różne odmiany polecenia
+          <em>top</em>, takie jak <strong>htop</strong> lub <em>atop</em>.
+          Polecenie <em>htop</em> jest znacznie bardziej rozbudowane, a
+          jego interaktywna konfiguracja pozwala nie tylko na zmianę
+          wyświetlanych danych, ale również zmianę tematu wyświetlania
+          (kolorów). Za pomocą <em>htop</em> możemy monitorować stan baterii.
+          Po za tym polecenie to posiada, nie które możliwości innego
+          przydatnego polecenia jakim jest <em>lsof</em>.
+        </p>
+        </ul>
       </div>
 			<p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

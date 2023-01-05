@@ -5225,6 +5225,152 @@ mpv     2923 xf0r3m   22w     FIFO               0,12      0t0  26082 pipe
           Po aktualizacji jądra oraz programu <em>lsof</em>, może ono nie
           nie działać, dopóki nie uruchomimy nowego jądra.
         </p>
+        <h2 id="8.3.tracingprogramexecutionandsystemcalls">8.3. Śledzenie wykonania programów oraz wywołań systemowych</h2>
+        <p>
+          Zazwyczaj program jeśli się uruchamia i napotka podczas wykonywania
+          swoich czynności błąd to zwróci jakąś informację o tym co się
+          stało (większość programów uruchomianych na uniksach). Możemy jednak
+          napotkać taki przypadek, że uruchomimy program i on odrazu się
+          zamknie. Wówczas pojawia się problem w jaki sposób mamy dowiedzieć
+          się co jest nie tak z programem czy naszym środowiskiem (czy wszyskie
+          wymagane pakiety zostały zainstalowane, na przykład). Rozwiązania,
+          które przedstawię w tym podrozdziale na pewno nie są idealne i nie
+          sprawdzą się na pewno w przypadku każdego "migającego" programu.
+          Nie mniej jednak warto uruchomić dla niego chodziaż jedno z
+          zaprezentowanych tutaj poleceń.
+        </p>
+        <h3 id="8.3.1.stracecommand">8.3. Polecenie strace</h3>
+        <p>
+          Polecenie <em>strace</em> pozwala na uruchomienie programu wraz ze
+          śledzeniem wywołań systemowych (interfejsu jądra, pozwalającego na
+          wykonanie wielu czynności systemowych, na przykład otwarcia pliku
+          zapisanego gdzieś na systemie plików). Najprostszą poleceniem jakie
+          możemy wykonać dla przykładu jest wyświetlenie zawartości jakiegoś
+          pliku. Polecenie <em>strace</em> może nie występować we wszystkich
+          dystrybucjach, więc będzie trzeba je zainstalować. Z racji tego, iż
+          informacji zwracanych przez to polecenie jest na prawdę dużo to 
+          poniżej przedstawiłem najważniesze moim zdaniem linie:
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ strace cat yt-links
+execve("/usr/bin/cat", ["cat", "yt-links"], 0x7ffc8ee949b8 /* 39 vars */) = 0
+brk(NULL)                               = 0x564490232000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (Nie ma takiego pliku ani katalogu)
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=105669, ...}) = 0
+mmap(NULL, 105669, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f2f770de000
+close(3)                                = 0
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0&gt;\0\1\0\0\0@&gt;\2\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=1905632, ...}) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f2f770dc000
+mmap(NULL, 1918592, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f2f76f07000
+mmap(0x7f2f76f29000, 1417216, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x22000) = 0x7f2f76f29000
+mmap(0x7f2f77083000, 323584, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x17c000) = 0x7f2f77083000
+mmap(0x7f2f770d2000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1ca000) = 0x7f2f770d2000
+mmap(0x7f2f770d8000, 13952, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f2f770d8000
+close(3)                                = 0
+arch_prctl(ARCH_SET_FS, 0x7f2f770dd580) = 0
+mprotect(0x7f2f770d2000, 16384, PROT_READ) = 0
+mprotect(0x56448ed5a000, 4096, PROT_READ) = 0
+mprotect(0x7f2f77122000, 4096, PROT_READ) = 0
+munmap(0x7f2f770de000, 105669)          = 0
+brk(NULL)                               = 0x564490232000
+brk(0x564490253000)                     = 0x564490253000
+openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=3041312, ...}) = 0
+mmap(NULL, 3041312, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f2f76c20000
+close(3)                                = 0
+fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0), ...}) = 0
+openat(AT_FDCWD, "yt-links", O_RDONLY)  = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=512, ...}) = 0
+fadvise64(3, 0, 0, POSIX_FADV_SEQUENTIAL) = 0
+mmap(NULL, 139264, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f2f76bfe000
+read(3, "lofi girl stream: www.youtube.co"..., 131072) = 512
+write(1, "lofi girl stream: www.youtube.co"..., 512lofi girl stream: www.youtube.com/watch?v=jfKfPfyJRdk
+Stalker czyste niebo: www.youtube.com/playlist?list=PLMnTK-S7An4KqvvXn6AMkE00s_aDNZ29o
+Stalker zew prypeci: www.youtube.com/playlist?list=PLMnTK-S7An4K8BMXzFCVA0Y8KLSSHRfwV
+MysteryTV CP S03: www.youtube.com/playlist?list=PLjkTsi__dtwWJm4gUqaFLBva0k1TljXcn
+MysteryTC CP S04: www.youtube.com/playlist?list=PLjkTsi__dtwWR247M06TZ_2FxccG91f1u
+Tu skończyłem: https://www.youtube.com/watch?v=wnY3cTAujMc
+
+Iceberg o stalkerze: www.youtube.com/watch?v=uMHvO7LXVz8
+) = 512
+read(3, "", 131072)                     = 0
+munmap(0x7f2f76bfe000, 139264)          = 0
+close(3)                                = 0
+close(1)                                = 0
+close(2)                                = 0
+exit_group(0)                           = ?
++++ exited with 0 +++
+</pre>
+        <p>
+          Polecenie <code class="code-inline">strace</code> wykorzystuje
+          wyołanie systemowe <em>fork()</em> aby utworzyć kopię swojego procesu
+          następnie ta kopia jest zastępowana przez wywołanie systemowe
+          <code class="code-inline">execve()</code>, które uruchamia
+          zadany przez nas proces, w tym przypadku jest wyświetlenie
+          zawartości pliku <code class="code-inline">yt-links</code>, po
+          zinicjowaniu pamięci oraz odpytaniu się bibliotek
+          (pominięto to na przykładzie) proces <em>cat</em> chcę otworzyć
+          plik za pomocą wywołania systemowego
+          <code class="code-inline">openat</code>, jeśli otwarcie pliku
+          się powiedzie, otwartemu plikowi zostanie nadany pierwszy wolny
+          deskryptor, najczęsiej będzie to <code class="code-inline">3</code>,
+          co zostało przedstawione na przykładzie. Jeśli samodzielnie będziemy
+          uruchamiać podobne polecenie (nie każdy w swoim systemie posiada,
+          pliki <em>yt-links</em>), to zauważym że ten deskrytor jest
+          przypisywany i zwalniany kilkukrotnie podczas wykonywania czynności
+          Przed pobraniem zawartości pliku, pobierane są jego atrybuty za
+          pomocą wywołanie <code class="code-inline">fstat()</code> oraz 
+          alokowana jest pamięci operacyjna 
+          (<code class="code-inline">mmap</code>) i wówczas następuje wywołanie
+          systemowe <code class="code-inline">read()</code>, które pobiera
+          zawartości pliku. Następne wywołanie systemowe odpowiedzialne jest
+          za wypisanie zawartości, do deskryptora o numerze
+          <code class="code-inline">1</code>. Jak pamiętamy polecenie 
+          <em>cat</em> to wypisuje albo podaną jako argument ścieżkę do pliku,
+          albo podane dane z standardowego wejścia na standardowe wyjście. A
+          więc numer standardowego wyjścia, którym jest <strong>1</strong> jest
+          deskryptorem otwartego pliku. Dlatego też wywołanie systemowe
+          <code class="code-inline">write()</code> odwołuje się do
+          deskryptora o numerze <code class="code-inline">1</code>. Następnie
+          pamięć oraz wykorzystywane deskrytory zostają zwolnione i w ten
+          sposób kończy się wykonanie procesu polecenia <em>cat</em>.
+        </p>
+        <p>
+          Czytając ten obszerny opis możemy przyjrzeć się jak działają programy
+          na uniksach. Nie mniej jednak polecenie <em>strace</em> może pomóc
+          nam przy, nie których problemach z programami. Często sytuacją,
+          w której program może nam "mignąć" jest brak jakiegoś pliku lub
+          problem z jego dostępnością. Kiedy analizujemy wykonanie programu
+          za pomocą polecenia <em>strace</em> to należy szczególną uwagę
+          zwrócić na wywołania systemowe <em>openat()</em> Poniżej znajdują się
+          dwa przykładowe komunikaty:
+        </p>
+<pre class="code-block">
+openat(AT_FDCWD, "test.txt", O_RDONLY)  = -1 ENOENT (Nie ma takiego pliku ani katalogu)
+openat(AT_FDCWD, "/etc/shadow", O_RDONLY) = -1 EACCES (Brak dostępu)
+</pre>
+        <p>
+          W przypadku błędu, zazwyczaj otrzymujemy deskryptor o numerze
+          <em>-1</em>, jednak zwróćmy uwagę na komunikaty błedów różnia się od
+          siebie (<code class="code-inline">ENOENT</code> a 
+          <code class="code-inline">EACCES</code>).
+        </p>
+        <h3 id="8.3.2.ltracecommand">8.3.2. Polecenie ltrace</h3>
+        <p>
+          Podobnym do <em>strace</em> narzędziem jest <strong>ltrace</strong>.
+          Jednak zamiast wywołań systemowych śledzi on wywołania bibliotek
+          wspóldzielnonych, dane wyjściowe tego programu są zbliżone do 
+          <em>strace</em>. Program <em>ltrace</em> nie śledzi niczego na
+          poziomie jądra, to jednak warto mieć na uwadzę fakt, iż programy
+          o wiele częściej korzystają z bibliotek wspódzielonych niż z 
+          wywołań systemowych. Polecenie <em>ltrace</em> nie zadziała w
+          przypadku bibliotego dołączonych statycznie. A jego dane wyjściowe
+          możemy odfiltrować za pomocą opcji polecenia, których opis dostępny
+          jest na stronie podręcznika.
+        </p>
       </div>
 			<p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

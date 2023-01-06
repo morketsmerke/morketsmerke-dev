@@ -5371,6 +5371,80 @@ openat(AT_FDCWD, "/etc/shadow", O_RDONLY) = -1 EACCES (Brak dostępu)
           możemy odfiltrować za pomocą opcji polecenia, których opis dostępny
           jest na stronie podręcznika.
         </p>
+        <h2 id="8.4.threads">8.4. Wątki</h2>
+        <p>
+          Procesy mogą dzielić się na podobne byty zwane 
+          <strong>wątkami</strong>. Wątki w pewnym sensie są podobne do
+          procesów, również zawierają identyfikator zwany <strong>TID</strong>
+          (ang. <em>Thread IDentifier</em>). Podobnie jak program może mieć
+          kilka procesów, odpowiadających wykonywanym przez niego czynnością,
+          to wątki mogą być efektem podziału czynności procesu na jeszcze
+          mniejsze części. W przypadku komputerów metoda rozwiązywania 
+          problemów "dziel i rządź", będzie miała zastosowanie jeszcze
+          nie jednokrotnie.
+        </p>
+        <h3 id="8.4.1.oneormultithreadprocess">8.4.1. Procesy jedno oraz wielowątkowe</h3>
+        <p>
+          Część procesów uruchamianych w systemie zawiera tylko jeden wątek.
+          Wówczas taki proces jest procesem jednowątkowym. Na początku, każdy
+          proces posiada jeden wątek, zwany <strong>wątkiem głównym</strong>.
+          Wątek główny może tworzyć kolejne wątki, zmieniając ten proces tym
+          samym w proces wielowątkowy.
+        </p>
+        <p>
+          Podstawową zaletą procesów wielowątkowych jest fakt wykonania 
+          zaplanowanych w procesie czynności o wiele szybciej, gdyż każdy
+          wątek może być wykonywany przez jeden procesor (wątek procesora,
+          tak rdzenie procesorów też mogą zawierać w sobie wątki, przeważnie
+          na jeden rdzeń przypadają dwa wątki). Innym cechą wątków jest to
+          iż wykorzystują one wspólne obszary pamięci, (nie tak jak w
+          przypadku procesów, gdzie procesy nie mają dostępu do obszaru
+          pamięci innych procesów) usprawniając tym samy komunikację miedzy
+          wątkami. Wątki najczęsciej wykorzystywane są do obsługi operacji
+          wejscia-wyjścia. Użycie w tym przypadku wątków zamiast procesów 
+          pozwala nam zaoszczędzić trochę czasu procesora.
+        </p>
+        <h3 id="8.4.2.displaingthreads">8.4.2. Wyświetlanie wątków.</h3>
+        <p>
+          Pozanane do tej pory narzędzia służące do obserowania procesów
+          również sprawdzą się gdy będzie chcieli wyświetlić informacje
+          na temat wątków. W przypadku polecenie <em>ps</em> wystarczy dodać
+          do polecenia opcję <strong>m</strong>, warto jednak zaznaczyć by 
+          nie mieszać opcji <em>m</em> wraz z opcją <em>u</em>. Na poniższym
+          przykładzie wyświetliłem moje procesy uruchomione w terminalach.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:/media/xf0r3m/immudex_crypt0$ ps -am -opid,tid,time,cmd
+    PID     TID     TIME CMD
+   1799       - 00:00:02 /usr/bin/python3 -O /usr/bin/ranger
+      -    1799 00:00:02 -
+   7507       - 00:00:00 /bin/sh -c set -- '/ic0/Repos/morketsmerke-dev/articles/terminallog/Linux.P
+      -    7507 00:00:00 -
+   7508       - 00:00:00 /bin/sh /usr/bin/sensible-editor -- /ic0/Repos/morketsmerke-dev/articles/te
+      -    7508 00:00:00 -
+   7512       - 00:00:05 /usr/bin/vim.gtk3 -- /ic0/Repos/morketsmerke-dev/articles/terminallog/Linux
+      -    7512 00:00:05 -
+  12070       - 00:00:00 ps -am -opid,tid,time,cmd
+      -   12070 00:00:00 -
+</pre>
+        <p>
+          Zwróćmy uwagę na to numery PID oraz TID są takie same. W przypadku
+          poleceń jednowątkowych, wątek główny posiada takim sam TID jak
+          proces macierzysty. Jeśli pojawiłby się procesy, wkorzystujące 
+          wątki, to wówczas TIDy wynośiły by kolejne numery rozpoczynając od
+          PID-u lub TID-u wątku głównego.
+        </p>
+        <p>
+          Jeśli preferujemy narzędzie <em>top</em> to wówczas użycie kombinacji
+          klawiszy <em>Śhift + h</em> pozwoli nam na wyświetlenie wątków.
+          Możemy je rozpoznać po tym, że wyświetlone tam "procesy" są
+          uruchomione z tego samego polecenia i posiadają następujące po sobie
+          identyfikatory.
+        </p>
+        <p>
+          Wątki w tym materiale zostały przedstawione, aby zaprezetować ich
+          istnienie i na tym temat się kończy.
+        </p>
       </div>
 			<p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

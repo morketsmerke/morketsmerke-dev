@@ -5445,6 +5445,201 @@ xf0r3m@immudex:/media/xf0r3m/immudex_crypt0$ ps -am -opid,tid,time,cmd
           Wątki w tym materiale zostały przedstawione, aby zaprezetować ich
           istnienie i na tym temat się kończy.
         </p>
+        <h2 id="8.5.resourcemonitoring">8.5. Monitorowanie zasobów</h2>w
+        <p>
+          Monitorowanie zasobów komputerów przeprowadza się głównie, aby 
+          dowiedzieć się, które z komponentów systemów lub komputerów należy
+          z optymalizować, aby nasza praca była jescze bardziej wydajna, abyśmy
+          mogli zrobić coś lepiej, szybciej oraz niższym nakładem pracy. Jak
+          już wspomniałem jądro Linuksa jest bardzo wydajne przy domyślnych
+          ustawieniach i nie trzeba się tym przejmować. Dlatego też
+          wykorzystamy monitorowanie zasobów czasu procesora, pamięci
+          operacyjnej oraz operacji wejścia-wyjścia do sprawdzenia w jaki
+          sposób dzieli je między procesami.
+        </p>
+        <h2 id="8.6.measuringprocessorusage">8.6. Pomiar czasu procesora</h2>
+        <p>
+          Do monitorowania w czasie rzeczywistym pojedynczych procesów możemy
+          wykorzystać polecenie <em>top</em> wraz z opcją <strong>-p</strong>.
+          Jako argumenty opcji podajemy listę identyfikatorów procesów.
+        </p>
+<pre class="code-block">
+$ top -p 3329,1230
+</pre>
+        <p>
+          Wówczas polecenie <em>top</em> pokaże na swojej liście tylko te dwa
+          procesy.
+        </p>
+        <p>
+          Aby dowiedzieć się ile czasu procesora w trakcie swojego działania
+          wykorzystało konkretne polecenie, to należy je uruchomić za pomocą
+          polecenia <strong>time</strong>, jednak tu musimy się na chwilę
+          zatrzymać gdyż przeważnie w większości dystrybucji istnieją dwa
+          polecenia <em>time</em>. Jedno jest polecenie wbudowanym w powłokę
+          i nie ma z niego za bardzo pożytku. Dla przykładu poniżej umieszczam
+          pomiar czasu procesora wbudowanym w powłokę polecenie <em>time</em>:
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ time ls
+...
+real	0m0,007s
+user	0m0,001s
+sys	  0m0,007s
+</pre>
+        <p>
+          Z kolei dostęp do właściwego polecenie uzyskamy uruchamiając
+          konkretny plik: <strong>/usr/bin/time</strong>, jednak twórcy
+          wiodących dystrybucji uznają, że polecenie wbudowane w powłokę
+          wystarczy, dlatego też prawdopodbne jest, że omawiany przez nas
+          program nie będzie domyślnie zainstalowany w naszym systemie. 
+          Poniżej znajduje się to samo polecenie wykonane za pomocą właściwego
+          programu.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ /usr/bin/time ls
+...
+0.00user 0.00system 0:00.00elapsed 100%CPU (0avgtext+0avgdata 2516maxresident)k
+0inputs+0outputs (0major+123minor)pagefaults 0swaps
+</pre>
+        <p>
+          To polecenie zwraca znacznie więcej informacji na temat wykonanego
+          polecenia. Na tym etapie będą interesować trzy pierwsze wartości:
+          <code class="code-inline">0.00user 0.00system 0:00.00elapsed</code>.
+          Wskazują one kolejno: 
+        </p>
+        <ul>
+          <li><strong>Czas użytkownika</strong>
+            (<code class="code-inline">0.00user</code>) - liczba sekund
+            poświęcona przez procesor na wykonanie właściwego kodu programu.
+            Przy obecnej mocy obliczeniowej komputerów czas wykonania prosty
+            czynności jest natyle krótki, że program zaokrągla go do zera.</li>
+          <li><strong>Czas systemowy</strong>
+            (<code class="code-inline">0.00system</code>) - czas poświęcony
+            przez jądro na obsługę procesu (na przykład, odczyt zawartości
+            plików lub katalogów).</li>
+          <li><strong>Czas trwania</strong>
+            (<code class="code-inline">0.00elapsed</code>) - całkowity czas
+            działania procesu od początku do końca jego życia, wraz ze
+            wszystkimi dodatkowymi czynnościami. Czas ten nie jest szczególnie
+            brany pod uwagę podczas pomiarów wydajności, ale odjęcie sumy
+            czasu użytkownika oraz czasu systemowego od tej wartości przedstawi
+            czas oczekiwania na zasoby.</li>
+        </ul>
+        <p>
+          Pozostałe wartości zwracane przez to polecenie dotyczą pamięci,
+          operacji wejścia-wyjścia oraz stronicowania (do stronicowania jeszcze
+          wrócimy w tym rozdziale).
+        </p>
+        <h2 id="8.7.processprioritization">8.7. Priorytetyzacja procesów</h2>
+        <p>
+          W pierwszym rodziale poruszyliśmy temat zarządzania protetami przez
+          jądro, dowiedzielśmy się, że każdy proces otrzymuje dostęp do
+          procesora na ułamek sekundy. Modułem odpowiedzialnym za to, który
+          z procesów uzyska w chwili obecnej dostęp do procesora jest
+          <strong>program szeregujący</strong>, który na podstawie
+          <strong>priorytetu</strong> procesu może przydzielć mu więcej lub
+          mniej czasu. W dystrybucja Linuksa priorytety funkcji przedstawiane
+          są dwojako. Polecenie <em>top</em> przestawia domyślny priorytet
+          wartością <strong>20</strong> (kolumna PR), jeśli jednak wywołamy 
+          polecenie
+          <em>ps</em> z opcjami <em>-elf</em> (ta sama kolumna), to domyślnym 
+          priorytetem będzie
+          <strong>80</strong>. My na tym etapie będziemy trzymać się raczej
+          wartosci przedstawianych przez polecenie <em>top</em>, ponieważ
+          łatwiej będzie nam je zrozumieć. Więc domyślnym priorytem jest
+          <em>20</em>, poniżej przedstawiam kilka procesów wyświetlonych przez
+          narzędzie <em>top</em>:
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ top
+
+top - 09:32:04 up  1:55,  1 user,  load average: 0,73, 0,65, 0,61
+...
+PID UŻYTK.    PR  NI    WIRT    REZ    WSP S  %CPU  %PAM     CZAS+ KOMENDA
+2364 xf0r3m    20   0 2504764 158992  90048 S   0,3   2,0   0:37.66 Isolated Web Co
+2418 xf0r3m    20   0  474048  94468  66272 S   0,3   1,2   1:39.81 xfce4-terminal
+4395 root      20   0       0      0      0 I   0,3   0,0   0:01.40 kworker/3:0-events
+33705 xf0r3m    20   0   10404   4212   3452 R   0,3   0,1   0:00.36 top 
+</pre>
+        <p>
+          Najniższym priortem w tym przypadku jest działanie w czasie
+          rzeczywistym, ale na tym etapie nie będziemy się tym zajmować. Tak
+          więc na chwilę obecną najniższym priortetem jest <strong>0</strong>,
+          a najwyższym <strong>39</strong>.
+        </p>
+        <p>
+          Do manipulacji priorytetami wartość <strong>nice</strong>
+          (kolumna NI), przechowuje ona wartość wpływającą na priorytet
+          zwiększając go lub zmieniajszając. Do ustawienia wartości
+          <em>nice</em> służy polecenie <strong>renice</strong>. To polecenie
+          możemy wykonać bez uprawnień administrator o ile zmniejszamy
+          priorytet (podając wysoką wartość <em>nice</em>, która dodawana jest
+          do domyślnej wartości priortety), zmniejszenie priorytetu
+          (podanie ujemnej wartości <em>nice</em>) wymaga już uprawnień
+          superużytkownika. Polecenie to poza nową wartością <em>nice</em>
+          wymaga podania PID-u procesu.
+        </p>
+<pre style="code-block">
+xf0r3m@immudex:/media/xf0r3m/immudex_crypt0$ pidof top
+37426
+xf0r3m@immudex:/media/xf0r3m/immudex_crypt0$ renice 20 37426
+37426 (process ID) old priority 0, new priority 19
+
+#lub krócej:
+
+xf0r3m@immudex:/media/xf0r3m/immudex_crypt0$ renice 20 $(pidof top) 
+37426 (process ID) old priority 0, new priority 19
+</pre>
+        <p>
+          Polecenie <code class="code-inline">pidof</code> pozwala uzyskać
+          PID procesu na podstawie polecenia, jeśli uruchomionych jest więcej
+          niż jedna instancja danego programu polecenie zwróci listę PID-ów.
+          Podczas zmiany priorytetu mimo, iż podaliśmy wartość 20 to
+          największą wartością <em>nice</em> jest 19 tak samo jest w drugą
+          stronę. Najmniejszą wartością <em>nice</em> (a zatem proces będzie
+          mieć największy priortet) jest <em>-19</em>.
+        </p>
+        <p>
+          Priortety i manipulacja nimi miała dużo większe znaczenie w czasch
+          gdy z jednego systemu korzystało wielużytkowników. Obecnie maja one
+          mniejsze znaczenie. Warto też dodać, aby nie wymuszać wysokich
+          priortetów, gdyż mogą one zablokować istotne dla funkcjonowania
+          systemu procesy i go zdestabilizować.
+        </p>
+        <h2 id="8.8.loadaverages">8.8. Średnie obciążenia</h2>
+        <p>
+          <strong>Średnie obciążenia</strong> jest to o szaczowana liczba
+          procesów do uruchomienia. Ten parametr określa ilość procesów
+          gotowych w każdej chwili użyć procesora. Jak pamiętamy nie wszystkie
+          procesy są gotowe do działania, część z nich czeka na dane. Średnie
+          obciążenia są wyświetlane przez polecenie <strong>uptime</strong>. 
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ uptime
+ 10:40:15 up  3:03,  1 user,  load average: 1,14, 0,99, 1,17
+</pre>
+        <p>
+          Wartości przedstawione obok etykiety
+          <code class="code-inline">load average</code> przedstawiaja średnie
+          obciążenia z minuty, 5 i 15 minut. Na powszszym przykładzie widzimy
+          że ciągu ostatniej minuty z użyto na wykonanie procesów użytkownika
+          114% procent procesora. Jeśli obiążenia tak jak na przykładzie stale
+          utrzymują się powyżej 1, to oznacza to, że jeden proces cały czas
+          wykorzystuje jeden rdzeń procesora. Pełne obiążenie komputera w
+          przypadku tego wskaźnika będzie oscylować w granicach ilości
+          rdzeni/wątków procesora zamontowanego w naszym komputerze.
+        </p>
+        <p>
+          Wysokie średnie obiążenia mogą wynikać nie tylko z działania w
+          systemie procesów ale również ze zwględu na pozostałą nie wielką
+          ilość pamięci dostępnej w systemie. Wówczas jądro może zarządzić
+          <strong>proces przeładowania</strong> (ang. <em>trashing</em>), 
+          powoduje to szybkie
+          przenoszenie stron pamięci na dysk oraz z dysku. Gdy ma to miejsce
+          ilość procesów gotowych do uruchomienia zwiększa sią powodując
+          znacznie zwiększenie średniej obiążenia. Ze względu na małą ilość
+          wolnej pamięci system może działać znacznie wolniej i niż zwykle.
+        </p>
       </div>
 			<p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

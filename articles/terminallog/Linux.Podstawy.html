@@ -5640,6 +5640,151 @@ xf0r3m@immudex:~$ uptime
           znacznie zwiększenie średniej obiążenia. Ze względu na małą ilość
           wolnej pamięci system może działać znacznie wolniej i niż zwykle.
         </p>
+        <h2 id="8.9.operating memory">8.9. Pamięc</h2>
+        <p>
+          Pamięć operacyjna jest bardzo ważnym komponentem komputera, jeśli
+          chodzi o maszyny uniksowe. W pamięci rezydują obszary, w których
+          procesy przechowują swoje dane, a jej ilość jest ograniczona. Do
+          monitorowania pamięci możemy posłużyć się takimi narzędziami jak
+          polecenie <strong>free</strong> (w przypadku tego polecenia, warto
+          przeskalować sobie wartości zwracane za pomocą opcji 
+          <strong>-h</strong>) lub skorzystać z interfejsu systemowego
+          wyświetlając zawartość pliku <em>/proc/meminfo</em> (tutaj jednak
+          jestśmy skazani na wartość wyrażone w kilobajtach). Jeśli pamięć
+          podręczna/bufora nie zajmuje dużego obszaru pamięci fizycznej, a
+          mimo to nie mamy w zanadrzu wiekszej ilości wolnej pamięci to 
+          niezbędne może być dołożenie pamięci do naszego komputera, aby
+          poprawić jego wydajność.
+        </p>
+        <h3 id="8.9.1.memorymanagement">8.9.1. Zarządzenie pamięcią</h3>
+        <p>
+          Jądro w tym zadaniu opera się na jednosce <strong>MMU</strong>
+          (ang. Memory Management Unit), której zadaniem jest zamiana adresów
+          pamięci wirtualnej na adresu pamięci fizycznej. Pamięć wirtualna
+          jest wykorzystywana przez procesy. Jądro współpracuje
+          z MMU dzieląc obszary procesów na mniejsze strony, trzymając w tym
+          samym dane służące MMU do odzworowania adresów w strukturze danych
+          zwanej <strong>tabelą stron</strong>. W momencie uzyskania przez
+          proces dostępu do pamięci jednostka MMU dzięki tej strukturze może
+          dokonywać translacji adresów.
+        </p>
+        <p>
+          Procesy zazwyczaj nie wymagają dostępu do pełnego obszaru w pamięci
+          od razu. Jądro ładuje wówczas tylko te strony, których proces
+          wymaga. Taki rodzaj przydzielania pamięci nazywany jest
+          <strong>stronicowaniem na żądanie</strong>.
+        </p>
+        <p>
+          Przydzielenie pamięci nowmy procesowi, możemy zapisać w czterech
+          krokach. 
+        </p>
+        <ol>
+          <li>Jądro ładuje do stron pamięci początek kodu programu</li>
+          <li>Jeśli zajdzie taka potrzeba jądro może przypisać procesowi kilka
+            stron pamięci.</li>
+          <li>W trakcie działania procesu, może zajść potrzeba załadowania
+            większej ilości kodu, ponieważ następna instrukcja do wykonania
+            nie znajduje się na załadowanych początkowo stronach. W takiej
+            sytuacji jądro przejmuje kontrolę, ładuje wymagane strony i
+            pozwala programowi wznowic działanie.</li>
+          <li>Jeśli zajdzie potrzeba przydzielenia więcej pamięci niż
+            zakładano na początku, jądro znajduje nieużywane strony, zwalnia
+            je i przydziela procesowi.</li>
+        </ol>
+        <h3 id="8.9.2.pageserrors">8.9.2. Błędy stron</h3>
+        <p>
+          Nie zawsze wyżej wymienione czynności da się spiąć w czasie. Jeśli
+          żądana przez proces strona w pamięci nie jest jeszcze gotowa to
+          generują on <strong>błąd strony</strong>. Gdy taki błąd zostanie
+          wygenerowany, to kontrolę nad procesorem przejmuje jądro aby
+          załadować żądaną stronę. Błędy dzielą się na podstawowe oraz
+          drugorzędne.
+        </p>
+        <h4>Drugorzędne błedy stron</h4>
+        <p>
+          Błędy tego typu nię są poważnym błedami, i zdarzają się dość często.
+          Ich najczęstszym powodem występowania jest fakt iż MMU nie zna 
+          położenia strony z instrukcjami programu. Samo MMU może nie mieć
+          odpowiednio dużo miejsca aby przechować adresy wszystkich obszarów.
+          W przypadku występowania takiego błędu jądro przekazuje do MMU
+          informacje o położeniu strony i pozwala na wznowienie działania
+          procesu.
+        </p>
+        <h4>Podstawowe błędy stron</h4>
+        <p>
+          Podstawowe błędy występują wówczas gdy strony nie ma w ogóle w
+          pamięci. Jądro musi ją załadować z jakiegoś nośnika najczęsciej jest
+          to dysk. Duża ilość tego typu błędów może przeciążyć system ponieważ
+          procesor jest zajęty przez jądro ładujące kod z niekoniecznie
+          szybkich nośników, blokując go tym samym dla innych procesów. 
+          Niestety pewna ilość tego typu błedów jest
+          nie unikniona, a mają one miejsce kiedy po raz pierwszy uruchamiamy
+          jakiś program, wówczas należy załadować kod z dysku. 
+        </p>
+        <h4>Obserowowanie błędów stron</h4>
+        <p>
+          Do obserwowania błędów stron przydatne staje się polecenie 
+          <strong>time</strong>, o którym wspomniałem przy okazji pomiaru
+          czasu procesora. Jednak w tym przypadku będzie interesować nas
+          wartość w nawiasie obok napisu 
+          <code class="code-inline">pagefaults</code>.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ /usr/bin/time timedatectl
+               Local time: nie 2023-01-08 17:59:08 CET
+           Universal time: nie 2023-01-08 16:59:08 UTC
+                 RTC time: nie 2023-01-08 16:59:08
+                Time zone: Europe/Warsaw (CET, +0100)
+System clock synchronized: no
+              NTP service: n/a
+          RTC in local TZ: no
+0.00user 0.01system 0:00.10elapsed 24%CPU (0avgtext+0avgdata 7416maxresident)k
+522inputs+0outputs (8major+359minor)pagefaults 0swaps
+</pre>
+        <p>
+          W przypadku uruchomienia w moim systemie polecenia
+          <code class="code-inline">timedatectl</code> wystąpiły 8 błędów
+          podstawowych (<code class="code-inline">8major</code>) oraz 359
+          błedów drugorzędnych.
+        </p>
+        <p>
+          Inne narzędzia takie <em>top</em> oraz <em>ps</em> również mogą 
+          wyświetlać informacje o błędach stron pamięć, w przypadku polecenia
+          <em>top</em> należy włączyć wyświetlanie <em>nMaj</em> oraz
+          <em>nMin</em>, aby przejść do konfiguracji należy nacisnąć literę
+          <em>f</em>, a następnie postępować zgodnie z instrukcją. Program
+          <em>ps</em> pozwala na wyświetlenie błędów strony poprzez podanie
+          niestandardowego wyświetlania kolumn (opcja <em>-o</em>) kolumny
+          noszą kolejno nazwy <em>maj_ftl</em> i <em>min_ftl</em>.
+        </p>
+        <h2 id="8.10.vmstat">8.10. Monitorowanie wydajności za pomocą polecenia vmstat</h2>
+        <p>
+          Polecenie <em>vmstat</em> pozwala na monitorowanie wielu aspektów
+          wydajności systemu, a jest jednym z najstarszych narzędzi tego typu.
+          Dane wyświetlane również pozostawiają wiele do życzenia i osoba
+          nie mająca styczności z tym narzędziem, może uznać je za mało
+          czytelne.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ vmstat 2
+proc. -----------pamięć---------- ---swap-- ---we/wy--- -system-- ------cpu-----
+dz bl   swap  wolna  bufor  cache   si   so    bi    bo   in   cs uż sy be io sk
+ 0  0      0 861264  13196 5331448    0    0    56     3  189  210 13  4 83  0  0
+ 0  0      0 861112  13196 5330624    0    0     0     0 2071 4073  8  4 88  0  0
+ 0  0      0 861712  13196 5330664    0    0     0     0 1944 3661  7  4 88  0  0
+ 0  0      0 862012  13196 5330608    0    0     0     0 2007 3866  7  4 89  0  0
+</pre>
+        <p>
+          Polecenie to przyjmuje jako argument interwał czasowym co ile sekund
+          ma wyświetlać nowe statystki. Każda linia to w tym przypadku
+          statustyki pobrane co dwie sekundy. Wyjście polecenia zawiera
+          tematyczne kolumny. Pierwszą z nich są procesy, ta kolumna zawiera
+          jeszcze dwie inne kolumny wskazujące procesy działające oraz te
+          zablokowane. W następnej kolumnie znajdują się informacje na temat
+          pamięci, a w niej informacje o przestrzeni wymiany, ilości wolnej
+          pamięci, pamięci przez naczonej na bufor oraz pamięci przeznaczonej
+          na pamięć podręczną.
+        </p>
       </div>
 			<p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

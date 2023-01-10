@@ -5779,11 +5779,155 @@ dz bl   swap  wolna  bufor  cache   si   so    bi    bo   in   cs uż sy be io s
           ma wyświetlać nowe statystki. Każda linia to w tym przypadku
           statustyki pobrane co dwie sekundy. Wyjście polecenia zawiera
           tematyczne kolumny. Pierwszą z nich są procesy, ta kolumna zawiera
-          jeszcze dwie inne kolumny wskazujące procesy działające oraz te
-          zablokowane. W następnej kolumnie znajdują się informacje na temat
-          pamięci, a w niej informacje o przestrzeni wymiany, ilości wolnej
+          jeszcze dwie inne kolumny wskazujące procesy gotowe do uruchomienia
+          (<code class="code-inline">dz</code>) oraz te
+          zablokowane (<code class="code-inline">bl</code>). W następnej 
+          kolumnie znajdują się informacje na temat
+          pamięci, a w niej informacje o wykorzystaniu przestrzeni wymiany
+          (<code class="code-inline">swap</code>), ilości wolnej
           pamięci, pamięci przez naczonej na bufor oraz pamięci przeznaczonej
-          na pamięć podręczną.
+          na pamięć podręczną. W trzeciej kolumnie znajdują się informacje o
+          przestrzeni wymiany, ile stron zostało przeniesionych na dysk
+          (<code class="code-inline">si</code>) oraz ile stron zostało
+          załadowanych z dysku do pamięci 
+          (<code class="code-inline">so<code>). Czwarta kolumna zawiera 
+          informacje o użyciu urządzeń wejścia-wyjścia, dane odczytane z dysku
+          (<code class="code-inline">bi</code>) oraz dane zapisane na dysku
+          (<code class="code-inline">bo</code>). Piąta kolumna zwiera
+          informacje systemowe, w niej znajdują się liczniki wywołań
+          systemowych (<code class="code-inline">in</code>) oraz przełączeń
+          kontekstu (<code class="code-inline">cs</code>). Ostatnia kolumna
+          zawiera procentowe zużycie czasu procesora dla kolejno: aplikacji
+          użytkownika (<code class="code-inline">uż</code>), jądra oraz obsługi
+          procesów (<code class="code-inline">sy</code>), stanu bezczynności
+          (<code class="code-inline">be</code>), czasu przeznaczonego na
+          obsługę operacji wejścia-wyjścia 
+          (<code class="code-inline">io</code>), czasu skradziony wirtualnej
+          maszynie (<code class="code-inline">sk</code>).
+        </p>
+        <p>
+          Polecenie to zawiera wiele przydanych opcji, które są zawarte na
+          stronie podręcznika programu. Jak na przykład opcję
+          <strong>-d</strong>, która pozwala na monitorowanie dysków.
+        </p>
+        <h2 id="8.11.iomonitoring">8.11. Monitorowanie operacji wejścia-wyjścia</h2>
+        <p>
+          Na dystrybucje Linuksa dostępnych jest kilka narzędzi służących do
+          monitorowania operacji wejścia-wyjścia, które w dużej mierze są
+          operacjami dyskowymi.
+        </p>
+        <h3 id="8.11.1.iostat">8.11.1. Polecenie iostat</h3>
+        <p>
+          Jedno znich przypomina omawiany w wcześniejszym
+          podrozdziale program <em>vmstat</em>, a jest nim polecenie
+          <strong>iostat</strong>, to polecenie może nie być domyślnie
+          zainstalowane i jeśli chcemy z niego skorzystać to należy je
+          zainstalować. Pakiet zawierający ten program zajduje się w
+          repozytoriach <em>Debiana</em> po nazwą <em>sysstat</em>. Poniżej
+          znajduje się przykład:
+        </p>
+<code class="code-block">
+xf0r3m@immudex:/media/xf0r3m/immudex_crypt0$ iostat 
+Linux 5.10.0-20-amd64 (immudex) 	10.01.2023 	_x86_64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          17,27    0,00    4,22    0,01    0,00   78,50
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+dm-0              0,35         3,52         0,61         0,00      25273       4396          0
+loop0             6,27        73,04         0,00         0,00     524237          0          0
+sda               1,55        66,41         0,56         0,00     476690       4048          0
+</code>
+        <p>
+          Oryginalny wydruk jest kolorowy. Ciemno niebieskie pola, mogą być
+          trochę nieczytelne, ale oznaczają one wartość
+          <code class="code-inline">0,00</code>. Pierwsza linia zawiera nazwę
+          jądra, nazwę hosta w nawiasie, aktualną datę, architekturę procesora
+          oraz liczbę logicznych procesorów (rdzenie/wątków). Druga oraz
+          trzecia linia zawierają średnie zużycie czasu procesora oraz 
+          objaśnienia tych wartości. Poniżej znajduje się tabelka
+          przedstawiająca urządzenia (<code class="code-inline">Device</code>),
+          liczba transferów na sekundę (liczba operacji wejścia-wyjścia na
+          sekundę wystosowana wobec urządzenia, 
+          <code class="code-inline">tps</code>); liczba danych odczytanych na
+          sekundę (<code class="code-inline">kB_read/s</code>); liczba danych
+          zapisanych na sekundę (<code class="code-inline">kB_write/s</code>);
+          liczba danych odrzuconych na sekundę dla urządznia
+          (<code class="code-inline">kB_dscd</code>), ostatnie trzy kolmny
+          wrażają podobne wartości tylko zamiast prędkości jest przedstawiona
+          tam łączna ilość.
+        </p>
+        <p>
+          Domyślnie dane wyrażane są w kilobajtach, jak prawie wszystko w
+          systemie co dotyczy pamięci masowych, jednostki możemy przeskalować
+          do megabajtów za pomocą opcji <strong>-m</strong>, natomiast za
+          pomocą opcji <strong>-p</strong> wraz z argumentem <em>ALL</em>
+          możemy wyświetlić statystki dla wszystkich urządzeń blokowych
+          dostępnych w systemie. Podobnie do <em>vmstat</em> podanie gołej
+          liczby jako argumentu spowoduje włączenie interwału czasowego o 
+          podanej wartości. Więcej opcji oraz bardziej szczegółowe wyjaśnienia
+          znajdują się na stronie podręcznika programu.
+        </p>
+        <h3 id="8.11.2.iotop">8.11.2. Polecenie iotop</h3>
+        <p>
+          Innym poleceniem służącym do monitorowania operacji wejścia-wyjścia
+          jest program <strong>iotop</strong>, zasada działania tego programu
+          jest podobna do znanego nam już narzędzia <em>top</em> tylko tym
+          razem zamiast skupiać się na procesach, położono nacisk na operacje
+          wejścia wyjścia.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo iotop
+Total DISK READ:         0.00 B/s | Total DISK WRITE:         0.00 B/s
+Current DISK READ:       0.00 B/s | Current DISK WRITE:       0.00 B/s
+    TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND                            
+      1 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % init
+      2 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [kthreadd]
+      3 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [rcu_gp]
+      4 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [rcu_par_gp]
+      6 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [kworker/0:0H-events_highpri]
+      8 be/0 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [mm_percpu_wq]
+      9 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [rcu_tasks_rude_]
+     10 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [rcu_tasks_trace]
+     11 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [ksoftirqd/0]
+     12 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [rcu_sched]
+     13 rt/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [migration/0]
+     15 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [cpuhp/0]
+     16 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [cpuhp/1]
+     17 rt/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [migration/1]
+     18 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [ksoftirqd/1]
+</pre>
+        <p>
+          Jak możemy zauważyć to polecenie wyświetla nam identyfikatory wątków.
+          Jest to jedno z nielicznych narzędzi wyświetlających wyświetlających
+          wątki, ponieważ często procesy dzielą się na nie aby własnie
+          zająć się obsługą wejścia-wyjścia. Inna kolumną wartą opisania jest
+          <code class="code-inline">PRIO</code>, podobnie jak procesy jądro
+          stara się szergować operacje wejścia-wyjścia. Przyczym priorytet
+          tutaj dzieli się na dwie wartości, klasę oraz poziom samego
+          priorytetu. Wątki o priorytecie
+          <code class="code-inline">be/0</code> otrzymają więcej czasu 
+          procesora na realizacje operacji niż wątki z priorytetem
+          <code class="code-inline">be/4</code>. Samych klas priorytetów
+          mogą wystąpić trzy rodzaje takie jak:
+        </p>
+        <ul>
+          <li><strong>be</strong>(<strong>best-effort</strong>) - w przypadku
+            tego priorytetu jądro stara się jak najbardziej sprawiedliwie
+            uszeregować operacje wejścia-wyjścia. Tę klasę posiada większość
+            operacji.</li>
+          <li><strong>rt</strong>(<strong>real-time</strong>) - Jądro
+            bezwarunkowo szereguje operacje opatrzone tą klasą ponad każdą
+            inną.</li>
+          <li><strong>idle</strong>, klasa bezczynności. Jądro będzie wykonywać
+            operacje z tą klasą, tylko wtedy gdy nie jest wykonywana żadna 
+            inna operacja. Ta klasa nie posiada żadnych poziomów, będąc
+            zarazem najniższym priorytetem.</li>
+        </ul>
+        <p>
+          Do manipulacji priortetami operacji wejścia-wyjścia służy polecenie
+          <strong>ionice</strong>, więcej na jego temat znajdziemy na stronie
+          podręcznika.
         </p>
       </div>
 			<p style="margin: 15px; padding: 0; outline: 0;">

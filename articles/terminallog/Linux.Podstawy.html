@@ -5929,6 +5929,114 @@ Current DISK READ:       0.00 B/s | Current DISK WRITE:       0.00 B/s
           <strong>ionice</strong>, więcej na jego temat znajdziemy na stronie
           podręcznika.
         </p>
+        <h2 id="8.12.pidstat">8.12. Monitorowanie procesów za pomocą narzędzia pidstat</h2>
+        <p>
+          Za pomocą polecenia <em>top</em> możemy śledzić wykorzystanie
+          zasobów przez wybrany proces. Problem w przypadku tego rozwiązania
+          jest brak poprzednich wartości, ponieważ dane odświerzane są co
+          interwał czasowy (w przypadku <em>top</em> jest to jedna sekunda).
+          Rozwiązaniem tej niedogodności może być zastosowanie narzędzia
+          <strong>pidstat</strong>, ponieważ zachowuje on się tak jak 
+          <em>vmstat</em>, ale dla procesów. Jeśli nie podamy konkretnego
+          PID-u, polecenie wyświetli wszystkie procesy, które zostały
+          uruchomione w systemie. Polecenie to nie jest domyślnie dostępne w
+          dystrybucjach opartych na Debianie, jest ono częścią pakietu
+          <em>sysstat</em>, ten pakiet zawiera również polecenie <em>iostat</em>.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:/media/xf0r3m/immudex_crypt0$ pidstat 
+Linux 5.10.0-20-amd64 (immudex) 	11.01.2023 	_x86_64_	(4 CPU)
+
+17:02:56      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+...
+17:02:56     1001      2820    4,84    0,99    0,00    0,08    5,83     1  mpv
+17:02:56     1001      2886    0,04    0,01    0,00    0,00    0,05     1  ranger
+17:02:56     1001      3366    0,18    0,04    0,00    0,00    0,21     1  atril
+17:02:56     1001      3398    0,00    0,00    0,00    0,00    0,00     0  WebKitNetworkPr
+17:02:56     1001      3805    0,03    0,01    0,00    0,00    0,04     1  vim.gtk3
+17:02:56     1001      3829    0,00    0,00    0,00    0,00    0,00     2  bash
+17:02:56        0      4176    0,00    0,01    0,00    0,00    0,01     0  kworker/u8:2-kcryptd/254:0
+17:02:56        0      5013    0,00    0,00    0,00    0,00    0,00     0  kworker/u8:3-i915
+17:02:56     1001      5610    0,00    0,00    0,00    0,00    0,00     0  Web Content
+17:02:56     1001     28551    0,00    0,00    0,00    0,00    0,00     2  pidstat
+</pre>
+        <p>
+          Polecenie to w pierwszej linii zwraca nam podsumowanie odnośnie
+          systemu (wersję jądra, nazwę hosta, architekturę procesora oraz
+          ilość rdzeni/wątków) i datę. Następnie wyświetlana jest tabela z
+          procesami, w kolumnach kolejno od lewej znajduje się czas wywołania
+          polecenia; UID użytkownika, który ten proces zainicjował; PID
+	        procesu. Następne pięć kolumn pokazuje informacje o zużyciu czasu
+          procesora. Kolumna <code class="code-inline">%wait</code> jest
+          procentowym żużyciem czasu procesora poświęconym na operacje
+          wejścia-wyjścia. Ciekawą wartością, nie zwracaną przez inne polecenia
+          jest kolumna <code class="code-inline">%guest</code>, która
+          przedstawia zużycie procesora na potrzeby zadań wykonywanych przez
+          maszynę wirtualną. Kolejnymi kolumnami są sumaryczne procentowe
+          zużycie czasu procesora; wskazanie, z którego z rdzeni/wątków
+          procesora korzysta ten proces oraz nazwa polecenia.
+        </p>
+        <p>
+          Uruchomienie tego polecenia dla pojedyńczego procesu wymaga podania
+          opcji <strong>-p</strong> wraz z wartością, którą jest PID procesu
+          oraz najlepiej podanie interwału czasowego w postaci suchej liczby
+          po PID-zie.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:/media/xf0r3m/immudex_crypt0$ pidstat -p 2820 2
+Linux 5.10.0-20-amd64 (immudex) 	11.01.2023 	_x86_64_	(4 CPU)
+
+17:32:37      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+17:32:39     1001      2820   13,50    5,00    0,00    0,50   18,50     1  mpv
+17:32:41     1001      2820   13,00    3,00    0,00    0,00   16,00     0  mpv
+17:32:43     1001      2820   14,00    4,50    0,00    0,50   18,50     0  mpv
+17:32:45     1001      2820   12,50    4,00    0,00    0,00   16,50     1  mpv
+17:32:47     1001      2820   14,00    4,00    0,00    0,00   18,00     1  mpv
+17:32:49     1001      2820   15,00    2,50    0,00    0,00   17,50     3  mpv
+17:32:51     1001      2820   14,00    2,50    0,00    0,50   16,50     2  mpv
+17:32:53     1001      2820   15,00    3,50    0,00    0,00   18,50     1  mpv
+17:32:55     1001      2820   11,50    5,50    0,00    0,00   17,00     3  mpv
+^C
+Średnia:    1001      2820   13,61    3,83    0,00    0,17   17,44     -  mpv
+</pre>
+        <p>
+          Przerywając działanie polecenia przed jego zakończeniem wyświetli
+          nam o ono jedną dodatkową linię zawierającą średnią poszczególnych
+          wartości uzyskanych podczas działania polecenia.
+        </p>
+        <p>
+          Więcej przydanych opcji dla tego polecenie znajduje się na stronie
+          podręcznika.
+        </p>
+        <h2 id="8.13.extrainfo">8.13. Informacje dodatkowe</h2>
+        <p>
+          Powodem istnienia tak szerokiej gamy różnych narzedzi do 
+          monitowania wydajności jest możliwość użycia, nie których komponentów
+          na różne sposoby. Najprostszym przykładem jaki przychodzi mi teraz
+          na myśl jest wykorzystanie pamięci operacyjnej jako dysku. Inną
+          rzeczą jest, iż te zasobo są ograniczone, a takie systemy jak serwery
+          sieciowe wymagają stałego i intesywnego monitoringu. Dlatego jeśli
+          chcemy lub musimy monitorować systemy, którymi zarządzamy lub
+          będziemy zarządzać warto zapoznać się z poniższymi zagadnieniami.
+        </p>
+        <ul>
+          <li><strong>sar</strong> (raportowanie dotyczące aktywności systemu).
+            Pakiet <em>sar</em> oferuje możliwości monitorowania systemu
+            podobne do programu <em>vmstat</em>, ale również rejestruje on
+            wykorzystanie zasobów w czasie. Przez co możemy sprawdzić jak
+            wyglądało zużycie zasobów podczas wykonywania wcześniejszych zadań.
+          </li>
+          <li><strong>acct</strong> (ewidencja procesów). Ten pakie z kolei
+            zajmuje się ewidencjonowanie procesów, a nie monitorowaniem
+            wydajności, nie mniej jednak funkcja sprawdzenia jakie procesy
+            działały powiedzmy kilka dni temu może być przydatna.</li>
+          <li><strong>Przydziały</strong> przy użyciu przydziałów możemy
+            nałożyć limity wykorzystania podstawowych zasobów (czas procesora,
+            pamięć operacyjna, czy przestrzeń dyskowa). Niestety jest funkcja
+            systemu <em>PAM</em> więc podlegją im procesy uruchomione w
+            obrębie czegoś co z niego korzysta, na przykład powłoka logowania.
+          </li>
+        <ul>
       </div>
 			<p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;

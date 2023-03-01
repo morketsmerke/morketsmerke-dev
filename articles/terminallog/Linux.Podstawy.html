@@ -5032,14 +5032,14 @@ xf0r3m@immudex:/ic0$ grep password.*unix /etc/pam.d/*
           wszystkie dostępne możliwości do momentu aż coś zadziała lub
           nie pozostanie nic sprawdzenia.
         </p>
-        <h1 id="processandresourcemonitoring">8. Procesy oraz monitorowania zasobów</h1>
+        <h1 id="8.processandresourcemonitoring">8. Procesy oraz monitorowania zasobów</h1>
         <p>
-          Jeśli pamiętamy definicję procesu, to wiem że proces to nic innego
+          Jeśli pamiętamy definicję procesu, to wiemy, że proces to nic innego
           jak wystąpienie uruchomionego programu. Każdy proces aby mógł
           wykonać swoje zadanie potrzebuje zasobów sprzetowych naszych 
           komputerów oferowanych przez system operacyjny. Jądro odpowiada
           za sprawiedliwy przydział zasobów systemowych. Samo jądro również
-          może mieć być zasobem - zasobem programowym wykorzystywanym przez
+          może być zasobem - programowym wykorzystywanym przez
           procesy do uzyskiwania dostępu do plików czy do urządzeń
           wejścia-wyjścia.  
         </p>
@@ -5049,10 +5049,10 @@ xf0r3m@immudex:/ic0$ grep password.*unix /etc/pam.d/*
           system, ponieważ ten na domyślnych ustawieniach dystrybucji działa 
           całkiem dobrze i nie potrzeba nic zmieniać. Zajmiemy się 
           natomiast monitorowaniem zasobów by lepiej zrozumieć co jest 
-          dokładnie mierzone, dzięki czemu przybliżymy sobie, nie które
+          dokładnie mierzone, dzięki czemu przybliżymy sobie, niektóre
           działania jądra.
         </p>
-        <h2 id="8.1.processtraking">8.1. Śledzenie procesów</h2>
+        <h2 id="8.1.processtracking">8.1. Śledzenie procesów</h2>
         <p>
           Procesy możemy śledzić za pomocą polecenia <strong>ps</strong> i
           w zależności od użytych przełączników możemy uzyskać różne 
@@ -5061,26 +5061,26 @@ xf0r3m@immudex:/ic0$ grep password.*unix /etc/pam.d/*
           to polecenie posiada trzy rózne możliwości wprowadzania do niego
           opcji. Ja skupie się na jednym myślniku i łączeniu razem opcji. 
           Inną godną polecenia kombinacją opcji jest <strong>-elf</strong>
-          te opcje zwracaną najważniesze dla nas informacje, na przykład
+          te opcje zwracają najważniesze dla nas informacje, na przykład
           jak wartość priorytetu oraz wartość <em>nice</em>, które biorą
-          udział w szeregowaniu procesów do wykoniania. Dlaczego polecam tę
+          udział w szeregowaniu procesów do wykonania. Dlaczego polecam tę
           pierwszą kombinacją, ponieważ najczęściej do zarządzania jakimś
           procesami będzie nam potrzebny PID, właściciel procesu, z jakiego
-          polecania proces pochodzi lub procentowe wartości zużycia pamięci
-          czy procsora.
+          polecenia proces pochodzi lub procentowe wartości zużycia pamięci
+          czy procesora.
         </p>
         <p>
           Innym przydatnym narzędziem dla śledzenia procesów jest polecenie
           <strong>top</strong>. Ponieważ informacje wyświetlane przez to
-          polecenie są odświerzane co 1 sekundę dając aktualy obraz tego co
+          polecenie są odświeżane co sekundę dając aktualny obraz tego co
           się aktualnie dzieje w systemie. Po uruchomieniu tego programu na
-          same górze listy procesów znajdują się najbardziej aktywne z nich.
-          Podczas działania programu, może przekazywać do niego opcje za
+          samej górze listy procesów znajdują się najbardziej aktywne z nich.
+          Podczas działania programu, można przekazywać do niego opcje za
           pomocą naciśniecia odpowiedniego klawisza. Poniżej znajduje się
           kilka opisanych klawiszy.
         </p>
         <ul>
-          <li><strong>Spacja</strong> - natychmiastowe odświerzania ekranu.</li>
+          <li><strong>Spacja</strong> - natychmiastowe odświerzanie ekranu.</li>
           <li><strong>Shift + m</strong> - sortuje procesy pod względem
             zajętości pamięci.</li>
           <li><strong>Shift + t</strong> - sortuje procesy pod względem
@@ -5093,7 +5093,7 @@ xf0r3m@immudex:/ic0$ grep password.*unix /etc/pam.d/*
           <li><strong>f</strong> - umożliwia wybranie różnych statystyk do
             wyświetlenia.</li>
           <li><strong>?</strong> - wyświetla informacje o opcjach programu
-            <em>top></em>.</li>
+            <em>top</em>.</li>
         </ul>
         <p>
           W dystrybucjach Linuksa dostępne są różne odmiany polecenia
@@ -5102,21 +5102,23 @@ xf0r3m@immudex:/ic0$ grep password.*unix /etc/pam.d/*
           jego interaktywna konfiguracja pozwala nie tylko na zmianę
           wyświetlanych danych, ale również zmianę tematu wyświetlania
           (kolorów). Za pomocą <em>htop</em> możemy monitorować stan baterii.
-          Po za tym polecenie to posiada, nie które możliwości innego
+          Po za tym polecenie to posiada, niektóre możliwości innego
           przydatnego polecenia jakim jest <em>lsof</em>.
         </p>
         <h2 id="8.2.lsof">8.2. Wyszukiwanie otwartych plików z pomocą polecenia lsof</h2>
         <p>
-          Polecenie lsof może być bardzo przydatne ponieważ pozwala wyświetlić
-          listę otwartych przez różnego rodzaju procesy. Co może okazać się
-          przydatne przypadku gdy chcemy odmontować jakiś system plików, ale
-          otrzymujemy informacje o tym że <em>target is busy</em>. Te komunikat
+          Polecenie <strong>lsof</strong> może być bardzo przydatne ponieważ
+          pozwala wyświetlić
+          listę plików otwartych przez różnego rodzaju procesy. Co może okazać
+          się przydatne przypadku gdy chcemy odmontować jakiś system plików,
+          ale otrzymujemy informacje o tym, że <em>target is busy</em>. Ten 
+          komunikat
           może być spowowany tym, że w systemie istnieją jeszcze procesy 
           działające na plikach znajdujących się na odmontowywanym systemie
           plików. Poza tym polecenie to generuje masę danych ze względu na
-          to, w systemach uniksopodobnych wszystko jest plikiem, a więc 
+          to, że w systemach uniksopodobnych wszystko jest plikiem, a więc 
           nie otrzymamy informacji tylko i wyłącznie o konwencjonalnych
-          plikach, ale również o gnizdkach czy nazwanych potokach. Poniżej
+          plikach, ale również o gniazdkach czy nazwanych potokach. Poniżej
           znajduje się linia z otwartym plikiem podczas pisania tego tekstu. 
         </p>
 <pre class="code-block">
@@ -5127,14 +5129,14 @@ vim.gtk3  3645 xf0r3m    7u      REG              254,0    20480    8391246 /med
           Linia przedstawia otwarty plik z materiałem w trakcie redagowania.
           Zwróćmy uwagę na nazwę pliku. Wygląda na to, że edytor <em>Vim</em>
           ładuję zawartość pożądanego przez nas pliku do pliku bufora
-          (rozszenienie .swp). W momencie zapisu otwiera właściwym pliku,
+          (rozszenienie .swp). W momencie zapisu otwiera właściwy plik,
           zapisuje dane poczym go zamyka. Edytor ten jest znany z tej metody
           obsługi plików. Dzięki temu w przypadku nagłego wyłącznia komputera,
           dane wciąż pozostają w pliku bufora. Nawet w przypadku, kiedy
           będziemy otwierać ten plik to edytor zauważy pozostawiony plik
-          bufora, który o opuszczeniu edytora powinien zostać usunięty. Jeśli
+          bufora, który o opuszczeniu programu powinien zostać usunięty. Jeśli
           dla otwieranego przez ten edytor istnieje już plik wymiany, wówczas
-          edytor zapyta co zrobić z jego zawartościa. 
+          edytor zapyta co zrobić z jego zawartością. 
         </p>
         <p>
           Wracając, linie zwracane przez to polecenie podzielone są na 9 kolumn
@@ -5161,14 +5163,15 @@ vim.gtk3  3645 xf0r3m    7u      REG              254,0    20480    8391246 /med
           Ze względu na przytłaczającą ilość danych zwracanych przez to
           polecenie, możemy uruchomić je na dwa sposóby. Pierwszym z nich
           jest przepuszcznie danych zwracanych przez to polecenie przez jakiś
-          filtr, najprostrzym jest chyba polecenie <em>less</em> jednak lepiej
+          filtr, najprostszym jest chyba polecenie <em>less</em> jednak lepiej
           wyszukać informacji z użyciem wyrażeń regularnych (polecenia
           <em>grep</em>). Drugą metodą jest zawężenie informacji zwracanych
-          porzez wykorzystanie dostępnych opcji narzędzia. Najłatwiejszym w
+          poprzez wykorzystanie dostępnych opcji narzędzia. Najłatwiejszym w
           użyciu jest podanie jako argumentu po prostu ścieżki do katalogu, z
           którego chcemy widzieć otwarte pliki. Na przykład:
         </p>
 <pre class="code-block">
+xf0r3m@immudex:~$ lsof /home/xf0r3m
 COMMAND    PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
 pipewire   978 xf0r3m  cwd    DIR   0,27      400  638 /home/xf0r3m
 dbus-daem  983 xf0r3m  cwd    DIR   0,27      400  638 /home/xf0r3m
@@ -5188,6 +5191,7 @@ atrild    3227 xf0r3m  cwd    DIR   0,27      400  638 /home/xf0r3m
           <em>mpv</em> tak jak przedstawiłem to na przykładzie.
         </p>
 <pre class="code-block">
+xf0r3m@immudex:~$ lsof -p 2923
 COMMAND  PID   USER   FD      TYPE             DEVICE SIZE/OFF   NODE NAME
 mpv     2923 xf0r3m  cwd       DIR               0,27      400    638 /home/xf0r3m
 mpv     2923 xf0r3m  rtd       DIR               0,27      200      2 /
@@ -5223,7 +5227,7 @@ mpv     2923 xf0r3m   22w     FIFO               0,12      0t0  26082 pipe
           Jeśli często aktualizujemy jądro, poza aktualizacją całej dystrybucji
           to należy pamiętać o aktualizacji programu <em>lsof</em>.
           Po aktualizacji jądra oraz programu <em>lsof</em>, może ono nie
-          nie działać, dopóki nie uruchomimy nowego jądra.
+          nie działać prawidłowo, dopóki nie uruchomimy nowego jądra.
         </p>
         <h2 id="8.3.tracingprogramexecutionandsystemcalls">8.3. Śledzenie wykonania programów oraz wywołań systemowych</h2>
         <p>
@@ -5235,7 +5239,7 @@ mpv     2923 xf0r3m   22w     FIFO               0,12      0t0  26082 pipe
           się co jest nie tak z programem czy naszym środowiskiem (czy wszyskie
           wymagane pakiety zostały zainstalowane, na przykład). Rozwiązania,
           które przedstawię w tym podrozdziale na pewno nie są idealne i nie
-          sprawdzą się na pewno w przypadku każdego "migającego" programu.
+          sprawdzą się w przypadku każdego "migającego" programu.
           Nie mniej jednak warto uruchomić dla niego chodziaż jedno z
           zaprezentowanych tutaj poleceń.
         </p>
@@ -5244,12 +5248,13 @@ mpv     2923 xf0r3m   22w     FIFO               0,12      0t0  26082 pipe
           Polecenie <em>strace</em> pozwala na uruchomienie programu wraz ze
           śledzeniem wywołań systemowych (interfejsu jądra, pozwalającego na
           wykonanie wielu czynności systemowych, na przykład otwarcia pliku
-          zapisanego gdzieś na systemie plików). Najprostszą poleceniem jakie
+          zapisanego gdzieś w systemie plików). Najprostszą poleceniem jakie
           możemy wykonać dla przykładu jest wyświetlenie zawartości jakiegoś
           pliku. Polecenie <em>strace</em> może nie występować we wszystkich
           dystrybucjach, więc będzie trzeba je zainstalować. Z racji tego, iż
           informacji zwracanych przez to polecenie jest na prawdę dużo to 
-          poniżej przedstawiłem najważniesze moim zdaniem linie:
+          poniżej przedstawiłem wywołanie prostego wyświetlenia zawartości
+          pliku przy użyciu polecenia <em>cat</em>:
         </p>
 <pre class="code-block">
 xf0r3m@immudex:~$ strace cat yt-links
@@ -5309,10 +5314,10 @@ exit_group(0)                           = ?
           wyołanie systemowe <em>fork()</em> aby utworzyć kopię swojego procesu
           następnie ta kopia jest zastępowana przez wywołanie systemowe
           <code class="code-inline">execve()</code>, które uruchamia
-          zadany przez nas proces, w tym przypadku jest wyświetlenie
+          podany przez nas proces, w tym przypadku jest wyświetlenie
           zawartości pliku <code class="code-inline">yt-links</code>, po
           zinicjowaniu pamięci oraz odpytaniu się bibliotek
-          (pominięto to na przykładzie) proces <em>cat</em> chcę otworzyć
+          proces <em>cat</em> chcę otworzyć
           plik za pomocą wywołania systemowego
           <code class="code-inline">openat</code>, jeśli otwarcie pliku
           się powiedzie, otwartemu plikowi zostanie nadany pierwszy wolny
@@ -5322,15 +5327,16 @@ exit_group(0)                           = ?
           pliki <em>yt-links</em>), to zauważym że ten deskrytor jest
           przypisywany i zwalniany kilkukrotnie podczas wykonywania czynności
           Przed pobraniem zawartości pliku, pobierane są jego atrybuty za
-          pomocą wywołanie <code class="code-inline">fstat()</code> oraz 
+          pomocą wywołania <code class="code-inline">fstat()</code> oraz 
           alokowana jest pamięci operacyjna 
           (<code class="code-inline">mmap</code>) i wówczas następuje wywołanie
           systemowe <code class="code-inline">read()</code>, które pobiera
           zawartości pliku. Następne wywołanie systemowe odpowiedzialne jest
           za wypisanie zawartości, do deskryptora o numerze
           <code class="code-inline">1</code>. Jak pamiętamy polecenie 
-          <em>cat</em> to wypisuje albo podaną jako argument ścieżkę do pliku,
-          albo podane dane z standardowego wejścia na standardowe wyjście. A
+          <em>cat</em> wyświetla zawartość pliku podanego jako ścieżka
+          albo wyświetla podane dane z standardowego wejścia na standardowe 
+          wyjście. A
           więc numer standardowego wyjścia, którym jest <strong>1</strong> jest
           deskryptorem otwartego pliku. Dlatego też wywołanie systemowe
           <code class="code-inline">write()</code> odwołuje się do
@@ -5345,7 +5351,7 @@ exit_group(0)                           = ?
           w której program może nam "mignąć" jest brak jakiegoś pliku lub
           problem z jego dostępnością. Kiedy analizujemy wykonanie programu
           za pomocą polecenia <em>strace</em> to należy szczególną uwagę
-          zwrócić na wywołania systemowe <em>openat()</em> Poniżej znajdują się
+          zwrócić na wywołania systemowe <em>openat()</em>. Poniżej znajdują się
           dwa przykładowe komunikaty:
         </p>
 <pre class="code-block">
@@ -5362,12 +5368,12 @@ openat(AT_FDCWD, "/etc/shadow", O_RDONLY) = -1 EACCES (Brak dostępu)
         <p>
           Podobnym do <em>strace</em> narzędziem jest <strong>ltrace</strong>.
           Jednak zamiast wywołań systemowych śledzi on wywołania bibliotek
-          wspóldzielnonych, dane wyjściowe tego programu są zbliżone do 
+          wspóldzielonych, dane wyjściowe tego programu są zbliżone do 
           <em>strace</em>. Program <em>ltrace</em> nie śledzi niczego na
           poziomie jądra, to jednak warto mieć na uwadzę fakt, iż programy
           o wiele częściej korzystają z bibliotek wspódzielonych niż z 
           wywołań systemowych. Polecenie <em>ltrace</em> nie zadziała w
-          przypadku bibliotego dołączonych statycznie. A jego dane wyjściowe
+          przypadku bibliotek dołączonych statycznie. A jego dane wyjściowe
           możemy odfiltrować za pomocą opcji polecenia, których opis dostępny
           jest na stronie podręcznika.
         </p>
@@ -5407,8 +5413,8 @@ openat(AT_FDCWD, "/etc/shadow", O_RDONLY) = -1 EACCES (Brak dostępu)
         <h3 id="8.4.2.displaingthreads">8.4.2. Wyświetlanie wątków.</h3>
         <p>
           Pozanane do tej pory narzędzia służące do obserowania procesów
-          również sprawdzą się gdy będzie chcieli wyświetlić informacje
-          na temat wątków. W przypadku polecenie <em>ps</em> wystarczy dodać
+          również sprawdzą się gdy będziemy chcieli wyświetlić informacje
+          na temat wątków. W przypadku polecenia <em>ps</em> wystarczy dodać
           do polecenia opcję <strong>m</strong>, warto jednak zaznaczyć by 
           nie mieszać opcji <em>m</em> wraz z opcją <em>u</em>. Na poniższym
           przykładzie wyświetliłem moje procesy uruchomione w terminalach.
@@ -5429,7 +5435,7 @@ xf0r3m@immudex:/media/xf0r3m/immudex_crypt0$ ps -am -opid,tid,time,cmd
 </pre>
         <p>
           Zwróćmy uwagę na to numery PID oraz TID są takie same. W przypadku
-          poleceń jednowątkowych, wątek główny posiada takim sam TID jak
+          poleceń jednowątkowych, wątek główny posiada taki sam TID jak
           proces macierzysty. Jeśli pojawiłby się procesy, wkorzystujące 
           wątki, to wówczas TIDy wynośiły by kolejne numery rozpoczynając od
           PID-u lub TID-u wątku głównego.
@@ -5511,7 +5517,7 @@ xf0r3m@immudex:~$ /usr/bin/time ls
           <li><strong>Czas użytkownika</strong>
             (<code class="code-inline">0.00user</code>) - liczba sekund
             poświęcona przez procesor na wykonanie właściwego kodu programu.
-            Przy obecnej mocy obliczeniowej komputerów czas wykonania prosty
+            Przy obecnej mocy obliczeniowej komputerów czas wykonania prostej
             czynności jest natyle krótki, że program zaokrągla go do zera.</li>
           <li><strong>Czas systemowy</strong>
             (<code class="code-inline">0.00system</code>) - czas poświęcony
@@ -5532,7 +5538,7 @@ xf0r3m@immudex:~$ /usr/bin/time ls
         </p>
         <h2 id="8.7.processprioritization">8.7. Priorytetyzacja procesów</h2>
         <p>
-          W pierwszym rodziale poruszyliśmy temat zarządzania protetami przez
+          W pierwszym rodziale poruszyliśmy temat zarządzania procesami przez
           jądro, dowiedzielśmy się, że każdy proces otrzymuje dostęp do
           procesora na ułamek sekundy. Modułem odpowiedzialnym za to, który
           z procesów uzyska w chwili obecnej dostęp do procesora jest
@@ -5562,10 +5568,10 @@ PID UŻYTK.    PR  NI    WIRT    REZ    WSP S  %CPU  %PAM     CZAS+ KOMENDA
 33705 xf0r3m    20   0   10404   4212   3452 R   0,3   0,1   0:00.36 top 
 </pre>
         <p>
-          Najniższym priortem w tym przypadku jest działanie w czasie
+          Najwyższym priortem w tym przypadku jest działanie w czasie
           rzeczywistym, ale na tym etapie nie będziemy się tym zajmować. Tak
-          więc na chwilę obecną najniższym priortetem jest <strong>0</strong>,
-          a najwyższym <strong>39</strong>.
+          więc na chwilę obecną najwyższym priortetem jest <strong>1</strong>,
+          a najniższym <strong>39</strong>.
         </p>
         <p>
           Do manipulacji priorytetami wartość <strong>nice</strong>
@@ -5574,7 +5580,7 @@ PID UŻYTK.    PR  NI    WIRT    REZ    WSP S  %CPU  %PAM     CZAS+ KOMENDA
           <em>nice</em> służy polecenie <strong>renice</strong>. To polecenie
           możemy wykonać bez uprawnień administrator o ile zmniejszamy
           priorytet (podając wysoką wartość <em>nice</em>, która dodawana jest
-          do domyślnej wartości priortety), zmniejszenie priorytetu
+          do domyślnej wartości priortetu), zmniejszenie priorytetu
           (podanie ujemnej wartości <em>nice</em>) wymaga już uprawnień
           superużytkownika. Polecenie to poza nową wartością <em>nice</em>
           wymaga podania PID-u procesu.
@@ -5630,8 +5636,8 @@ xf0r3m@immudex:~$ uptime
           rdzeni/wątków procesora zamontowanego w naszym komputerze.
         </p>
         <p>
-          Wysokie średnie obiążenia mogą wynikać nie tylko z działania w
-          systemie procesów ale również ze zwględu na pozostałą nie wielką
+          Wysokie średnie obciążenia mogą wynikać nie tylko z działania w
+          systemie procesów ale również ze względu na pozostałą nie wielką
           ilość pamięci dostępnej w systemie. Wówczas jądro może zarządzić
           <strong>proces przeładowania</strong> (ang. <em>trashing</em>), 
           powoduje to szybkie
@@ -5662,7 +5668,7 @@ xf0r3m@immudex:~$ uptime
           (ang. Memory Management Unit), której zadaniem jest zamiana adresów
           pamięci wirtualnej na adresu pamięci fizycznej. Pamięć wirtualna
           jest wykorzystywana przez procesy. Jądro współpracuje
-          z MMU dzieląc obszary procesów na mniejsze strony, trzymając w tym
+          z MMU dzieląc obszary procesów na mniejsze strony, trzymając tym
           samym dane służące MMU do odzworowania adresów w strukturze danych
           zwanej <strong>tabelą stron</strong>. W momencie uzyskania przez
           proces dostępu do pamięci jednostka MMU dzięki tej strukturze może
@@ -5675,7 +5681,7 @@ xf0r3m@immudex:~$ uptime
           <strong>stronicowaniem na żądanie</strong>.
         </p>
         <p>
-          Przydzielenie pamięci nowmy procesowi, możemy zapisać w czterech
+          Przydzielenie pamięci nowemu procesowi, możemy zapisać w czterech
           krokach. 
         </p>
         <ol>
@@ -5777,7 +5783,7 @@ dz bl   swap  wolna  bufor  cache   si   so    bi    bo   in   cs uż sy be io s
         <p>
           Polecenie to przyjmuje jako argument interwał czasowym co ile sekund
           ma wyświetlać nowe statystki. Każda linia to w tym przypadku
-          statustyki pobrane co dwie sekundy. Wyjście polecenia zawiera
+          statystyki pobrane co dwie sekundy. Wyjście polecenia zawiera
           tematyczne kolumny. Pierwszą z nich są procesy, ta kolumna zawiera
           jeszcze dwie inne kolumny wskazujące procesy gotowe do uruchomienia
           (<code class="code-inline">dz</code>) oraz te
@@ -5785,7 +5791,7 @@ dz bl   swap  wolna  bufor  cache   si   so    bi    bo   in   cs uż sy be io s
           kolumnie znajdują się informacje na temat
           pamięci, a w niej informacje o wykorzystaniu przestrzeni wymiany
           (<code class="code-inline">swap</code>), ilości wolnej
-          pamięci, pamięci przez naczonej na bufor oraz pamięci przeznaczonej
+          pamięci, pamięci przeznaczonej na bufor oraz pamięci przeznaczonej
           na pamięć podręczną. W trzeciej kolumnie znajdują się informacje o
           przestrzeni wymiany, ile stron zostało przeniesionych na dysk
           (<code class="code-inline">si</code>) oraz ile stron zostało
@@ -6032,7 +6038,7 @@ Linux 5.10.0-20-amd64 (immudex) 	11.01.2023 	_x86_64_	(4 CPU)
             działały powiedzmy kilka dni temu może być przydatna.</li>
           <li><strong>Przydziały</strong> przy użyciu przydziałów możemy
             nałożyć limity wykorzystania podstawowych zasobów (czas procesora,
-            pamięć operacyjna, czy przestrzeń dyskowa). Niestety jest funkcja
+            pamięć operacyjna, czy przestrzeń dyskowa). Niestety jest to funkcja
             systemu <em>PAM</em> więc podlegją im procesy uruchomione w
             obrębie czegoś co z niego korzysta, na przykład powłoka logowania.
           </li>

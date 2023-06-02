@@ -6043,6 +6043,1984 @@ Linux 5.10.0-20-amd64 (immudex) 	11.01.2023 	_x86_64_	(4 CPU)
             obrębie czegoś co z niego korzysta, na przykład powłoka logowania.
           </li>
         <ul>
+        <h1 id="9.network">9. Sieć</h1>
+        <p>
+          Komputery służą do przetwarzania informacji. Informacje 
+          wykorzystywane do obliczeń mogą pochodzić z różnych źródeł a jednym
+          z nich może być inny system komputerowy. Jednak, aby to miało miejsce
+          komputery muszą się w jakiś sposób komunikować ze sobą. W celach
+          w miarę swobodnej komunikacji między systemami, komputery łączy się
+          w sieci. Połączenie ze sobą dwóch komputerów za pomocą jednego kabla
+          również możemy nazwać się siecią, ponieważ mechanizmy oraz
+          komponenty związane z komunikacją pozozstają takie same jak dla
+          większej ilości komputerów. Zagadnienia łączności sieciowej zostały
+          w taki sposób zdefiniowane, aby były nie zależne od systemu
+          operacyjnego, ale to systemy definiują narzędzia do ich konfiguracji.
+          W tym rodziale zapoznamy się z konfiguracją sieci w Linuksie.
+        </p>
+        <h2 id="9.1.networkbasics">9.1. Podstawy sieci</h2>
+        <p>
+          Dla łatwiejszego zrozumienia sieci, zaczniemy od zapoznania się z
+          nazewnictwem, nie których jej elementów. Nasz komputer podłączony do
+          sieci nazywany jest <strong>hostem</strong>. <em>Hosty</em> często są
+          podłączone do sieci lokalnej określanej jako <strong>LAN</strong>.
+          Sieci tego typu są wszechobecne. Tego typu sieci posiadamy w naszych
+          domach. Sieci tego typu nie przekaraczajem swoim obszarem działania
+          jednego budynku lub grupy pomiesczeń. Składają się one z routera
+          łączącego sieć internet z siecią <em>LAN</em> oraz (zazwyczaj) z 
+          podłączonych do niego hostów. Definicja <em>LAN</em>-u nie ogranicza
+          się tylko do hostów podłączonych za pomocą przewodów, łączność może
+          zostać zapewniona tutaj bezprzewodowo nie ma na tym polu żadnych
+          ograniczeń.
+        </p>
+        <p>
+          Poza możliwością podłączenia sieci <em>LAN</em> do internetu routery
+          klasy <strong>SOHO</strong> (<em>Small Office/Home Office</em>)
+          posiadają wiele usług przez co konfiguracja i obsługa <em>hosta</em>
+          w sieci staje się bezobsługowa. Kilka z tych usług omówimy sobie
+          w kontekscie Linuksa w tym rozdziale.
+        </p>
+        <h3 id="9.1.1.packages">9.1.1. Pakiety</h3>
+        <p>
+          Jeśli żądana strona internetowa ma zostać przekazana do chcącego ją
+          obejrzeć użytkownika, musi zostać specjalnie przygotowana do
+          transmisji sieciowej. Takim przygotowaniem zajmują się poszczególne
+          <strong>warstwy</strong> <strong>stosu TCP/IP</strong>. Dane strony
+          (powiedzmy kod) przechodzi z jednej warstwy do drugiej będąc
+          zamienianym w <strong>pakiety</strong> zrozumiałe dla tych samych 
+          warstw po drugiej
+          stronie transmisjii. Dane są przetwarzane przez poszczególne warstwy
+          stosu aż staną się możliwe do przesłania przez
+          fizyczny nośnik w postaci kabla miedzianego, światłowodu lub 
+          fal radiowych. Pakiety składają się najczęsciej z danych z poprzednej
+          warstwy (zwanego <strong>ładunkiem</strong>) oraz dedykowanego tej
+          warstwie nagłówka. Przetwarzanie danych przez stos <em>TCP/IP</em>
+          nazwywane jest <strong>enkapsulacją</strong> Dwie warstwy stosu 
+          zostaną opisane w tym rodziale.
+          Warstwą najwyższą zajmiemy się następnym rodziale. Natomiast warstwę
+          najniższą omówimy sobie w dużym uogólnieniu.
+        </p>
+        <h3 id="9.1.2.tcpstack">9.1.2. Stos TCP/IP</h3>
+        <p>
+          W stosie <em>TCP/IP</em> możemy wyróżnić cztery różne warstwy:
+        </p>
+        <ol reversed>
+          <li><strong>Warstwa aplikacji</strong> - określa sposób komunikacji
+            między aplikacjami. Wewnątrz tej warstwy rezydują protokoły
+            aplikacji wykorzystywane przez użytkowników takiej np. HTTP.</li>
+          <li><strong>Warstwa transportowa</strong> - określa sposób transmisji
+            danych z warstwy aplikacji. W tej warstwie zanajdują się protokoły
+            takie jak TCP oraz UDP. Tutaj także rezyduje pojęcie 
+            <strong>portu</strong>. Warstwa transportowa będzie jeszcze
+            omawiana w tym materiale.</li>
+          <li><strong>Warstwa internetowa</strong> - określa sposób
+            dostarczania pakietów z hostów źródłowych do docelowych i
+            odwrotnie. W tej warstwie rezyduje protokół IP oraz protokoły
+            odpowiedzialne za trasowanie (znalezienie jak najlepszej drogi z
+            jednego do drugiego hosta). W tej warstwie znajduje się również
+            protokół ICMP odpowiedzialny z diagnozowanie problemów z protokołem
+            IP.</li>
+          <li><strong>Warstwa łącza</strong> - ta warstwa definuje topologię
+            logiczną sieci. Okresla ona metody transmisji danych przez użyty
+            w sieci nośnik fizyczny. W tej warstwie znajdują się takie
+            protokoły jak Ethernet oraz standard 802.11, definiujący podstawy
+            transmisji bezprzewodowej.</li>
+        </ol>
+        <p>
+          Warto wspomnieć o tym, że w dystrybucjach Linuksa trzy z czterch 
+          warstw znajdują się w jądrze systemtu.  Mogą jednak pojawić się
+          wyjątki, wówczas pakiet może trafic do przetworzenia w przestrzeni
+          użytkownika.
+        </p>
+        <h2 id="9.2.networklayer">9.2. Warstwa sieciowa</h2>
+        <p>
+          Jak wiemy warstwa sieciowa definiuje sposoby dostarczenia pakietów
+          z jednego do drugiego hosta. Ze względu na to, iż będziemy zajmować
+          się sieciami internetowymi, skupimy się na jednym protokole tej
+          warstwy na - protokole <strong>IP</strong>. Ten protokół posiada
+          kilka funkcji, jednak dla nas na tym etapie najważniejsza będzie 
+          jedna z nich - <strong>adresacja</strong>. Każdy host aby mógł
+          komunikować się w sieci musi mieć przypisany taki adres. Adres ten
+          składa się (a przynajmniej w wersji 4) z czterech grup liczb z
+          zakresu od 0 do 255 rozdzielonych kropkami. Na przykład adres IP
+          mojego komputera to:
+        </p>
+<pre class="code-block">
+192.168.8.101
+</pre>
+        <p>
+          Ja uzyskałem go w moim systemie za pomocą polecenia:
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ ip address show
+#lub
+xf0r3m@immudex:~$ ip a
+</pre>
+        <p>
+          Drugi zapis jest skrótem pierwszego polecenia. Analizując wynik
+          działania tego polecenia musimy zwrócić uwagę na dwie rzeczy.
+          Pierwszą z nich są "dziwne" nazwy intefejsów sieciowych. Jeśli nikt
+          nie korzystał z dystrybucji Linuksa przed 2016 rokiem to wówczas
+          nie mógł spotkać się z klasycznymi nazwami interfejsów sieciowych. 
+          To jest pierwszy interfejs przewodowy = <em>eth0</em> i tak dalej
+          do <em>ethX</em>. Miało to jedną podstawową zaletę znaną już z
+          dysków. Otóż po którymś uruchomieniu ponownym system mógł wykryć
+          karty sieciowe w innej kolejności niż poprzednio co powodowało
+          problemy ze <strong>statyczną</strong> (zapisana na stałe w systemie)
+          konfiguracją sieciową, ponieważ adresy niezgadzały się z adresacją
+          podpiętej sieci. Obecnie ich nazwy są zaczerpnięte z modułów jądra,
+          które są wykorzystywane do ich obsługi. Nie wszystkie jądra stosują
+          nową nomenklaturę dla interfejsów sieciowych. W dużej mierze są to
+          systemy korzystające z innych programów typu <em>init</em> niż
+          <em>systemd</em>, choć co prawda nie jest to regułą.
+        </p>
+        <h3 id="9.2.1.ipaddresses">9.2.1. Adresacja IP</h3>
+        <p>
+          Inną rzeczą jest sposób prezentowania adresów IP. W linii
+          rozpoczynającej się od słowa <code class="code-inline">inet</code>
+          znajduje się adres IP przedstawioy w ten sposób 
+          <code class="code-inline">192.168.8.101/24</code>. Jest to zapis w
+          notacji <strong>CIDR</strong>. Na zapis ten składa się adres IP
+          oraz <strong>maska podsieci</strong> w postacji ilości bitów. 
+        </p>
+        <p>
+          Maska podsieci jest rodzajem adresu IP, który określa gdzie i jakie
+          liczby z zakresu możemy wpisać do adresów IP hostów. Wyzanczając tym
+          samym pierwszy oraz ostatni adres w sieci (początek i koniec sieci),
+          na podstawie maski podsieci możemy określić ilość hostów w sieci.
+          W jaki sposób się to dzieje? Otóż adres IP jak i maskę możemy
+          przedstawić w postaci binarnej. W na poprzedni przykładzie maska 
+          wynosiła 24 bity. Co to oznacza? Aby sobie to wyjaśnić przedstawimy
+          adres IP w postaci binarnej.
+        </p>
+<pre class="code-block">
+192.168.8.101 = 11000000.10101000.00001000.01100101
+</pre>
+        <p>
+          Z adresem poszło w miarę łatwo, ponieważ znaliśmy konkretne liczby.
+          Jeśli policzymy wszystkie cyferki w postaci binarnej otrzymam wynik
+          32 cyfr, z racji tego że są to wartości binarne bardziej mówimy o
+          bitach - podstawowej jednostce informacji, klasycznemu 0 oraz 1.
+          Adresy IP w wersji 4 (można zapisać to skrótowo IPv4) mają długość
+          32-bitów. Powyżej omawiając maskę podsieci zostało wspomniane, że
+          maska wyznacza początek oraz koniec sieci. Adres IP możemy przyrównać
+          do adresów pocztowych, kolejne jego części mogą wskazywać na miasto,
+          ulicę, budynek oraz na mieszkanie. Adresy pocztowe zawierają
+          zazwyczaj stałe elementy jak nazwy miast, ulic czy numerację budynków.
+          Tak samo jest w przypadku adresów IP. Te stałe elementy wydzielane są
+          maskę podsieci. Mając maskę w postaci ilości bitów z notacji CIDR,
+          możemy zapisać ją w ten sposób.
+        </p>
+<pre class="code-block">
+/24 = 11111111.11111111.11111111.00000000
+/24 = 255.255.255.0
+</pre>
+        <p>
+          Więc zapis maski w notacji CIDR, to nic innego jak ilość bitów o
+          wartości jeden zapisanych od lewej w reprezentacji binarnej adresu
+          IP. No dobrze, ale 32 - 24 = 8. Co zrobić z tymi 8 bitami? Otóż te
+          bity pozostają do dyspozycjo administratora i stanowią przestrzeń
+          adresową. Maskę podsieci można podzieli na dwie częsci. Jedną częścią
+          jest część sieciowa, która wyznacza stałą część adresu IP w adresacji
+          hostów w sieci i ta część adresu IP jest niezmienna podczas adresacji
+          drugą częścią jest część hosta, wskazująca, która część adresu IP
+          będzie zawierać konkretną wartość wskazującą na hosta w sieci. Teraz
+          złożymy ze sobą adres IP oraz maskę zapisaną w postaci dziesiętnej
+          (<code class="code-inline">255.255.255.0</code>).
+        </p> 
+<pre class="code-block">
+Adres IP: 192.168.8.101
+Maska:    255.255.255.0
+</pre>
+        <p>
+          Poszczególne części adresu IP odzielone kropkami noszą nazwe
+          <strong>oktetów</strong>, ponieważ w reprezentacji binarnej każda
+          z częsci posiada 8 bitów. Zatem przyglądając się powyższemu
+          przykładowi możemy dojść do wniosku, że czwarty ostatni oktet będzie
+          przeznaczony na częśc hostów, i tylko on będzie się zmieniać
+          podczas adresacji kolejnych hostów w tej sieci.
+        </p>
+        <p>
+          Warto zaznaczyć że przy niewielkich sieciach, maski mogą pozostać
+          typowe tj. 24, 12 oraz 8 bit. Gdzie niegdzie spotykałem się
+          również z maską 16 bitową. Dającą dwa oktety na częsć przeznaczną
+          dla hostów. W przypadku 12-bitowej maski, nie ma już takiego
+          elegancskiego podziału. Część bitów z drugiego oktetu pozostanie w
+          części sieciowe, a druga część przejdzie do części hosta. Rozpiszmy
+          sobie ten przykład. Załóżmy że nasz komputer jest podłączony do
+          sieci 172.16.X.Y/12 i chcielibyśmy dowiedzieć się jak duża jest 
+          ta podsieć. Za stałą możemy przyjąć, że jeśli na konkretnym oktecie
+          maski występuje 0, to ten sam oktet adresu IP może przyjąć wartości
+          od 0 do 255.
+        </p>
+<pre class="code-block">
+172.16.0.0/12
+10101100.00010000.00000000.00000000 = 172.16.0.0
+11111111.11110000.00000000.00000000 = /12 = 255.240.0.0
+#Część bazowa adresu IP po usunięciu wszystkich bitów z zermi na masce:
+10101100.0001
+
+10101100.00010000.00000000.00000000 = 172.16.0.0
+1.           0000                   = 172.16
+2.           0001                   = 172.17
+3.           0010                   = 172.18
+4.           0011                   = 172.19
+5.           0100                   = 172.20
+6.           0101                   = 172.21
+7.           0110                   = 172.22
+8.           0111                   = 172.23
+9.           1000                   = 172.24
+10.          1001                   = 172.25
+11.          1010                   = 172.26
+12.          1011                   = 172.27
+13.          1100                   = 172.28
+14.          1101                   = 172.29
+15.          1110                   = 172.30
+16.          1111                   = 172.31
+10101100.00011111.00000000.00000000 = 172.31.0.0
+(16 x 256 ^ 2) - 2 = 1048574
+</pre>
+        <p>
+          Myślę że powyższy przykład jasno przedstawia jak wygląda podział
+          klasowych sieci. A co jeśli będziemy chcieli
+          rozszerzyć sieci 192.168.8.0/24? Jeśli założym, że potrzebowalibyśmy
+          kolejne 255 adresów to wówczas wystarczy zabrać z maski 1 bit. Da to
+          maskę 23-bitową a my swojej sieci będziemy mogli zaadresować hosty od
+          192.168.8.1 - 192.168.9.254.
+        </p>
+        <p>
+          Każdy komputer posiadający skonfigurowaną w ten sposób warstwę
+          internetową/sieciową może komunikować się z hostami w sieci.
+          Konfigurowanie warsty sieciowej, jest chyba jedyną czynnością, w
+          w której użytkownik będzie mieć styczność z stosem TCP/IP. Jednak
+          aby móc skomunikować się za pośrednictwem routera z internetem
+          potrzebujemy jeszcze kilku informacji.
+        </p>
+        <h3 id="9.2.2.routingtable">9.2.2. Routowanie oraz tabela routingu</h3>
+        <p>
+          Każdy funkcjonujący w sieci system musi posiadać źródło informacji na
+          temat gdzie należy przesłać pakiety lub jakiego interfejsu do tego
+          celu należy użyć. Czynność ustalenia optymalnej trasy dla pakietu
+          nazywa się <strong>routowaniem</strong>, natomiast informacje na
+          temat jakie sieci są osiągalne i przez jakie interfejsy znajduje się
+          w <strong>tabeli routingu</strong>. W systemie, który nie jest
+          jakmiś routerem, tabela routingu będzie zawierać prawdopodobnie
+          tylko dwa wpisy. Na poniższym przykładzie widnieje zrzut tabeli
+          routingu z mojego komputera.
+        </p>
+<pre class="code-block">
+default via 192.168.8.1 dev enp0s31f6 onlink
+192.168.8.0/24 dev enp0s31f6 proto kernel scope link src 172.16.1.2
+</pre>
+        <p>
+          Pierwsza linia zawiera definicję <strong>bramy domyślnej</strong>,
+          którą zajmiemy się za chwilę. Natomiast druga linia wskazuje jaka
+          sieć jest osiągalna przez jaki interfejs w tym przypadku sieć
+          <code class="code-inline">192.168.8.0/24</code> jest dostępną przez
+          interfejs <code class="code-inline">enp0s31f6</code>. 
+        </p>
+        <p>
+          W systemach, które łączą ze sobą sieci (routerach) wpisów
+          w tabeli <em>routingu</em> takich jak druga linia może być znacznie
+          więcej. Możemym sobie wówczasz zadać pytanie na jakiej podstawie
+          jądro wybiera właściwy port. Otóż jądro przy wyborze będzie bazować
+          na dwóch czynnikach. Pierwszy z nich jest oczywisty i chodzi tu
+          adres częsci sieciowej adresu IP, musi on pasować do adresu sieci
+          inaczej ma się rzecz jeśli jedna z sieci jest na tyle duża, że
+          obejmuje swoim zakresem także adresacje innej sieci. Tutaj wówczas
+          pojawia się drugi czynnik, którym jest długość maski/części sieciowe.
+          Czasami nazywanej także <strong>prefiksem</strong>. Jeśli przy
+          którymś z wpisów adresy sieci zachodzą na siebie, to wówczas dłuższy
+          prefiks (a co za tym idzie, mniejsza sieć) jest wybierana jako
+          trasa dla pakietu.
+        </p>
+        <h3 id="9.2.3.defaultgateway">9.2.3. Brama domyślna</h3>
+        <p>
+          Omawiając tablę <em>routingu</em> wspomnieliśmy o bramie domyślnej.
+          Brama domyślna jest rodzajem wpisu we wspomnianej tabeli a jej
+          zadaniem jest przechowywanie domyślniej trasy, która wybierana jest
+          jeśli żadna inna nie jest odpowiednia. Wynika to z faktu jak jądro
+          wybiera właściwe dla pakietów trasy oraz adresu jaki kryje się za 
+          słowem <code class="code-inline">default</code>  a jest nim
+          <strong>0.0.0.0/0</strong>. Oznacza on wszystkie hosty w adresacji
+          IPv4. Co daje nawiększy możliwy prefiks, dlatego też jeśli komputer
+          nie posiada właściwej dla pakietu trasy to jest ona przekzywana
+          do adresu znajdującego się w tym wpisie.
+        </p>
+        <p>
+          Tym adresem jest przeważnie adresem <em>routera</em>, który łączy 
+          sieć LAN z inną siecią np. siecią usługodawcy internetowego.
+          Zwyczajowo takie urządzenia zwykło się nazywać <em>routerami</em>,
+          mimo ich możliwość to najczęściej wykorzystywaną funkcjonalnością
+          jest automatyczna konfiguracja hostów (protokół DHCP, będzie o nim
+          w tym rozdziale), pamięć podręczna i przekazywanie zapytań systemu
+          DNS (o systemie DNS, też będzie tutaj) oraz translacja adresów
+          (o adresach prywatnych oraz translacji adresów też sobie wspomnimy)
+          oraz przekazywanie pakietów dalej do jednego z routerów usługodawcy,
+          więc równie dobrze urządzenia tego typu można nazwać bramkami.
+        </p>
+        <h2 id="9.3.ipv6">9.3. Adres IPv6</h2>
+        <p>
+          Adres IPv4 posiada długość 32 bitów, co daje nam możliwość
+          zaadresowania 4,3 miliarda hostów w Internecie. Co jest o wiele
+          mniejszym wynikem niż ilość ludzi na świecie, biorąc pod uwagę
+          rozwój przedsiębiorstw oraz samego internetu wymaga od organizacji
+          czuwających nad jego standaryzacją rozwiązań, które są w stani
+          sprostać wymaganiom czasów obecnych oraz przyszłości. Jedym z takich
+          rozwiązań są prace na rozwojem oraz wdrożeniem nowego standardu
+          jakim <strong>protokół IP w wersji 6</strong>.
+        </p>
+        <p>
+          Adres IP w wersji 6, ma długość 128-bitów, co czyni go 4 razy
+          dłuższym od adresu IPv4. Adres ten nie przypomina adresu z
+          poprzedniej wersji. Zamiast cyfr dziesiętnych użytko cyfr systemu 
+          heksadecymalnego, a kropki zastąponio dwukropkami. Poniżej znajduje
+          się adres IPv6 komputera na którym pisze ten tekst.
+        </p>
+<pre class="code-block">
+fe80::921b:eff:fe6a:717d/64
+</pre>
+        <p>
+          Cyfry heksadecymalne są reprezentowane przez znaki: 0-9 oraz a-f.
+          Każda grupa cyfr jest odzielona dwukropkiem, a każda z nich posiada
+          po 4 znaki. Jeśli zero jest napoczątku grupy, to można je pominąć,
+          jeszcze inną zależność jak możemy zauważyć jest to, jeśli grupa
+          składa się z samych zero to można ją pominąć, wówczas w zapisie
+          adresu widnieją dwa dwukropki obok siebie. Nie tyczy się to tylko
+          jednej grupy, ale jeśli grupy zer następują po sobie to rownież
+          można je pomniąć. Zapis natomiast nie ulegnie zmianie, jesli będzie
+          więcej niż jedna grupa zer do pominięcia.
+        </p>
+        <p>
+          Jak możemy zauważyć adresy IPv6 również możemy zapisać w notacji
+          CIDR. Tutaj maska wynosi 64-bit, co oznacza ze połowa adresu zajmuje
+          prefiks. Natomiast druga połowa jest już częścią hosta.
+        </p>
+        <p>
+          Adresy IPv6 możemym podzielić na globalne, która mogą być osiągalne
+          z internetu lub lokalne, które są przypisywane automatycznie przez
+          systemy z obsługą IPv6. Każdy z tych typów posiada swój prefix i dla
+          adresów globalnych (znanych także jako globalny adres hosta) prefix 
+          wynosi <em>2000::/3</em>, przez co globalny adres hosta zaczyna się
+          od 2 lub od 3 (ze zwględu na prefix, 3 pierwsze bity pierwszej cyfry
+          są stałe (001), a zatem do dyspozycji mamym tylko jeden bit, którego
+          zmiana nie dam nam innych wartości jak 2 lub 3). Pozostałe zera służa
+          jako dopełnienie do zapisu. Z kolei prefiksem dla adresów lokalnych
+          jest <em>fe80::/10</em>. W przypadku adresu łącza lokalnego resztę
+          częsci sieciowej adresu wypełniają 54-bity zer. Na podstawie
+          przedstawionych tutaj prefiksów możemy ustalić z jakiego rodzaju
+          adresem mamy doczynienia.
+        </p>
+        <h3 id="9.3.1.showipv6">9.3.1. Wyświetletnie adresów IPv6</h3>
+        <p>
+          Do wyświetlenia adresów IPv6 może posłużyć nam to samo polecenie,
+          z którego korzystaliśmy do wyświetlenia adres IP w wersji 4.
+          Mianowicie polecenie <code class="code-inline">ip</code>, po za
+          samymi podpoleceniami tego polecenia dla adresów IPv6 podaje się
+          także opcję <strong>-6</strong>.
+        </p>
+<pre class="code-block">
+$ ip -6 addr show
+</pre>
+        <p>
+          Podobnie rzecz ma się adresami IP tras, tutaj wykorzystuje się
+          tę samą opcją natomiast inne podpolecenia.
+        </p>
+<pre class="code-block">
+$ ip -6 route show
+</pre>
+        <h2 id="9.4.basictoolkiticmpanddns">9.4. Podstawowe narzędzia ICMP oraz DNS</h2>
+        <p>
+          W tym podrozdziale omówimy sobie podstawowe narzędzia wykorzystywane
+          przy połączeniach sieciowych. Są one wykorzystywane do ustalania
+          adresów IP oraz sprawdzania dostępności hosta.
+        </p>
+        <h3 id="9.4.1.ping">9.4.1. Narzędzie ping</h3>
+        <p>
+          Protokół ICMP jest protokołem diagostycznym dla protokołu IP. Do jego
+          podstawowych zadań należy sprawdzenie dotępności hosta w sieci. Do
+          tego celu wykorzystujemy narzędzie <strong>ping</strong>. To
+          niepozorne narzędzie wysyła specjalny pakiet z żądaniem odesłania
+          pakietu z odpowiedzią. W przypadku tego narzędzia istotna jest
+          sama odpowiedź ale poza nią zwracanych jest kilka statystyk, które
+          pozwolają na przykład na określenie jakość połączenia oraz czasem
+          stanu samej sieci (gdy odpowiedzi z bramy domyślnej przychodzą po
+          ok. 1 sekundzie).
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ ping wp.pl
+PING wp.pl (212.77.98.9) 56(84) bytes of data.
+64 bytes from www.wp.pl (212.77.98.9): icmp_seq=1 ttl=54 time=11.2 ms
+64 bytes from www.wp.pl (212.77.98.9): icmp_seq=2 ttl=54 time=11.0 ms
+64 bytes from www.wp.pl (212.77.98.9): icmp_seq=3 ttl=54 time=14.1 ms
+^C
+--- wp.pl ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 11.049/12.096/14.062/1.391 ms
+</pre>
+        <p>
+          Na 56-bajtowe żądanie <em>echa</em> wysłane z naszego komputera
+          host docelowy odpowiada 64-bajtowym pakietem. Jego zawartość nie
+          jest istotna. Dla nas ważne są pola 
+          <code class="code-inline">icmp_seq<code> oraz
+          <code class="code-inline">time</code>, gdyż swiadczą on one jakości
+          połączenia pomiędzy naszym komputerem, a hostem docelowym. 
+          <code class="code-inline">icmp_seq</code> wskazuje kolejności
+          otrzymywanych odpowiedzi. Jeśli jakiegoś pakietu brakuje, oznacza to
+          że został on zgubiony podczas transmisji. Zagubione pakiety
+          zdarzają się gdy korzystamy z połączenia bezprzewowego przy słabym
+          zasięgu. Drugą ważnym polem jest czas wyrażony w kolumnie
+          <code class="code-inline">time</code>. Czas poniżej 30 ms oznacza
+          że mamy bardzo dobre połącznie z hostem. Czas w sieci lokalnej
+          oscyluje poniżej 1 ms. Natomiast jeśli jest powyżej jednej sekundy
+          (1000 ms) lub w jej granicach oznacza, że gdzieś w sieci może
+          znajdować się problem. Polecenie <em>ping</em> w dystrybucjach
+          Linuksa ale i ogólnie w implementacji Uniksowej działa do momentu,
+          aż nie przerwiemy mu działania. Na sam koniec zostanie wyświetlona
+          statystyka zawierająca informacje o tym ile pakietów zostało
+          wysłanych ile zostało odebranych, jaki procent pakietów został
+          utracony. W drugiej linii podsumowania znajduje się podstawowe
+          statystki związane z odpowiedzia na żądania.
+        </p>
+        <p>
+          Ze względów bezpieczeństwa nie wszystkie hosty (z właszcza w
+          internecie są w stanie odpowiedzieć na żądania narzędzia 
+          <em>ping</em>. Pakiety mogą zostać do nich wysłane, ale jest wielce
+          prawdopodobne, że zostaną zablokowane po drodze. Takie zachowanie
+          jest przecidziałaniem przeciwko atakowi odmowy usługi, który opiera
+          się na przesłaniu wielu żądań (<em>echo request</em>, typ pakietu
+          nazywa się właśnie w ten sposób), tak aby host nie był w stanie
+          obsłużyć żadnego innego połączenia sieciowego.
+        </p>
+        <p>
+          Istnieje możliwość wykorzystania pakietów <em>echo request</em> 
+          zarówno z protokołu <em>IPv4</em> oraz <em>IPv6</em>. Wówczas należy
+          wskazać to za pomocą opcji <em>-4</em> lub <em>-6</em> w poleceniu
+          <em>ping</em>.
+        </p>
+        <h3 id="9.4.3.host">9.4.3. Narzędzie host</h3>
+        <p>
+          Narzędzie <strong>host</strong> jest najprostszym sposobem na
+          skorzystanie z systemu DNS. 
+        </p>
+        <p>
+          System DNS pozwala on zapamiętać ludziom typowy adres strony, bez
+          potrzeby znajomości jej adresu IP, aby zrealizować to połączenie.
+          Jeśli wpiszemy adres strony do przeglądarki, zapyta ona system DNS o
+          jej adres IP i ten udzieli jej takiej odpowiedzi. Oczywiście w
+          skrócie rzecz ujmując. Czasami możemy znaleźć się w odwrotnej
+          sytuacji, kiedy będziemy znać adres IP, a chcielibyśmy się
+          dowiedzieć do jakiej organizacji jest on przypisany. Jednak ta
+          funkcjonalność nie jest kluczowa i rzadko bywa dobrze skonfigurowana,
+          nie mniej jednak warto spróbować. 
+        </p>
+        <p>
+          Aby skorzystać z narzędzia <em>host</em>, podajemy nazwę lub adres
+          IP jako argument polecenia.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ host morketsmerke.org
+morketsmerke.org has address 213.186.33.5
+morketsmerke.org mail is handled by 10 mx3.mail.ovh.net.
+morketsmerke.org mail is handled by 1 mx4.mail.ovh.net.
+
+xf0r3m@immudex:~$ host 195.164.150.90
+Host 90.150.164.195.in-addr.arpa. not found: 3(NXDOMAIN)
+
+xf0r3m@immudex:~$ host 213.186.33.5
+5.33.186.213.in-addr.arpa domain name pointer redirect.ovh.net.
+</pre>
+        <p>
+          Na powyższym przykładzie widzimy trzy wywołania polecenia
+          <code class="code-inline">host</code> jedno z nich klasyczne
+          pytające o adres IP i dwa pytające o nazwę domenową, zwróćmy uwagę
+          na to w jaki sposób zostały zapisane adresy IP. Nie będę tutaj
+          przytaczać więcej informacji o sposobie działania systemu DNS, gdyż
+          wykraczają one ramy tego materiału. Do systemu DNS wrócimy podczas
+          konfiguracji interfejsu hosta.
+        </p>
+        <h2 id="9.5.ethernet">9.5. Warstwa fizyczna</h2>
+        <p>
+          Wiemy że sieć internetowa oparta jest o oprogramowanie. Nie miej
+          jednak gdzieś zagadnienia sieciowe muszą stykać się ze swiatem
+          realnym, z tym że komputery koniec, końców są ze sobą połączone
+          za pomocą specjalnych przewodów oraz z lub bez pośrednictwa
+          dodatkowych urządzeń. Ty mi elementami zajmuje się warstwa
+          fizyczna. Standardów implementacji warstwy fizycznej (tego w jaki
+          sposób informacje przesyłane są przez media (przewody lub fale
+          radiowe)) jest wiele, jednak wykorzystywaną po dzień dzisiejszy oraz
+          najpowszechniejszą z nich jest <strong>Ethernet</strong>. Sprzęt
+          sieciowy, mimo tej samej implementacji będzie różnić się od siebie
+          ze względu na użyte medium transmisji, ale mają one wiele cech
+          wspólnych. Oto kilka z nich:
+        </p>
+        <ul>
+          <li>Element identyfikującym w sieciach <em>Ethernet</em> jest 
+            adres sprzetowy także adres <strong>MAC</strong>. Adresy MAC
+            są niezależny od adresów progrmowych i aby transmisja w sieci
+            <em>Ethernet</em> doszła do skutku to musi on być unikatowy w
+            obrębie sieci lokalnej (i zazwyczaj tak jest, w sieci lokalnej,
+            jednak w sieciach rozległych, już może tak nie być. Obecnie
+            <em>losowy</em> MAC adres interfejsu sieciowego stosowany może
+            aby podnieść poziom prywatności w sieciah publicznych
+	          (ogólnodostępne sieci bezprzewodowe)). Adres sprzęty składa się
+            z 6 grup po 2 cyfry systemu heksadecymalnego oddzielonego
+            dwukropkami. Całość ma łącznie 48-bitów.</li>
+          <li>W sieciach Ethernet dane wysłane są w ramkach. Ramki są 
+            opatrzone adresami MAC hostów biorących udział w wymianie
+            danych</li>
+        </ul>
+        <p>
+          Host mając nawet dwa interfejsy sieciowe podłączone do różnych
+          sieci <em>Ethernet</em> nie może przekazać pakietu z jednej do
+          drugiej sieci, chyba skonfigurowano na nim most. Więc jeśli dane
+          mają zostać wysłane do internetu, potrzebny jest udział warstw
+          wyższych, albowiem każda sieć fizyczna jest podsiecią sieci
+          warstwy wyższej, zatem routem może odebrać ramkę, wyodrębnić jej
+          dane a następnie przepakować do nowej ramki i wysłać dalej
+          w świat.
+        </p>
+        <h2 id="9.6.kernelnetworkinterfaces">9.6. Sieciowe interfejsy jądra</h2>
+        <p>
+          Jądro samodzielnie odróżnia warstwę fizyczną od sieciowej, przez co
+          musi zapewniać im standard w komunikacji. Czymś takim właśnie jest
+          <strong>interfejs sieciowy</strong>. W trakcie jego konfiguracji
+          przypisane parametry warstwy internetowej są łączone z parametrami
+          urządzenia. Nazwy interfejsów opierają się rodzaj sprzętu na którym
+          bazują. Np. <em>enp0s4</em>, oznacza zazwyczaj kartę sieciową
+          podłączoną do magistrali PCI. Nazwy tego typu są określane
+          nazwami przewidywalnymi i nie zmieniają się one ponownym uruchomieniu
+          systemu. Jest to jednak prowadzone głównie program typu <em>init</em>
+          - <em>systemd</em>. Aby wyświetlić interfejsy wydajemy polecenie:
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ ip a
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: enp4s0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc mq state UP group default qlen 1000
+    link/ether 90:1b:0e:6a:71:7d brd ff:ff:ff:ff:ff:ff
+    inet 172.16.1.2/16 brd 172.16.255.255 scope global enp4s0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::921b:eff:fe6a:717d/64 scope link
+       valid_lft forever preferred_lft forever
+3: enp0s25: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 90:1b:0e:87:3c:43 brd ff:ff:ff:ff:ff:ff
+</pre>
+      <p>
+        Polecenie <code class="code-inline">ip a</code>, jest poleceniem
+        skrótowym dla polecenia <em>ip address show</em>.
+        Interfejsy sieciowe są numerowane kolejno do numer 2, numer 1
+        zarezerowany jest dla specjalnego interfejsu systemowego - zwanego
+        pętlą zwrotną. Każdy działający interfejs w linii z numerem oraz
+        nazwą posiada flagę <code class="code-inline">UP</code>. Poza
+        informacjami warstwy sieciowej możmy również zauważyć informacje z
+        warstwy fizycznej takie jak adres MAC. Polecenie
+        <code class="code-inline">ip a</code>, głównie skupia się na warstwie
+        sieciowej. Jeśli chcielibyś poznać więcej szczegółów związanych z
+        warstwą fizyczną, wówczas należało by użyć polecenia takiego jak
+        <strong>ethtool</strong>.
+      </p>
+      <h2 id="9.7.interfaceconfig">9.7. Konfiguracja interfejsu sieciowego</h2>
+      <p>
+        Do tej pory omawialiśmy kwestie sieciowe wyłącznie teoretycznie, a to
+        przeanalizowaliśmy sobie wynik jednego czy drugiego polecenia, ale
+        teraz zajmiemy konfiguracją interfejsu sieciowego. Aby użytkownik
+        dowolnej dystrybucji mógł połączyć się z internetem musimy wykonać
+        cztery poniższe czynności:
+      </p>
+      <ol>
+        <li>Zapewnienie obecności sterownika karty sieciowej w jądrze. Jeśli
+          sterownika będzie brakować, to nawet nieskonfigurowany nie zostanie
+          wyświetlony po wydaniu polecenia <em>ip a</em>.</li>
+        <li>Dodatkowa konfiguracja warstwy fizycznej, na przykład poprzez
+          podanie nazwy sieci oraz hasła (głównie sieci bezprzewodowe).</li>
+        <li>Ustawienie dla interfejsu adresu IP oraz maski podsieci (dzięki
+          temu warstwy będą mogły się ze sobą komunikować).</li>
+        <li>Ustawienie wszystkich wymaganych tras w tym trasy domyślnej.</li>
+      </ol>
+      <p>
+        Wiedząc teraz co musimy zrobić. Przejdziemy do wykonania tych
+        czynności w systemie.
+      </p>
+      <h3 id="9.7.1.manualifconf">9.7.1. Ręczna konfiguracja interfejsu</h3>
+      <p>
+        Reczna konfiguracja interfejsów sieciowych rzadko jest wymagana, chyba
+        eksperymentujemy z systemem lub próbujemy skonfigurować urządzenie,
+        które samo na interfejsu nie skonfiguruje. Nie mniej jednak, a
+        własnego doświadczenia wiem, że warto posiadać taką wiedzę. Więc tak
+        załóżmy, że posiadamy sterowniki do karty sieciowej (interfejsu), którą
+        chcemy skonfigurować oraz łączymy się z siecią <em>Ethernet</em> za 
+        pomocą kabla miedzianego, dlatego też punkt nr. 2 też możemy pominąć.
+        Jeśli tak rzeczywiście jest to wówczas konfiguracja interfejsu 
+        sprowadza się do dwóch poleceń.
+      </p>
+      <p>
+        Aby skonfigurować ręcznie interfejs musimy musimy użyć polecenia
+        <strong>ip</strong> wraz z podpoleceniem <strong>address</strong> lub
+        <em>addr</em>, następnie podać komendę <em>add</em> po niej adres IP
+        wraz z maską w notacji CIDR do tego opcję <em>dev</em> po której
+        należy wskazać nazwę interfejsu jaki chcemy skonfigurować.
+      </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo ip address add 172.16.1.1/16 dev enp4s0
+</pre>
+      <p>
+        Wykorzystując powyższe polecenie mamy pierwszą część za sobą.
+        Pamiętajmy jednak aby zmienić dane.
+      </p>
+      <p>
+        Drugą czynnością jest dodanie tras. Do połączenia z internetem
+        potrzebna będzie na pewno brama domyślna. Jeśli będziemy potrzebować
+        dodatkowych tras wystarczy zmodyfikować poniższe polecenie: 
+      </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo ip route add default via 172.16.0.1 dev enp4s0
+</pre>
+      <p>
+        Za trasy odpowiada podpolecenie <code class="code-inline">route</code>,
+        komenda <code class="code-inline">add</code> odpowiada za dodawanie
+        tras. Następnie podawana jest sieć jaka ma być osiągalna. Po opcji
+        <code class="code-inline">via</code> podawny jest adres IP na jaki
+        mają być kierowane pakiety do docelowej sieci, tym adresm może być
+        adres routera sieci lokalnej lub nawet jeden z interfejsów
+        zainstalowanych na tym samym komputerze, na koniec po opcji
+        <code class="code-inline">dev</code> podajemy interfejs, przez który
+        adres IP podany po opcji <code class="code-inline">via</code> jest
+        osiągalny.
+      </p>
+      <p>
+        Jeśli trasa jest nam nie potrzebna lub pomyliliśmy się podczas jej
+        dodawnia, to taką trasę bez obaw można usunać, przy użyciu komendy
+        <em>del</em> podpolecenia <em>route</em>. Komenda przyjmuje adres
+        sieci jako argument.
+      </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo ip route del 192.168.60.0/24
+</pre>
+      <h3 id="9.8.networkifacebootconfig">9.8. Konfiguracja interfejsów sieciowych podczas rozruchu</h3>
+      <p>
+        Próba konfiguracji interfejsu podczas rozruchu mogła by wyglądać w 
+        taki sposób, że gdzieś podczas sekwencji rozruchowej program typu
+        <em>init</em> (lub jeden z jego skryptów) mógłby wydać polecenia
+        <em>ip</em> (takie jak wkorzystywaliśmy do ręcznej konfiguracji) lub
+        innego narzędzia. Pytanie tylko jakiego? A odpowiedzi tyle co
+        wiodących dystrybucji.
+      </p>
+      <p>
+        Do tej pory próbowano ustandaryzować ten proces za pomocą poleceń
+        <em>ifup</em> oraz <em>ifdown</em>. Z niezbyt zadawalającym skutkiem
+        ze względu na różne implementacje tych narzędzi przez osoby
+        zajmujące się rozwojem dystrybucji, czego następstwem różnice w
+        plikach konfiguracyjnych. Kolejną problematyczną rzeczą jest fakt
+        iż wiele elementów sieciowych wykorzystywanych do konfiguracji
+        znajduje się różnych miescach w systemie i odpowiadają za nie inne
+        komponenty. W Linuksie panuje również zasada aby nie rozpowszechniać
+        plików konfiguracyjnych w przypadku wielu osobnych narzędzi czy
+        bibliotek, ponieważ zmiany wprowadzone w jednym narzędziu mogą
+        spowodować, że inne przestaną działać.
+      </p>
+      <p>
+        Więc tak chcąc skonfigurować interfejsy sieciowe podczas rozruchu
+        musimy skorzystać z jednego z dostępnych managerów lub dostępnewgo w
+        systemie kompnentu. W Debianie, interfejsy sieciowe są zarządzane
+        przez dodatek <strong>ifupdown</strong>, którego składową jest plik
+        <em>/etc/network/interfaces</em>. Na Ubuntu system <em>Netplan</em>,
+        od najnowszysch wersji dystrybucji opartych o Red Hat, korzysta się
+        głównie z managerów. Natomiast managerem godnym uwagi jest
+        <strong>NetworkManager</strong> i to nim się skupimy podczas ich
+        omawiania. Aby ten podrozdział wniósł coś pożytecznego po kilkoma
+        teoretycznymi dywagacjami omówimy sobie konfigrację interfejsów na
+        przykładzie dystrybucji Debian.
+      </p>
+<pre class="code-block">
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto enp4s0
+iface enp4s0 inet static
+        address 172.16.1.2
+        netmask 255.255.0.0
+        gateway 172.16.0.1
+        dns-nameservers 172.16.0.1
+</pre>
+      <p>
+        Na powyższym przykładzie mamy dwie deklaracje interfejsów sieciowych.
+        Pierwszym z nich jest interfejs pętli zwrotnej. Jego rola w systemie
+        jeszcze zostanie omówiona. Nie miej jednak jego deklaracja zawiera
+        słowo <code class="code-inline">auto</code>, która powoduje załączenie
+        interfejsu podczas startu systemu. Po linii ze słowem auto następuje
+        definicja interfejsu (linia ze słowem
+        <code class="code-inline">iface</code>) w niej podawana jest nazwa
+        interfejsu (<code class="code-inline">enp4s0</code>), stos protokółów
+        (<code class="code-inline">inet</code>, co oznacza IPv4. Mogą być też
+        inne). Następnie podawana jest metoda konfiguracji interfejsu.
+        Najczęściej wykorzystywanymi są <code class="code-inline">static</code>
+        oraz <em>dhcp</em>, w przypadku pętli zwrotnej w tym miejscu
+        używane jest słowo <code class="code-inline">loopback</code>. W
+        przypadku drugiego (właściwego) interfejsu adres przypisywany będzie
+        statycznie. To tak samo jakbyśmy przypisywali go ręcznie, jest to
+        czynność automatyczna wykonywana podczas rozruchu. Po uruchomieniu
+        ponownym komputera interfejs powinien zostać automatycznie podniesiony
+        i skonfigurowany przy użyciu podanych w pliku parametrów. 
+      </p>
+      <p>
+        Obecnie systemy służą użytkownikom końcowym, którzy zapewne mają
+        uprawnienia administratora, ale nie posiadają odpowiedniej wiedzy aby
+        móc konfigurować odpowiednie warstwy. Proste rozwiązania, takie jak
+        to opisane powyżej daje oczywiście taką mozliwośc, jednak nie jest
+        ono zbyt przystępne użytkownika, dlatego też w dystrybucjach takich
+        Red Hat, stosowane są managery, których zadaniem jest ułatwienie
+        konfiguracji.
+      </p>
+      <h2 id="9.9.networkconfigmanagers">9.9. Menedżery konfiguracji sieciowe</h2>
+      <p>
+        Dla dystrybucji Linuksa dostępnych jest wiele programów będących
+        menedżerami konfiguracji sieciowe. Część z nich przeznaczona jest 
+        systemy wbudowane. Dlatego godnymi uwagi pozostają tylko dwa. Jeden
+        będący częścią programu typu <em>init</em> <strong>systemd-networkd</strong>
+        nadaje się on wykonania podstawowej konfiguracji sieciowej. Jest
+        wystarczający dla serwerów, ale nie dla użytkonika końcowego. Wówczas
+        pozostaje jeden - <strong>NetworkManager</strong> i to na nim się
+        skupimy. 
+      </p>
+      <p>
+        <strong>NetworkManager</strong> jest demonem takim samym jak pozostałe
+        więc jego zadaniem jest nasłuchiwanie zdarzeń generowanych zarówno
+        przez system jak i przez samych użytkowników, dodatkowo 
+        <em>NetworkManager</em> zajmuje się konfiguracją sieciową zgodnie z
+        założonymi regułami. <em>NetworkManager</em> operuje na informacjach
+        o dostępnych urządzenia uzyskanch od jądra oraz na 
+        <strong>połączeniach</strong>, które są wskazaniem konkretnych urządzeń
+        wraz z parametrami warstw sieciowych. Konfigurując sieć w danej
+        dystrybucji, <em>NetworkManager</em> korzysta z określonego dodatku
+        aby dostoswać konfigurację do standardu używanego przez dystrybucję,
+        nie narzucacjąc przy tym swoich rozwiązań.
+      </p>
+      <p>
+        W momencie uruchomienia <em>NetworkManager</em>, zbiera informacje o
+        dostępnych urządzeniach sieciowych, sprawdza listę połączeń i
+        podejmuje decyzję o próbie połączenia. Proces decyzyjny na podstawie,
+        które menedżer decyduje, z którą z sieci chce się połączyć można
+        rozpisać w trzech krokach.
+      </p>
+      <ol>
+        <li>Jeśli dostępne jest połaczenie kablowe. To ono jest preferowane
+          jako pierwsze.</li>
+        <li>Jeśli połączenie kablowe nie jest dostępne, wówczas jeśli w
+          systemie dostępny jest interfejs bezprzewodowy to skanowane jest
+          otoczenie podzwględem występowania sieci bezprzewodowych. Jesli
+          dostępne są sieci, z którymi system już kiedyś nawiązał połączenia.
+          To jest ono nawiązywane ponownie. Jeśli to dostępna jest lista
+          sieci bezprzewodowych dystępujących na danym terenie.</li>
+        <li>Jeśli dostępne są więcej niż dwie sieci, wówczas wybierana jest
+          z którą łączono się jako z <em>ostatnią</em>.</li>
+      </ol>
+      <p>
+        Połączenie sieciowe zwłaszacza wśród sieci bezprzewodowych utrzymywane
+        jest do momentu uzyskanie połączenia o lepszych parametrach. Na
+        przykład, wpięcie kabla.
+      </p>
+      <h3 id="9.9.1.interactionwithnm">9.9.1. Interakcja z NetworkManager</h3>
+      <p>
+        Kontrolować <em>NetworkManager</em> możemy za pomocą apletu,
+        przygotowanego dla środowiska graficznego. Jednak w tym materiale
+        skupiamy się wyłącznie na rozwiązaniach opartych o wiersz polecenia.
+        Więc przejdziemy odrazu do tego typu interakcji z tym narzędziem.
+        Do kontrolowania <em>NetworkManager</em> z poziomu powłoki, służy
+        narzędzie <em>nmcli</em>. Za pomocą podpoleceń tego narzędzia możemy
+        kontrolować połączenia sieciowe zarządzane przez omawiany menadżer.
+      </p>
+      <p>
+        Innym narzędziem związanym z <em>NetworkManager</em>-em, jest polecenie
+        <strong>nm-online</strong>, które zwraca jedynie infomacje w zależności
+        od tego czy posiadamy aktywne połączenie czy też nie.
+      </p>
+      <p>
+        Poniżej znajduje się przykładowe uruchomienie, <em>nmcli</em> bez
+        żadnych podpoleceń. 
+      </p>
+<pre class="code-block">
+
+</pre>
+      <p>
+        Polecenie to agreguje informacje zwracane przez wiele poznanych do
+        tej pory poleceń, takich jak <em>ip addr</em> lub <em>ip route show</em>.
+        Dodatkowo wyświetlane są informacje o konfiguracji systemu DNS. 
+      </p>
+      <p>
+        Dla przykładu możemy utworzyć ręczną konfigurację dla interfejsu tym
+        razem wykorzystując do tego <em>NetworkManager</em>.
+      <p>
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo nmcli con add con-name my-connection ifname enp4s0 \
+type ethernet ipv4 192.168.8.150/24 gw4 192.168.8.1
+</pre>
+      <p>
+        Efekt działania tego polecenia możemy sprawdzić za pomocą polecenia
+        <em>ip a</em> lub za pomocą <em>nmcli</em> 
+      </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ ip a
+
+xf0r3m@immudex:~$ nmcli -p con show my-connection
+</pre>
+      <p>
+        Opcja <code class="code-inline">-p</code> formatuje wynik polecenia,
+        aby był on bardziej czytelny dla człowieka. Więcej przykładowych
+        poleceń wraz z opisami znajduje się na stronie podręcznika:
+        <em>man 7 nmcli-examples</em>. <em>NetworkManager</em> to naprawdę
+        rozbudowane narzędzie więc warto mieć z tyłu głowy to polecenie,
+        chociażby dlatego, że znajduje się tam opis sposobu łączność z siecią
+        bezprzewodową z poziomu wiersza poleceń. Sposób dużo bardziej
+        przystępny niż samodzielne skanowanie i obcowanie z pakietem
+        <em>wpa_supplicant</em>, gdzie często demon tego narzędzia może być
+        już użwany przez jeden z komponentów systemu.
+      </p>
+      <h3 id="9.9.2.nmconfiguration">9.9.2. Konfiguracja NetworkManager</h3>
+      <p>
+        Konfiguracja <em>NetworkManagera</em> wymaga edycji pliku
+        <em>/etc/NetworkManager/NetworkManager.conf</em>. Plik jest formatu
+        <em>XDG</em> lub wśród osób zaznajomionych z systemami od Microsoftu
+        formatu <em>.ini</em>. Rzadko będzie potrzeba zmiany czego kolwiek w
+        tym pliku. Nie mniej jednak jest jedna funkcją warta omówienia związana
+        z konfiguracją tego menedżera - <strong>wyłączenie zarządania interfejsu</strong>
+        przez <em>NetworkManager</em>. Interfejs pętli zwrotnej jest izolowany
+        od tego narzędzie i jeśli uznamy, że inny/inne interfejsy w systemie
+        też powinny to możemy zadeklarować w tym pliku. W sekcji
+        <em>[keyfile]</em> (jeśli nie ma takowej, to należy dopisać). Plik
+        ma format <em>XDG</em> więc opcje zapiswane są w postaci 
+        <em>klucz=wartość</em>. Tak więc do klucza <em>unmanaged-devices</em>
+        przypisujemy adres MAC interfejsów, które mają być wyłączone z spod 
+        zarządzania przez <em>NetworkManager</em> w taki sposób jak przedstawio
+        to poniżej.
+<pre class="code-block">
+...
+[keyfile]
+unmanaged-devices=mac:08:00:27:3d:1b:9c
+</pre>
+      </p>
+      <p>
+        Inną kwestią związaną z konfiguracją omawianego w tym rodziale
+        menedżera jest propagacja informacji o zmianie status interfejsu
+        sieciowego. Niektóre demony do swojego poprawnego działania muszą
+        otrzymać takową informację o tego typu sytuacji, aby zakończyć lub
+        rozpocząć nasłuchiwanie na danym interfejsie. <em>NetworkManager</em>
+        realizuje to za pomoca <strong>sieciowych skrytów sterujących</strong>
+        znajdujących się w katalogu <em>/etc/NetworkManager/dispatcher.d</em>.
+        Jeśli status interfejsu sieciowego ulegnie zmianie menedżer uruchomi
+        wszystko co zostało umieszczone w powyższym katalogu z odpowiednim
+        dla stanu interfejsu (<em>up</em> lub <em>down</em>). Na przykład
+        w dystrybucjach opartych na Debianie (w tym i Ubuntu) istnieje plik
+        <em>01-ifupdown</em>, który na podstawie otrzymanego komunikatu
+        zdrzenia (jeśli przyjrzeć się plikowi, to dowiemy się że to nie tylko
+        <em>up</em> oraz <em>down</em>) uruchomi wszystko znajduje się w
+        odpowiednich podkatalogach w katalogu <em>/etc/network</em>.
+      <p>
+      <p>
+        Dla nas zarówno konfiguracja <em>NetworkManager</em> może być mało
+        istotna, podobnie jest ze skryptami rozsyłającymi. Nie mniej jednak
+        może się kiedyś zdarzyć, że będzię potrzeba zmiany czegoś w skrypcie
+        tego typu lub wyłączenie interfejsu z menedżera.
+      </p>
+      <h2 id="9.10.nameresolution">9.10. Rozwiazywanie nazw hostów.</h2>
+      <p>
+        Jeśli chcemy nawiązać jakie kolwiek połączenie sieciowe musimy podać
+        adres komputera, z którym chcemy to połączenie nawiązać. Ludzie
+        rzadko posługują się adresami IP, chyba że są to specjaliści lub 
+        entuzajści nauk komputerowych i pracują oni w lokalnych środowiskach.
+        Takie adresy trudno zapamiętąć, więc niezbędne jest zapewnienie
+        systemu/usługi, która zmieni adresu domenowe 
+        (np. <em>morketsmerke.org</em>) na adres IP. Z system DNS mieliśmy już
+        styczność, w momencie gdy omawialiśmy protokół ICMP. Konfiguracja
+        adresów systemu DNS jest tak naprawdę czwartą ostatnią wartością
+        konfigurowaną na interfejsie sieciowym, aby mógł on nawiązać
+        połączenie z internetem. Jest to o tyle ciekawe, że system DNS należy
+        do warstwy aplikacji. Większość aplikacji sieciowych w Linuksie ma
+        możliwość odpytania systemu DNS o adres IP, dlatego możemy zarówno
+        użyć adresów IP lub nazw domenowych. Uzyskiwania takiego adresu od
+        DNS zwykle przebiega w następujący sposób:
+      </p>
+       <ol>
+          <li>Przy uzyciu systemowej bibilioteki współużytkowanej aplikacja
+            wywołuje funkcję wyszukiwania adres IP.</li>
+          <li>Określa się kolejność odpytywania źródeł na podstawie danych 
+            zapisanych w pliku <em>/etc/nsswitch.conf</em>. Jedną z takowych
+            reguł może być wymuszenie kolejności odytania na początku pliku
+            <em>/etc/hosts</em> jeszcze przed odpytaniem systemu DNS.</li>
+          <li>Jeśli funkcja jednak zdecyduje o skorzystaniu z systemu DNS, musi
+            użyć zawartości pliku konfiguracyjnego, w którym zawarte są adres
+            serwerów systemu DNS.</li>
+          <li>Funkcja wysyła zapytanie z adresem domenowym serwera, prosząc o
+            jego adres IP.</li>
+          <li>Serwer DNS odsyła do funkcji adres IP serwera, który zwracany
+            jest do aplikacji.</li>
+       </ol>
+        <p>
+          Często występującym scenariuszem jest to, że serwer system DNS nie
+          zna adresu IP serwera, o który prosimy, wówczas serwer, do którego
+          skierowaliśmy to zapytanie musi zapytać się innych serwerów. System
+          DNS ma budowę hierarchiczną, a cała hierarchia jest zapisana w 
+          adresie domenowym. Przytoczeniu tutaj jak działa DNS nie ma sensu.
+          nie na tym ma polegać ten materiał. 
+        </p>
+        <h3 id="9.10.1.dnsfiles">9.10.1. Pliki biorące udział w działaniu systemu DNS</h3>
+        <p>
+          Jak możemy wywnioskować z wyżej wymienionych czynności system DNS
+          nawet w roli klienta potrzebuje korzysta z dużej ilości plików.
+          Pierwszym z nich jest <strong>/etc/nssswitch.conf</strong>. Ten plik
+          nie jest związany <em>stricte</em> z systemem DNS, ale ze wszystkim
+          co jest związane z nazwami w systemi. Jest to klasyczny interfejs
+          określający pierwszeństwo w źródłach rozwiązywania nazw. Jeśli
+          przeanalizujemy sobie zawartość tego pliku, możemy zauważyć
+          informacje o użytkownikach, usługach czy innych rodzajach sieci niż
+          IP. Jednak na tym etapie interesuje nas wyłącznie linia
+          rozpoczynająca się od <em>hosts</em>. Wskazuje ona pierwszeństwo
+          pliku /etc/hosts nad system DNS, przez co korzystając z dystrybucji
+          możemy dowolnie manipulować rozwiązywaniem nazw. Jest to szczególnie
+          przydane podczas konfiguracji serwera WWW.
+        </p>
+        <p>
+          Kolejnym plikiem jest wspomaniany już wcześniej <em>/etc/hosts</em>.
+          Plik ten zawiera zestawienie adresów IP wraz z nazwami domenowymi.
+          Kiedyś kiedy hosty w internecie można było policzyć na palcach obu
+          rąk służył za centralną bazę danych odnosnie odwzrowania nazw. Był
+          on swojego czasu protoplastą systemu DNS. Jednak ze względu na
+          <em>bum</em> rozwoju internetu, zaprzestano korzystania z tej
+          praktyki. Jednak obecnie wciąż można spotkać go w roli lokalnej bazy
+          rekordów DNS w sieciach, gdzie centralnym urządzeniem (router
+          core'owy) jest urządzenie oparte na jakimś uniksie.
+        </p>
+        <p>
+          Ostatnim plikiem jest /etc/resolv.conf. Zawartośc tego pliku, ma
+          wpływ na to z jakiego źródła systemu DNS korzysta nasz system. Otóż
+          w tym pliku przechowywane są zazwyczaj dwie wartości pierwszą z nich
+          są adres serwerów systemu DNS, a drugim sufiks nazwy domenowej
+          wykorzystywany wtedy gdy podamy samą nazwę hosta bez nazwy domeny,
+          to znaczy jeśli na przykład podamy samo <em>www</em> zamiast
+          <em>www.morketsmerke.org</em>, wówczas funkcja na podstawie sufiksu
+          z tego pliku sama go <em>doklei</em> i przekaże żądanie dalej na 
+          jeden z adresów widniejących po opcji <em>nameserver</em>.
+        </p>
+        <h3 id="9.10.2.configlessdnsandcache">9.10.2. Buforowanie oraz bezkonfiguracyjne systemy DNS</h3>
+        <p>
+          Buforowanie to czyność, którą głównie się kocha a czasem nienawidzi.
+          Buforowanie odpowiedzi systemu DNS jest odpowiedzią na fakt, że
+          komputery odpytujące system DNS przechowywały nigdzie uzyskanych od
+          serwera odpowiedzi, zbyt często powtarazna tego typu czynność mogła
+          przytkać sieć. Obecnie bardzo często adres serwera DNS jest również
+          adres bramy. Ma to głównie na celu właśnie buforowanie na naszym
+          domowym routerze za pewne uruchomiony jest buforujący. Niestety w
+          przypadku wielu urządzeń nie będzie my sie wstanie tego dowiedzieć.
+          Ale jeśli nasz sprzęt jest zmodyfikowany, lub naszym routerem jest
+          jest oprogramowanie zainstalowane na komputerze z wieloma kartami
+          sieciowymi, to raczej na 100% tak będzie. Innym sposóbem na
+          <em>wykrycie</em> systemu buforującego, jest sprawdzenie zawartości
+          pliku <em>/etc/resolv.conf</em>. Jeśli widnieje tam tylko jeden
+          wpis <em>nameserver</em> to za pewne z adresem <em>127.0.0.53</em>.
+          Jest to adres z klasy <em>pętli zwrotnej</em> (o której będzie za
+          chwilę), czyli wiemy że to usługa uruchomiona lokalnie na tej
+          maszynie. Jest to jeden z demonów programu typu <em>init</em>
+          (<em>systemd</em>) - <strong>systemd-resolved</strong>. Często w tym
+          wypadku sam plik jest dowiązaniem symboliczym. Użycie tego rodzaju
+          systemu rozwiązuje inny problem związany z brakiem elastyczności
+          statycznych konfiguracji, wówczas nie ma potrzeby wprowdzania zmian
+          w kompnentach systemu.
+        </p>
+        <p>
+          Wspomniany wcześniej demon posiada jedną ważną cechę. Potrafi łączyć
+          wiele sposobów wyszukiwania nazw w sieci, co przekłada się na
+          możliwość użycia bezkonfiguracyjnych systemów DNS. W przypadku takiej
+          konfiguracji jeśli podłączymy nowe urządzenie do sieci będziemy
+          mogli wywołać je za pomocą nazwy. Jeśli host istnieje udzieli
+          odpowiedzi ze swoim adresem IP. Rozwiązaniami tego typu są 
+          <strong>mDNS</strong> (<em>multicastDNS</em>) oraz 
+          <strong>LLMNP</strong> (<em>Link-Local Multicast Name Protocol</em>).
+          Rozwiązania te poza zwykłym odwzorowaniem nazw, mogą przedstawiać
+          dostępność usług. Ich dostępność w systemie możemy sprawdzić za
+          pomocą polecenia <em>resolvectl status</em>, warto jednak pamiętać,
+          że jego działanie jest uzależnione od działania wcześniej 
+          wspomnianego demona.
+        </p>
+        <h2 id="9.11.localhost">9.11. Host lokalny</h2>
+        <p>
+          W wielu systemach operacyjnych, poznając ich możliwości sieciowe
+          możemy natknąć się na dośc specyficzny interfejs, który w uniksach
+          określany jako <strong>lo</strong>. Jest to jedyny interfejs, który
+          będzie posiadać w plikach konfiguracyjnych statyczną konfigurację.
+          Interfejs <strong>pętli zwrotnej</strong> bo tak jest określany
+          przez swój sposób działnia służy głównie interakcji z programami
+          sieciowymi bez potrzeby angażowania innych interfejsów. Na przykład
+          jeśli aplikacja jest w fazie testów i póki co nikt po za naszym
+          komputerem nie powinien się z nią łączyć. To wtedy taką aplikację
+          ustawia się tak aby oczekiwała na połączenia na interfejsie pętli
+          zwrotnej.
+        </p>
+        <p>
+          Jeśli wyświetlimy sobie konfigurację interfejsu pętli zwrotnej to 
+          zwrócimy uwagę na to, jaki adres został mu przypisany:
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ ip addr show lo
+1: lo: &lt;LOOPBACK,UP&gt; mtu 1500 group default qlen 1
+    link/loopback 00:00:00:00:00:00
+    inet 127.0.0.1/8 brd 127.255.255.255 scope global dynamic
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host dynamic
+       valid_lft forever preferred_lft forever
+</pre>
+        <p>
+          Jest to bardzo duża klasa adresowa. Jeśli przypisany do usługi adres
+          będzie rozpoczynął się od 127 i posiadał 8 bitową maskę, będzie
+          wówczas przypisany do pętli zwrotnej.
+        </p>
+        <h2 id="9.12.transportlayer">9.12. Warstwa transportowa oraz usługi</h2>
+        <p>
+          Przedostatnią wartstwą modelu TCP/IP jest warstwa transportowa.
+          Jak sobie wcześniej omówilismy definiuje ona sposób transmisji w
+          sieciach IP. Wewnątrz niej możemy znajdują się takie protokoły
+          jak <strong>TCP</strong> oraz <strong>UDP</strong>, ona także
+          definiuje pojęcie <strong>portu</strong>.
+        </p>
+        <h3 id="9.12.1.tcp">9.12.1. TCP - Transmission Control Protokol</h3>
+        <p>
+          TCP jest protokołem przepływu danych w sieciach IP. Jest to protokół,
+          który przed właściwą transmisją danych zestawia coś w rodzaju
+          połączenia. Za pomocą specjalnych pakietów kontrolnych strona odległa
+          informowana jest o nadchodzącej transmisji, i jeśli faktycznie jest
+          ona w stanie odebrać dane (port na który, strona lokalna chce wysłać
+          informacje jest otwarty) odsyła informacje zwrotną o tym, że może
+          wysyłać. Wówczas po wymianie pakietów kontrolnych, dochodzi do
+          wysłania danych z komputera lokalnego do komputera zdalnego. Protokół
+          TCP czuwa na przebieg transmisji, każdy pakiet ma swój numer i strona
+          zdalna po jego otrzymaniu wysyła pakiet kontrolny z potwierdzeniem
+          jeśli odpowiedź nie przychodzi w określonym czasie wówczas dochodzi
+          do retransmisji zagubionych pakietów pakietów. TCP jest protokołem
+          wolniejszym od innego protokołu z tej samej warstwy, zapewnia jednak
+          niezawdność transmisji, przez co strona odległa może mieć pewność, że
+          uzyska poprawne dane. Ten protokół wykorzystywany jest w wiekszości
+          usług w internecie, w których przenoszone przez jego łącza dane mają
+          znaczenie.
+        </p>
+        <p>
+          UDP jest trochę innym protokołem niż TCP, ale jego główna rola jest
+          bardzo podobna, z tą różnicą, że nie zawiera on żadnych mechanizmów
+          kontroli. Ma to swoje plusy i minusy. Protokół jest na tyle szybki,
+          że wykorzystywany jest przez różnego rodzaju aplikacji służące do
+          przesyłania strumieniowego. W tym wypadku możemy osobiście
+          doświadczyć błędów w transmisji objawiających się spadkiem jakość
+          <em>streamowanych</em> materiałów. Inną ważnym wykorzystaniem tego,
+          protokołu, właśnie ze względu na <em>zalety</em> protokołu TCP jest
+          użycie UDP do budowania sieci prywatnych VPN. Faktem, dla którego
+          nie korzysta się protokołu TCP jest <em>piekło</em> retransmisji.
+          Załóżmy, że dochodzi do błedów w transmisji pakietów zewnętrznej
+          transmisji, czyli między serwera VPN i jeśli była by to transmisja
+          TCP doszło by do retransmisji, ale system VPN nie zatrzyma się i
+          przekaże poszatkowną transmisję dalej do hosta docelowego, a on
+          zauważy błąd i rozpocznie swoją retransmisję pakietów wewnętrznej
+          transmisji co doprowadzi do zapchania łącza i wstrzymania trasnsmisji
+          w ogóle. Dlatego też stosuje się protokół UDP dla transmisji
+          zewnętrznej, wówczas na poprawnością danych przenoszonych przez
+          tunel VPN czówać będą hosty transmisji wewnętrznej.
+        </p>
+        <p>
+          Jak możemy zauważyć wszystko co może być zaletą w konkretnym
+          przypadku może okazać się wadą w innym. Z wyżej wymienionych metod
+          transmisji przy uzyciu portów korzystają różne aplikacje. Port to
+          nic innego jak numer wystąpienia aplikacji w obszarze warstwy
+          transportowej. Na ten numer kierowane są pakiety i w ten sposób 
+          aplikacja otrzymuje dane z sieci. Aplikacje sieciowe posidaja
+          przypisane te numery przez swoich twórców, ich lista wstępuje
+          w każdym uniksie, który ma możliwośc podłaczenia do sieci. Lista
+          znajduje się w pliku, <em>/etc/services</em>. Większość zebranych
+          tam aplikacja powstawa wraz z internetem, więc lista może być długa
+          i już nie zbyt aktualna, ale jednak jest pewnym zbiorem informacji.
+          Poniżej znajduje się kilka protokołów wraz z informacją z której
+          pochodzi źródło.
+        </p>
+<pre class="code-block">
+# Updated from https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml .
+http            80/tcp          www             # WorldWideWeb HTTP
+https           443/tcp                         # http protocol over TLS/SSL
+https           443/udp                         # HTTP/3
+http-alt        8080/tcp        webcache        # WWW caching service
+</pre>
+        <p>
+          Obok portu wyświetlony jest również rodzaj transmisji. Ciekawostką
+          jest fakt, że trzecia generacja protokołu HTTP będzie oparta na
+          protokole UDP, a nie TCP.
+        </p>
+        <p>
+          Omawiając warstwę transportową to nie sposób jest nie wspomnieć o 
+          wyświetlaniu połączeń. Obecnie w dystrybucjach Linuksa używa się
+          nowego polecenia jakim jest <strong>ss</strong>, aby wyświetlić
+          połączenia TCP w systemie należy wydać poniższe polecenie. Polecenie
+          to dla przykładu zostało wydane na jednym z moich serwerów VPS
+        </p>
+<pre class="code-block">
+root@searx:~# ss -tr
+State       Recv-Q  Send-Q          Local Address:Port                                     Peer Address:Port   Process
+CLOSE-WAIT  32      0        ip109.ip-51-178-2.eu:57026                                   146.75.74.208:https
+CLOSE-WAIT  64      0        ip109.ip-51-178-2.eu:32808                     text-lb.drmrs.wikimedia.org:https
+CLOSE-WAIT  64      0        ip109.ip-51-178-2.eu:43164                     text-lb.drmrs.wikimedia.org:https
+CLOSE-WAIT  40      0        ip109.ip-51-178-2.eu:57466                                    52.84.150.51:https
+CLOSE-WAIT  40      0        ip109.ip-51-178-2.eu:35092     server-143-204-68-27.lhr61.r.cloudfront.net:https
+CLOSE-WAIT  25      0        ip109.ip-51-178-2.eu:45492                   upload-lb.drmrs.wikimedia.org:https
+CLOSE-WAIT  40      0        ip109.ip-51-178-2.eu:41928     server-143-204-68-21.lhr61.r.cloudfront.net:https
+CLOSE-WAIT  32      0        ip109.ip-51-178-2.eu:36336              qwantbot-115-168-187-194.qwant.com:https
+ESTAB       0       52       ip109.ip-51-178-2.eu:2022                                     213.25.29.68:63950
+CLOSE-WAIT  130     0        ip109.ip-51-178-2.eu:60580                        waw02s07-in-f4.1e100.net:https
+CLOSE-WAIT  47      0        ip109.ip-51-178-2.eu:33310                                    104.16.55.16:https
+CLOSE-WAIT  130     0        ip109.ip-51-178-2.eu:43572                        waw02s07-in-f4.1e100.net:https
+CLOSE-WAIT  32      0        ip109.ip-51-178-2.eu:36666                                   140.177.50.13:https
+CLOSE-WAIT  1       0        ip109.ip-51-178-2.eu:33408                       par21s17-in-f14.1e100.net:https
+CLOSE-WAIT  40      0        ip109.ip-51-178-2.eu:53446                                    172.67.22.17:https
+CLOSE-WAIT  40      0        ip109.ip-51-178-2.eu:57454                                    52.84.150.51:https
+ESTAB       0       0        ip109.ip-51-178-2.eu:2022                                     213.25.29.68:61628
+CLOSE-WAIT  32      0        ip109.ip-51-178-2.eu:53654                            www.wolframalpha.com:https
+CLOSE-WAIT  32      0        ip109.ip-51-178-2.eu:58752              qwantbot-109-168-187-194.qwant.com:https
+CLOSE-WAIT  130     0        ip109.ip-51-178-2.eu:58880                        waw02s07-in-f4.1e100.net:https
+CLOSE-WAIT  40      0        ip109.ip-51-178-2.eu:37804              qwantbot-106-168-187-194.qwant.com:https
+CLOSE-WAIT  25      0        ip109.ip-51-178-2.eu:50924     server-18-244-117-84.lhr50.r.cloudfront.net:https
+CLOSE-WAIT  64      0        ip109.ip-51-178-2.eu:43148                     text-lb.drmrs.wikimedia.org:https
+CLOSE-WAIT  90      0        ip109.ip-51-178-2.eu:41176                                  151.101.65.181:https
+CLOSE-WAIT  40      0        ip109.ip-51-178-2.eu:58504    server-18-244-153-127.lhr50.r.cloudfront.net:https
+CLOSE-WAIT  40      0        ip109.ip-51-178-2.eu:58216      server-13-224-132-41.lhr3.r.cloudfront.net:https
+</pre>
+        <p>
+          W pierwszej kolumnie znajduje się stan połaczenia, jak już wcześniej
+          wspominałem protokół TCP ustanawia połączenia i ta kolumna
+          przedstawia ich stan. <code class="code-inline">Estab</code> skrót od
+          ang. <em>established</em> oznacza że połączenie zostało nawiązane i
+          dalej trwa. Dalej przesyłane są jakieś pakiety. Reszta połączeń
+          pozostaje w stanie <code class="code-inline">CLOSE-WAIT</code> jest
+          to stan oczekiwania na zamknięcie połączenia przez użytkownika.
+          Przeważnie nie musimy się przejmować tego rodzaju połączeniami, one
+          zostaną zakończone z czasem. Druga i trzecia kolumna przechowują
+          informacje odnośnie pamięci podręcznej wysyłanie i odbioru. Najlepiej
+          aby te wartości były jak najbliżej zera. Wysokie wartości w kolumnie
+          <code class="code-inline">Recv-Q</code> mogą świadczyć o tym, że
+          pakiety osiągneły komputer docelowy, ale nie ma kto ich odebrać, na
+          natomiast w wysokie wartości w kolumnie
+          <code class="code-inline">Send-Q</code> mogą najczęściej oznaczać, że
+          pakiety zostały wysłane ale do host, który na nie oczekuje i nie
+          potwierdza ich odebrania lub pakiety nie zostały wysłane w ogóle.
+          Czwarta oraz piąta kolumna zawierają <strong>gniazda</strong> lokalne
+          oraz zadalne. Za pomocą gniazd określamy połączenie adresu IP lub 
+          nazwy domenowej (tak, jak w tym przypadku) z portem.
+        </p>
+        <p>
+          Wydając powyższe polecenie użyłem opcji <code class="code-inline">-t</code>
+          określającej rodzaj transmisji oraz opcji
+          <code class="code-inline">-r</code>, która zamienia adres IP oraz
+          numery portów na nazwy domenowe i nazwy usług. Warto zapoznać się
+          zawartością strony podręcznika narzędzia <em>ss</em>. Można odnależć
+          opcje pozwalającą na zamykanie dowolnych połączeń. Połączenia
+          (może, raczej rejestr transmisji) dla protokołu UDP możemy
+          wyświetlić za pomocą opcji <em>-u</em>.
+        </p>
+        <h2 id="9.13.dhcp">9.13. Protokół dynamicznej konfiguracji hosta - DHCP</h2>
+        <p>
+          Ciężko sobie wyobrazić współczesną sieć bez tak ważnego składnika
+          jakim jest protokół <strong>DHCP</strong>. Jest on odpowiedzialny
+          za konfigurację interfejsów sieciowych oraz za utrzymywanie 
+          informacji o przekazanych parameterach, aby nie dochodziło do
+          absurdalnych zdarzeń, że dwa komputery w sieci nie dostały tego
+          samego adresu. Poza adresami IP serwer DHCP, konfigurje interfejsy
+          w taki sposób, aby komputer był podłączony do internetu. W sieciach
+          korporacyjnych mogą być konfigurowane dodatkowe paramety lub nie
+          istnieć domyślna pula, a nowe urządzenia trzeba dodawać do listy
+          rezerwacji, w tym wypadku komputery uzyskują statyczny adres IP ale
+          nie jest on przypisywany przez administratora, tylko przez DHCP
+          właśnie.
+        </p>
+        <p>
+          Metoda uzyskiwania adresu jest dość niezwykła. Otóż jak komputer,
+          który nie posiada adresu IP ma skomunikować z innym komputerem i
+          jakimi. Otóż z każdym. Klient DHCP rozsyła na pakiet z poszukiwaniem
+          serwera DHCP, na adres rozgłoszeniowy sieci (<em>255.255.255.255</em>)
+          w tym pakiecie może być zawarty adres, jaki klient kiedyś posiadał.
+          W odpowiedzi od serwera, klient dostanie ofertę, z którą może się
+          zgodzić lub żądać innych, bądź dodatkowych parametrów, wówczas
+          zostaje wysłane żądanie. Po uznaniu żądania, serwer wysyła
+          potwierdzenie. Kiedy klient otrzyma potwierdzenie rozpoczyna
+          konfigurację interfejsu sieciowego i na tym etapie rola DHCP kończy
+          się. Jednak należy pamiętać, że adresy są dzierżawione od serwera,
+          czyli czas jej konfiguracji jest określony i od czasu do czasu 
+          trzeba się z tym serwerem skomunikować, aby utrzymać obecną
+          kofigurację lub prosić o nową. Jednak to pozostaje już w gesti
+          klienta. 
+        </p>
+        <p>
+          Obsługa protokołu DHCP na uniksach występuje w oryginalnej 
+          implementacji. Do dyspozycji mamy pakiet klienta
+          <strong>dhclient</strong>, wśród serwerów możemy wyróżnić co najmniej
+          dwie godne polecenie implementacje. Jedną z nich wykorzystamy
+          tworząc z komputera z dystrybucją Linuksa domową bramkę. Aby
+          pobrać konfigurację z serwera DHCP (nie które dystrybucje, nie
+          posiadają domyślnie żadnej konfiguracji sieciowej) należy wydać
+          poniższe polecenie. 
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ dhclient enp4s0
+</pre>
+        <p>
+          Podanie interfejsu jako argument spowoduje skonfigurowanie
+          tylko tego konkretnego interfejsu, jeśli go pominiemy skonfigurowane
+          zostaną wszystkie aktywe (w których warstwy poniżej internetowej już
+          działają).
+        </p>
+        <p>
+          Jeśli chcelibyśmy poznać np. czas dzierżawy to informacje uzyskane
+          od serwera znajdują sie pliku dzierżawy
+          <em>/var/lib/dhcp/dhclient.leases</em>
+        </p>
+        <p>
+          Do tej pory omawiając DHCP, skupialiśmy się głównie na protokole
+          IPv4. W przypadku protokołu IPv6 również istnieje możliwość
+          zastosowania DHCP, nawet został przygotowany ku temu standard
+          protokołu DHCPv6 to proponowane jest innego rodzaju rozwiązanie.
+          Ze względu na długość adresów IPv6, organizacja zarządzająca
+          wykorzystała częśc adresów na potrzeby nowej metody konfiguracji.
+          <strong>Konfiguracja bezstanowa</strong> nie wymaga punktów
+          centralnych w postaci serwerów do konfiguracji interfejsów dla IPv6.
+        </p>
+        <p>
+          Metoda działania tej konfiguracji opiera się o adresy sieci lokalnej
+          łącza, ze względu długość adresu host może wygenerować sobie adres,
+          który może z mały prawdopodobnieństwem powtórzyć się w sieci.
+          Z resztą mając ustalony prefiks (<em>fe80::/64</em>) można wysłać
+          zapytania do innych hostów w sieci czy adres, który host wygenerował
+          jest wykorzystywany przez inne hosty w sieci. Jest to mało
+          prawdopodobne gdyż do wygenerowania tego adresu brany jest również
+          adres MAC. Po uzyskaniu łącza lokalnego, host może określić adres
+          globalny z pomocą komunikatów RA (<em>Router Advertisement</em>)
+          wysłanego co jakiś czas przez router w naszej sieci lokalnej.
+          Komunikat zawiera prefiks sieci globalne, adres routera oraz adresy
+          serwerów DNS. Po otrzymaniu tych informacji może podjąć próbę
+          wygenerowania części adresów odpowiadającej za identyfikator
+          interfejsu. W ten sposób interfejs otrzymuje dostęp do internetu
+          za pośrednictwem protokołu IP w wersji 6.
+        </p>
+        <h2 id="9.14.linuxasrouter">9.14. Konfiguracja systemu Linux jako router</h2>
+        <p>
+          Ten podrozdział będzie dość obszerny, ponieważ postanowiłem zebrać
+          w nim część zagadnień sieciowych dotyczących konfiguracji dystrybucji
+          Linuksa w celu wykorzystania jako router.
+        </p>
+        <p>
+          Chcąc wykorzystać komputer z dystrybucją Linuksa jako bramę czy
+          router (w zależności ile sieci będzie łączyć) musimy zaopatrzyć nasz
+          komputer w odpowiednią ilość interfejsów. Jak możemy się domyślić
+          interfejsy to nic innego jak karty sieciowe. Jeśli jest to zwykły
+          PC to dołożenie kart nie powino być problemem (zakładając, że
+          nasza sieć jest oparta na miedzianej skrętce) a najzwyklejsze
+          karty (gigabitowe) mogą kosztować w okolicach 50 zł  jeśli nie mamy
+          możliwości rozbudowania komputera o więcej niż jedną kartę to możemy
+          użyć kart serwerowych, one zazwyczaj posiadają od 2 do 4 portów a
+          zajmują jeden port PCI-E x16 (rzadko, kto będzie mieć w komputerze
+          przeznaczonym na router, złącza PCI-E x8 lub x4, bo takie złącze
+          będą mieć karty tego typu). 
+        </p>
+        <h3 id="9.14.1.linuxdistroforrouters">9.14.1. Oprogramownie główne</h3>
+        <p>
+          Wiele urządzeń dostępnych na rynku jako router posiada przyjazny,
+          z którym możemy połączyć się za pośrednictwem przeglądarki
+          internetowe, a obecnie cześć producentów posiada również aplikacje
+          mobline do ich kontrolowania. Tego typu rozwiązania zapewniają nam
+          łatwość konfiguracji, która często sprowadza sie to wpisania kilku
+          rzeczy i klikania <em>Dalej, dalej, dalej...</em> i na koniec
+          zrestartowania urządzenia. Na tym zadanie się, kończy za
+          pośrednictwem tego urządzenia komputery w naszej sieci lokalnej będą
+          posiadać połączenie z internetem. Mimo to na tych sprzętach w dużej
+          mierze przeważa Linux. Ten system w warunkach wbudowanych jest
+          wstanie uruchomić się z każdego urządzenia. Czytając te słowa,
+          zabrneliśmy tak daleko w głąb tego materiału, że możemy z pewnością
+          stwierdzić, że domyślnie na Linuksie próżno szukać takich udogodnień.
+        </p>
+        <p>
+          Każda dystrybucja posiada wiele cech specyficznych, z racji tego iż
+          nie narzucałem żadnej konkretej (chociaż, Debian tutaj przoduje). To
+          warto wybrać tę której używaliśmy do tej pory jeśli jest to wiodąca
+          dystrybucja to możemy zainstalować takie oprogramowanie jako
+          <strong>cockpit</strong>, jest to środowisko do zarządania serwerem
+          z poziomu WWW, przez przeglądarkę. Dostępne jest ono w wiekszości
+          dystrybucji. Niestety nie daje ono zbyt rozbudowanych możliwości.
+          Cechą dominująć przy wyborze powinna być stabliność
+          dystrybucji, dlatego takie dystrybucje jak Debian lub dystrybucje
+          klasy <em>Enterprise</em> (pomijając te płatne) jak Rocky czy Alma
+          Linux sprawdzą się tutaj znakomicie. Problemem z tymi dystrybucjami
+          jest trochę inna konfiguracją zapory sieciowej, ale ona opisana jest
+          w innym moim materiale odnośnie RHCSA. Zatem wybierając taką
+          dystrybucję mamy nieco więcej pracy, ale możemy mieć pewność, że
+          nie spotkamy się z różnymi, nie zawsze przemyślanymi rozwiązaniami
+          dostawców różnych nakładek czy dystrybucji skierowanych na routery.
+          Sam osobiście wole takie rozwiązanie.
+        </p>
+        <p>
+          Dużo prostszym sposobem na tego typu zadania, może być użycie
+          dystrybucji przeznaczonej do zamieniania PC-tów z kilkoma kartami
+          sieciowymi w router, takimi jak np. dystrybucja IPFire. Takich
+          dystrybucji nie tylko opartych o Linux jest wiele więcej. Część z
+          nich jest już niewspierana lub wątpliwej jakość (<em>zeroshell</em>,
+          może dlatego upadła). Cała lista dostępna jest pod 
+          <a href="https://en.wikipedia.org/wiki/List_of_router_and_firewall_distributions">tym</a>
+          adresem.
+        </p>
+        <p>
+          Możemy również zmienić podejście do tematu. Jeśli nie mamy wolnego
+          komputera, którego możemy użyć w roli routera. To możemy użyć
+          domowego routera, jako mikroserwer z Linux. Za pomocą dystrybucji
+          takiej jak DD-WRT, a szczególnie <strong>OpenWRT</strong> możemy
+          uzyskać dostęp dystrybucji Linuksowej na tym nie pozornym urządzeniu.
+          Lista kompatybilnego sprzętu, na którym możemy zainstalować
+          OpenWRT jest dość obszerna. Więc może znajdziemy system pasujący do
+          naszego sprzętu. Dodam również, że obsługa tego typu dystrybucji
+          może może opierać na konkretnym narzędziu i żadne z przedstawionych
+          rozwiązań poniżej, skierowane raczej do dystrybucji ogólnych, takich
+          jak Debian, może nie działać. Wówczas zachęcam do zapoznania się z
+          dokumentacją.
+        </p>
+        <p>
+          Poniższe rozwiązania bedą dotyczyć głównie wiodących dystrybucji.
+          Więc jeśli zdecydujemy się inne rozwiązania wykonanie zadania możemy
+          oprzeć o dostępną dokumnetację.
+        </p>
+        <h3 id="9.14.2.additionalsoftware">9.14.2. Oprogramowanie dodatkowe</h3>
+        <p>
+          Poza system operacyjnym i jego wewnętrznymi komponentami sieciowymi
+          do zbudowania pełno prawnego routera lub bramy potrzebujemy kilku
+          pakietów: 
+        </p>
+        <ul>
+          <li>Pakietu zapory sieciowej - <strong>iptables</strong></li>
+          <li>Pakietu DHCP wraz z DNS - <strong>dnsmasq</strong></li>
+          <li>Pakietu rozgłaszania sieci bezprzewodowej (opcjonalnie) - <strong>hostapd</strong></li>
+        </ul>
+        <p>
+          Jeśli jesteśmy w posiadaniu odpowiedniego sprzętu nasz router może
+          rozgłaszać sieć bezprzewodwą. Jeśli chcielibyśmy coś takiego
+          zrealizować to warto zapoznać się z tematem tworzenia mostów.
+          Jeśli taki most miedzy <em>LAN-em</em> a <em>WiFi</em> zostanie
+          zestawiony to oba interfejsy zostaną połączone jednym wirtualnym,
+          który będzie obsługiwał połączenia z zupełnie różnych dwóch
+          warstw fizycznych.
+        </p>
+        <p>
+          Dostępność oraz sposób instalacji tych pakietów dla wybranych przez
+          nas dystrybucji (ze względu na ich róznorodność) należy ustalić we
+          własnym zakresie. Poniżej znajduje się polecenie dla dystrybucji
+          Debian oraz oraz pokrewnych.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo apt install dnsmasq
+</pre>
+        <p>
+          To polecenie zainstaluje tylko jeden pakiet. Debian 11 jest
+          już rozprowadzany zainstalowanym pakietem zapory.
+        </p>
+        <h3 id="9.14.3.linuxasrtrconfig">9.14.3. Konfiguracja dystrybucji jako router</h3>
+        <p>
+          Po złożeniu sprzętu oraz zainstalowaniu oprogramowania. Przyszedł
+          czas na jego konfigrację. Najlepiej rozpocząć ją (a wręcz trzeba) od
+          konfiguracji interfejsów. Musimy ustalić wykorzystywany przez nas
+          sposób łączenia z Internetem, czy posiadamy statyczny adres IP lub
+          interfejs jest konfigurowany dynamicznie przez naszego usługodawce.
+          Ten informacje musimy zapisać w charkterystyczny dla naszej
+          dystrybucji sposób konfiguracji interfejsów. Jeśli chcemy możemy
+          wykorzystać do tego celu <em>NetworkManager</em>. Pamietając, że
+          w przypadku Debiana interfejs wykorzystywany podczas instalacji
+          będzie kontrolowany przez system <em>ifupdown</em>, trzeba go 
+          stamtąd usunąć. Po skonfigurowaniu interfejsu łączącego z internetem
+          musimy skonfigurować interfejsy sieci LAN. Tutaj wystarczy sam adres
+          oraz maska podsieci. Adres ten musi być jednym z adresów
+          <strong>sieci prywatnych IPv4</strong>.
+        </p>
+        <h4>Sieci prywatne IPv4</h4>
+        <p>
+          Sieci prywatne to nic innego jak wycięte z użytkownika klasy adresowe
+          sieci IP w wersji 4. Te adresy mają zastosowanie jedynie w sieciach
+          lokalnych, ale i usługodawcy również mogą się nimi posługiwać,
+          ponieważ to co wpinamy w port WAN routera jest umowne i tak naprawdę
+          naszym WAN-em, może być sieć osiedlowa, która jest nieco wiekszym
+          LAN-em lub będąc bardziej szczegółowym siecią kampusową. Adresy sieci
+          prywatnych powstały ze względu na wyczerpywanie się adresów
+          publicznych. Można by się zastanowić nad tym w jaki sposób zabranie
+          prawie 18 milionów adresów, przyczniło się do tego, że sieci IPv4
+          jest na wyczerpaniu to nadal są przydzielane konkretne adresy. Otóż
+          adresy klas prywatnych nie mogą funkcjonowac w internecie, są tylko
+          do użytku wewnetrznego. Największa klasa A (posidająca grubo ponad
+          16 miliownów adresów) może być widoczna w internecie jak jeden adres.
+          Stąd taka optymalizacja. Dostępne mamy trzy klasy adresowe: 
+        </p>
+        <ul>
+          <li><strong>Klasa A</strong> - o masce 255.0.0.0, dającą 256^3 - 2
+            adresów w zakresie od 10.0.0.0 do 10.255.255.255.</li>
+          <li><strong>Klasa B</strong> - o masce 255.240.0.0, dająca
+            16*256^2 -2 adresów w zakresie od 172.16.0.0 do 172.31.255.255.</li>
+          <li><strong>Klasa C</strong> - o masce 255.255.0.0, dająca 256^2 - 2
+            adresów w zakresie od 192.168.0.0 do 192.168.255.255.</li>
+        </ul>
+        <p>
+          Gdzieś wśród młodych adeptów informatyki, wzięło się przeswiadczenie,
+          że klasy B oraz C są dużo mniejsze. Klasie B przypisywało się wówczas
+          maskę 16-bitową, odcinając wszystkie adresy powyżej 172.16.255.255.
+          A klasie C przypisywano maskę 24-bitową, przez co zmniejszano ją
+          do 254 adresów. Ten sposób adresacji wziął się z nie wiedzy osób
+          konfigurjących sprzęt oraz z narzucenia przez producentów domyślnie
+          takich wartości. Nie jest to błędem, ponieważ możemy alokować te
+          adresy odpowiednio do swoich potrzeb. Dlatego jeśli nie potrzebujemy
+          tak dużej sieci, to możemy ją zmniejszyć dzieląc te sieci na
+          podsieci i wykorzystując tylko jedną z nich.
+        </p>
+        <p>
+          Po konfiguracji interfejsów możemy przjeść do konfiguracji serwera
+          DHCP, który jest również serwerem buforująco-przekazujący systemu
+          DNS. Przyczym konfiguracja DNS-u nie wymaga od nas żadnej uwagi
+          <strong>dnsmasq</strong> zaraz po uruchomieniu zaczyna nasłuchiwać
+          na porcie 53/UDP. Naszym zadaniem będzie jedynie graniczenie tego
+          nasłuchiwania do portów LAN. Dla przykładu żałożymy, że naszym
+          interfejsem LAN-u jest klasyczny port eth0. 
+        </p>
+<pre class="code-block">
+interface=eth0
+dhcp-range=192.168.4.2,192.168.4.20,255.255.255.0,12h
+dhcp-option=3,192.168.4.1
+dhcp-option=6,192.168.4.1
+</pre>
+        <p>
+          Pierwsza opcja <code class="code-inline">interface=eth0</code>
+          ogranicza działanie demona tylko i wyłącznie do interfejsu
+          <code class="code-inline">eth0</code>. Dzięki tej opcji nasłuchiwanie
+          na porcie 53/udp (DNS) zostanie ograniczone do wskazane interfejsu.
+          Pozostałe opcje konfigurją nam już serwer DHCP. Pierwsza opcja
+          <code class="code-inline">dhcp-range</code> definiuje nam zakres
+          przydzielanych adresów, maskę podsieci oraz czas dzierżawy. Następnie
+          zaczynają się typowe opcje protokołu DHCP, są one opisane w
+          standardzie, ale dla zachowania kontekstu przytocze je również tutaj
+          opcja <code class="code-inline">3</code> odpowiada za przypisanie
+          adresu domyślnej bramy, natomiast opcja
+          <code class="code-inline">6</code> odpowiada za przypisanie adresów
+          serwerów DNS. Adres bramy oraz adres serwera DNS wskazują na adres
+          portu LAN. Te cztery linie wystarczą aby skonfigurować serwer DNS i
+          DHCP dla naszej sieci. Teraz po podłączeniu komputera do routera
+          powinniśmy uzyskać adres IP wraz z pozostałymi paramerami 
+          pozwalającymi na połączenie z internet za pośrednictwem naszego
+          systemu.
+        </p>
+        <p>
+          Aby zrealizować połączenie z internetem hostów podłączanych do sieci
+          LAN musimy wykonać jescze dwie czynności. Umożliwić w systemie
+          przsyłanie pakietów między interfejsami, domyślnie jest ono 
+          wyłączone. Włączyć funckję NAT-u.
+        </p>
+        <h4>NAT - Translacja adresów sieciowych</h4>
+        <p>
+          Translacja adresów potocznie zwana NAT-em, jest funkcja zapór
+          sieciowych, której zadaniem jest najczęściej zamiana adresów sieci
+          LAN, na adres sieci publicznej. Tak aby komputery mogły wysyłać oraz
+          odbierać dane z sieci rozległej nie będąc do niej bezpośrednio
+          podłączone. Istnieje kilka rodzajów translacji adresów nas będą
+          interesować tylko dwa. Przeznaczone dla ruchu wychodzącego (danych
+          generowanych przez komputery z sieci LAN). Do wybory wówczas mamy
+          <strong>SNAT</strong> - ang. <em>Source Network Address Translation</em>
+          lub <strong>MASQUERADE</strong>. Użycie SNAT-u będzie wymagać
+          podania adresu IP portu WAN, teoretycznie nic w tym złego, ale jeśli
+          nasz usługodawca automatycznie przypisuje swoim klientom adresy IP,
+          za każdą zmianą adresu na tym interfejsie połączenie z internetem
+          zostało by zerwane. Zatem SNAT jest szybszą metodą NAT-u, ale wymaga
+          stałego adresu IP. Jeśli takim nie władamy, pozostało nam tylko
+          użycie MASQUERADE, który pozwala na podanie interfejsu.
+        </p>
+        <p>
+          Za przekazywanie pakietów między interfejsami odpowiada jądro. Aby
+          je włączyć musimy skorzystać z interfejsu ukrytego za poleceniem
+          <strong>sysctl</strong>. Do konkretnych wartości prowadzi ścieżka,
+          której elementy są odzielone od siebie kropkami. Poniżej znajduje
+          sie polecenie, które odpowiada za przekazywanie pakietów miedzy
+          interfejsami.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo sysctl net.ipv4.ip_forward=1
+</pre>
+        <p>
+          Teraz pakiety będą swobodnie przekazywane między interfejsami. Tak
+          jak wspomniałem NAT jest funkcją zapory sieciowej. Tak więc
+          konfiguracja dystrybucji Linuxa jako router będzie wymagać jego
+          konfiguracji. Co prawda będzie to jedno polecenie, ale żeby nie
+          pozostawiać użytkownika w niewiedzy trzeba trochę przybliżyć temat
+          działania zapory jaką jest <strong>iptables</strong>.
+        </p>
+        <h4>Zapora sieciowa w systemie Linux</h4>
+        <p>
+          Zapora sieciowa w dystrybucjach Linux realizowana jest przez pakiet
+          <em>iptables</em>, jego zasada
+          działania opiera się o <strong>łańcuchy</strong> zasad pod kątem
+	        których sprawdzany może być pakiet przychodzący, wychodzący a nawet
+          dodatkowo przekazywany dalej. Łańcuchy łączą się w tablice, które
+          mogą modyfikować moment konfrontacji pakiety z łańcuchem, ale ogólna
+          zasada pozostaje bez zmian. Każdy łańcuch posiada domyślną politykę,
+          która jest stosowana dla pakietów niepasujących do żadnej z reguł.
+          Domyślnie jest to polityka <em>przepuszczaj</em>, oznacza to swobodną
+          transmisję. Wśród najważniejszych tablic oraz łańcuchów możemy 
+          wyróżnić:
+        </p>
+        <ul>
+          <li><strong>filter</strong> - tablica zwierająca łańcuchy
+            sprawdzające pakiety które są związane jakoś z docelowym 
+            komputerem, Ta tablica jest również domyślna i nie ma
+            potrzeby definiowania jest nazwy wśród niej możemy wyróżnić takie 
+            łańcuchy jak:
+          <ul>
+            <li><strong>INPUT</strong> - zawiera reguły filtrujące pakiety
+            przeznaczone dla lokalne hosta (tego komputera).</li>
+            <li><strong>OUTPUT</strong> - zawiera reguły filtrujące pakiety
+            wysyłane (jego połączenia) z tego komputera.<li>
+            <li><strong>FORWARD</strong> - zawiera reguły filtrujące pakiety
+            przesyłane przez ten komputer.</li>
+          </ul>
+          </li>
+          <li><strong>nat</strong> - tablica zawierająca łańcuchy, których
+            zadaniem jest modyfikacja przechodzących przez nią pakietów.
+            Np. łańcucha <em>PREROUTING</em> korzysta się do
+            <strong>port-forwardingu</strong>, czyli udostępniania połączeń
+            z internetu dla wybranych usług. Kluczowe łańcuchy tej tablicy
+            przetwarzają pakiety zaraz po pojawieniu się na interfejsie (tj.
+            bardzo wcześnie) lub zaraz przed jego opuszczeniem (tj. bardzo
+            późno). Będą przy tym pierwszymi oraz ostatnimi zestawiami reguł
+            przetwarzającymi pakiet. Wśród tej tablicy możemy wyróżnić takie
+            łańcuchy jak:
+          <ul>
+            <li><strong>PREROUTING</strong> - zawiera reguły filtrujące, które
+            najwcześniej przetwarzają pakiety. Ten łańcuchy wykorzystywany jest
+            w <em>port-forwarding</em>.</li>
+            <li><strong>OUTPUT</strong> - zawiera reguły filtrujące pakiety dla
+            wygenerowanych lokalnie pakietów, które poźniej będą wymagały
+            trasowania.<li>
+            <li><strong>POSTROUTING</strong> - zawiera reguły filtrujące, które
+            najpóźniej przetwarzają pakiety. Tutaj stosowany jest SNAT oraz
+            <em>maskarada</em>.</li>
+          </ul>
+          </li>
+        </ul>
+        <p>
+          <em>Iptables</em> konfrontując pakiet z łańcuchem zastosuję akcję
+          dla pierwszej reguły do której będzie pasować przetważany pakiet.
+          Natomiast możemy wyróżnić trzy rodzaje akcji podstawowych takich
+          jak:
+        </p>
+        <ul>
+          <li><strong>ACCEPT</strong> - przepuść pakiet do dalszego
+            przetwarzania</li>
+          <li><strong>DROP</strong> - odrzuć pakiet</li>
+          <li><strong>REJECT</strong> - odrzuć pakiet, ale poinformuj nadawcę
+            o takiej sytuacji</li>
+        </ul>
+        <p>
+          Istnieją także dodatkowe akcje specyficzne dla tablicy. Przeważnie
+          po podaniu akcji w tablicy <em>fliter</em> reguła się kończy. W
+          przypadku akcji <em>SNAT</em> oraz <em>DNAT</em> tablicy <em>nat</em>
+          wymagane jest podanie docelowego adresu IP. Akcją bez argumentów dla
+          tej tablicy jest <em>MASQUERADE</em> uruchamiające maskaradę.
+        </p>
+        <p>
+          Z powyższego wywodu możemy wywnioskować, że aby uruchomić na NAT na
+          naszym routerze musimy zapisać regułę tablicy <em>nat</em> w łańcuchu
+          <em>POSTROUTING</em>. Więc tak, tablicę wskazujemy z pomoca opcji
+          <em>-t</em>, teraz w zależności od tego czy chcemy wstawić w
+          konkretną linią naszą regułę czy ją dopisać musimy użyć innych opcji.
+          Opcja <em>-I</em> odpowdzialna za wsawianie (<em>INSERT</em>)
+          wymaga po podaniu nazwy łańcucha numeru linii, w którą ma wstawić
+          daną regułem, natomiast opcja <em>-A</em> odpowiedzialna za
+          dopisanie (<em>APPEND</em>). Zewzględu na to, że jest reguła
+          <em>POSTROUTING</em>, to raczej będzie ona pusta, więc nie będzie
+          to miało znaczenia czy użyjemy dopisania czy wstawienia. Drugą rzeczą
+          jest wskazanie interfejsu, na którym interfejsy będą wymagały NAT-u,
+          aby transmisja miała sens. W przypadku wyjściowych łańcuchów takich
+          jak <em>POSTROUTING</em> czy <em>OUTPUT</em> interfejs podwany jest
+          po opcji <em>-o</em> (nazywane jest kierunkien od 
+          <em>in</em>/<em>out</em>, jednak łańcuchy mają już zdefiniowane
+          możliwe kierunki transmisji) następnie po opcji <em>-j</em> podawana
+          akcja, zawsze wieliki literami. Więc nasza reguła uruchamiająca NAT
+          prezentuje się następująco. W przypadku tego oraz poniższych
+          przykładów dotyczących zapory sieciowej interfejsem przeznaczonym do
+          połączenia z siecią WAN będzie <em>eth1</em>.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+</pre>
+        <p>
+          Teraz o ile komputery podłaczone do interfejsu <em>LAN</em> posiadają
+          prawidłowe adresu IP, powinny mieć już połączenie z Internetem.
+          Mimo, że wszystko funkcjonuje prawidłow do pozostawienie tak
+          podłączone routera do Internetu pozostawia wiele do życzenia.
+          Pierwszym rażącym zaniedbanie jest fakt iż router będzie przyjmował
+          połączenia z internetu, z każdym dowolnym portem, w ramach lepszego
+          poznania pakietu <em>firewall</em>-a na Linuksie możemy nieco
+          bardziej zabezpieczyć naszą transmisję.
+        </p>
+        <p>
+          Jak zapewne pamiętamy, każdy łańcuch posiada swoją politykę, która
+          jest stosowana dla każdego pakietu, którem nie zostanie przypasowana
+          żadna reguła. Moglibyśmy ustawić ją na odrzucanie i dopuścić tylko
+          potrzebny ruch. To dobry pomysł szczególnie jeśli myślimy o
+          interfejsie WAN, ale zły jeśli pomyślimy interfejsie LAN. Ponieważ
+          możemy zdefiniować polityki <em>per</em> interfejs, ten pomysł
+          odpada, ponieważ dla interfejsu LAN musiała by powstać długa lista
+          reguł dopuszczająca ruch do wszystkie bardziej oraz mniej znanych 
+          usług. Dlatego też pozostawimy politykę bez zmian i dopuścimy tylko
+          niezbędny ruch. Na pewno z internetu musimy przyjąć dane od serwera
+          DNS, aby rozwiązywać dotąd nieznane nazwy oraz w zależności
+          konfiguracji interfejsu WAN dane z serwera DHCP usługodawcy. Łańcuch
+          INPUT będziemy konfigurować dodają na początku reguły zezwalające na
+          ruch, żeby następnie zablokować pozostały nieokreślony regułami.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo iptables -A INPUT -i eth1 -p udp --sport 53 -j ACCEPT
+#Opcjonalnie:
+xf0r3m@immudex:~$ sudo iptables -A INPUT -i eth1 -p udp --sport 67 -j ACCEPT
+#Zablokowanie pozostałego ruchu
+xf0r3m@immudex:~$ sudo iptables -A INPUT -i eth1 -p udp -j DROP;
+xf0r3m@immudex:~$ sudo iptables -A INPUT -i eth1 -p tcp --syn -j DROP;
+</pre>
+        <p>
+          Dwie pierwsze reguły dopusczają ruch z sieci WAN (interfejs eth1) na
+          porcie 53/udp (serwer systemu DNS) oraz 67/udp (serwer DHCP).
+          Pozostały ruch protokołu UDP został zablokowany. Podobnie jest z
+          całym ruchem na protokole TCP, tutaj dodano także modyfikator
+          <code class="code-inline">--syn</code>. Jak wspominałem omawiając
+          protokół TCP, musi on zestawić połączenie, aby rozpocząć transmisje
+          co wymaga wysłania kilku pakietów sterujących. Pakiet wysyłany aby
+          zainicjować zestawienie połączenia TCP posiada własnie ustawioną
+          flagę SYN (pakiety sterujące TCP posiadają specjalne miesce na flagę).
+          I tego typu pakiety są właśnie blokowane. To rozwiązanie skutecznie
+          zablokuje próbę połączenia, ale prawdopodbnie nie uchroni przed
+          metodą rozpoznawczą jaką jest skanowanie portów. Należało by tutaj
+          zamiast flagi, stanów połączenia.
+        </p>
+        <p>
+          Ze względu na to, iż zapora na Linuksie to temat rzeka. 
+          Małe ćwiczenie. Usprawnienie tej ostatniej reguły, takby aby 
+          opierała się na stanach TCP. (Podpowiedź: Zablokowanie ma służyć
+          nawiązywaniu nowych połączeń z naszym routerem. Transmisja
+          przez hosty w sieci, ktore łączy nasz routera powina przebiegać bez
+          zarzutu).
+        </p>
+        <p>
+          <em>Iptables</em> nie jest bez wad jedną z nich jest utrzymanie
+          reguł w łańuchach do momentu wyłączenia wyłączenia systemu. Dlatego
+          systemy w których instalowany jest ten pakiet dostępny jest też
+          pakiet odpowiadający za zapisanie reguł w pliku i przywrócenie ich
+          w momencie startu systemu. Pakiet nazywa się 
+          <em>iptables-persistent</em> dostępny jest w repozytoriach Debiana.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo apt install iptables-persistent
+</pre>
+        <p>
+          Zapisanie reguł odbywać się będzie za wydaniem poniższego polecenia.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo iptables-persistent save
+</pre>
+        <p>
+          Teraz router jest skonfigurowany i gotowy do działania. Routery
+          programowe mają to do siebie, że ich funkcjonalność można
+          rozszerzyć np. o serwer plików. Konfiguracje takiego serwera plików
+          będziemy jeszcze omawiać w tym materiale. Także będziemy jeszcze
+          wracać do naszego routera.
+        </p>
+        <p>
+          Kolejną kwestią jest komunikacja między sieciami. Jeśli nasz router
+          łączy ze sobą więcej niż jedną sieć lokalną i ich komputery mają się
+          ze sobą komunikowac to należy utworzyć statyczne trasy, które wskaża
+          przez który interfejs należy komunikować się z daną siecią.
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo ip route add 192.168.1.0/24 via 192.168.1.1 dev eth2
+xf0r3m@immudex:~$ sudo ip route add 192.168.4.0/24 via 192.168.4.1 dev eth0
+</pre>
+        <p>
+          Trasy te mogą zostać utworzone automatycznie jeśli np. interfejs
+          sieci WAN zostanie podniesiony podczas automatycznej konfiguracji.
+          Jeśli takie zachowanie nie jest przez nas porządane to w najlepszym
+          wypadku jest zablokwać transmisję między sieciami na 
+          <em>firewall</em>-u. Ninejszym temat konfigruacji routera uważam
+          za zakończony. Nie mniej jednak to nie koniec rodziału. Zostały
+          jeszcze dwa tematy do omówienia.
+        </p>
+        <h2 id="9.15.ipoverethernet">9.15. Sieci IP oparte na Ethernet. Protokół ARP i NDP</h2>
+        <p>
+          Mając na uwadzę to, że chcąc wysłać jakieś dane musimy podać adres
+          hosta docelowego. Zazwyczaj takim adresem jest albo adres IP albo 
+          nazwa domenowa. Te piewsze wykorzystywane są głównie w sieciach
+          lokalnych przez specjalistów. Zatem podając nazwę domenową aplikacja
+          musi rozwiązać ją na adres IP i dokonuje tego za pomoca systemu DNS.
+          To dzieje się w warstwie aplikacji. Warstwa transportowa definiuje
+          port oraz rodzaj transmisji dla wysłanych danych. Najczęściej są
+          to znane protokoły jak HTTPS, protokoły przesyłania strumieniowego
+          oraz protokoły poczty. Warstwa sieciowa posiada już adres IP hosta
+          docelowego i bez względu na to czy host docelowy znajduje się w tej 
+          samej sieci czy nie, pakiet przekazywany jest dalej i tutaj pozostaje
+          nam pewna nie wiadoma, skąd host źródłowy wie jakim adresem MAC 
+          ma zaadresować ramkę <em>ethernet</em>? 
+        </p>
+        <p>
+          Tutaj pojawia się protokoły <strong>ARP</strong> oraz RARP. Ten 
+          drugi jest może mniej wykorzystywany. Ale ich zadaniem jest zamiana
+          adresów IP na MAC i odwrotnie. Głownie chodzi tu o protokół ARP i
+          to nanim się się skupimy. Informacje na temat adresów MAC hostów
+          w sieci przechowywane są w tablicy lub w buforze ARP. Jednak co jeśli
+          tablica jest pusta? Wówczas protokół ARP dla docelowego adresu IP
+          tworzy ramkę z żądaniem ARP. Taka ramka rozsyłana jest w całej sieci.
+          Jeśli jeden ze znajdujących się w niej hostów posiada adres MAC dla
+          adresu IP z żądania wówczas odsyłana jest odpowiedź. Nasz host na
+          podstawie odpowiedzi uzpełnia swoją tablicę o ten wpis wówczas może
+          on rozpocząć transmisję.  Dostęp do tablicy w dystrybucjach Linuksa
+          odbywa się z pomocą: 
+        </p>
+<pre class="code-block">
+xf0r3m@immudex:~$  sudo ip -4 neigh
+172.16.2.20 dev enp4s0 lladdr 74:27:ea:e9:cc:14 STALE
+172.16.7.6 dev enp4s0 lladdr 70:85:c2:a4:bf:b9 STALE
+172.16.8.2 dev enp4s0 lladdr 6c:4b:90:be:91:74 STALE
+172.16.6.1 dev enp4s0 lladdr 78:45:c4:12:6a:5d STALE
+172.16.2.100 dev enp4s0 lladdr 3c:84:6a:44:d7:a4 STALE
+172.16.2.46 dev enp4s0 lladdr 74:27:ea:ea:98:8a STALE
+172.16.17.15 dev enp4s0 lladdr 78:45:c4:09:23:4c STALE
+172.16.2.146 dev enp4s0 lladdr 1c:69:7a:cd:f4:cb STALE
+172.16.2.119 dev enp4s0 lladdr 74:27:ea:ea:63:56 STALE
+172.16.8.13 dev enp4s0 lladdr 6c:4b:90:be:88:16 STALE
+172.16.0.1 dev enp4s0 lladdr 90:e2:ba:45:4f:8c REACHABLE
+...
+</pre>
+        <p>
+          Wpisy w tablicy same ulegją usunięciu jeśli nie nastąpiła aktywność
+          przez pewien czas. Nie mniej jednak istnieje możliwość ręcznego
+          usunięcia wpisów za pomocą polecenia:
+        </p> 
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo ip neigh del 172.16.8.13 dev enp4s0
+</pre>
+        <p>
+          Efektem działania tego polecenia będzie usunięcie wpisu dotyczączego
+          host <code class="code-inline">172.16.8.13</code>.
+        </p> 
+        <p>
+          Protokołem o działaniu udwrotnym jest <strong>RARP</strong>, jego
+          zadaniem była zamiana adresów MAC na adresy IP, przez co
+          wykrzystywany był do automatycznej konfiguracji hosta, przed
+          upowszechnieniem się protokołu DHPC. Obecnie jest już rzadko
+          spotykany.
+        </p>
+        <p>
+          Za pomocą podpolecenia <em>neigh</em> polecenia <em>ip</em> mogliśmy
+          sprawdzić tablicę ARP w systemie. Kiedyś używano do tego polecenia
+          <em>arp</em>. Obecnie doszło do unifikacji przez narzędzie 
+          <em>ip</em> obsługi protokołu ARP dla IPv4 oraz protokołu NDP dla
+          IPv6. NDP jest podobny rozwiązaniem dla IPv6. Jego działanie opiera
+          na dwóch rodzajach komunikatów:
+        </p>
+        <ul>
+          <li><strong>Poszukiwanie adresu</strong> - pakiet tego rodzaju służy
+            uzykania informacji o sieci lokalnej hosta wraz z adresem MAC.</li>
+          <li><strong>Ogłaszenie adresu</strong> - pakiet z odpowiedzią wraz
+            z żądanymi informacjami.</li>
+        </ul>
+        <h2 id="9.16.wirelesslan">9.16. Sieć bezprzewodowa</h2>
+        <p>
+          Logiczna konstrukcja sieci bezprzewodowej, nie rózni się zbytnio
+          od połączeń kablowych. To również jest <em>Ethernet</em> rózni się
+          on kilkoma charakterystycznymi elementami w warstwie fizycznej.
+          Opiszemy sobie te elementy:
+        </p>
+        <ul>
+          <li><strong>Identyfikator/Nazwa sieci/ESSID</strong> jest ciąg
+            znaków jednoznacznie określający sieć. Każda sieć bezprzewodowa
+            go posiada. Jest on niezbedny do połączenia.</li>
+          <li><strong>Dane bezpieczeństwa</strong> sieci bezprzewodowe, mogą
+            zostać zabezpieczone za pomocą funkcji kryptograficznych 
+            (zaszyfrowane), aby osoby nie będące jej częścią nie mogły
+            przechwycić przesyłanych przez nią danych. Najczęsciej jest hasło,
+            chociaż, czasami też stoswane są PIN-y (w przypadku funkcji WPS)
+            lub dane logowania (w przypadku sieci korporacyjnych).</li>
+          <li><strong>Częstotliwość</strong> - fragment pasma częstotliwości
+            radiowej na której możliwa jest wymiana informacji w obrębie danej
+            sieci bezprzewodowej. Bezprzewodowe sieci komputerowe operują
+            najczęściej na częstotliwości 2.4GHz lub 5GHz. Każda sieć ma
+            do dyspozycji tylko fragment pasma powyższych częstotliwości.</li>
+          <li><strong>Kanał</strong> - kanał jest powiązany z częstotliwością
+            Kanał określa konkretną częstotliwość dla pasma np. 2.4GHz.
+            Jeśli nasza sieć ma nadawać na pierwszym kanale (Kanał/CH 1,
+            oznaczenia są różne) to znaczy że będzie nadawać na częstotliwości
+            2.412MHz.</li>
+        </ul>
+        <p>
+          Oczywiście cech charakterystycznych jest jescze więcej. Nie 
+          opisywałem tutaj siły sygnału. To chyba każdy rozumie. My tutaj
+          skupimy się głownie na podłączaniu się do sieci i to najlepiej za
+          pomocą terminala. Opcji jest kilka.
+        </p>
+        <ul>
+          <li><strong>NetworkManager</strong>. Do przyłączenia się do sieci
+            bezprzewodowej możemy wykorzystać dobrze znany nam już menedżer.
+            Za pomocą komend polecenia <em>nmcli</em> możemy wyświetlić sobie
+            listę dostępnych sieci i następnie się do niej podłączyć. Poniżej
+            znajdują się polecenia, dzięki którym możemym wykorzystać ten
+            menedżer do podłączenia do sieci.
+<pre class="code-block">
+xf0r3m@immudex:~$ nmcli device wifi list
+*  SSID               MODE    CHAN  RATE       SIGNAL  BARS  SECURITY
+   netdatacomm_local  Infra   6     54 Mbit/s  37      ▂▄__  WEP
+*  F1                 Infra   11    54 Mbit/s  98      ▂▄▆█  WPA1
+   LoremCorp          Infra   1     54 Mbit/s  62      ▂▄▆_  WPA2 802.1X
+   Internet           Infra   6     54 Mbit/s  29      ▂___  WPA1
+xf0r3m@immudex:~$ nmcli device wifi connect "F1" password "p4ssw0rd"
+#lub
+xf0r3m@immudex:~$ nmcli --ask device wifi connect "F1"
+xf0r3m@immudex:~$ nmcli -p -f general,wifi-properties device show wlan0
+</pre>
+            Można użyć modyfikatora <code class="code-inline">--ask</code>
+            zamiast wpisywać hasło w poleceniu. Ostatnie polecenie zwraca
+            podstawowe informacje na temat interejsu oraz samej sieci. 
+        </li>
+          <li><strong>iwd</strong>, jest menedżer sieci bezprzewodywych stworzony
+            prze firmę Intel. Jego obsługa jest interaktywna i opiera sie na
+            wydaniu kilku poleceń. W przeciwieństwie do <em>NetworkManagera</em>
+            (który może być już zainstalowany w wielu dystrybucjach) trzeba go
+            zainstalować. Pomoc dostępna jest wewnąrz narzędzia po jego
+            uruchomieniu. Uruchomienie odbywa się poprzez wydanie polecenia:
+<pre class="code-block">
+xf0r3m@immudex:~$ iwctl
+[iwd]# help
+[iwd]# device list
+[iwd]# station wlp1s0 scan
+[iwd]# station wlp1s0 get-networks
+[iwd]# station wlp1s0 connect SSID
+</pre>
+            Ten program wymaga nieco więcej poleceń. Ostanie poleceń, jeśli
+            połączenie tego będzie wymagać zapyta o hasło. (Więcej informacji
+            na https://wiki.archlinux.org/title/iwd)
+          </li>
+          <li><strong>wireless-tools</strong> - Pakiet. Konfiguracja ręczna.
+            Ten sposób jest najdłuższy, ale zadziała na każdej dystrybucji.
+            Składa się on z klasycznego interfejsu <em>iwconfig</em> oraz
+            programu <strong>wpa_supplicant</strong> służącego do łączenia się
+            sieciami wykorzystującymi mechanizm bezpieczeństwa WPA. Chcąc
+            znaleźć sieć, do której chcemy się podłaczyć musimy skorzystać z
+            polecenia <em>iwlist</em>, który wyświetli nam raport ze skanowania
+            z znalezionymi sieciami oraz ich parametrami. Te informacje są
+            trochę nieczytelne, ale nam potrzebny jest jedynie ESSID
+            (nazwa sieci) oraz sam fakt jej obecnosci. Po uzyskaniu tych
+            informacji musimy utworzyć plik zawierający <em>profil</em> sieci
+            posiłkując się poleceniem <em>wpa_passphrase</em>. Czasami może
+            być wymagane dodanie kilku opcji, ale przedstawie to na liście
+            poleceń. Następnie należy uruchomić polecenie 
+            <em>wpa_supplicant</em> z odpowiednimi przełącznikami oraz opcjami
+            a na sam koniec należy pobrać adresy IP. Jeśli zestawienie
+            połączenie niedochodzi do skuktu to może oznaczać, że uruchomiony
+            jest już demon, którego to my mieliśmy uruchamiać. Można wówczas
+            wyłączyć jednostkę i zabić wszystkie pozostałe procesy związane
+            z <em>wpa_supplicant</em>, a następnie spróbować ponownie. Jednak
+            tutaj mała wskazówka. W raz z obecnością działającego demona
+            wpa_supplicant w systemie dostępne jest polecenie 
+            <strong>wpa_cli</strong>, które umożliwia nam podłączenie za
+            pomocą interaktywnego interfejsu. Nie mniej jednak próba reczenego
+            podłączenia się do sieci bezprzewodowej wygląda następująco.
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo iwlist wlp1s0 scan
+xf0r3m@immudex:~$ wpa_passphrase "F1" 'p4ssw0rd' &gt;&gt; f1_wlan.conf
+#lub
+xf0r3m@immudex:~$ echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" | tee f1_wlan.conf
+xf0r3m@immudex:~$ echo "update_config=1" | tee -a f1_wlan.conf
+xf0r3m@immudex:~$ echo "country=PL" | tee -a f1_wlan.conf
+xf0r3m@immudex:~$ wpa_passphrase "F1" 'p4ssw0rd' | tee -a f1_wlan.conf
+xf0r3m@immudex:~$ sudo systemctl stop wpa_supplicant.service
+xf0r3m@immudex:~$ sudo kill -9 $(ps -aux | grep '^root.*wpa_supplicant' | awk '{printf %2" "}')
+xf0r3m@immudex:~$ sudo wpa_supplicant -B -Dwext -iwlp1s0 -cf1_wlan.conf
+xf0r3m@immudex:~$ sudo dhclient
+</pre>
+            Jak możemy zauważyć proces jest nieco bardziej złożony, ale jest
+            to ręczna metoda. Z racji tego iż opisałem główny proces powyżej
+            tutaj skupię się na kilku szczegółach. Program
+            <code class="code-inline">wpa_passphrase</code> tworzy tak zwany
+            <em>blok sieci</em> w nim zawarta jest nazwa sieci oraz klucz PSK
+            (hasło do sieci). Mimo tego my podajemy ten plik jako plik
+            konfiguracyjny <em>wpa_supplicant</em> i w niektórych przypadkach
+            nie jest wystarczająca konfiguracja. Dlatego też podaje się
+            takie informacje jak lokalizacja interfejsu sterowania 
+            wpa_supplicant 
+            (<code class="code-inline">ctrl_interface=DIR=/var/run/wpa_supplicant</code>),
+            grupa użytkowników, którzy mogą sterować <em>wpa_supplicant</em>
+            (<code class="code-inline">GROUP=netdev</code>), zezwolenie na
+            możliwość modyfikacji konfiguracji
+            (<code class="code-inline">update_config=1</code>) oraz kod ISO
+            kraju w którym działa odbiornik
+            (<code class="code-inline">country=PL</code>). Kod kraju jest o
+            o tyle istotny, że każdy kraj posiada swoje regulacje prawne
+            odnośnie wykorzystania częstotliwości radiowych, które są
+            wykorzystywane przez sieci bezprzewodowe. Na przykład w Polsce
+            dostępnych jest 13 kanałów a w USA tylko 11. A to są tylko kanały
+            większość krajów reguluje również moc nadawczą. Więc manipulacja
+            kodem kraju może wpłynąć na siłę sygnału i poprawić jakość
+            połączenia. Kolejną rzeczą jest działanie już <em>wpa_supplicant</em>
+            w systemie. Ten program może działać jako usługa. Dzięki czemu
+            możemy zapisać <em>bloki sieci</em> w ogólnym pliku konfiguracjnym.
+            Wówczas powoduje to, że jeśli komputer z włączony demon znajdzie
+            się w zasięgu sieci, zostanie z nią połączony. W przypadku kiedy
+            łaczność ma być wykonywana na żadanie użytkownika działanie demona
+            nie jest pożądane. Dlatego demona należy wyłączyć, ale mimo jego
+            wyłączenia nadal może pozostawać proces, który bedzie blokował
+            próbę podłączenia się. Dlatego też ważne jest aby pozbyć się
+            tego procesu i za to odpowiada polecenie
+            (<code class="code-inline">kill</code>) w podstawieniu polecenia
+            uzyskujemy PID tego procesu. Uruchomienie polecenia
+            <em>wpa_supplicant</em> wymaga kilku opcji. Opcja
+            <code class="code-inline">-B</code> uruchamia narzędzie w tle,
+            opcja <code class="code-inline">-D</code> wraz z wartością
+            <code class="code-inline">wext</code> jest to wskazanie sterownika
+            odpowiedzialnego za obsługę sieci bezprzewodowej, dostępnych jest
+            ich kilka, <code class="code-inline">wext</code> jest rozwiązaniem
+            przestarzałym niemniej jednak cechuje się obsługa przez bardzo
+            wiele układów kart bezprzewodowych na rynku. Następnie po opcji
+            <code class="code-inline">-i</code> podaje się interfejs sieciowy,
+            ostatnią opcją jest <code class="code-inline">-c</code>, która
+            wskazuje na plik konfiguracyjny. Zwróćmy uwagę na to, iż opcję
+            wraz z wartościami zapisujemy łącznie.
+            Inną opcją skorzystania z tego
+            pakietu jest wykorzytanie narzędzia <strong>wpa_cli</strong>.
+            Poniżej znajduje się lista polecenie, jakich należy użyć. Użycie
+            <em>wpa_cli</em> wymaga działania demona <em>wpa_supplicant</em>.
+<pre class="code-block">
+xf0r3m@immudex:~$ sudo wpa_cli
+&gt; scan
+&gt; scan_results
+#tu_wyswietli_sie_lista_znalezionych_sieci
+&gt; add_network
+#tu_wyswietli_sie_id_sieci_wazne_bo_sluzy_do_odlowania_sie_do_sieci
+&gt; set_network 0 ssid "nazwa_sieci/ESSID"
+&gt; set_network 0 psk "haslo/PSK"
+&gt; enable_network 0
+#tu_wyswietli_sie_informacja_o_podlaczaeniu_do_sieci
+&gt; save_config
+&gt; quit
+</pre> 
+           Jeśli nie chcemy aby połączenie zostało zapisane dołączenia
+           do łączenia automatycznego to należy pominąć przedostatnią opcję.
+          </li>
+        </ul>
+        <p>
+          Na konfiguracji narzędzia <em>wpa_suplicant</em> zakończymy temat
+          konfiguracji sieci w Linux. Jednak to nie koniec tematów 
+          sieciowych ponieważ następne dwa rozdziały będą na niej bazować.
+        </p>
       </div>
 			<p style="margin: 15px; padding: 0; outline: 0;">
 				2022; COPYLEFT; ALL RIGHTS REVERSED;
